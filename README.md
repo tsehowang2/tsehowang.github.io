@@ -1,3 +1,19 @@
+# English / 香港繁體中文 edition
+
+Open `index.html`, then select **繁體中文** to read the corresponding Chinese page. You can also open `zh-HK/index.html` directly. The **English** link returns to the same page in English.
+
+The Hong Kong Traditional Chinese edition covers the 32 lecture readers, all 401 HTML slides, 32 tutorials, weekly questions and worked solutions, examinations, project guidance, and interactive explanations. Technical and academic terms remain in English. Example words and sentences (such as “I go to school by bus”), code, equations, API names, filenames, and reading titles retain their original language. Downloadable notebooks and source materials are the original approved English files; their website explanations are translated.
+
+Both editions are prebuilt static HTML and work offline. No translation service, account, API key, build step, or server is needed. Search operates within the selected language and includes retained English terminology. Browser progress and test notes are shared between languages on the same origin. English pages retain the approved teaching content.
+
+Upload **all** extracted folders, including **zh-HK**, to the same GitHub Pages root. Both user sites and project sites use relative links. Keep **assets/site-config.js** configured as described below if you use a custom domain or nonstandard repository layout.
+
+## 香港繁體中文版本
+
+按頁面上方的「繁體中文」即可開啟同一頁的中文版本；按「English」可切回英文。解說使用香港繁體中文；token、logit、matrix、dot product、normalize、prompt、function 等 technical terms 保留英文。英文例句、程式碼及公式亦保留原文。兩種語言共用同一瀏覽器的進度和練習筆記。
+
+---
+
 # Applied AI course website
 
 The complete course is readable on the website. No embedded code editor, API, package installation or build step is needed to read it. Open index.html locally, or host the extracted contents on GitHub Pages.

@@ -1,8 +1,9 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Reference implementation code · Applied AI</title><meta name="description" content="Applied generative AI and LLM systems course material"><meta name="theme-color" content="#173c36"><link rel="icon" href="assets/favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="assets/style.css"><link rel="stylesheet" href="assets/slides.css"><script>window.COURSE_BASE="";</script><script defer src="assets/site-config.js"></script><script defer src="assets/search-index.js"></script><script defer src="assets/app.js"></script><script defer src="assets/visuals.js"></script><script defer src="assets/slides.js"></script><script defer src="assets/beginner-visuals.js"></script></head><body data-week="0" data-page-kind="tutorial"><a class="skip-link" href="#main">Skip to content</a><header class="topbar"><button class="menu-toggle" type="button" aria-expanded="false" aria-controls="course-sidebar">Menu</button><a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true">a<span>i</span></span><span>APPLIED AI<small>Principles into practice</small></span></a><nav aria-label="Main navigation"><a href="index.html">The course</a><a href="visuals.html">Visual lab</a><a href="project.html">Project</a></nav><button class="search-open" type="button">Search the course <span aria-hidden="true">/</span></button></header><aside id="course-sidebar" class="sidebar" aria-label="Course chapters"><a class="side-home" href="index.html">Course overview</a><details class="semester-nav" open><summary>Semester 1<span>Weeks 1–16</span></summary><ol start="1"><li><a href="lectures/01.html"><span class="week-number">01</span><span>What a language model is trying to learn</span><span class="week-tick" data-week-tick="1"></span></a></li><li><a href="lectures/02.html"><span class="week-number">02</span><span>From text to tokens and numerical IDs</span><span class="week-tick" data-week-tick="2"></span></a></li><li><a href="lectures/03.html"><span class="week-number">03</span><span>What word vectors can represent</span><span class="week-tick" data-week-tick="3"></span></a></li><li><a href="lectures/04.html"><span class="week-number">04</span><span>From scores to probabilities and learning signals</span><span class="week-tick" data-week-tick="4"></span></a></li><li><a href="lectures/05.html"><span class="week-number">05</span><span>Why language needs context and order</span><span class="week-tick" data-week-tick="5"></span></a></li><li><a href="lectures/06.html"><span class="week-number">06</span><span>Attention begins as a weighted mixture</span><span class="week-tick" data-week-tick="6"></span></a></li><li><a href="lectures/07.html"><span class="week-number">07</span><span>Where queries keys and values come from</span><span class="week-tick" data-week-tick="7"></span></a></li><li><a href="lectures/08.html"><span class="week-number">08</span><span>Scaling and masking attention correctly</span><span class="week-tick" data-week-tick="8"></span></a></li><li><a href="lectures/09.html"><span class="week-number">09</span><span>Multiple attention heads and position</span><span class="week-tick" data-week-tick="9"></span></a></li><li><a href="lectures/10.html"><span class="week-number">10</span><span>The transformer block step by step</span><span class="week-tick" data-week-tick="10"></span></a></li><li><a href="lectures/11.html"><span class="week-number">11</span><span>Encoders decoders and complete model architectures</span><span class="week-tick" data-week-tick="11"></span></a></li><li><a href="lectures/12.html"><span class="week-number">12</span><span>Training a small transformer</span><span class="week-tick" data-week-tick="12"></span></a></li><li><a href="lectures/13.html"><span class="week-number">13</span><span>Generation decoding and the KV cache</span><span class="week-tick" data-week-tick="13"></span></a></li><li><a href="lectures/14.html"><span class="week-number">14</span><span>From pretraining to instruction following and reasoning</span><span class="week-tick" data-week-tick="14"></span></a></li><li><a href="lectures/15.html"><span class="week-number">15</span><span>Generative AI beyond text</span><span class="week-tick" data-week-tick="15"></span></a></li><li><a href="lectures/16.html"><span class="week-number">16</span><span>A complete transformer walkthrough and first semester review</span><span class="week-tick" data-week-tick="16"></span></a></li></ol></details><details class="semester-nav"><summary>Semester 2<span>Weeks 17–32</span></summary><ol start="17"><li><a href="lectures/17.html"><span class="week-number">17</span><span>From word vectors to semantic search</span><span class="week-tick" data-week-tick="17"></span></a></li><li><a href="lectures/18.html"><span class="week-number">18</span><span>A vector database from a list of vectors</span><span class="week-tick" data-week-tick="18"></span></a></li><li><a href="lectures/19.html"><span class="week-number">19</span><span>RAG as an open book question</span><span class="week-tick" data-week-tick="19"></span></a></li><li><a href="lectures/20.html"><span class="week-number">20</span><span>Improving RAG without losing the basic task</span><span class="week-tick" data-week-tick="20"></span></a></li><li><a href="lectures/21.html"><span class="week-number">21</span><span>Evaluating retrieval answers and uncertainty</span><span class="week-tick" data-week-tick="21"></span></a></li><li><a href="lectures/22.html"><span class="week-number">22</span><span>CPU GPU memory and model resource accounting</span><span class="week-tick" data-week-tick="22"></span></a></li><li><a href="lectures/23.html"><span class="week-number">23</span><span>CUDA kernels and profiling</span><span class="week-tick" data-week-tick="23"></span></a></li><li><a href="lectures/24.html"><span class="week-number">24</span><span>Fine tuning starts with a teaching dataset</span><span class="week-tick" data-week-tick="24"></span></a></li><li><a href="lectures/25.html"><span class="week-number">25</span><span>LoRA and QLoRA from a small matrix</span><span class="week-tick" data-week-tick="25"></span></a></li><li><a href="lectures/26.html"><span class="week-number">26</span><span>Fine tuning experiments preferences and distillation</span><span class="week-tick" data-week-tick="26"></span></a></li><li><a href="lectures/27.html"><span class="week-number">27</span><span>Tools functions workflows and agents</span><span class="week-tick" data-week-tick="27"></span></a></li><li><a href="lectures/28.html"><span class="week-number">28</span><span>Harnesses planning memory and bounded execution</span><span class="week-tick" data-week-tick="28"></span></a></li><li><a href="lectures/29.html"><span class="week-number">29</span><span>From a notebook to MLOps and inference serving</span><span class="week-tick" data-week-tick="29"></span></a></li><li><a href="lectures/30.html"><span class="week-number">30</span><span>Monitoring security regression tests and rollback</span><span class="week-tick" data-week-tick="30"></span></a></li><li><a href="lectures/31.html"><span class="week-number">31</span><span>Integrating the documentation assistant and advanced extensions</span><span class="week-tick" data-week-tick="31"></span></a></li><li><a href="lectures/32.html"><span class="week-number">32</span><span>Review defense and a continuing learning plan</span><span class="week-tick" data-week-tick="32"></span></a></li></ol></details><div class="side-links"><a href="visuals.html">Visual laboratory <span>14 interactive lessons</span></a><a href="project.html">Documentation assistant <span>Your capstone project</span></a><a href="resources.html">Readings and setup</a></div><div class="side-progress"><div><span>Your progress</span><strong data-progress-count>0 / 32</strong></div><progress max="32" value="0" aria-label="Completed lectures"></progress><small>Saved in this browser</small></div></aside><main id="main" class="main "><div class="content"><div class="chapter-header"><div class="eyebrow">Inspect the implementation</div><h1>Reference code</h1><p class="deck">The small, readable components behind the tutorials. These code samples do not execute on the website.</p></div><article class="prose"><details class="setup-details" id="coursekit-core-py"><summary>Retrieval metrics tools and controller · coursekit/core.py</summary><div class="code-block"><div class="code-bar"><span>Python</span><button type="button" class="copy-code">Copy code</button></div><pre><code>&quot;&quot;&quot;Retrieval, evaluation and a bounded tool controller.
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/><title>Reference implementation code · Applied AI</title><meta content="Applied generative AI and LLM systems course material" name="description"/><meta content="#173c36" name="theme-color"/><link href="assets/favicon.svg" rel="icon" type="image/svg+xml"/><link href="assets/style.css" rel="stylesheet"/><link href="assets/slides.css" rel="stylesheet"/><script>window.COURSE_BASE="";</script><script defer="" src="assets/site-config.js"></script><script defer="" src="assets/search-index.js"></script><script defer="" src="assets/app.js"></script><script defer="" src="assets/visuals.js"></script><script defer="" src="assets/slides.js"></script><script defer="" src="assets/beginner-visuals.js"></script><link href="zh-HK/implementation.html" hreflang="zh-HK" rel="alternate"/><link href="assets/bilingual.css" rel="stylesheet"/></head><body data-page-kind="tutorial" data-week="0"><a class="skip-link" href="#main">Skip to content</a><header class="topbar"><button aria-controls="course-sidebar" aria-expanded="false" class="menu-toggle" type="button">Menu</button><a class="brand" href="index.html"><span aria-hidden="true" class="brand-mark">a<span>i</span></span><span>APPLIED AI<small>Principles into practice</small></span></a><nav aria-label="Main navigation"><a href="index.html">The course</a><a href="visuals.html">Visual lab</a><a href="project.html">Project</a><a class="language-switch" href="zh-HK/implementation.html" hreflang="zh-HK" lang="zh-HK">繁體中文</a></nav><button class="search-open" type="button">Search the course <span aria-hidden="true">/</span></button></header><aside aria-label="Course chapters" class="sidebar" id="course-sidebar"><a class="side-home" href="index.html">Course overview</a><details class="semester-nav" open=""><summary>Semester 1<span>Weeks 1–16</span></summary><ol start="1"><li><a href="lectures/01.html"><span class="week-number">01</span><span>What a language model is trying to learn</span><span class="week-tick" data-week-tick="1"></span></a></li><li><a href="lectures/02.html"><span class="week-number">02</span><span>From text to tokens and numerical IDs</span><span class="week-tick" data-week-tick="2"></span></a></li><li><a href="lectures/03.html"><span class="week-number">03</span><span>What word vectors can represent</span><span class="week-tick" data-week-tick="3"></span></a></li><li><a href="lectures/04.html"><span class="week-number">04</span><span>From scores to probabilities and learning signals</span><span class="week-tick" data-week-tick="4"></span></a></li><li><a href="lectures/05.html"><span class="week-number">05</span><span>Why language needs context and order</span><span class="week-tick" data-week-tick="5"></span></a></li><li><a href="lectures/06.html"><span class="week-number">06</span><span>Attention begins as a weighted mixture</span><span class="week-tick" data-week-tick="6"></span></a></li><li><a href="lectures/07.html"><span class="week-number">07</span><span>Where queries keys and values come from</span><span class="week-tick" data-week-tick="7"></span></a></li><li><a href="lectures/08.html"><span class="week-number">08</span><span>Scaling and masking attention correctly</span><span class="week-tick" data-week-tick="8"></span></a></li><li><a href="lectures/09.html"><span class="week-number">09</span><span>Multiple attention heads and position</span><span class="week-tick" data-week-tick="9"></span></a></li><li><a href="lectures/10.html"><span class="week-number">10</span><span>The transformer block step by step</span><span class="week-tick" data-week-tick="10"></span></a></li><li><a href="lectures/11.html"><span class="week-number">11</span><span>Encoders decoders and complete model architectures</span><span class="week-tick" data-week-tick="11"></span></a></li><li><a href="lectures/12.html"><span class="week-number">12</span><span>Training a small transformer</span><span class="week-tick" data-week-tick="12"></span></a></li><li><a href="lectures/13.html"><span class="week-number">13</span><span>Generation decoding and the KV cache</span><span class="week-tick" data-week-tick="13"></span></a></li><li><a href="lectures/14.html"><span class="week-number">14</span><span>From pretraining to instruction following and reasoning</span><span class="week-tick" data-week-tick="14"></span></a></li><li><a href="lectures/15.html"><span class="week-number">15</span><span>Generative AI beyond text</span><span class="week-tick" data-week-tick="15"></span></a></li><li><a href="lectures/16.html"><span class="week-number">16</span><span>A complete transformer walkthrough and first semester review</span><span class="week-tick" data-week-tick="16"></span></a></li></ol></details><details class="semester-nav"><summary>Semester 2<span>Weeks 17–32</span></summary><ol start="17"><li><a href="lectures/17.html"><span class="week-number">17</span><span>From word vectors to semantic search</span><span class="week-tick" data-week-tick="17"></span></a></li><li><a href="lectures/18.html"><span class="week-number">18</span><span>A vector database from a list of vectors</span><span class="week-tick" data-week-tick="18"></span></a></li><li><a href="lectures/19.html"><span class="week-number">19</span><span>RAG as an open book question</span><span class="week-tick" data-week-tick="19"></span></a></li><li><a href="lectures/20.html"><span class="week-number">20</span><span>Improving RAG without losing the basic task</span><span class="week-tick" data-week-tick="20"></span></a></li><li><a href="lectures/21.html"><span class="week-number">21</span><span>Evaluating retrieval answers and uncertainty</span><span class="week-tick" data-week-tick="21"></span></a></li><li><a href="lectures/22.html"><span class="week-number">22</span><span>CPU GPU memory and model resource accounting</span><span class="week-tick" data-week-tick="22"></span></a></li><li><a href="lectures/23.html"><span class="week-number">23</span><span>CUDA kernels and profiling</span><span class="week-tick" data-week-tick="23"></span></a></li><li><a href="lectures/24.html"><span class="week-number">24</span><span>Fine tuning starts with a teaching dataset</span><span class="week-tick" data-week-tick="24"></span></a></li><li><a href="lectures/25.html"><span class="week-number">25</span><span>LoRA and QLoRA from a small matrix</span><span class="week-tick" data-week-tick="25"></span></a></li><li><a href="lectures/26.html"><span class="week-number">26</span><span>Fine tuning experiments preferences and distillation</span><span class="week-tick" data-week-tick="26"></span></a></li><li><a href="lectures/27.html"><span class="week-number">27</span><span>Tools functions workflows and agents</span><span class="week-tick" data-week-tick="27"></span></a></li><li><a href="lectures/28.html"><span class="week-number">28</span><span>Harnesses planning memory and bounded execution</span><span class="week-tick" data-week-tick="28"></span></a></li><li><a href="lectures/29.html"><span class="week-number">29</span><span>From a notebook to MLOps and inference serving</span><span class="week-tick" data-week-tick="29"></span></a></li><li><a href="lectures/30.html"><span class="week-number">30</span><span>Monitoring security regression tests and rollback</span><span class="week-tick" data-week-tick="30"></span></a></li><li><a href="lectures/31.html"><span class="week-number">31</span><span>Integrating the documentation assistant and advanced extensions</span><span class="week-tick" data-week-tick="31"></span></a></li><li><a href="lectures/32.html"><span class="week-number">32</span><span>Review defense and a continuing learning plan</span><span class="week-tick" data-week-tick="32"></span></a></li></ol></details><div class="side-links"><a href="visuals.html">Visual laboratory <span>14 interactive lessons</span></a><a href="project.html">Documentation assistant <span>Your capstone project</span></a><a href="resources.html">Readings and setup</a></div><div class="side-progress"><div><span>Your progress</span><strong data-progress-count="">0 / 32</strong></div><progress aria-label="Completed lectures" max="32" value="0"></progress><small>Saved in this browser</small></div></aside><main class="main" id="main"><div class="content"><div class="chapter-header"><div class="eyebrow">Inspect the implementation</div><h1>Reference code</h1><p class="deck">The small, readable components behind the tutorials. These code samples do not execute on the website.</p></div><article class="prose"><details class="setup-details" id="coursekit-core-py"><summary>Retrieval metrics tools and controller · coursekit/core.py</summary><div class="code-block"><div class="code-bar"><span>Python</span><button class="copy-code" type="button">Copy code</button></div><pre><code>"""Retrieval, evaluation and a bounded tool controller.
 
 This is an educational baseline. Lexical extraction is not LLM generation,
 and structural citation validation is not semantic grounding verification.
-&quot;&quot;&quot;
+"""
 import ast
 from collections import Counter
 import hashlib
@@ -15,15 +16,15 @@ import re
 import time
 
 ROOT = Path(__file__).resolve().parents[1]
-STOP = set(&#x27;a an the is are of to in on for what how do does i it and with my can&#x27;.split())
+STOP = set('a an the is are of to in on for what how do does i it and with my can'.split())
 
 
 def load_docs():
-    return json.loads((ROOT / &#x27;data&#x27; / &#x27;docs.json&#x27;).read_text(encoding=&#x27;utf-8&#x27;))
+    return json.loads((ROOT / 'data' / 'docs.json').read_text(encoding='utf-8'))
 
 
 def tokens(text):
-    return [t for t in re.findall(r&#x27;[a-z0-9_]+&#x27;, text.lower()) if t not in STOP]
+    return [t for t in re.findall(r'[a-z0-9_]+', text.lower()) if t not in STOP]
 
 
 def sha256_file(path):
@@ -31,26 +32,26 @@ def sha256_file(path):
 
 
 class LexicalIndex:
-    &quot;&quot;&quot;BM25 reference with filtering before scoring and stable tie ordering.&quot;&quot;&quot;
+    """BM25 reference with filtering before scoring and stable tie ordering."""
     def __init__(self, docs):
         self.docs = list(docs)
-        if len({d[&#x27;id&#x27;] for d in docs}) != len(docs):
-            raise ValueError(&#x27;document IDs must be unique&#x27;)
-        self.counts = [Counter(tokens(d[&#x27;title&#x27;] + &#x27; &#x27; + d[&#x27;text&#x27;])) for d in docs]
+        if len({d['id'] for d in docs}) != len(docs):
+            raise ValueError('document IDs must be unique')
+        self.counts = [Counter(tokens(d['title'] + ' ' + d['text'])) for d in docs]
         self.lengths = [sum(c.values()) for c in self.counts]
         self.avgdl = sum(self.lengths) / max(1, len(docs))
         self.df = Counter(t for c in self.counts for t in c)
 
-    def search(self, question, version=&#x27;2&#x27;, k=3):
-        if version not in (&#x27;1&#x27;, &#x27;2&#x27;, &#x27;all&#x27;):
-            raise ValueError(&#x27;version must be 1, 2 or all&#x27;)
+    def search(self, question, version='2', k=3):
+        if version not in ('1', '2', 'all'):
+            raise ValueError('version must be 1, 2 or all')
         if type(k) is not int or not 1 &lt;= k &lt;= 100:
-            raise ValueError(&#x27;k must be an integer in [1,100]&#x27;)
+            raise ValueError('k must be an integer in [1,100]')
         query = set(tokens(question))
         hits = []
         n = len(self.docs)
         for d, counts, length in zip(self.docs, self.counts, self.lengths):
-            if version != &#x27;all&#x27; and d[&#x27;version&#x27;] != version:
+            if version != 'all' and d['version'] != version:
                 continue
             score = 0.0
             for term in query:
@@ -60,41 +61,41 @@ class LexicalIndex:
                 idf = math.log(1 + (n - self.df[term] + 0.5) / (self.df[term] + 0.5))
                 score += idf * tf * 2.2 / (tf + 1.2 * (0.25 + 0.75 * length / self.avgdl))
             if score &gt; 0:
-                hits.append({**d, &#x27;score&#x27;: score})
-        return sorted(hits, key=lambda d: (-d[&#x27;score&#x27;], d[&#x27;id&#x27;]))[:k]
+                hits.append({**d, 'score': score})
+        return sorted(hits, key=lambda d: (-d['score'], d['id']))[:k]
 
 
-def extract_answer(question, index=None, version=&#x27;2&#x27;, k=3):
-    &quot;&quot;&quot;Evidence-only baseline. It can return irrelevant excerpts: assess relevance.&quot;&quot;&quot;
+def extract_answer(question, index=None, version='2', k=3):
+    """Evidence-only baseline. It can return irrelevant excerpts: assess relevance."""
     index = index or LexicalIndex(load_docs())
     start = time.perf_counter()
     hits = index.search(question, version, k)
     return {
-        &#x27;answer&#x27;: &#x27;\n&#x27;.join(d[&#x27;text&#x27;] for d in hits) if hits else &#x27;Insufficient evidence in this version.&#x27;,
-        &#x27;citations&#x27;: [d[&#x27;id&#x27;] for d in hits],
-        &#x27;version&#x27;: version,
-        &#x27;status&#x27;: &#x27;evidence_found&#x27; if hits else &#x27;insufficient_evidence&#x27;,
-        &#x27;generator&#x27;: &#x27;lexical_extractor_not_llm&#x27;,
-        &#x27;grounding_verified&#x27;: False,
-        &#x27;latency_ms&#x27;: (time.perf_counter() - start) * 1000,
+        'answer': '\n'.join(d['text'] for d in hits) if hits else 'Insufficient evidence in this version.',
+        'citations': [d['id'] for d in hits],
+        'version': version,
+        'status': 'evidence_found' if hits else 'insufficient_evidence',
+        'generator': 'lexical_extractor_not_llm',
+        'grounding_verified': False,
+        'latency_ms': (time.perf_counter() - start) * 1000,
     }
 
 
 def retrieval_metrics(retrieved, relevant, k):
     if type(k) is not int or k &lt; 1:
-        raise ValueError(&#x27;k must be positive&#x27;)
+        raise ValueError('k must be positive')
     gold = set(relevant)
     if not gold:
-        return {&#x27;recall&#x27;: None, &#x27;hit&#x27;: None, &#x27;rr&#x27;: None}
+        return {'recall': None, 'hit': None, 'rr': None}
     ranked = list(dict.fromkeys(retrieved))[:k]
     ranks = [i for i, item in enumerate(ranked, 1) if item in gold]
-    return {&#x27;recall&#x27;: len(set(ranked) &amp; gold) / len(gold),
-            &#x27;hit&#x27;: int(bool(ranks)), &#x27;rr&#x27;: 1 / min(ranks) if ranks else 0.0}
+    return {'recall': len(set(ranked) &amp; gold) / len(gold),
+            'hit': int(bool(ranks)), 'rr': 1 / min(ranks) if ranks else 0.0}
 
 
 def rrf(rankings, c=60):
     if c &lt; 0:
-        raise ValueError(&#x27;c must be nonnegative&#x27;)
+        raise ValueError('c must be nonnegative')
     scores = Counter()
     for ranking in rankings:
         for rank, item in enumerate(dict.fromkeys(ranking), 1):
@@ -103,15 +104,15 @@ def rrf(rankings, c=60):
 
 
 def paired_bootstrap(a, b, repeats=2000, seed=7):
-    &quot;&quot;&quot;Percentile interval of mean(B-A), resampling paired task indices.&quot;&quot;&quot;
+    """Percentile interval of mean(B-A), resampling paired task indices."""
     if not a or len(a) != len(b) or repeats &lt; 20:
-        raise ValueError(&#x27;need equal nonempty paired samples and &gt;=20 repeats&#x27;)
+        raise ValueError('need equal nonempty paired samples and &gt;=20 repeats')
     rng = random.Random(seed)
     delta = [y - x for x, y in zip(a, b)]
     samples = sorted(sum(rng.choice(delta) for _ in delta) / len(delta) for _ in range(repeats))
-    return {&#x27;difference&#x27;: sum(delta) / len(delta),
-            &#x27;ci95&#x27;: [samples[int(0.025 * (repeats - 1))], samples[int(0.975 * (repeats - 1))]],
-            &#x27;n&#x27;: len(delta), &#x27;seed&#x27;: seed}
+    return {'difference': sum(delta) / len(delta),
+            'ci95': [samples[int(0.025 * (repeats - 1))], samples[int(0.975 * (repeats - 1))]],
+            'n': len(delta), 'seed': seed}
 
 
 class ToolError(ValueError):
@@ -120,19 +121,19 @@ class ToolError(ValueError):
 
 def _exact_keys(value, expected):
     if not isinstance(value, dict) or set(value) != set(expected):
-        raise ToolError(&#x27;argument keys do not match schema&#x27;)
+        raise ToolError('argument keys do not match schema')
 
 
 def calculate(expression):
-    &quot;&quot;&quot;Bounded arithmetic AST, never Python eval; intentionally excludes powers.&quot;&quot;&quot;
+    """Bounded arithmetic AST, never Python eval; intentionally excludes powers."""
     if not isinstance(expression, str) or not 1 &lt;= len(expression) &lt;= 128:
-        raise ToolError(&#x27;expression must be 1..128 characters&#x27;)
+        raise ToolError('expression must be 1..128 characters')
     try:
-        tree = ast.parse(expression, mode=&#x27;eval&#x27;)
+        tree = ast.parse(expression, mode='eval')
     except (SyntaxError, RecursionError) as exc:
-        raise ToolError(&#x27;invalid arithmetic syntax&#x27;) from exc
+        raise ToolError('invalid arithmetic syntax') from exc
     if sum(1 for _ in ast.walk(tree)) &gt; 32:
-        raise ToolError(&#x27;expression too complex&#x27;)
+        raise ToolError('expression too complex')
     binary = {ast.Add: operator.add, ast.Sub: operator.sub, ast.Mult: operator.mul, ast.Div: operator.truediv}
     unary = {ast.UAdd: operator.pos, ast.USub: operator.neg}
 
@@ -143,104 +144,104 @@ def calculate(expression):
             try:
                 value = binary[type(node.op)](visit(node.left), visit(node.right))
             except (ArithmeticError, OverflowError) as exc:
-                raise ToolError(&#x27;arithmetic failure&#x27;) from exc
+                raise ToolError('arithmetic failure') from exc
         elif isinstance(node, ast.UnaryOp) and type(node.op) in unary:
             value = unary[type(node.op)](visit(node.operand))
         else:
-            raise ToolError(&#x27;operator or value not allowed&#x27;)
+            raise ToolError('operator or value not allowed')
         try:
             valid = math.isfinite(value) and abs(value) &lt;= 1e9
         except OverflowError:
             valid = False
         if not valid:
-            raise ToolError(&#x27;numeric bound exceeded&#x27;)
+            raise ToolError('numeric bound exceeded')
         return value
     return visit(tree.body)
 
 
 def validate_config(config):
-    _exact_keys(config, (&#x27;timeout_ms&#x27;, &#x27;retries&#x27;))
+    _exact_keys(config, ('timeout_ms', 'retries'))
     errors = []
-    if type(config[&#x27;timeout_ms&#x27;]) is not int or not 1 &lt;= config[&#x27;timeout_ms&#x27;] &lt;= 120000:
-        errors.append(&#x27;timeout_ms must be an integer in [1,120000]&#x27;)
-    if type(config[&#x27;retries&#x27;]) is not int or not 0 &lt;= config[&#x27;retries&#x27;] &lt;= 5:
-        errors.append(&#x27;retries must be an integer in [0,5]&#x27;)
-    return {&#x27;valid&#x27;: not errors, &#x27;errors&#x27;: errors}
+    if type(config['timeout_ms']) is not int or not 1 &lt;= config['timeout_ms'] &lt;= 120000:
+        errors.append('timeout_ms must be an integer in [1,120000]')
+    if type(config['retries']) is not int or not 0 &lt;= config['retries'] &lt;= 5:
+        errors.append('retries must be an integer in [0,5]')
+    return {'valid': not errors, 'errors': errors}
 
 
 def execute_tool(name, arguments, index, allowed_version):
-    if name == &#x27;lookup&#x27;:
-        _exact_keys(arguments, (&#x27;query&#x27;, &#x27;version&#x27;))
-        if arguments[&#x27;version&#x27;] != allowed_version:
-            raise ToolError(&#x27;version outside request scope&#x27;)
-        if not isinstance(arguments[&#x27;query&#x27;], str) or not 1 &lt;= len(arguments[&#x27;query&#x27;]) &lt;= 2000:
-            raise ToolError(&#x27;query length invalid&#x27;)
-        return index.search(arguments[&#x27;query&#x27;], allowed_version, 3)
-    if name == &#x27;calculate&#x27;:
-        _exact_keys(arguments, (&#x27;expression&#x27;,))
-        return {&#x27;value&#x27;: calculate(arguments[&#x27;expression&#x27;])}
-    if name == &#x27;validate_config&#x27;:
-        _exact_keys(arguments, (&#x27;config&#x27;,))
-        return validate_config(arguments[&#x27;config&#x27;])
-    raise ToolError(&#x27;unknown tool&#x27;)
+    if name == 'lookup':
+        _exact_keys(arguments, ('query', 'version'))
+        if arguments['version'] != allowed_version:
+            raise ToolError('version outside request scope')
+        if not isinstance(arguments['query'], str) or not 1 &lt;= len(arguments['query']) &lt;= 2000:
+            raise ToolError('query length invalid')
+        return index.search(arguments['query'], allowed_version, 3)
+    if name == 'calculate':
+        _exact_keys(arguments, ('expression',))
+        return {'value': calculate(arguments['expression'])}
+    if name == 'validate_config':
+        _exact_keys(arguments, ('config',))
+        return validate_config(arguments['config'])
+    raise ToolError('unknown tool')
 
 
-def run_agent(question, planner, version=&#x27;2&#x27;, max_steps=4, index=None):
-    &quot;&quot;&quot;Synchronous controller: step-bounded, not a wall-clock sandbox.
+def run_agent(question, planner, version='2', max_steps=4, index=None):
+    """Synchronous controller: step-bounded, not a wall-clock sandbox.
 
     Model planners must implement their own generation timeout/cancellation.
     Final citations are checked for existence in prior lookup observations only.
-    &quot;&quot;&quot;
-    if version not in (&#x27;1&#x27;, &#x27;2&#x27;) or type(max_steps) is not int or not 1 &lt;= max_steps &lt;= 20:
-        raise ValueError(&#x27;invalid request scope or step budget&#x27;)
+    """
+    if version not in ('1', '2') or type(max_steps) is not int or not 1 &lt;= max_steps &lt;= 20:
+        raise ValueError('invalid request scope or step budget')
     index = index or LexicalIndex(load_docs())
     observations, trace, evidence = [], [], set()
     for step in range(max_steps):
-        state = {&#x27;question&#x27;: question, &#x27;version&#x27;: version, &#x27;step&#x27;: step,
-                 &#x27;observations&#x27;: json.loads(json.dumps(observations))}
+        state = {'question': question, 'version': version, 'step': step,
+                 'observations': json.loads(json.dumps(observations))}
         try:
             proposal = planner(state)
         except Exception as exc:
-            return {&#x27;status&#x27;: &#x27;planner_error&#x27;, &#x27;trace&#x27;: trace, &#x27;error&#x27;: type(exc).__name__}
+            return {'status': 'planner_error', 'trace': trace, 'error': type(exc).__name__}
         try:
             if not isinstance(proposal, dict):
-                raise ToolError(&#x27;proposal must be an object&#x27;)
-            if proposal.get(&#x27;type&#x27;) == &#x27;final&#x27;:
-                _exact_keys(proposal, (&#x27;type&#x27;, &#x27;answer&#x27;, &#x27;citations&#x27;))
-                if not isinstance(proposal[&#x27;answer&#x27;], str) or len(proposal[&#x27;answer&#x27;]) &gt; 8000:
-                    raise ToolError(&#x27;invalid answer&#x27;)
-                ids = proposal[&#x27;citations&#x27;]
+                raise ToolError('proposal must be an object')
+            if proposal.get('type') == 'final':
+                _exact_keys(proposal, ('type', 'answer', 'citations'))
+                if not isinstance(proposal['answer'], str) or len(proposal['answer']) &gt; 8000:
+                    raise ToolError('invalid answer')
+                ids = proposal['citations']
                 if not isinstance(ids, list) or any(not isinstance(i, str) for i in ids):
-                    raise ToolError(&#x27;invalid citations&#x27;)
+                    raise ToolError('invalid citations')
                 if not set(ids) &lt;= evidence:
-                    raise ToolError(&#x27;citation not in observed evidence&#x27;)
-                return {&#x27;status&#x27;: &#x27;completed&#x27;, &#x27;answer&#x27;: proposal[&#x27;answer&#x27;],
-                        &#x27;citations&#x27;: ids, &#x27;trace&#x27;: trace, &#x27;grounding_verified&#x27;: False}
-            _exact_keys(proposal, (&#x27;type&#x27;, &#x27;name&#x27;, &#x27;arguments&#x27;))
-            if proposal[&#x27;type&#x27;] != &#x27;tool&#x27;:
-                raise ToolError(&#x27;unknown proposal type&#x27;)
-            result = execute_tool(proposal[&#x27;name&#x27;], proposal[&#x27;arguments&#x27;], index, version)
-            if proposal[&#x27;name&#x27;] == &#x27;lookup&#x27;:
-                evidence.update(d[&#x27;id&#x27;] for d in result)
-            event = {&#x27;step&#x27;: step, &#x27;name&#x27;: proposal[&#x27;name&#x27;], &#x27;arguments&#x27;: proposal[&#x27;arguments&#x27;], &#x27;result&#x27;: result}
+                    raise ToolError('citation not in observed evidence')
+                return {'status': 'completed', 'answer': proposal['answer'],
+                        'citations': ids, 'trace': trace, 'grounding_verified': False}
+            _exact_keys(proposal, ('type', 'name', 'arguments'))
+            if proposal['type'] != 'tool':
+                raise ToolError('unknown proposal type')
+            result = execute_tool(proposal['name'], proposal['arguments'], index, version)
+            if proposal['name'] == 'lookup':
+                evidence.update(d['id'] for d in result)
+            event = {'step': step, 'name': proposal['name'], 'arguments': proposal['arguments'], 'result': result}
             trace.append(event)
-            observations.append({&#x27;name&#x27;: proposal[&#x27;name&#x27;], &#x27;result&#x27;: json.dumps(result)[:4096]})
+            observations.append({'name': proposal['name'], 'result': json.dumps(result)[:4096]})
         except ToolError as exc:
-            return {&#x27;status&#x27;: &#x27;invalid_action&#x27;, &#x27;trace&#x27;: trace, &#x27;error&#x27;: str(exc)}
-    return {&#x27;status&#x27;: &#x27;budget_exhausted&#x27;, &#x27;trace&#x27;: trace}
+            return {'status': 'invalid_action', 'trace': trace, 'error': str(exc)}
+    return {'status': 'budget_exhausted', 'trace': trace}
 
 
 def make_manifest(extra=None):
-    return {&#x27;course_version&#x27;: &#x27;1.0&#x27;, &#x27;corpus_sha256&#x27;: sha256_file(ROOT / &#x27;data&#x27; / &#x27;docs.json&#x27;),
-            &#x27;retriever&#x27;: &#x27;bm25_reference_v1&#x27;, &#x27;generator&#x27;: &#x27;lexical_extractor_not_llm&#x27;,
+    return {'course_version': '1.0', 'corpus_sha256': sha256_file(ROOT / 'data' / 'docs.json'),
+            'retriever': 'bm25_reference_v1', 'generator': 'lexical_extractor_not_llm',
             **(extra or {})}
 
 
 def verify_manifest(manifest):
-    if manifest[&#x27;corpus_sha256&#x27;] != sha256_file(ROOT / &#x27;data&#x27; / &#x27;docs.json&#x27;):
-        raise ValueError(&#x27;corpus hash mismatch; rebuild/re-evaluate dependent artifacts&#x27;)
+    if manifest['corpus_sha256'] != sha256_file(ROOT / 'data' / 'docs.json'):
+        raise ValueError('corpus hash mismatch; rebuild/re-evaluate dependent artifacts')
     return True
-</code></pre></div></details><details class="setup-details" id="coursekit-server-py"><summary>Local API · coursekit/server.py</summary><div class="code-block"><div class="code-bar"><span>Python</span><button type="button" class="copy-code">Copy code</button></div><pre><code>&quot;&quot;&quot;Local instructional HTTP API. No authentication; binds to loopback only.&quot;&quot;&quot;
+</code></pre></div></details><details class="setup-details" id="coursekit-server-py"><summary>Local API · coursekit/server.py</summary><div class="code-block"><div class="code-bar"><span>Python</span><button class="copy-code" type="button">Copy code</button></div><pre><code>"""Local instructional HTTP API. No authentication; binds to loopback only."""
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 import json
 from .core import extract_answer, LexicalIndex, load_docs
@@ -250,48 +251,48 @@ INDEX = LexicalIndex(load_docs())
 
 class Handler(BaseHTTPRequestHandler):
     def send_json(self, status, body):
-        payload = json.dumps(body).encode(&#x27;utf-8&#x27;)
+        payload = json.dumps(body).encode('utf-8')
         self.send_response(status)
-        self.send_header(&#x27;Content-Type&#x27;, &#x27;application/json; charset=utf-8&#x27;)
-        self.send_header(&#x27;Content-Length&#x27;, str(len(payload)))
+        self.send_header('Content-Type', 'application/json; charset=utf-8')
+        self.send_header('Content-Length', str(len(payload)))
         self.end_headers()
         self.wfile.write(payload)
 
     def do_GET(self):
-        self.send_json(200 if self.path == &#x27;/health&#x27; else 404,
-                       {&#x27;status&#x27;: &#x27;ok&#x27;} if self.path == &#x27;/health&#x27; else {&#x27;error&#x27;: &#x27;not found&#x27;})
+        self.send_json(200 if self.path == '/health' else 404,
+                       {'status': 'ok'} if self.path == '/health' else {'error': 'not found'})
 
     def do_POST(self):
-        if self.path != &#x27;/ask&#x27;:
-            self.send_json(404, {&#x27;error&#x27;: &#x27;not found&#x27;})
+        if self.path != '/ask':
+            self.send_json(404, {'error': 'not found'})
             return
         try:
-            length = int(self.headers.get(&#x27;Content-Length&#x27;, &#x27;0&#x27;))
+            length = int(self.headers.get('Content-Length', '0'))
             if not 1 &lt;= length &lt;= 65536:
-                self.send_json(413, {&#x27;error&#x27;: &#x27;request size invalid&#x27;})
+                self.send_json(413, {'error': 'request size invalid'})
                 return
             self.connection.settimeout(5)
             data = json.loads(self.rfile.read(length))
-            if not isinstance(data, dict) or not set(data) &lt;= {&#x27;question&#x27;, &#x27;version&#x27;}:
-                raise ValueError(&#x27;invalid fields&#x27;)
-            question, version = data.get(&#x27;question&#x27;), data.get(&#x27;version&#x27;, &#x27;2&#x27;)
+            if not isinstance(data, dict) or not set(data) &lt;= {'question', 'version'}:
+                raise ValueError('invalid fields')
+            question, version = data.get('question'), data.get('version', '2')
             if not isinstance(question, str) or not 1 &lt;= len(question) &lt;= 2000:
-                raise ValueError(&#x27;question must contain 1..2000 characters&#x27;)
-            if version not in (&#x27;1&#x27;, &#x27;2&#x27;, &#x27;all&#x27;):
-                raise ValueError(&#x27;invalid version&#x27;)
+                raise ValueError('question must contain 1..2000 characters')
+            if version not in ('1', '2', 'all'):
+                raise ValueError('invalid version')
             self.send_json(200, extract_answer(question, INDEX, version))
         except (ValueError, TypeError, TimeoutError) as exc:
-            self.send_json(400, {&#x27;error&#x27;: str(exc)})
+            self.send_json(400, {'error': str(exc)})
 
     def log_message(self, fmt, *args):
         # Avoid logging request bodies; extend with request IDs in lab 14.
         pass
 
 
-if __name__ == &#x27;__main__&#x27;:
-    print(&#x27;Instructional extraction API: http://127.0.0.1:8000&#x27;)
-    ThreadingHTTPServer((&#x27;127.0.0.1&#x27;, 8000), Handler).serve_forever()
-</code></pre></div></details><details class="setup-details" id="tests-test_contracts-py"><summary>Contract tests · tests/test_contracts.py</summary><div class="code-block"><div class="code-bar"><span>Python</span><button type="button" class="copy-code">Copy code</button></div><pre><code>import unittest
+if __name__ == '__main__':
+    print('Instructional extraction API: http://127.0.0.1:8000')
+    ThreadingHTTPServer(('127.0.0.1', 8000), Handler).serve_forever()
+</code></pre></div></details><details class="setup-details" id="tests-test_contracts-py"><summary>Contract tests · tests/test_contracts.py</summary><div class="code-block"><div class="code-bar"><span>Python</span><button class="copy-code" type="button">Copy code</button></div><pre><code>import unittest
 from coursekit.core import (LexicalIndex, load_docs, retrieval_metrics, rrf, paired_bootstrap,
                             calculate, ToolError, validate_config, run_agent, make_manifest, verify_manifest)
 
@@ -301,129 +302,129 @@ class RetrievalTests(unittest.TestCase):
         self.index = LexicalIndex(load_docs())
 
     def test_version_filter_prevents_cross_version_evidence(self):
-        for version in (&#x27;1&#x27;, &#x27;2&#x27;):
-            hits = self.index.search(&#x27;default request timeout&#x27;, version)
+        for version in ('1', '2'):
+            hits = self.index.search('default request timeout', version)
             self.assertTrue(hits)
-            self.assertTrue(all(d[&#x27;version&#x27;] == version for d in hits))
+            self.assertTrue(all(d['version'] == version for d in hits))
 
     def test_comparison_can_retrieve_both_versions(self):
-        ids = {d[&#x27;id&#x27;] for d in self.index.search(&#x27;default request timeout&#x27;, &#x27;all&#x27;, 5)}
-        self.assertTrue({&#x27;timeout-v1&#x27;, &#x27;timeout-v2&#x27;} &lt;= ids)
+        ids = {d['id'] for d in self.index.search('default request timeout', 'all', 5)}
+        self.assertTrue({'timeout-v1', 'timeout-v2'} &lt;= ids)
 
     def test_no_matching_term_has_no_evidence(self):
-        self.assertEqual(self.index.search(&#x27;zzzzzzzzzz&#x27;, &#x27;2&#x27;), [])
+        self.assertEqual(self.index.search('zzzzzzzzzz', '2'), [])
 
     def test_duplicate_ids_rejected(self):
         with self.assertRaises(ValueError):
             LexicalIndex([load_docs()[0], load_docs()[0]])
 
     def test_recall_differs_from_hit(self):
-        m = retrieval_metrics([&#x27;C&#x27;, &#x27;A&#x27;, &#x27;D&#x27;], [&#x27;A&#x27;, &#x27;B&#x27;], 3)
-        self.assertEqual(m, {&#x27;recall&#x27;: .5, &#x27;hit&#x27;: 1, &#x27;rr&#x27;: .5})
+        m = retrieval_metrics(['C', 'A', 'D'], ['A', 'B'], 3)
+        self.assertEqual(m, {'recall': .5, 'hit': 1, 'rr': .5})
 
     def test_duplicate_ranks_do_not_inflate_recall(self):
-        self.assertEqual(retrieval_metrics([&#x27;A&#x27;, &#x27;A&#x27;], [&#x27;A&#x27;, &#x27;B&#x27;], 2)[&#x27;recall&#x27;], .5)
+        self.assertEqual(retrieval_metrics(['A', 'A'], ['A', 'B'], 2)['recall'], .5)
 
     def test_unanswerable_recall_is_not_defined(self):
-        self.assertIsNone(retrieval_metrics([&#x27;A&#x27;], [], 1)[&#x27;recall&#x27;])
+        self.assertIsNone(retrieval_metrics(['A'], [], 1)['recall'])
 
     def test_rrf_can_favor_consensus(self):
-        left = [&#x27;A&#x27;, &#x27;B&#x27;]
-        right = [&#x27;C&#x27;, &#x27;B&#x27;] + [&#x27;x&#x27;+str(i) for i in range(7)] + [&#x27;A&#x27;]
-        self.assertEqual(rrf([left, right])[0][0], &#x27;B&#x27;)
+        left = ['A', 'B']
+        right = ['C', 'B'] + ['x'+str(i) for i in range(7)] + ['A']
+        self.assertEqual(rrf([left, right])[0][0], 'B')
 
     def test_bootstrap_uses_paired_difference(self):
         r = paired_bootstrap([0, 1, 0, 1], [1, 1, 1, 1], repeats=100)
-        self.assertEqual(r[&#x27;difference&#x27;], .5)
-        self.assertLessEqual(r[&#x27;ci95&#x27;][0], r[&#x27;difference&#x27;])
-        self.assertGreaterEqual(r[&#x27;ci95&#x27;][1], r[&#x27;difference&#x27;])
+        self.assertEqual(r['difference'], .5)
+        self.assertLessEqual(r['ci95'][0], r['difference'])
+        self.assertGreaterEqual(r['ci95'][1], r['difference'])
 
 
 class ToolTests(unittest.TestCase):
     def test_arithmetic(self):
-        self.assertEqual(calculate(&#x27;100+200+400&#x27;), 700)
-        self.assertEqual(calculate(&#x27;-(3+1)/2&#x27;), -2)
+        self.assertEqual(calculate('100+200+400'), 700)
+        self.assertEqual(calculate('-(3+1)/2'), -2)
 
     def test_code_execution_syntax_rejected(self):
-        for text in [&quot;__import__(&#x27;os&#x27;)&quot;, &#x27;x+1&#x27;, &#x27;True+1&#x27;, &#x27;2**10&#x27;, &#x27;[1][0]&#x27;]:
+        for text in ["__import__('os')", 'x+1', 'True+1', '2**10', '[1][0]']:
             with self.subTest(text=text), self.assertRaises(ToolError):
                 calculate(text)
 
     def test_division_zero_and_numeric_bounds(self):
-        for text in [&#x27;1/0&#x27;, &#x27;1e100&#x27;, &#x27;999999999*999999999&#x27;]:
+        for text in ['1/0', '1e100', '999999999*999999999']:
             with self.subTest(text=text), self.assertRaises(ToolError):
                 calculate(text)
 
     def test_complexity_bound(self):
         with self.assertRaises(ToolError):
-            calculate(&#x27;+&#x27;.join([&#x27;1&#x27;] * 30))
+            calculate('+'.join(['1'] * 30))
 
     def test_config_types_and_boundaries(self):
-        self.assertTrue(validate_config({&#x27;timeout_ms&#x27;: 1, &#x27;retries&#x27;: 0})[&#x27;valid&#x27;])
-        self.assertTrue(validate_config({&#x27;timeout_ms&#x27;: 120000, &#x27;retries&#x27;: 5})[&#x27;valid&#x27;])
-        self.assertFalse(validate_config({&#x27;timeout_ms&#x27;: True, &#x27;retries&#x27;: 0})[&#x27;valid&#x27;])
-        self.assertFalse(validate_config({&#x27;timeout_ms&#x27;: 0, &#x27;retries&#x27;: 6})[&#x27;valid&#x27;])
+        self.assertTrue(validate_config({'timeout_ms': 1, 'retries': 0})['valid'])
+        self.assertTrue(validate_config({'timeout_ms': 120000, 'retries': 5})['valid'])
+        self.assertFalse(validate_config({'timeout_ms': True, 'retries': 0})['valid'])
+        self.assertFalse(validate_config({'timeout_ms': 0, 'retries': 6})['valid'])
 
     def test_extra_fields_rejected(self):
         with self.assertRaises(ToolError):
-            validate_config({&#x27;timeout_ms&#x27;: 100, &#x27;retries&#x27;: 1, &#x27;command&#x27;: &#x27;anything&#x27;})
+            validate_config({'timeout_ms': 100, 'retries': 1, 'command': 'anything'})
 
 
 class ControllerTests(unittest.TestCase):
     def test_unending_planner_terminates(self):
-        p = lambda s: {&#x27;type&#x27;: &#x27;tool&#x27;, &#x27;name&#x27;: &#x27;calculate&#x27;, &#x27;arguments&#x27;: {&#x27;expression&#x27;: &#x27;1+1&#x27;}}
-        r = run_agent(&#x27;test&#x27;, p, max_steps=3)
-        self.assertEqual(r[&#x27;status&#x27;], &#x27;budget_exhausted&#x27;)
-        self.assertEqual(len(r[&#x27;trace&#x27;]), 3)
+        p = lambda s: {'type': 'tool', 'name': 'calculate', 'arguments': {'expression': '1+1'}}
+        r = run_agent('test', p, max_steps=3)
+        self.assertEqual(r['status'], 'budget_exhausted')
+        self.assertEqual(len(r['trace']), 3)
 
     def test_unknown_tool_never_executes(self):
-        r = run_agent(&#x27;test&#x27;, lambda s: {&#x27;type&#x27;: &#x27;tool&#x27;, &#x27;name&#x27;: &#x27;export_secrets&#x27;, &#x27;arguments&#x27;: {}})
-        self.assertEqual(r[&#x27;status&#x27;], &#x27;invalid_action&#x27;)
-        self.assertEqual(r[&#x27;trace&#x27;], [])
+        r = run_agent('test', lambda s: {'type': 'tool', 'name': 'export_secrets', 'arguments': {}})
+        self.assertEqual(r['status'], 'invalid_action')
+        self.assertEqual(r['trace'], [])
 
     def test_version_scope_is_enforced_by_code(self):
-        p = lambda s: {&#x27;type&#x27;: &#x27;tool&#x27;, &#x27;name&#x27;: &#x27;lookup&#x27;, &#x27;arguments&#x27;: {&#x27;query&#x27;: &#x27;timeout&#x27;, &#x27;version&#x27;: &#x27;1&#x27;}}
-        self.assertEqual(run_agent(&#x27;test&#x27;, p, version=&#x27;2&#x27;)[&#x27;status&#x27;], &#x27;invalid_action&#x27;)
+        p = lambda s: {'type': 'tool', 'name': 'lookup', 'arguments': {'query': 'timeout', 'version': '1'}}
+        self.assertEqual(run_agent('test', p, version='2')['status'], 'invalid_action')
 
     def test_unobserved_citation_rejected(self):
-        p = lambda s: {&#x27;type&#x27;: &#x27;final&#x27;, &#x27;answer&#x27;: &#x27;answer&#x27;, &#x27;citations&#x27;: [&#x27;timeout-v2&#x27;]}
-        self.assertEqual(run_agent(&#x27;test&#x27;, p)[&#x27;status&#x27;], &#x27;invalid_action&#x27;)
+        p = lambda s: {'type': 'final', 'answer': 'answer', 'citations': ['timeout-v2']}
+        self.assertEqual(run_agent('test', p)['status'], 'invalid_action')
 
     def test_lookup_then_final(self):
         def planner(s):
-            if not s[&#x27;observations&#x27;]:
-                return {&#x27;type&#x27;: &#x27;tool&#x27;, &#x27;name&#x27;: &#x27;lookup&#x27;, &#x27;arguments&#x27;: {&#x27;query&#x27;: &#x27;default request timeout&#x27;, &#x27;version&#x27;: s[&#x27;version&#x27;]}}
-            return {&#x27;type&#x27;: &#x27;final&#x27;, &#x27;answer&#x27;: &#x27;The cited fixture contains the default.&#x27;, &#x27;citations&#x27;: [&#x27;timeout-v2&#x27;]}
-        r = run_agent(&#x27;default request timeout&#x27;, planner)
-        self.assertEqual(r[&#x27;status&#x27;], &#x27;completed&#x27;)
-        self.assertFalse(r[&#x27;grounding_verified&#x27;])
+            if not s['observations']:
+                return {'type': 'tool', 'name': 'lookup', 'arguments': {'query': 'default request timeout', 'version': s['version']}}
+            return {'type': 'final', 'answer': 'The cited fixture contains the default.', 'citations': ['timeout-v2']}
+        r = run_agent('default request timeout', planner)
+        self.assertEqual(r['status'], 'completed')
+        self.assertFalse(r['grounding_verified'])
 
     def test_malformed_planner_output(self):
-        self.assertEqual(run_agent(&#x27;test&#x27;, lambda s: &#x27;not an object&#x27;)[&#x27;status&#x27;], &#x27;invalid_action&#x27;)
+        self.assertEqual(run_agent('test', lambda s: 'not an object')['status'], 'invalid_action')
 
     def test_planner_exception_is_controlled(self):
         def planner(s):
-            raise RuntimeError(&#x27;failure&#x27;)
-        self.assertEqual(run_agent(&#x27;test&#x27;, planner)[&#x27;status&#x27;], &#x27;planner_error&#x27;)
+            raise RuntimeError('failure')
+        self.assertEqual(run_agent('test', planner)['status'], 'planner_error')
 
     def test_corpus_manifest_rejects_mismatch(self):
         m = make_manifest()
         self.assertTrue(verify_manifest(m))
-        m[&#x27;corpus_sha256&#x27;] = &#x27;bad&#x27;
+        m['corpus_sha256'] = 'bad'
         with self.assertRaises(ValueError):
             verify_manifest(m)
 
 
-if __name__ == &#x27;__main__&#x27;:
+if __name__ == '__main__':
     unittest.main()
-</code></pre></div></details><details class="setup-details" id="cuda-vector_add-cu"><summary>CUDA vector addition · cuda/vector_add.cu</summary><div class="code-block"><div class="code-bar"><span>CUDA C++</span><button type="button" class="copy-code">Copy code</button></div><pre><code>// Compile with nvcc -O2 vector_add.cu -o vector_add
+</code></pre></div></details><details class="setup-details" id="cuda-vector_add-cu"><summary>CUDA vector addition · cuda/vector_add.cu</summary><div class="code-block"><div class="code-bar"><span>CUDA C++</span><button class="copy-code" type="button">Copy code</button></div><pre><code>// Compile with nvcc -O2 vector_add.cu -o vector_add
 #include &lt;cuda_runtime.h&gt;
 #include &lt;cmath&gt;
 #include &lt;cstdio&gt;
 #include &lt;cstdlib&gt;
 #include &lt;vector&gt;
 #define CHECK(call) do { cudaError_t e=(call); if(e!=cudaSuccess) { \
-  std::fprintf(stderr,&quot;CUDA error: %s\n&quot;,cudaGetErrorString(e)); std::exit(1); }} while(0)
+  std::fprintf(stderr,"CUDA error: %s\n",cudaGetErrorString(e)); std::exit(1); }} while(0)
 __global__ void add(const float* a,const float* b,float* c,int n) {
   int i=blockIdx.x*blockDim.x+threadIdx.x;
   if(i&lt;n) c[i]=a[i]+b[i];
@@ -447,9 +448,9 @@ int main(int argc,char** argv) {
   float ms;CHECK(cudaEventElapsedTime(&amp;ms,start,stop));
   CHECK(cudaMemcpy(c.data(),dc,bytes,cudaMemcpyDeviceToHost));
   float worst=0;for(int i=0;i&lt;n;i++) worst=std::fmax(worst,std::fabs(c[i]-(a[i]+b[i])));
-  std::printf(&quot;n=%d mean_kernel_ms=%.6f max_absolute_error=%.8f transfers_excluded=1\n&quot;,n,ms/100,worst);
+  std::printf("n=%d mean_kernel_ms=%.6f max_absolute_error=%.8f transfers_excluded=1\n",n,ms/100,worst);
   CHECK(cudaEventDestroy(start));CHECK(cudaEventDestroy(stop));
   CHECK(cudaFree(da));CHECK(cudaFree(db));CHECK(cudaFree(dc));
   return worst&lt;1e-4f?0:3;
 }
-</code></pre></div></details></article></div><footer class="footer"><span>Applied AI · An independent self-study course</span><span>32 weeks · 10 hours per week</span><a href="resources.html#about-this-course">About and sources</a></footer></main><dialog class="search-dialog" aria-labelledby="search-title"><div class="dialog-head"><h2 id="search-title">Find a concept</h2><button class="search-close" type="button" aria-label="Close search">Close</button></div><label class="sr-only" for="course-search">Search all lectures and tutorials</label><input id="course-search" type="search" placeholder="Try attention, fine-tuning, or harness…" autocomplete="off"><p class="search-status" aria-live="polite">Search lecture notes, tutorials, tests and readings.</p><div class="search-results"></div></dialog><div class="toast" role="status" aria-live="polite"></div></body></html>
+</code></pre></div></details></article></div><footer class="footer"><span>Applied AI · An independent self-study course</span><span>32 weeks · 10 hours per week</span><a href="resources.html#about-this-course">About and sources</a></footer></main><dialog aria-labelledby="search-title" class="search-dialog"><div class="dialog-head"><h2 id="search-title">Find a concept</h2><button aria-label="Close search" class="search-close" type="button">Close</button></div><label class="sr-only" for="course-search">Search all lectures and tutorials</label><input autocomplete="off" id="course-search" placeholder="Try attention, fine-tuning, or harness…" type="search"/><p aria-live="polite" class="search-status">Search lecture notes, tutorials, tests and readings.</p><div class="search-results"></div></dialog><div aria-live="polite" class="toast" role="status"></div></body></html>

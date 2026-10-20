@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+
+<html lang="zh-HK"><head><script src="../assets/translations-zh-HK.js"></script><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/><title>參考 code · Applied AI</title><meta content="Applied generative AI and LLM systems course material" name="description"/><meta content="#173c36" name="theme-color"/><link href="../assets/favicon.svg" rel="icon" type="image/svg+xml"/><link href="../assets/style.css" rel="stylesheet"/><link href="../assets/slides.css" rel="stylesheet"/><script>window.COURSE_BASE="";</script><script defer="" src="../assets/site-config.js"></script><script defer="" src="assets/search-index.js"></script><script defer="" src="../assets/app.js"></script><script defer="" src="../assets/visuals.js"></script><script defer="" src="../assets/slides.js"></script><script defer="" src="../assets/beginner-visuals.js"></script><script defer="True" src="../assets/locale-patterns.js"></script><script defer="True" src="../assets/locale.js"></script><link href="../assets/bilingual.css" rel="stylesheet"/><link href="../implementation.html" hreflang="en" rel="alternate"/></head><body data-page-kind="tutorial" data-week="0"><a class="skip-link" href="#main">跳至內容</a><header class="topbar"><button aria-controls="course-sidebar" aria-expanded="false" class="menu-toggle" type="button">選單</button><a class="brand" href="index.html"><span aria-hidden="true" class="brand-mark">a<span>i</span></span><span>APPLIED AI<small>從原理到實踐</small></span></a><nav aria-label="主要導覽"><a href="index.html">課程</a><a href="visuals.html">互動圖解</a><a href="project.html">專題</a><a class="language-switch" href="../implementation.html" hreflang="en" lang="en">English</a></nav><button class="search-open" type="button">搜尋課程 <span aria-hidden="true">/</span></button></header><aside aria-label="課程章節" class="sidebar" id="course-sidebar"><a class="side-home" href="index.html">課程概覽</a><details class="semester-nav" open=""><summary>第一學期<span>第 1–16 週</span></summary><ol start="1"><li><a href="lectures/01.html"><span class="week-number">01</span><span>Language model 究竟在學甚麼</span><span class="week-tick" data-week-tick="1"></span></a></li><li><a href="lectures/02.html"><span class="week-number">02</span><span>從文字到 token 和數值 ID</span><span class="week-tick" data-week-tick="2"></span></a></li><li><a href="lectures/03.html"><span class="week-number">03</span><span>Word vector 能表達甚麼</span><span class="week-tick" data-week-tick="3"></span></a></li><li><a href="lectures/04.html"><span class="week-number">04</span><span>從 score 到 probability 和學習訊號</span><span class="week-tick" data-week-tick="4"></span></a></li><li><a href="lectures/05.html"><span class="week-number">05</span><span>為甚麼語言需要 context 和次序</span><span class="week-tick" data-week-tick="5"></span></a></li><li><a href="lectures/06.html"><span class="week-number">06</span><span>Attention 由 weighted mixture 開始</span><span class="week-tick" data-week-tick="6"></span></a></li><li><a href="lectures/07.html"><span class="week-number">07</span><span>Query、key 和 value 從何而來</span><span class="week-tick" data-week-tick="7"></span></a></li><li><a href="lectures/08.html"><span class="week-number">08</span><span>正確進行 attention scaling 和 masking</span><span class="week-tick" data-week-tick="8"></span></a></li><li><a href="lectures/09.html"><span class="week-number">09</span><span>多個 attention head 與位置</span><span class="week-tick" data-week-tick="9"></span></a></li><li><a href="lectures/10.html"><span class="week-number">10</span><span>逐步拆解 transformer block</span><span class="week-tick" data-week-tick="10"></span></a></li><li><a href="lectures/11.html"><span class="week-number">11</span><span>Encoder、decoder 與完整 model architecture</span><span class="week-tick" data-week-tick="11"></span></a></li><li><a href="lectures/12.html"><span class="week-number">12</span><span>訓練一個小型 transformer</span><span class="week-tick" data-week-tick="12"></span></a></li><li><a href="lectures/13.html"><span class="week-number">13</span><span>Generation、decoding 與 KV cache</span><span class="week-tick" data-week-tick="13"></span></a></li><li><a href="lectures/14.html"><span class="week-number">14</span><span>從 pretraining 到 instruction following 和 reasoning</span><span class="week-tick" data-week-tick="14"></span></a></li><li><a href="lectures/15.html"><span class="week-number">15</span><span>文字以外的 Generative AI</span><span class="week-tick" data-week-tick="15"></span></a></li><li><a href="lectures/16.html"><span class="week-number">16</span><span>完整 transformer 導覽與第一學期溫習</span><span class="week-tick" data-week-tick="16"></span></a></li></ol></details><details class="semester-nav"><summary>第二學期<span>第 17–32 週</span></summary><ol start="17"><li><a href="lectures/17.html"><span class="week-number">17</span><span>從 word vector 到 semantic search</span><span class="week-tick" data-week-tick="17"></span></a></li><li><a href="lectures/18.html"><span class="week-number">18</span><span>從一列 vector 建立 vector database</span><span class="week-tick" data-week-tick="18"></span></a></li><li><a href="lectures/19.html"><span class="week-number">19</span><span>把 RAG 理解為開卷作答</span><span class="week-tick" data-week-tick="19"></span></a></li><li><a href="lectures/20.html"><span class="week-number">20</span><span>在保持基本任務的前提下改善 RAG</span><span class="week-tick" data-week-tick="20"></span></a></li><li><a href="lectures/21.html"><span class="week-number">21</span><span>評估 retrieval、答案與 uncertainty</span><span class="week-tick" data-week-tick="21"></span></a></li><li><a href="lectures/22.html"><span class="week-number">22</span><span>CPU、GPU、memory 與 model 資源計算</span><span class="week-tick" data-week-tick="22"></span></a></li><li><a href="lectures/23.html"><span class="week-number">23</span><span>CUDA kernel 與 profiling</span><span class="week-tick" data-week-tick="23"></span></a></li><li><a href="lectures/24.html"><span class="week-number">24</span><span>Fine-tuning 由教學 dataset 開始</span><span class="week-tick" data-week-tick="24"></span></a></li><li><a href="lectures/25.html"><span class="week-number">25</span><span>從小型 matrix 理解 LoRA 和 QLoRA</span><span class="week-tick" data-week-tick="25"></span></a></li><li><a href="lectures/26.html"><span class="week-number">26</span><span>Fine-tuning 實驗、preference 與 distillation</span><span class="week-tick" data-week-tick="26"></span></a></li><li><a href="lectures/27.html"><span class="week-number">27</span><span>Tool、function、workflow 與 agent</span><span class="week-tick" data-week-tick="27"></span></a></li><li><a href="lectures/28.html"><span class="week-number">28</span><span>Harness、planning、memory 與有界執行</span><span class="week-tick" data-week-tick="28"></span></a></li><li><a href="lectures/29.html"><span class="week-number">29</span><span>從 notebook 到 MLOps 和 inference serving</span><span class="week-tick" data-week-tick="29"></span></a></li><li><a href="lectures/30.html"><span class="week-number">30</span><span>Monitoring、security、regression test 與 rollback</span><span class="week-tick" data-week-tick="30"></span></a></li><li><a href="lectures/31.html"><span class="week-number">31</span><span>整合文件助手與進階延伸</span><span class="week-tick" data-week-tick="31"></span></a></li><li><a href="lectures/32.html"><span class="week-number">32</span><span>溫習、答辯與持續學習計劃</span><span class="week-tick" data-week-tick="32"></span></a></li></ol></details><div class="side-links"><a href="visuals.html">互動圖解實驗室 <span>14 個互動課節</span></a><a href="project.html">文件助手 <span>你的 capstone project</span></a><a href="resources.html">閱讀材料與環境設定</a></div><div class="side-progress"><div><span>你的進度</span><strong data-progress-count="">0 / 32</strong></div><progress aria-label="已完成 lecture" max="32" value="0"></progress><small>儲存在這個瀏覽器</small></div></aside><main class="main" id="main"><div class="content"><div class="chapter-header"><div class="eyebrow">查看實作</div><h1>參考 code</h1><p class="deck">Tutorial 背後的小型、易讀元件。這些 code 範例不會在網站執行。</p></div><article class="prose"><details class="setup-details" id="coursekit-core-py"><summary>Retrieval metric、tool 與 controller · coursekit/core.py</summary><div class="code-block"><div class="code-bar"><span>Python</span><button class="copy-code" type="button">複製 code</button></div><pre><code>"""Retrieval, evaluation and a bounded tool controller.
+
+This is an educational baseline. Lexical extraction is not LLM generation,
+and structural citation validation is not semantic grounding verification.
+"""
+import ast
+from collections import Counter
+import hashlib
+import json
+import math
+import operator
+from pathlib import Path
+import random
+import re
+import time
+
+ROOT = Path(__file__).resolve().parents[1]
+STOP = set('a an the is are of to in on for what how do does i it and with my can'.split())
+
+
+def load_docs():
+    return json.loads((ROOT / 'data' / 'docs.json').read_text(encoding='utf-8'))
+
+
+def tokens(text):
+    return [t for t in re.findall(r'[a-z0-9_]+', text.lower()) if t not in STOP]
+
+
+def sha256_file(path):
+    return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+
+
+class LexicalIndex:
+    """BM25 reference with filtering before scoring and stable tie ordering."""
+    def __init__(self, docs):
+        self.docs = list(docs)
+        if len({d['id'] for d in docs}) != len(docs):
+            raise ValueError('document IDs must be unique')
+        self.counts = [Counter(tokens(d['title'] + ' ' + d['text'])) for d in docs]
+        self.lengths = [sum(c.values()) for c in self.counts]
+        self.avgdl = sum(self.lengths) / max(1, len(docs))
+        self.df = Counter(t for c in self.counts for t in c)
+
+    def search(self, question, version='2', k=3):
+        if version not in ('1', '2', 'all'):
+            raise ValueError('version must be 1, 2 or all')
+        if type(k) is not int or not 1 &lt;= k &lt;= 100:
+            raise ValueError('k must be an integer in [1,100]')
+        query = set(tokens(question))
+        hits = []
+        n = len(self.docs)
+        for d, counts, length in zip(self.docs, self.counts, self.lengths):
+            if version != 'all' and d['version'] != version:
+                continue
+            score = 0.0
+            for term in query:
+                tf = counts[term]
+                if not tf:
+                    continue
+                idf = math.log(1 + (n - self.df[term] + 0.5) / (self.df[term] + 0.5))
+                score += idf * tf * 2.2 / (tf + 1.2 * (0.25 + 0.75 * length / self.avgdl))
+            if score &gt; 0:
+                hits.append({**d, 'score': score})
+        return sorted(hits, key=lambda d: (-d['score'], d['id']))[:k]
+
+
+def extract_answer(question, index=None, version='2', k=3):
+    """Evidence-only baseline. It can return irrelevant excerpts: assess relevance."""
+    index = index or LexicalIndex(load_docs())
+    start = time.perf_counter()
+    hits = index.search(question, version, k)
+    return {
+        'answer': '\n'.join(d['text'] for d in hits) if hits else 'Insufficient evidence in this version.',
+        'citations': [d['id'] for d in hits],
+        'version': version,
+        'status': 'evidence_found' if hits else 'insufficient_evidence',
+        'generator': 'lexical_extractor_not_llm',
+        'grounding_verified': False,
+        'latency_ms': (time.perf_counter() - start) * 1000,
+    }
+
+
+def retrieval_metrics(retrieved, relevant, k):
+    if type(k) is not int or k &lt; 1:
+        raise ValueError('k must be positive')
+    gold = set(relevant)
+    if not gold:
+        return {'recall': None, 'hit': None, 'rr': None}
+    ranked = list(dict.fromkeys(retrieved))[:k]
+    ranks = [i for i, item in enumerate(ranked, 1) if item in gold]
+    return {'recall': len(set(ranked) &amp; gold) / len(gold),
+            'hit': int(bool(ranks)), 'rr': 1 / min(ranks) if ranks else 0.0}
+
+
+def rrf(rankings, c=60):
+    if c &lt; 0:
+        raise ValueError('c must be nonnegative')
+    scores = Counter()
+    for ranking in rankings:
+        for rank, item in enumerate(dict.fromkeys(ranking), 1):
+            scores[item] += 1 / (c + rank)
+    return sorted(scores.items(), key=lambda x: (-x[1], x[0]))
+
+
+def paired_bootstrap(a, b, repeats=2000, seed=7):
+    """Percentile interval of mean(B-A), resampling paired task indices."""
+    if not a or len(a) != len(b) or repeats &lt; 20:
+        raise ValueError('need equal nonempty paired samples and &gt;=20 repeats')
+    rng = random.Random(seed)
+    delta = [y - x for x, y in zip(a, b)]
+    samples = sorted(sum(rng.choice(delta) for _ in delta) / len(delta) for _ in range(repeats))
+    return {'difference': sum(delta) / len(delta),
+            'ci95': [samples[int(0.025 * (repeats - 1))], samples[int(0.975 * (repeats - 1))]],
+            'n': len(delta), 'seed': seed}
+
+
+class ToolError(ValueError):
+    pass
+
+
+def _exact_keys(value, expected):
+    if not isinstance(value, dict) or set(value) != set(expected):
+        raise ToolError('argument keys do not match schema')
+
+
+def calculate(expression):
+    """Bounded arithmetic AST, never Python eval; intentionally excludes powers."""
+    if not isinstance(expression, str) or not 1 &lt;= len(expression) &lt;= 128:
+        raise ToolError('expression must be 1..128 characters')
+    try:
+        tree = ast.parse(expression, mode='eval')
+    except (SyntaxError, RecursionError) as exc:
+        raise ToolError('invalid arithmetic syntax') from exc
+    if sum(1 for _ in ast.walk(tree)) &gt; 32:
+        raise ToolError('expression too complex')
+    binary = {ast.Add: operator.add, ast.Sub: operator.sub, ast.Mult: operator.mul, ast.Div: operator.truediv}
+    unary = {ast.UAdd: operator.pos, ast.USub: operator.neg}
+
+    def visit(node):
+        if isinstance(node, ast.Constant) and type(node.value) in (int, float):
+            value = node.value
+        elif isinstance(node, ast.BinOp) and type(node.op) in binary:
+            try:
+                value = binary[type(node.op)](visit(node.left), visit(node.right))
+            except (ArithmeticError, OverflowError) as exc:
+                raise ToolError('arithmetic failure') from exc
+        elif isinstance(node, ast.UnaryOp) and type(node.op) in unary:
+            value = unary[type(node.op)](visit(node.operand))
+        else:
+            raise ToolError('operator or value not allowed')
+        try:
+            valid = math.isfinite(value) and abs(value) &lt;= 1e9
+        except OverflowError:
+            valid = False
+        if not valid:
+            raise ToolError('numeric bound exceeded')
+        return value
+    return visit(tree.body)
+
+
+def validate_config(config):
+    _exact_keys(config, ('timeout_ms', 'retries'))
+    errors = []
+    if type(config['timeout_ms']) is not int or not 1 &lt;= config['timeout_ms'] &lt;= 120000:
+        errors.append('timeout_ms must be an integer in [1,120000]')
+    if type(config['retries']) is not int or not 0 &lt;= config['retries'] &lt;= 5:
+        errors.append('retries must be an integer in [0,5]')
+    return {'valid': not errors, 'errors': errors}
+
+
+def execute_tool(name, arguments, index, allowed_version):
+    if name == 'lookup':
+        _exact_keys(arguments, ('query', 'version'))
+        if arguments['version'] != allowed_version:
+            raise ToolError('version outside request scope')
+        if not isinstance(arguments['query'], str) or not 1 &lt;= len(arguments['query']) &lt;= 2000:
+            raise ToolError('query length invalid')
+        return index.search(arguments['query'], allowed_version, 3)
+    if name == 'calculate':
+        _exact_keys(arguments, ('expression',))
+        return {'value': calculate(arguments['expression'])}
+    if name == 'validate_config':
+        _exact_keys(arguments, ('config',))
+        return validate_config(arguments['config'])
+    raise ToolError('unknown tool')
+
+
+def run_agent(question, planner, version='2', max_steps=4, index=None):
+    """Synchronous controller: step-bounded, not a wall-clock sandbox.
+
+    Model planners must implement their own generation timeout/cancellation.
+    Final citations are checked for existence in prior lookup observations only.
+    """
+    if version not in ('1', '2') or type(max_steps) is not int or not 1 &lt;= max_steps &lt;= 20:
+        raise ValueError('invalid request scope or step budget')
+    index = index or LexicalIndex(load_docs())
+    observations, trace, evidence = [], [], set()
+    for step in range(max_steps):
+        state = {'question': question, 'version': version, 'step': step,
+                 'observations': json.loads(json.dumps(observations))}
+        try:
+            proposal = planner(state)
+        except Exception as exc:
+            return {'status': 'planner_error', 'trace': trace, 'error': type(exc).__name__}
+        try:
+            if not isinstance(proposal, dict):
+                raise ToolError('proposal must be an object')
+            if proposal.get('type') == 'final':
+                _exact_keys(proposal, ('type', 'answer', 'citations'))
+                if not isinstance(proposal['answer'], str) or len(proposal['answer']) &gt; 8000:
+                    raise ToolError('invalid answer')
+                ids = proposal['citations']
+                if not isinstance(ids, list) or any(not isinstance(i, str) for i in ids):
+                    raise ToolError('invalid citations')
+                if not set(ids) &lt;= evidence:
+                    raise ToolError('citation not in observed evidence')
+                return {'status': 'completed', 'answer': proposal['answer'],
+                        'citations': ids, 'trace': trace, 'grounding_verified': False}
+            _exact_keys(proposal, ('type', 'name', 'arguments'))
+            if proposal['type'] != 'tool':
+                raise ToolError('unknown proposal type')
+            result = execute_tool(proposal['name'], proposal['arguments'], index, version)
+            if proposal['name'] == 'lookup':
+                evidence.update(d['id'] for d in result)
+            event = {'step': step, 'name': proposal['name'], 'arguments': proposal['arguments'], 'result': result}
+            trace.append(event)
+            observations.append({'name': proposal['name'], 'result': json.dumps(result)[:4096]})
+        except ToolError as exc:
+            return {'status': 'invalid_action', 'trace': trace, 'error': str(exc)}
+    return {'status': 'budget_exhausted', 'trace': trace}
+
+
+def make_manifest(extra=None):
+    return {'course_version': '1.0', 'corpus_sha256': sha256_file(ROOT / 'data' / 'docs.json'),
+            'retriever': 'bm25_reference_v1', 'generator': 'lexical_extractor_not_llm',
+            **(extra or {})}
+
+
+def verify_manifest(manifest):
+    if manifest['corpus_sha256'] != sha256_file(ROOT / 'data' / 'docs.json'):
+        raise ValueError('corpus hash mismatch; rebuild/re-evaluate dependent artifacts')
+    return True
+</code></pre></div></details><details class="setup-details" id="coursekit-server-py"><summary>本機 API · coursekit/server.py</summary><div class="code-block"><div class="code-bar"><span>Python</span><button class="copy-code" type="button">複製 code</button></div><pre><code>"""Local instructional HTTP API. No authentication; binds to loopback only."""
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+import json
+from .core import extract_answer, LexicalIndex, load_docs
+
+INDEX = LexicalIndex(load_docs())
+
+
+class Handler(BaseHTTPRequestHandler):
+    def send_json(self, status, body):
+        payload = json.dumps(body).encode('utf-8')
+        self.send_response(status)
+        self.send_header('Content-Type', 'application/json; charset=utf-8')
+        self.send_header('Content-Length', str(len(payload)))
+        self.end_headers()
+        self.wfile.write(payload)
+
+    def do_GET(self):
+        self.send_json(200 if self.path == '/health' else 404,
+                       {'status': 'ok'} if self.path == '/health' else {'error': 'not found'})
+
+    def do_POST(self):
+        if self.path != '/ask':
+            self.send_json(404, {'error': 'not found'})
+            return
+        try:
+            length = int(self.headers.get('Content-Length', '0'))
+            if not 1 &lt;= length &lt;= 65536:
+                self.send_json(413, {'error': 'request size invalid'})
+                return
+            self.connection.settimeout(5)
+            data = json.loads(self.rfile.read(length))
+            if not isinstance(data, dict) or not set(data) &lt;= {'question', 'version'}:
+                raise ValueError('invalid fields')
+            question, version = data.get('question'), data.get('version', '2')
+            if not isinstance(question, str) or not 1 &lt;= len(question) &lt;= 2000:
+                raise ValueError('question must contain 1..2000 characters')
+            if version not in ('1', '2', 'all'):
+                raise ValueError('invalid version')
+            self.send_json(200, extract_answer(question, INDEX, version))
+        except (ValueError, TypeError, TimeoutError) as exc:
+            self.send_json(400, {'error': str(exc)})
+
+    def log_message(self, fmt, *args):
+        # Avoid logging request bodies; extend with request IDs in lab 14.
+        pass
+
+
+if __name__ == '__main__':
+    print('Instructional extraction API: http://127.0.0.1:8000')
+    ThreadingHTTPServer(('127.0.0.1', 8000), Handler).serve_forever()
+</code></pre></div></details><details class="setup-details" id="tests-test_contracts-py"><summary>Contract test · tests/test_contracts.py</summary><div class="code-block"><div class="code-bar"><span>Python</span><button class="copy-code" type="button">複製 code</button></div><pre><code>import unittest
+from coursekit.core import (LexicalIndex, load_docs, retrieval_metrics, rrf, paired_bootstrap,
+                            calculate, ToolError, validate_config, run_agent, make_manifest, verify_manifest)
+
+
+class RetrievalTests(unittest.TestCase):
+    def setUp(self):
+        self.index = LexicalIndex(load_docs())
+
+    def test_version_filter_prevents_cross_version_evidence(self):
+        for version in ('1', '2'):
+            hits = self.index.search('default request timeout', version)
+            self.assertTrue(hits)
+            self.assertTrue(all(d['version'] == version for d in hits))
+
+    def test_comparison_can_retrieve_both_versions(self):
+        ids = {d['id'] for d in self.index.search('default request timeout', 'all', 5)}
+        self.assertTrue({'timeout-v1', 'timeout-v2'} &lt;= ids)
+
+    def test_no_matching_term_has_no_evidence(self):
+        self.assertEqual(self.index.search('zzzzzzzzzz', '2'), [])
+
+    def test_duplicate_ids_rejected(self):
+        with self.assertRaises(ValueError):
+            LexicalIndex([load_docs()[0], load_docs()[0]])
+
+    def test_recall_differs_from_hit(self):
+        m = retrieval_metrics(['C', 'A', 'D'], ['A', 'B'], 3)
+        self.assertEqual(m, {'recall': .5, 'hit': 1, 'rr': .5})
+
+    def test_duplicate_ranks_do_not_inflate_recall(self):
+        self.assertEqual(retrieval_metrics(['A', 'A'], ['A', 'B'], 2)['recall'], .5)
+
+    def test_unanswerable_recall_is_not_defined(self):
+        self.assertIsNone(retrieval_metrics(['A'], [], 1)['recall'])
+
+    def test_rrf_can_favor_consensus(self):
+        left = ['A', 'B']
+        right = ['C', 'B'] + ['x'+str(i) for i in range(7)] + ['A']
+        self.assertEqual(rrf([left, right])[0][0], 'B')
+
+    def test_bootstrap_uses_paired_difference(self):
+        r = paired_bootstrap([0, 1, 0, 1], [1, 1, 1, 1], repeats=100)
+        self.assertEqual(r['difference'], .5)
+        self.assertLessEqual(r['ci95'][0], r['difference'])
+        self.assertGreaterEqual(r['ci95'][1], r['difference'])
+
+
+class ToolTests(unittest.TestCase):
+    def test_arithmetic(self):
+        self.assertEqual(calculate('100+200+400'), 700)
+        self.assertEqual(calculate('-(3+1)/2'), -2)
+
+    def test_code_execution_syntax_rejected(self):
+        for text in ["__import__('os')", 'x+1', 'True+1', '2**10', '[1][0]']:
+            with self.subTest(text=text), self.assertRaises(ToolError):
+                calculate(text)
+
+    def test_division_zero_and_numeric_bounds(self):
+        for text in ['1/0', '1e100', '999999999*999999999']:
+            with self.subTest(text=text), self.assertRaises(ToolError):
+                calculate(text)
+
+    def test_complexity_bound(self):
+        with self.assertRaises(ToolError):
+            calculate('+'.join(['1'] * 30))
+
+    def test_config_types_and_boundaries(self):
+        self.assertTrue(validate_config({'timeout_ms': 1, 'retries': 0})['valid'])
+        self.assertTrue(validate_config({'timeout_ms': 120000, 'retries': 5})['valid'])
+        self.assertFalse(validate_config({'timeout_ms': True, 'retries': 0})['valid'])
+        self.assertFalse(validate_config({'timeout_ms': 0, 'retries': 6})['valid'])
+
+    def test_extra_fields_rejected(self):
+        with self.assertRaises(ToolError):
+            validate_config({'timeout_ms': 100, 'retries': 1, 'command': 'anything'})
+
+
+class ControllerTests(unittest.TestCase):
+    def test_unending_planner_terminates(self):
+        p = lambda s: {'type': 'tool', 'name': 'calculate', 'arguments': {'expression': '1+1'}}
+        r = run_agent('test', p, max_steps=3)
+        self.assertEqual(r['status'], 'budget_exhausted')
+        self.assertEqual(len(r['trace']), 3)
+
+    def test_unknown_tool_never_executes(self):
+        r = run_agent('test', lambda s: {'type': 'tool', 'name': 'export_secrets', 'arguments': {}})
+        self.assertEqual(r['status'], 'invalid_action')
+        self.assertEqual(r['trace'], [])
+
+    def test_version_scope_is_enforced_by_code(self):
+        p = lambda s: {'type': 'tool', 'name': 'lookup', 'arguments': {'query': 'timeout', 'version': '1'}}
+        self.assertEqual(run_agent('test', p, version='2')['status'], 'invalid_action')
+
+    def test_unobserved_citation_rejected(self):
+        p = lambda s: {'type': 'final', 'answer': 'answer', 'citations': ['timeout-v2']}
+        self.assertEqual(run_agent('test', p)['status'], 'invalid_action')
+
+    def test_lookup_then_final(self):
+        def planner(s):
+            if not s['observations']:
+                return {'type': 'tool', 'name': 'lookup', 'arguments': {'query': 'default request timeout', 'version': s['version']}}
+            return {'type': 'final', 'answer': 'The cited fixture contains the default.', 'citations': ['timeout-v2']}
+        r = run_agent('default request timeout', planner)
+        self.assertEqual(r['status'], 'completed')
+        self.assertFalse(r['grounding_verified'])
+
+    def test_malformed_planner_output(self):
+        self.assertEqual(run_agent('test', lambda s: 'not an object')['status'], 'invalid_action')
+
+    def test_planner_exception_is_controlled(self):
+        def planner(s):
+            raise RuntimeError('failure')
+        self.assertEqual(run_agent('test', planner)['status'], 'planner_error')
+
+    def test_corpus_manifest_rejects_mismatch(self):
+        m = make_manifest()
+        self.assertTrue(verify_manifest(m))
+        m['corpus_sha256'] = 'bad'
+        with self.assertRaises(ValueError):
+            verify_manifest(m)
+
+
+if __name__ == '__main__':
+    unittest.main()
+</code></pre></div></details><details class="setup-details" id="cuda-vector_add-cu"><summary>CUDA vector 相加 · cuda/vector_add.cu</summary><div class="code-block"><div class="code-bar"><span>CUDA C++</span><button class="copy-code" type="button">複製 code</button></div><pre><code>// Compile with nvcc -O2 vector_add.cu -o vector_add
+#include &lt;cuda_runtime.h&gt;
+#include &lt;cmath&gt;
+#include &lt;cstdio&gt;
+#include &lt;cstdlib&gt;
+#include &lt;vector&gt;
+#define CHECK(call) do { cudaError_t e=(call); if(e!=cudaSuccess) { \
+  std::fprintf(stderr,"CUDA error: %s\n",cudaGetErrorString(e)); std::exit(1); }} while(0)
+__global__ void add(const float* a,const float* b,float* c,int n) {
+  int i=blockIdx.x*blockDim.x+threadIdx.x;
+  if(i&lt;n) c[i]=a[i]+b[i];
+}
+int main(int argc,char** argv) {
+  int n=argc&gt;1?std::atoi(argv[1]):1048576;
+  if(n&lt;1||n&gt;16777216) return 2;
+  std::vector&lt;float&gt;a(n),b(n),c(n);
+  for(int i=0;i&lt;n;i++){a[i]=i*0.001f;b[i]=1.0f;}
+  float *da,*db,*dc;size_t bytes=n*sizeof(float);
+  CHECK(cudaMalloc((void**)&amp;da,bytes));CHECK(cudaMalloc((void**)&amp;db,bytes));CHECK(cudaMalloc((void**)&amp;dc,bytes));
+  CHECK(cudaMemcpy(da,a.data(),bytes,cudaMemcpyHostToDevice));
+  CHECK(cudaMemcpy(db,b.data(),bytes,cudaMemcpyHostToDevice));
+  int blocks=(n+255)/256;
+  for(int j=0;j&lt;10;j++) add&lt;&lt;&lt;blocks,256&gt;&gt;&gt;(da,db,dc,n);
+  CHECK(cudaGetLastError());CHECK(cudaDeviceSynchronize());
+  cudaEvent_t start,stop;CHECK(cudaEventCreate(&amp;start));CHECK(cudaEventCreate(&amp;stop));
+  CHECK(cudaEventRecord(start));
+  for(int j=0;j&lt;100;j++) add&lt;&lt;&lt;blocks,256&gt;&gt;&gt;(da,db,dc,n);
+  CHECK(cudaGetLastError());CHECK(cudaEventRecord(stop));CHECK(cudaEventSynchronize(stop));
+  float ms;CHECK(cudaEventElapsedTime(&amp;ms,start,stop));
+  CHECK(cudaMemcpy(c.data(),dc,bytes,cudaMemcpyDeviceToHost));
+  float worst=0;for(int i=0;i&lt;n;i++) worst=std::fmax(worst,std::fabs(c[i]-(a[i]+b[i])));
+  std::printf("n=%d mean_kernel_ms=%.6f max_absolute_error=%.8f transfers_excluded=1\n",n,ms/100,worst);
+  CHECK(cudaEventDestroy(start));CHECK(cudaEventDestroy(stop));
+  CHECK(cudaFree(da));CHECK(cudaFree(db));CHECK(cudaFree(dc));
+  return worst&lt;1e-4f?0:3;
+}
+</code></pre></div></details></article></div><footer class="footer"><span>Applied AI · 獨立自學課程</span><span>32 週 · 每週 10 小時</span><a href="resources.html#about-this-course">關於課程及資料來源</a></footer></main><dialog aria-labelledby="search-title" class="search-dialog"><div class="dialog-head"><h2 id="search-title">尋找概念</h2><button aria-label="關閉搜尋" class="search-close" type="button">關閉</button></div><label class="sr-only" for="course-search">搜尋所有 lecture 和 tutorial</label><input autocomplete="off" id="course-search" placeholder="試試 attention、fine-tuning 或 harness……" type="search"/><p aria-live="polite" class="search-status">搜尋 lecture notes、tutorial、測驗及閱讀材料。</p><div class="search-results"></div></dialog><div aria-live="polite" class="toast" role="status"></div></body></html>

@@ -63,7 +63,7 @@
       const path=(config.repositoryPath||'').replace(/^\/|\/$/g,'');
       a.href='https://colab.research.google.com/github/'+encodeURIComponent(config.githubOwner)+'/'+encodeURIComponent(config.githubRepo)+'/blob/'+encodeURIComponent(config.githubBranch||'main')+'/'+(path?path+'/':'')+a.dataset.notebook;
     }else if(location.hostname.endsWith('.github.io')){
-      const owner=location.hostname.split('.')[0],segments=location.pathname.split('/').filter(Boolean);
+      const owner=location.hostname.split('.')[0],segments=location.pathname.split('/').filter(Boolean).filter(s=>s!=='zh-HK');
       const isUserSite=segments[0]==='lectures'||segments[0]==='tutorials'||segments[0]==='tests'||segments.length<=1;
       const repo=isUserSite?owner+'.github.io':segments[0];
       a.href='https://colab.research.google.com/github/'+encodeURIComponent(owner)+'/'+encodeURIComponent(repo)+'/blob/'+encodeURIComponent(config.githubBranch||'main')+'/'+a.dataset.notebook;
