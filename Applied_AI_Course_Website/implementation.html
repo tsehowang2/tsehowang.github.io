@@ -1,0 +1,455 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Reference implementation code · Applied AI</title><meta name="description" content="Applied generative AI and LLM systems course material"><meta name="theme-color" content="#173c36"><link rel="icon" href="assets/favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="assets/style.css"><script>window.COURSE_BASE="";</script><script defer src="assets/site-config.js"></script><script defer src="assets/search-index.js"></script><script defer src="assets/app.js"></script><script defer src="assets/visuals.js"></script></head><body data-week="0" data-page-kind="tutorial"><a class="skip-link" href="#main">Skip to content</a><header class="topbar"><button class="menu-toggle" type="button" aria-expanded="false" aria-controls="course-sidebar">Menu</button><a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true">a<span>i</span></span><span>APPLIED AI<small>Principles into practice</small></span></a><nav aria-label="Main navigation"><a href="index.html">The course</a><a href="visuals.html">Visual lab</a><a href="project.html">Project</a></nav><button class="search-open" type="button">Search the course <span aria-hidden="true">/</span></button></header><aside id="course-sidebar" class="sidebar" aria-label="Course chapters"><a class="side-home" href="index.html">Course overview</a><details class="semester-nav" open><summary>Semester 1<span>Weeks 1–16</span></summary><ol start="1"><li><a href="lectures/01.html"><span class="week-number">01</span><span>From a model to a useful system</span><span class="week-tick" data-week-tick="1"></span></a></li><li><a href="lectures/02.html"><span class="week-number">02</span><span>Tokens and the generative AI landscape</span><span class="week-tick" data-week-tick="2"></span></a></li><li><a href="lectures/03.html"><span class="week-number">03</span><span>Embeddings are learned coordinates</span><span class="week-tick" data-week-tick="3"></span></a></li><li><a href="lectures/04.html"><span class="week-number">04</span><span>Attention is content-dependent mixing</span><span class="week-tick" data-week-tick="4"></span></a></li><li><a href="lectures/05.html"><span class="week-number">05</span><span>The decoder transformer</span><span class="week-tick" data-week-tick="5"></span></a></li><li><a href="lectures/06.html"><span class="week-number">06</span><span>Pretraining objectives and data discipline</span><span class="week-tick" data-week-tick="6"></span></a></li><li><a href="lectures/07.html"><span class="week-number">07</span><span>Decoding and the chat contract</span><span class="week-tick" data-week-tick="7"></span></a></li><li><a href="lectures/08.html"><span class="week-number">08</span><span>Reasoning and chain of thought</span><span class="week-tick" data-week-tick="8"></span></a></li><li><a href="lectures/09.html"><span class="week-number">09</span><span>Hardware and memory accounting</span><span class="week-tick" data-week-tick="9"></span></a></li><li><a href="lectures/10.html"><span class="week-number">10</span><span>CUDA programming and honest profiling</span><span class="week-tick" data-week-tick="10"></span></a></li><li><a href="lectures/11.html"><span class="week-number">11</span><span>Retrieval begins with a benchmark</span><span class="week-tick" data-week-tick="11"></span></a></li><li><a href="lectures/12.html"><span class="week-number">12</span><span>A vector database is a maintained index</span><span class="week-tick" data-week-tick="12"></span></a></li><li><a href="lectures/13.html"><span class="week-number">13</span><span>RAG is evidence selection plus conditional generation</span><span class="week-tick" data-week-tick="13"></span></a></li><li><a href="lectures/14.html"><span class="week-number">14</span><span>Hybrid retrieval and reranking</span><span class="week-tick" data-week-tick="14"></span></a></li><li><a href="lectures/15.html"><span class="week-number">15</span><span>Evaluation is an executable specification</span><span class="week-tick" data-week-tick="15"></span></a></li><li><a href="lectures/16.html"><span class="week-number">16</span><span>Deliver and defend RAG v1</span><span class="week-tick" data-week-tick="16"></span></a></li></ol></details><details class="semester-nav"><summary>Semester 2<span>Weeks 17–32</span></summary><ol start="17"><li><a href="lectures/17.html"><span class="week-number">17</span><span>Choose what to adapt</span><span class="week-tick" data-week-tick="17"></span></a></li><li><a href="lectures/18.html"><span class="week-number">18</span><span>LoRA and quantized adaptation</span><span class="week-tick" data-week-tick="18"></span></a></li><li><a href="lectures/19.html"><span class="week-number">19</span><span>Run and evaluate a fine-tuning experiment</span><span class="week-tick" data-week-tick="19"></span></a></li><li><a href="lectures/20.html"><span class="week-number">20</span><span>Alignment, preferences and distillation</span><span class="week-tick" data-week-tick="20"></span></a></li><li><a href="lectures/21.html"><span class="week-number">21</span><span>Tools are typed capabilities</span><span class="week-tick" data-week-tick="21"></span></a></li><li><a href="lectures/22.html"><span class="week-number">22</span><span>Agents and harnesses</span><span class="week-tick" data-week-tick="22"></span></a></li><li><a href="lectures/23.html"><span class="week-number">23</span><span>Planning and memory</span><span class="week-tick" data-week-tick="23"></span></a></li><li><a href="lectures/24.html"><span class="week-number">24</span><span>Evaluate the agent as a task performer</span><span class="week-tick" data-week-tick="24"></span></a></li><li><a href="lectures/25.html"><span class="week-number">25</span><span>MLOps and the artifact lifecycle</span><span class="week-tick" data-week-tick="25"></span></a></li><li><a href="lectures/26.html"><span class="week-number">26</span><span>Serving and inference performance</span><span class="week-tick" data-week-tick="26"></span></a></li><li><a href="lectures/27.html"><span class="week-number">27</span><span>Observability and feedback</span><span class="week-tick" data-week-tick="27"></span></a></li><li><a href="lectures/28.html"><span class="week-number">28</span><span>Security, privacy and authorization</span><span class="week-tick" data-week-tick="28"></span></a></li><li><a href="lectures/29.html"><span class="week-number">29</span><span>CI, releases and rollback</span><span class="week-tick" data-week-tick="29"></span></a></li><li><a href="lectures/30.html"><span class="week-number">30</span><span>Scaling training and inference</span><span class="week-tick" data-week-tick="30"></span></a></li><li><a href="lectures/31.html"><span class="week-number">31</span><span>Multimodal documents and adjacent ideas</span><span class="week-tick" data-week-tick="31"></span></a></li><li><a href="lectures/32.html"><span class="week-number">32</span><span>Reproduce, demonstrate and defend</span><span class="week-tick" data-week-tick="32"></span></a></li></ol></details><div class="side-links"><a href="visuals.html">Visual laboratory <span>9 interactive lessons</span></a><a href="project.html">Documentation assistant <span>Your capstone project</span></a><a href="resources.html">Readings and setup</a></div><div class="side-progress"><div><span>Your progress</span><strong data-progress-count>0 / 32</strong></div><progress max="32" value="0" aria-label="Completed lectures"></progress><small>Saved in this browser</small></div></aside><main id="main" class="main "><div class="content"><div class="chapter-header"><div class="eyebrow">Inspect the implementation</div><h1>Reference code</h1><p class="deck">The small, readable components behind the tutorials. These code samples do not execute on the website.</p></div><article class="prose"><details class="setup-details" id="coursekit-core-py"><summary>Retrieval metrics tools and controller · coursekit/core.py</summary><div class="code-block"><div class="code-bar"><span>Python</span><button type="button" class="copy-code">Copy code</button></div><pre><code>&quot;&quot;&quot;Retrieval, evaluation and a bounded tool controller.
+
+This is an educational baseline. Lexical extraction is not LLM generation,
+and structural citation validation is not semantic grounding verification.
+&quot;&quot;&quot;
+import ast
+from collections import Counter
+import hashlib
+import json
+import math
+import operator
+from pathlib import Path
+import random
+import re
+import time
+
+ROOT = Path(__file__).resolve().parents[1]
+STOP = set(&#x27;a an the is are of to in on for what how do does i it and with my can&#x27;.split())
+
+
+def load_docs():
+    return json.loads((ROOT / &#x27;data&#x27; / &#x27;docs.json&#x27;).read_text(encoding=&#x27;utf-8&#x27;))
+
+
+def tokens(text):
+    return [t for t in re.findall(r&#x27;[a-z0-9_]+&#x27;, text.lower()) if t not in STOP]
+
+
+def sha256_file(path):
+    return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+
+
+class LexicalIndex:
+    &quot;&quot;&quot;BM25 reference with filtering before scoring and stable tie ordering.&quot;&quot;&quot;
+    def __init__(self, docs):
+        self.docs = list(docs)
+        if len({d[&#x27;id&#x27;] for d in docs}) != len(docs):
+            raise ValueError(&#x27;document IDs must be unique&#x27;)
+        self.counts = [Counter(tokens(d[&#x27;title&#x27;] + &#x27; &#x27; + d[&#x27;text&#x27;])) for d in docs]
+        self.lengths = [sum(c.values()) for c in self.counts]
+        self.avgdl = sum(self.lengths) / max(1, len(docs))
+        self.df = Counter(t for c in self.counts for t in c)
+
+    def search(self, question, version=&#x27;2&#x27;, k=3):
+        if version not in (&#x27;1&#x27;, &#x27;2&#x27;, &#x27;all&#x27;):
+            raise ValueError(&#x27;version must be 1, 2 or all&#x27;)
+        if type(k) is not int or not 1 &lt;= k &lt;= 100:
+            raise ValueError(&#x27;k must be an integer in [1,100]&#x27;)
+        query = set(tokens(question))
+        hits = []
+        n = len(self.docs)
+        for d, counts, length in zip(self.docs, self.counts, self.lengths):
+            if version != &#x27;all&#x27; and d[&#x27;version&#x27;] != version:
+                continue
+            score = 0.0
+            for term in query:
+                tf = counts[term]
+                if not tf:
+                    continue
+                idf = math.log(1 + (n - self.df[term] + 0.5) / (self.df[term] + 0.5))
+                score += idf * tf * 2.2 / (tf + 1.2 * (0.25 + 0.75 * length / self.avgdl))
+            if score &gt; 0:
+                hits.append({**d, &#x27;score&#x27;: score})
+        return sorted(hits, key=lambda d: (-d[&#x27;score&#x27;], d[&#x27;id&#x27;]))[:k]
+
+
+def extract_answer(question, index=None, version=&#x27;2&#x27;, k=3):
+    &quot;&quot;&quot;Evidence-only baseline. It can return irrelevant excerpts: assess relevance.&quot;&quot;&quot;
+    index = index or LexicalIndex(load_docs())
+    start = time.perf_counter()
+    hits = index.search(question, version, k)
+    return {
+        &#x27;answer&#x27;: &#x27;\n&#x27;.join(d[&#x27;text&#x27;] for d in hits) if hits else &#x27;Insufficient evidence in this version.&#x27;,
+        &#x27;citations&#x27;: [d[&#x27;id&#x27;] for d in hits],
+        &#x27;version&#x27;: version,
+        &#x27;status&#x27;: &#x27;evidence_found&#x27; if hits else &#x27;insufficient_evidence&#x27;,
+        &#x27;generator&#x27;: &#x27;lexical_extractor_not_llm&#x27;,
+        &#x27;grounding_verified&#x27;: False,
+        &#x27;latency_ms&#x27;: (time.perf_counter() - start) * 1000,
+    }
+
+
+def retrieval_metrics(retrieved, relevant, k):
+    if type(k) is not int or k &lt; 1:
+        raise ValueError(&#x27;k must be positive&#x27;)
+    gold = set(relevant)
+    if not gold:
+        return {&#x27;recall&#x27;: None, &#x27;hit&#x27;: None, &#x27;rr&#x27;: None}
+    ranked = list(dict.fromkeys(retrieved))[:k]
+    ranks = [i for i, item in enumerate(ranked, 1) if item in gold]
+    return {&#x27;recall&#x27;: len(set(ranked) &amp; gold) / len(gold),
+            &#x27;hit&#x27;: int(bool(ranks)), &#x27;rr&#x27;: 1 / min(ranks) if ranks else 0.0}
+
+
+def rrf(rankings, c=60):
+    if c &lt; 0:
+        raise ValueError(&#x27;c must be nonnegative&#x27;)
+    scores = Counter()
+    for ranking in rankings:
+        for rank, item in enumerate(dict.fromkeys(ranking), 1):
+            scores[item] += 1 / (c + rank)
+    return sorted(scores.items(), key=lambda x: (-x[1], x[0]))
+
+
+def paired_bootstrap(a, b, repeats=2000, seed=7):
+    &quot;&quot;&quot;Percentile interval of mean(B-A), resampling paired task indices.&quot;&quot;&quot;
+    if not a or len(a) != len(b) or repeats &lt; 20:
+        raise ValueError(&#x27;need equal nonempty paired samples and &gt;=20 repeats&#x27;)
+    rng = random.Random(seed)
+    delta = [y - x for x, y in zip(a, b)]
+    samples = sorted(sum(rng.choice(delta) for _ in delta) / len(delta) for _ in range(repeats))
+    return {&#x27;difference&#x27;: sum(delta) / len(delta),
+            &#x27;ci95&#x27;: [samples[int(0.025 * (repeats - 1))], samples[int(0.975 * (repeats - 1))]],
+            &#x27;n&#x27;: len(delta), &#x27;seed&#x27;: seed}
+
+
+class ToolError(ValueError):
+    pass
+
+
+def _exact_keys(value, expected):
+    if not isinstance(value, dict) or set(value) != set(expected):
+        raise ToolError(&#x27;argument keys do not match schema&#x27;)
+
+
+def calculate(expression):
+    &quot;&quot;&quot;Bounded arithmetic AST, never Python eval; intentionally excludes powers.&quot;&quot;&quot;
+    if not isinstance(expression, str) or not 1 &lt;= len(expression) &lt;= 128:
+        raise ToolError(&#x27;expression must be 1..128 characters&#x27;)
+    try:
+        tree = ast.parse(expression, mode=&#x27;eval&#x27;)
+    except (SyntaxError, RecursionError) as exc:
+        raise ToolError(&#x27;invalid arithmetic syntax&#x27;) from exc
+    if sum(1 for _ in ast.walk(tree)) &gt; 32:
+        raise ToolError(&#x27;expression too complex&#x27;)
+    binary = {ast.Add: operator.add, ast.Sub: operator.sub, ast.Mult: operator.mul, ast.Div: operator.truediv}
+    unary = {ast.UAdd: operator.pos, ast.USub: operator.neg}
+
+    def visit(node):
+        if isinstance(node, ast.Constant) and type(node.value) in (int, float):
+            value = node.value
+        elif isinstance(node, ast.BinOp) and type(node.op) in binary:
+            try:
+                value = binary[type(node.op)](visit(node.left), visit(node.right))
+            except (ArithmeticError, OverflowError) as exc:
+                raise ToolError(&#x27;arithmetic failure&#x27;) from exc
+        elif isinstance(node, ast.UnaryOp) and type(node.op) in unary:
+            value = unary[type(node.op)](visit(node.operand))
+        else:
+            raise ToolError(&#x27;operator or value not allowed&#x27;)
+        try:
+            valid = math.isfinite(value) and abs(value) &lt;= 1e9
+        except OverflowError:
+            valid = False
+        if not valid:
+            raise ToolError(&#x27;numeric bound exceeded&#x27;)
+        return value
+    return visit(tree.body)
+
+
+def validate_config(config):
+    _exact_keys(config, (&#x27;timeout_ms&#x27;, &#x27;retries&#x27;))
+    errors = []
+    if type(config[&#x27;timeout_ms&#x27;]) is not int or not 1 &lt;= config[&#x27;timeout_ms&#x27;] &lt;= 120000:
+        errors.append(&#x27;timeout_ms must be an integer in [1,120000]&#x27;)
+    if type(config[&#x27;retries&#x27;]) is not int or not 0 &lt;= config[&#x27;retries&#x27;] &lt;= 5:
+        errors.append(&#x27;retries must be an integer in [0,5]&#x27;)
+    return {&#x27;valid&#x27;: not errors, &#x27;errors&#x27;: errors}
+
+
+def execute_tool(name, arguments, index, allowed_version):
+    if name == &#x27;lookup&#x27;:
+        _exact_keys(arguments, (&#x27;query&#x27;, &#x27;version&#x27;))
+        if arguments[&#x27;version&#x27;] != allowed_version:
+            raise ToolError(&#x27;version outside request scope&#x27;)
+        if not isinstance(arguments[&#x27;query&#x27;], str) or not 1 &lt;= len(arguments[&#x27;query&#x27;]) &lt;= 2000:
+            raise ToolError(&#x27;query length invalid&#x27;)
+        return index.search(arguments[&#x27;query&#x27;], allowed_version, 3)
+    if name == &#x27;calculate&#x27;:
+        _exact_keys(arguments, (&#x27;expression&#x27;,))
+        return {&#x27;value&#x27;: calculate(arguments[&#x27;expression&#x27;])}
+    if name == &#x27;validate_config&#x27;:
+        _exact_keys(arguments, (&#x27;config&#x27;,))
+        return validate_config(arguments[&#x27;config&#x27;])
+    raise ToolError(&#x27;unknown tool&#x27;)
+
+
+def run_agent(question, planner, version=&#x27;2&#x27;, max_steps=4, index=None):
+    &quot;&quot;&quot;Synchronous controller: step-bounded, not a wall-clock sandbox.
+
+    Model planners must implement their own generation timeout/cancellation.
+    Final citations are checked for existence in prior lookup observations only.
+    &quot;&quot;&quot;
+    if version not in (&#x27;1&#x27;, &#x27;2&#x27;) or type(max_steps) is not int or not 1 &lt;= max_steps &lt;= 20:
+        raise ValueError(&#x27;invalid request scope or step budget&#x27;)
+    index = index or LexicalIndex(load_docs())
+    observations, trace, evidence = [], [], set()
+    for step in range(max_steps):
+        state = {&#x27;question&#x27;: question, &#x27;version&#x27;: version, &#x27;step&#x27;: step,
+                 &#x27;observations&#x27;: json.loads(json.dumps(observations))}
+        try:
+            proposal = planner(state)
+        except Exception as exc:
+            return {&#x27;status&#x27;: &#x27;planner_error&#x27;, &#x27;trace&#x27;: trace, &#x27;error&#x27;: type(exc).__name__}
+        try:
+            if not isinstance(proposal, dict):
+                raise ToolError(&#x27;proposal must be an object&#x27;)
+            if proposal.get(&#x27;type&#x27;) == &#x27;final&#x27;:
+                _exact_keys(proposal, (&#x27;type&#x27;, &#x27;answer&#x27;, &#x27;citations&#x27;))
+                if not isinstance(proposal[&#x27;answer&#x27;], str) or len(proposal[&#x27;answer&#x27;]) &gt; 8000:
+                    raise ToolError(&#x27;invalid answer&#x27;)
+                ids = proposal[&#x27;citations&#x27;]
+                if not isinstance(ids, list) or any(not isinstance(i, str) for i in ids):
+                    raise ToolError(&#x27;invalid citations&#x27;)
+                if not set(ids) &lt;= evidence:
+                    raise ToolError(&#x27;citation not in observed evidence&#x27;)
+                return {&#x27;status&#x27;: &#x27;completed&#x27;, &#x27;answer&#x27;: proposal[&#x27;answer&#x27;],
+                        &#x27;citations&#x27;: ids, &#x27;trace&#x27;: trace, &#x27;grounding_verified&#x27;: False}
+            _exact_keys(proposal, (&#x27;type&#x27;, &#x27;name&#x27;, &#x27;arguments&#x27;))
+            if proposal[&#x27;type&#x27;] != &#x27;tool&#x27;:
+                raise ToolError(&#x27;unknown proposal type&#x27;)
+            result = execute_tool(proposal[&#x27;name&#x27;], proposal[&#x27;arguments&#x27;], index, version)
+            if proposal[&#x27;name&#x27;] == &#x27;lookup&#x27;:
+                evidence.update(d[&#x27;id&#x27;] for d in result)
+            event = {&#x27;step&#x27;: step, &#x27;name&#x27;: proposal[&#x27;name&#x27;], &#x27;arguments&#x27;: proposal[&#x27;arguments&#x27;], &#x27;result&#x27;: result}
+            trace.append(event)
+            observations.append({&#x27;name&#x27;: proposal[&#x27;name&#x27;], &#x27;result&#x27;: json.dumps(result)[:4096]})
+        except ToolError as exc:
+            return {&#x27;status&#x27;: &#x27;invalid_action&#x27;, &#x27;trace&#x27;: trace, &#x27;error&#x27;: str(exc)}
+    return {&#x27;status&#x27;: &#x27;budget_exhausted&#x27;, &#x27;trace&#x27;: trace}
+
+
+def make_manifest(extra=None):
+    return {&#x27;course_version&#x27;: &#x27;1.0&#x27;, &#x27;corpus_sha256&#x27;: sha256_file(ROOT / &#x27;data&#x27; / &#x27;docs.json&#x27;),
+            &#x27;retriever&#x27;: &#x27;bm25_reference_v1&#x27;, &#x27;generator&#x27;: &#x27;lexical_extractor_not_llm&#x27;,
+            **(extra or {})}
+
+
+def verify_manifest(manifest):
+    if manifest[&#x27;corpus_sha256&#x27;] != sha256_file(ROOT / &#x27;data&#x27; / &#x27;docs.json&#x27;):
+        raise ValueError(&#x27;corpus hash mismatch; rebuild/re-evaluate dependent artifacts&#x27;)
+    return True
+</code></pre></div></details><details class="setup-details" id="coursekit-server-py"><summary>Local API · coursekit/server.py</summary><div class="code-block"><div class="code-bar"><span>Python</span><button type="button" class="copy-code">Copy code</button></div><pre><code>&quot;&quot;&quot;Local instructional HTTP API. No authentication; binds to loopback only.&quot;&quot;&quot;
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+import json
+from .core import extract_answer, LexicalIndex, load_docs
+
+INDEX = LexicalIndex(load_docs())
+
+
+class Handler(BaseHTTPRequestHandler):
+    def send_json(self, status, body):
+        payload = json.dumps(body).encode(&#x27;utf-8&#x27;)
+        self.send_response(status)
+        self.send_header(&#x27;Content-Type&#x27;, &#x27;application/json; charset=utf-8&#x27;)
+        self.send_header(&#x27;Content-Length&#x27;, str(len(payload)))
+        self.end_headers()
+        self.wfile.write(payload)
+
+    def do_GET(self):
+        self.send_json(200 if self.path == &#x27;/health&#x27; else 404,
+                       {&#x27;status&#x27;: &#x27;ok&#x27;} if self.path == &#x27;/health&#x27; else {&#x27;error&#x27;: &#x27;not found&#x27;})
+
+    def do_POST(self):
+        if self.path != &#x27;/ask&#x27;:
+            self.send_json(404, {&#x27;error&#x27;: &#x27;not found&#x27;})
+            return
+        try:
+            length = int(self.headers.get(&#x27;Content-Length&#x27;, &#x27;0&#x27;))
+            if not 1 &lt;= length &lt;= 65536:
+                self.send_json(413, {&#x27;error&#x27;: &#x27;request size invalid&#x27;})
+                return
+            self.connection.settimeout(5)
+            data = json.loads(self.rfile.read(length))
+            if not isinstance(data, dict) or not set(data) &lt;= {&#x27;question&#x27;, &#x27;version&#x27;}:
+                raise ValueError(&#x27;invalid fields&#x27;)
+            question, version = data.get(&#x27;question&#x27;), data.get(&#x27;version&#x27;, &#x27;2&#x27;)
+            if not isinstance(question, str) or not 1 &lt;= len(question) &lt;= 2000:
+                raise ValueError(&#x27;question must contain 1..2000 characters&#x27;)
+            if version not in (&#x27;1&#x27;, &#x27;2&#x27;, &#x27;all&#x27;):
+                raise ValueError(&#x27;invalid version&#x27;)
+            self.send_json(200, extract_answer(question, INDEX, version))
+        except (ValueError, TypeError, TimeoutError) as exc:
+            self.send_json(400, {&#x27;error&#x27;: str(exc)})
+
+    def log_message(self, fmt, *args):
+        # Avoid logging request bodies; extend with request IDs in lab 14.
+        pass
+
+
+if __name__ == &#x27;__main__&#x27;:
+    print(&#x27;Instructional extraction API: http://127.0.0.1:8000&#x27;)
+    ThreadingHTTPServer((&#x27;127.0.0.1&#x27;, 8000), Handler).serve_forever()
+</code></pre></div></details><details class="setup-details" id="tests-test_contracts-py"><summary>Contract tests · tests/test_contracts.py</summary><div class="code-block"><div class="code-bar"><span>Python</span><button type="button" class="copy-code">Copy code</button></div><pre><code>import unittest
+from coursekit.core import (LexicalIndex, load_docs, retrieval_metrics, rrf, paired_bootstrap,
+                            calculate, ToolError, validate_config, run_agent, make_manifest, verify_manifest)
+
+
+class RetrievalTests(unittest.TestCase):
+    def setUp(self):
+        self.index = LexicalIndex(load_docs())
+
+    def test_version_filter_prevents_cross_version_evidence(self):
+        for version in (&#x27;1&#x27;, &#x27;2&#x27;):
+            hits = self.index.search(&#x27;default request timeout&#x27;, version)
+            self.assertTrue(hits)
+            self.assertTrue(all(d[&#x27;version&#x27;] == version for d in hits))
+
+    def test_comparison_can_retrieve_both_versions(self):
+        ids = {d[&#x27;id&#x27;] for d in self.index.search(&#x27;default request timeout&#x27;, &#x27;all&#x27;, 5)}
+        self.assertTrue({&#x27;timeout-v1&#x27;, &#x27;timeout-v2&#x27;} &lt;= ids)
+
+    def test_no_matching_term_has_no_evidence(self):
+        self.assertEqual(self.index.search(&#x27;zzzzzzzzzz&#x27;, &#x27;2&#x27;), [])
+
+    def test_duplicate_ids_rejected(self):
+        with self.assertRaises(ValueError):
+            LexicalIndex([load_docs()[0], load_docs()[0]])
+
+    def test_recall_differs_from_hit(self):
+        m = retrieval_metrics([&#x27;C&#x27;, &#x27;A&#x27;, &#x27;D&#x27;], [&#x27;A&#x27;, &#x27;B&#x27;], 3)
+        self.assertEqual(m, {&#x27;recall&#x27;: .5, &#x27;hit&#x27;: 1, &#x27;rr&#x27;: .5})
+
+    def test_duplicate_ranks_do_not_inflate_recall(self):
+        self.assertEqual(retrieval_metrics([&#x27;A&#x27;, &#x27;A&#x27;], [&#x27;A&#x27;, &#x27;B&#x27;], 2)[&#x27;recall&#x27;], .5)
+
+    def test_unanswerable_recall_is_not_defined(self):
+        self.assertIsNone(retrieval_metrics([&#x27;A&#x27;], [], 1)[&#x27;recall&#x27;])
+
+    def test_rrf_can_favor_consensus(self):
+        left = [&#x27;A&#x27;, &#x27;B&#x27;]
+        right = [&#x27;C&#x27;, &#x27;B&#x27;] + [&#x27;x&#x27;+str(i) for i in range(7)] + [&#x27;A&#x27;]
+        self.assertEqual(rrf([left, right])[0][0], &#x27;B&#x27;)
+
+    def test_bootstrap_uses_paired_difference(self):
+        r = paired_bootstrap([0, 1, 0, 1], [1, 1, 1, 1], repeats=100)
+        self.assertEqual(r[&#x27;difference&#x27;], .5)
+        self.assertLessEqual(r[&#x27;ci95&#x27;][0], r[&#x27;difference&#x27;])
+        self.assertGreaterEqual(r[&#x27;ci95&#x27;][1], r[&#x27;difference&#x27;])
+
+
+class ToolTests(unittest.TestCase):
+    def test_arithmetic(self):
+        self.assertEqual(calculate(&#x27;100+200+400&#x27;), 700)
+        self.assertEqual(calculate(&#x27;-(3+1)/2&#x27;), -2)
+
+    def test_code_execution_syntax_rejected(self):
+        for text in [&quot;__import__(&#x27;os&#x27;)&quot;, &#x27;x+1&#x27;, &#x27;True+1&#x27;, &#x27;2**10&#x27;, &#x27;[1][0]&#x27;]:
+            with self.subTest(text=text), self.assertRaises(ToolError):
+                calculate(text)
+
+    def test_division_zero_and_numeric_bounds(self):
+        for text in [&#x27;1/0&#x27;, &#x27;1e100&#x27;, &#x27;999999999*999999999&#x27;]:
+            with self.subTest(text=text), self.assertRaises(ToolError):
+                calculate(text)
+
+    def test_complexity_bound(self):
+        with self.assertRaises(ToolError):
+            calculate(&#x27;+&#x27;.join([&#x27;1&#x27;] * 30))
+
+    def test_config_types_and_boundaries(self):
+        self.assertTrue(validate_config({&#x27;timeout_ms&#x27;: 1, &#x27;retries&#x27;: 0})[&#x27;valid&#x27;])
+        self.assertTrue(validate_config({&#x27;timeout_ms&#x27;: 120000, &#x27;retries&#x27;: 5})[&#x27;valid&#x27;])
+        self.assertFalse(validate_config({&#x27;timeout_ms&#x27;: True, &#x27;retries&#x27;: 0})[&#x27;valid&#x27;])
+        self.assertFalse(validate_config({&#x27;timeout_ms&#x27;: 0, &#x27;retries&#x27;: 6})[&#x27;valid&#x27;])
+
+    def test_extra_fields_rejected(self):
+        with self.assertRaises(ToolError):
+            validate_config({&#x27;timeout_ms&#x27;: 100, &#x27;retries&#x27;: 1, &#x27;command&#x27;: &#x27;anything&#x27;})
+
+
+class ControllerTests(unittest.TestCase):
+    def test_unending_planner_terminates(self):
+        p = lambda s: {&#x27;type&#x27;: &#x27;tool&#x27;, &#x27;name&#x27;: &#x27;calculate&#x27;, &#x27;arguments&#x27;: {&#x27;expression&#x27;: &#x27;1+1&#x27;}}
+        r = run_agent(&#x27;test&#x27;, p, max_steps=3)
+        self.assertEqual(r[&#x27;status&#x27;], &#x27;budget_exhausted&#x27;)
+        self.assertEqual(len(r[&#x27;trace&#x27;]), 3)
+
+    def test_unknown_tool_never_executes(self):
+        r = run_agent(&#x27;test&#x27;, lambda s: {&#x27;type&#x27;: &#x27;tool&#x27;, &#x27;name&#x27;: &#x27;export_secrets&#x27;, &#x27;arguments&#x27;: {}})
+        self.assertEqual(r[&#x27;status&#x27;], &#x27;invalid_action&#x27;)
+        self.assertEqual(r[&#x27;trace&#x27;], [])
+
+    def test_version_scope_is_enforced_by_code(self):
+        p = lambda s: {&#x27;type&#x27;: &#x27;tool&#x27;, &#x27;name&#x27;: &#x27;lookup&#x27;, &#x27;arguments&#x27;: {&#x27;query&#x27;: &#x27;timeout&#x27;, &#x27;version&#x27;: &#x27;1&#x27;}}
+        self.assertEqual(run_agent(&#x27;test&#x27;, p, version=&#x27;2&#x27;)[&#x27;status&#x27;], &#x27;invalid_action&#x27;)
+
+    def test_unobserved_citation_rejected(self):
+        p = lambda s: {&#x27;type&#x27;: &#x27;final&#x27;, &#x27;answer&#x27;: &#x27;answer&#x27;, &#x27;citations&#x27;: [&#x27;timeout-v2&#x27;]}
+        self.assertEqual(run_agent(&#x27;test&#x27;, p)[&#x27;status&#x27;], &#x27;invalid_action&#x27;)
+
+    def test_lookup_then_final(self):
+        def planner(s):
+            if not s[&#x27;observations&#x27;]:
+                return {&#x27;type&#x27;: &#x27;tool&#x27;, &#x27;name&#x27;: &#x27;lookup&#x27;, &#x27;arguments&#x27;: {&#x27;query&#x27;: &#x27;default request timeout&#x27;, &#x27;version&#x27;: s[&#x27;version&#x27;]}}
+            return {&#x27;type&#x27;: &#x27;final&#x27;, &#x27;answer&#x27;: &#x27;The cited fixture contains the default.&#x27;, &#x27;citations&#x27;: [&#x27;timeout-v2&#x27;]}
+        r = run_agent(&#x27;default request timeout&#x27;, planner)
+        self.assertEqual(r[&#x27;status&#x27;], &#x27;completed&#x27;)
+        self.assertFalse(r[&#x27;grounding_verified&#x27;])
+
+    def test_malformed_planner_output(self):
+        self.assertEqual(run_agent(&#x27;test&#x27;, lambda s: &#x27;not an object&#x27;)[&#x27;status&#x27;], &#x27;invalid_action&#x27;)
+
+    def test_planner_exception_is_controlled(self):
+        def planner(s):
+            raise RuntimeError(&#x27;failure&#x27;)
+        self.assertEqual(run_agent(&#x27;test&#x27;, planner)[&#x27;status&#x27;], &#x27;planner_error&#x27;)
+
+    def test_corpus_manifest_rejects_mismatch(self):
+        m = make_manifest()
+        self.assertTrue(verify_manifest(m))
+        m[&#x27;corpus_sha256&#x27;] = &#x27;bad&#x27;
+        with self.assertRaises(ValueError):
+            verify_manifest(m)
+
+
+if __name__ == &#x27;__main__&#x27;:
+    unittest.main()
+</code></pre></div></details><details class="setup-details" id="cuda-vector_add-cu"><summary>CUDA vector addition · cuda/vector_add.cu</summary><div class="code-block"><div class="code-bar"><span>CUDA C++</span><button type="button" class="copy-code">Copy code</button></div><pre><code>// Compile with nvcc -O2 vector_add.cu -o vector_add
+#include &lt;cuda_runtime.h&gt;
+#include &lt;cmath&gt;
+#include &lt;cstdio&gt;
+#include &lt;cstdlib&gt;
+#include &lt;vector&gt;
+#define CHECK(call) do { cudaError_t e=(call); if(e!=cudaSuccess) { \
+  std::fprintf(stderr,&quot;CUDA error: %s\n&quot;,cudaGetErrorString(e)); std::exit(1); }} while(0)
+__global__ void add(const float* a,const float* b,float* c,int n) {
+  int i=blockIdx.x*blockDim.x+threadIdx.x;
+  if(i&lt;n) c[i]=a[i]+b[i];
+}
+int main(int argc,char** argv) {
+  int n=argc&gt;1?std::atoi(argv[1]):1048576;
+  if(n&lt;1||n&gt;16777216) return 2;
+  std::vector&lt;float&gt;a(n),b(n),c(n);
+  for(int i=0;i&lt;n;i++){a[i]=i*0.001f;b[i]=1.0f;}
+  float *da,*db,*dc;size_t bytes=n*sizeof(float);
+  CHECK(cudaMalloc((void**)&amp;da,bytes));CHECK(cudaMalloc((void**)&amp;db,bytes));CHECK(cudaMalloc((void**)&amp;dc,bytes));
+  CHECK(cudaMemcpy(da,a.data(),bytes,cudaMemcpyHostToDevice));
+  CHECK(cudaMemcpy(db,b.data(),bytes,cudaMemcpyHostToDevice));
+  int blocks=(n+255)/256;
+  for(int j=0;j&lt;10;j++) add&lt;&lt;&lt;blocks,256&gt;&gt;&gt;(da,db,dc,n);
+  CHECK(cudaGetLastError());CHECK(cudaDeviceSynchronize());
+  cudaEvent_t start,stop;CHECK(cudaEventCreate(&amp;start));CHECK(cudaEventCreate(&amp;stop));
+  CHECK(cudaEventRecord(start));
+  for(int j=0;j&lt;100;j++) add&lt;&lt;&lt;blocks,256&gt;&gt;&gt;(da,db,dc,n);
+  CHECK(cudaGetLastError());CHECK(cudaEventRecord(stop));CHECK(cudaEventSynchronize(stop));
+  float ms;CHECK(cudaEventElapsedTime(&amp;ms,start,stop));
+  CHECK(cudaMemcpy(c.data(),dc,bytes,cudaMemcpyDeviceToHost));
+  float worst=0;for(int i=0;i&lt;n;i++) worst=std::fmax(worst,std::fabs(c[i]-(a[i]+b[i])));
+  std::printf(&quot;n=%d mean_kernel_ms=%.6f max_absolute_error=%.8f transfers_excluded=1\n&quot;,n,ms/100,worst);
+  CHECK(cudaEventDestroy(start));CHECK(cudaEventDestroy(stop));
+  CHECK(cudaFree(da));CHECK(cudaFree(db));CHECK(cudaFree(dc));
+  return worst&lt;1e-4f?0:3;
+}
+</code></pre></div></details></article></div><footer class="footer"><span>Applied AI · An independent self-study course</span><span>32 weeks · 10 hours per week</span><a href="resources.html#about-this-course">About and sources</a></footer></main><dialog class="search-dialog" aria-labelledby="search-title"><div class="dialog-head"><h2 id="search-title">Find a concept</h2><button class="search-close" type="button" aria-label="Close search">Close</button></div><label class="sr-only" for="course-search">Search all lectures and tutorials</label><input id="course-search" type="search" placeholder="Try attention, fine-tuning, or harness…" autocomplete="off"><p class="search-status" aria-live="polite">Search lecture notes, tutorials, tests and readings.</p><div class="search-results"></div></dialog><div class="toast" role="status" aria-live="polite"></div></body></html>
