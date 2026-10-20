@@ -4,8 +4,8 @@
   const $=(q,r=document)=>r.querySelector(q);
   const $$=(q,r=document)=>Array.from(r.querySelectorAll(q));
   const store={
-    get(key,fallback){try{const v=localStorage.getItem('applied-ai:'+key);return v===null?fallback:JSON.parse(v);}catch{return fallback;}},
-    set(key,value){try{localStorage.setItem('applied-ai:'+key,JSON.stringify(value));return true;}catch{return false;}}
+    get(key,fallback){try{const v=localStorage.getItem('applied-ai-v2:'+key);return v===null?fallback:JSON.parse(v);}catch{return fallback;}},
+    set(key,value){try{localStorage.setItem('applied-ai-v2:'+key,JSON.stringify(value));return true;}catch{return false;}}
   };
   let completed=store.get('completed',[]);
   if(!Array.isArray(completed))completed=[];
