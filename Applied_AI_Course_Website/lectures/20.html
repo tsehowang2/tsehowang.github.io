@@ -1,67 +1,1090 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/><title>Improving RAG without losing the basic task · Applied AI</title><meta content="Applied generative AI and LLM systems course material" name="description"/><meta content="#173c36" name="theme-color"/><link href="../assets/favicon.svg" rel="icon" type="image/svg+xml"/><link href="../assets/style.css" rel="stylesheet"/><link href="../assets/slides.css" rel="stylesheet"/><script>window.COURSE_BASE="../";</script><script defer="" src="../assets/site-config.js"></script><script defer="" src="../assets/search-index.js"></script><script defer="" src="../assets/app.js"></script><script defer="" src="../assets/visuals.js"></script><script defer="" src="../assets/slides.js"></script><script defer="" src="../assets/beginner-visuals.js"></script><link href="../zh-HK/lectures/20.html" hreflang="zh-HK" rel="alternate"/><link href="../assets/bilingual.css" rel="stylesheet"/></head><body data-page-kind="lecture" data-week="20"><a class="skip-link" href="#main">Skip to content</a><header class="topbar"><button aria-controls="course-sidebar" aria-expanded="false" class="menu-toggle" type="button">Menu</button><a class="brand" href="../index.html"><span aria-hidden="true" class="brand-mark">a<span>i</span></span><span>APPLIED AI<small>Principles into practice</small></span></a><nav aria-label="Main navigation"><a href="../index.html">The course</a><a href="../visuals.html">Visual lab</a><a href="../project.html">Project</a><a class="language-switch" href="../zh-HK/lectures/20.html" hreflang="zh-HK" lang="zh-HK">繁體中文</a></nav><button class="search-open" type="button">Search the course <span aria-hidden="true">/</span></button></header><aside aria-label="Course chapters" class="sidebar" id="course-sidebar"><a class="side-home" href="../index.html">Course overview</a><details class="semester-nav"><summary>Semester 1<span>Weeks 1–16</span></summary><ol start="1"><li><a href="../lectures/01.html"><span class="week-number">01</span><span>What a language model is trying to learn</span><span class="week-tick" data-week-tick="1"></span></a></li><li><a href="../lectures/02.html"><span class="week-number">02</span><span>From text to tokens and numerical IDs</span><span class="week-tick" data-week-tick="2"></span></a></li><li><a href="../lectures/03.html"><span class="week-number">03</span><span>What word vectors can represent</span><span class="week-tick" data-week-tick="3"></span></a></li><li><a href="../lectures/04.html"><span class="week-number">04</span><span>From scores to probabilities and learning signals</span><span class="week-tick" data-week-tick="4"></span></a></li><li><a href="../lectures/05.html"><span class="week-number">05</span><span>Why language needs context and order</span><span class="week-tick" data-week-tick="5"></span></a></li><li><a href="../lectures/06.html"><span class="week-number">06</span><span>Attention begins as a weighted mixture</span><span class="week-tick" data-week-tick="6"></span></a></li><li><a href="../lectures/07.html"><span class="week-number">07</span><span>Where queries keys and values come from</span><span class="week-tick" data-week-tick="7"></span></a></li><li><a href="../lectures/08.html"><span class="week-number">08</span><span>Scaling and masking attention correctly</span><span class="week-tick" data-week-tick="8"></span></a></li><li><a href="../lectures/09.html"><span class="week-number">09</span><span>Multiple attention heads and position</span><span class="week-tick" data-week-tick="9"></span></a></li><li><a href="../lectures/10.html"><span class="week-number">10</span><span>The transformer block step by step</span><span class="week-tick" data-week-tick="10"></span></a></li><li><a href="../lectures/11.html"><span class="week-number">11</span><span>Encoders decoders and complete model architectures</span><span class="week-tick" data-week-tick="11"></span></a></li><li><a href="../lectures/12.html"><span class="week-number">12</span><span>Training a small transformer</span><span class="week-tick" data-week-tick="12"></span></a></li><li><a href="../lectures/13.html"><span class="week-number">13</span><span>Generation decoding and the KV cache</span><span class="week-tick" data-week-tick="13"></span></a></li><li><a href="../lectures/14.html"><span class="week-number">14</span><span>From pretraining to instruction following and reasoning</span><span class="week-tick" data-week-tick="14"></span></a></li><li><a href="../lectures/15.html"><span class="week-number">15</span><span>Generative AI beyond text</span><span class="week-tick" data-week-tick="15"></span></a></li><li><a href="../lectures/16.html"><span class="week-number">16</span><span>A complete transformer walkthrough and first semester review</span><span class="week-tick" data-week-tick="16"></span></a></li></ol></details><details class="semester-nav" open=""><summary>Semester 2<span>Weeks 17–32</span></summary><ol start="17"><li><a href="../lectures/17.html"><span class="week-number">17</span><span>From word vectors to semantic search</span><span class="week-tick" data-week-tick="17"></span></a></li><li><a href="../lectures/18.html"><span class="week-number">18</span><span>A vector database from a list of vectors</span><span class="week-tick" data-week-tick="18"></span></a></li><li><a href="../lectures/19.html"><span class="week-number">19</span><span>RAG as an open book question</span><span class="week-tick" data-week-tick="19"></span></a></li><li><a aria-current="page" href="../lectures/20.html"><span class="week-number">20</span><span>Improving RAG without losing the basic task</span><span class="week-tick" data-week-tick="20"></span></a></li><li><a href="../lectures/21.html"><span class="week-number">21</span><span>Evaluating retrieval answers and uncertainty</span><span class="week-tick" data-week-tick="21"></span></a></li><li><a href="../lectures/22.html"><span class="week-number">22</span><span>CPU GPU memory and model resource accounting</span><span class="week-tick" data-week-tick="22"></span></a></li><li><a href="../lectures/23.html"><span class="week-number">23</span><span>CUDA kernels and profiling</span><span class="week-tick" data-week-tick="23"></span></a></li><li><a href="../lectures/24.html"><span class="week-number">24</span><span>Fine tuning starts with a teaching dataset</span><span class="week-tick" data-week-tick="24"></span></a></li><li><a href="../lectures/25.html"><span class="week-number">25</span><span>LoRA and QLoRA from a small matrix</span><span class="week-tick" data-week-tick="25"></span></a></li><li><a href="../lectures/26.html"><span class="week-number">26</span><span>Fine tuning experiments preferences and distillation</span><span class="week-tick" data-week-tick="26"></span></a></li><li><a href="../lectures/27.html"><span class="week-number">27</span><span>Tools functions workflows and agents</span><span class="week-tick" data-week-tick="27"></span></a></li><li><a href="../lectures/28.html"><span class="week-number">28</span><span>Harnesses planning memory and bounded execution</span><span class="week-tick" data-week-tick="28"></span></a></li><li><a href="../lectures/29.html"><span class="week-number">29</span><span>From a notebook to MLOps and inference serving</span><span class="week-tick" data-week-tick="29"></span></a></li><li><a href="../lectures/30.html"><span class="week-number">30</span><span>Monitoring security regression tests and rollback</span><span class="week-tick" data-week-tick="30"></span></a></li><li><a href="../lectures/31.html"><span class="week-number">31</span><span>Integrating the documentation assistant and advanced extensions</span><span class="week-tick" data-week-tick="31"></span></a></li><li><a href="../lectures/32.html"><span class="week-number">32</span><span>Review defense and a continuing learning plan</span><span class="week-tick" data-week-tick="32"></span></a></li></ol></details><div class="side-links"><a href="../visuals.html">Visual laboratory <span>14 interactive lessons</span></a><a href="../project.html">Documentation assistant <span>Your capstone project</span></a><a href="../resources.html">Readings and setup</a></div><div class="side-progress"><div><span>Your progress</span><strong data-progress-count="">0 / 32</strong></div><progress aria-label="Completed lectures" max="32" value="0"></progress><small>Saved in this browser</small></div></aside><main class="main" id="main"><div class="content"><div class="chapter-header"><div class="eyebrow">Semester 2 / Week 20</div><h1>Improving RAG without losing the basic task</h1></div><div class="lesson-links"><a href="../tutorials/20.html">Tutorial 20</a><a href="../tests/20.html">Test your understanding</a><button aria-pressed="false" class="mark-complete" data-week="20" type="button">Mark as complete</button></div><section aria-label="Lecture slides" class="lecture-deck" id="lecture-slides"><div class="deck-top"><div><div class="eyebrow">Lecture slides · Week 20</div><h2>Learn one step at a time.</h2></div><button class="deck-present" type="button">Present</button></div><p class="deck-help">Read each explanation, pause to predict the result, then continue. Use the arrow keys while the presentation is focused. The complete lecture reader is below.</p><div aria-label="Presentation: use left and right arrow keys" class="slide-viewport" tabindex="0"><section class="lecture-slide" data-slide=""><div class="slide-stage">Start with an example</div><h3>A basic pipeline gives us observable failures</h3><div class="slide-prose"><p>Suppose the handbook assistant handles direct questions but misses “At what time can pupils board the morning transport?” The relevant passage uses bus leaves. Another failure quotes a correct time from the wrong year.</p>
-<p>These are different problems. Semantic retrieval may help with paraphrasing. Required version filtering addresses scope. A more elaborate prompt cannot reliably repair a mislabeled source record.</p>
-<p>Begin every change with an observed error and a hypothesis about the failed boundary. This keeps improvements connected to a task rather than a list of fashionable components.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Start with an example</div><h3>Combining lexical and dense candidates</h3><div class="slide-prose"><p>Lexical search can handle exact names well; dense search can handle some paraphrases. Hybrid retrieval combines candidates from both.</p>
-<p>Scores may live on different scales. Adding a BM25 score directly to a cosine score without calibration changes the meaning unpredictably. Rank fusion combines ordering information instead.</p>
-<p>Reciprocal rank fusion uses a sum of 1/(c+rank) over candidate lists. An absent item contributes zero from that list. The constant c controls how sharply top positions dominate.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Build the mechanism</div><h3>A worked fusion comparison</h3><div class="slide-prose"><p>Passage A is rank 1 in lexical search and rank 10 in dense search. Passage B is rank 2 in both. With c=60, A scores 1/61+1/70≈0.030679, while B scores 2/62≈0.032258.</p>
-<p>B wins this comparison because both lists rank it consistently well. The values are rank-derived scores, not calibrated probabilities of correctness.</p>
-<p>Changing c changes the weighting. Compare the final candidate set and downstream task result rather than judging a setting only by which passage wins one designed example.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Build the mechanism</div><h3>Reranking spends more work on selected pairs</h3><div class="slide-prose"><p>A cross-encoder can read the question and each candidate passage jointly to estimate relevance. Unlike cached bi-encoder vectors, this work happens for the query-passage pair.</p>
-<p>Rerank a sufficiently broad candidate pool, then select a smaller evidence set. If necessary evidence never entered the pool, the reranker cannot restore it.</p>
-<p>Measure candidate recall before reranking and answer quality afterward. The separation tells you whether failures concern finding evidence, ordering it, or using it.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Build the mechanism</div><h3>Context construction after ranking</h3><div class="slide-prose"><p>Deduplicate highly overlapping chunks, preserve source labels, and include needed exceptions. A small retrieved chunk may point to a larger parent section that supplies coherent context.</p>
-<p>A two-version comparison needs diversity of versions, while a precise single-version question needs the requested scope. Selection depends on the task rather than a universal instruction to maximize diversity.</p>
-<p>Pack against the actual token budget and reserve output space. Record selected source IDs and the exact packed prompt so an error can be reproduced.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Build the mechanism</div><h3>Query rewriting and multi step retrieval</h3><div class="slide-prose"><p>A conversational question such as “Does that apply next year?” may need reference resolution. A rewrite can make the intended year and subject explicit.</p>
-<p>Rewriting can also introduce an unsupported assumption. Keep the original question, log the transformation, and preserve scope/authorization constraints independently.</p>
-<p>Multiple retrieval steps are useful when a task needs them. They add latency and additional failure paths. Compare with a single-step baseline under a stated resource budget.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Build the mechanism</div><h3>A controlled experiment</h3><div class="slide-prose"><p>Use the same corpus, chunks, question set, version rules, generator, decoding settings, and answer rubric. Compare lexical, dense, fusion, and a reranking or selection improvement.</p>
-<p>Save raw candidate lists and answer outputs. Slice by exact identifier, paraphrase, multi-source question, absence, and version comparison.</p>
-<p>If one method improves paraphrases but harms exact names, investigate the pattern. Add routing only if you can define and test the rule, rather than hiding the tradeoff in an aggregate average.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Build the mechanism</div><h3>Worked practice and a readiness check</h3><div class="slide-prose"><p>Reproduce the RRF calculation, then remove a required passage from both candidate lists. Explain why increasing reranker quality cannot fix that particular absence.</p>
-<p>Run one real RAG comparison and manually audit claims and citations. A valid source ID is only a structural check; inspect whether the cited passage supports the claim.</p>
-<p>You are ready when you can justify one pipeline addition by a measured error reduction and state the quality, complexity, and latency costs.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Optional deeper study</div><h3>A deeper pass after the worked introduction</h3><div class="slide-prose"><p>The following reference treatment is for a second pass. First explain the ordinary example above, then use the equations and implementation details below to make the explanation more precise.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Optional deeper study</div><h3>Further study 14 Intuition</h3><div class="slide-prose"><p>Lexical and semantic search make different errors. Hybrid retrieval combines candidate lists; reranking spends more work judging the best candidates. These are separate operations. Reranking cannot recover a relevant document absent from its candidate set.</p>
-<p>Do not add BM25 scores directly to cosine scores without a justified calibration: their scales differ. Reciprocal rank fusion combines ranks: <code>RRF(d) = sum_lists 1/(c + rank_list(d))</code>, with ranks starting at one. c controls how sharply top ranks dominate. Choose settings on development data, and compare against each component alone.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Optional deeper study</div><h3>Further study 14 Worked fusion</h3><div class="slide-prose"><p>With c=60, passage A ranked 1st lexically and 10th semantically scores <code>1/61 + 1/70</code>, approximately 0.03068. Passage B ranked 2nd in both scores <code>2/62</code>, approximately 0.03226. B wins because both systems support it. A document absent from one finite list contributes zero from that list. Fusion does not mean the scores are probabilities.</p>
-<p>A cross-encoder reads question and candidate together to assign a relevance score. Rerank a sufficiently broad candidate pool, then select a small evidence set. Diversification can reduce near-duplicates, but too much diversity may discard necessary details from one source. Parent-child retrieval can search small chunks and include a larger parent section for coherent context.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Optional deeper study</div><h3>Further study 14 Query transformation</h3><div class="slide-prose"><p>Query rewriting resolves conversational references or expands terms. Multi-query retrieval can broaden recall. Hypothetical-document approaches generate a possible answer-like passage to embed. These can help some distributions but may introduce unsupported assumptions, extra latency and correlated false evidence. Keep the original query and log transformations. Version and access constraints must survive rewriting.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Optional deeper study</div><h3>Further study 14 Experiment</h3><div class="slide-prose"><p>Compare lexical only, dense only, rank fusion, and fusion plus a reranker on the same frozen development split. In the notebook, a simple deterministic reranking demonstration teaches the interface; an actual neural reranker is an optional extension, not a claimed baseline result. Report candidate recall before reranking and answer metrics after generation. This separates a recall problem from an ordering problem.</p>
-<p>If hybrid improves identifiers but harms paraphrases, examine slice results and consider targeted routing. Do not add routing until you can explain its decision boundary and evaluation. A more complex pipeline has more timeouts, caches, artifacts and failure paths.</p>
-<p><strong>Exit criterion:</strong> calculate RRF, explain candidate recall, and justify whether the measured quality gain merits added latency. <strong>Reading:</strong> R07 for embedding side; optional R25 lexical model. <strong>Tutorial:</strong> 20.</p></div></section></div><div class="deck-controls"><button class="slide-prev" type="button">← Previous</button><span aria-live="polite" class="slide-counter">1 / 13</span><button class="slide-next" type="button">Next →</button></div><label class="slide-jump-label">Go to slide <select aria-label="Go to slide" class="slide-jump"><option value="0">1</option><option value="1">2</option><option value="2">3</option><option value="3">4</option><option value="4">5</option><option value="5">6</option><option value="6">7</option><option value="7">8</option><option value="8">9</option><option value="9">10</option><option value="10">11</option><option value="11">12</option><option value="12">13</option></select></label><button aria-pressed="false" class="deck-all" type="button">Show all slides</button><a class="reader-link" href="#full-notes">Read the complete lecture ↓</a></section><section aria-label="Hybrid retrieval" class="visual-lesson"><div class="eyebrow">Explore the mechanism</div><h2>Hybrid retrieval</h2><p class="visual-intro">Inspect rank fusion and candidate recall after understanding exact vector search.</p><div data-widget="retrieval"><p>Enable JavaScript to use this illustration. The lecture notes below explain the same mechanism.</p></div></section><article class="prose full-notes" id="full-notes"><div class="eyebrow">Complete lecture reader</div><h2>Read the full explanation</h2><h3 id="a-basic-pipeline-gives-us-observable-failures">A basic pipeline gives us observable failures</h3>
-<p>Suppose the handbook assistant handles direct questions but misses “At what time can pupils board the morning transport?” The relevant passage uses bus leaves. Another failure quotes a correct time from the wrong year.</p>
-<p>These are different problems. Semantic retrieval may help with paraphrasing. Required version filtering addresses scope. A more elaborate prompt cannot reliably repair a mislabeled source record.</p>
-<p>Begin every change with an observed error and a hypothesis about the failed boundary. This keeps improvements connected to a task rather than a list of fashionable components.</p>
-<h3 id="combining-lexical-and-dense-candidates">Combining lexical and dense candidates</h3>
-<p>Lexical search can handle exact names well; dense search can handle some paraphrases. Hybrid retrieval combines candidates from both.</p>
-<p>Scores may live on different scales. Adding a BM25 score directly to a cosine score without calibration changes the meaning unpredictably. Rank fusion combines ordering information instead.</p>
-<p>Reciprocal rank fusion uses a sum of 1/(c+rank) over candidate lists. An absent item contributes zero from that list. The constant c controls how sharply top positions dominate.</p>
-<h3 id="a-worked-fusion-comparison">A worked fusion comparison</h3>
-<p>Passage A is rank 1 in lexical search and rank 10 in dense search. Passage B is rank 2 in both. With c=60, A scores 1/61+1/70≈0.030679, while B scores 2/62≈0.032258.</p>
-<p>B wins this comparison because both lists rank it consistently well. The values are rank-derived scores, not calibrated probabilities of correctness.</p>
-<p>Changing c changes the weighting. Compare the final candidate set and downstream task result rather than judging a setting only by which passage wins one designed example.</p>
-<h3 id="reranking-spends-more-work-on-selected-pairs">Reranking spends more work on selected pairs</h3>
-<p>A cross-encoder can read the question and each candidate passage jointly to estimate relevance. Unlike cached bi-encoder vectors, this work happens for the query-passage pair.</p>
-<p>Rerank a sufficiently broad candidate pool, then select a smaller evidence set. If necessary evidence never entered the pool, the reranker cannot restore it.</p>
-<p>Measure candidate recall before reranking and answer quality afterward. The separation tells you whether failures concern finding evidence, ordering it, or using it.</p>
-<h3 id="context-construction-after-ranking">Context construction after ranking</h3>
-<p>Deduplicate highly overlapping chunks, preserve source labels, and include needed exceptions. A small retrieved chunk may point to a larger parent section that supplies coherent context.</p>
-<p>A two-version comparison needs diversity of versions, while a precise single-version question needs the requested scope. Selection depends on the task rather than a universal instruction to maximize diversity.</p>
-<p>Pack against the actual token budget and reserve output space. Record selected source IDs and the exact packed prompt so an error can be reproduced.</p>
-<h3 id="query-rewriting-and-multi-step-retrieval">Query rewriting and multi step retrieval</h3>
-<p>A conversational question such as “Does that apply next year?” may need reference resolution. A rewrite can make the intended year and subject explicit.</p>
-<p>Rewriting can also introduce an unsupported assumption. Keep the original question, log the transformation, and preserve scope/authorization constraints independently.</p>
-<p>Multiple retrieval steps are useful when a task needs them. They add latency and additional failure paths. Compare with a single-step baseline under a stated resource budget.</p>
-<h3 id="a-controlled-experiment">A controlled experiment</h3>
-<p>Use the same corpus, chunks, question set, version rules, generator, decoding settings, and answer rubric. Compare lexical, dense, fusion, and a reranking or selection improvement.</p>
-<p>Save raw candidate lists and answer outputs. Slice by exact identifier, paraphrase, multi-source question, absence, and version comparison.</p>
-<p>If one method improves paraphrases but harms exact names, investigate the pattern. Add routing only if you can define and test the rule, rather than hiding the tradeoff in an aggregate average.</p>
-<h3 id="worked-practice-and-a-readiness-check">Worked practice and a readiness check</h3>
-<p>Reproduce the RRF calculation, then remove a required passage from both candidate lists. Explain why increasing reranker quality cannot fix that particular absence.</p>
-<p>Run one real RAG comparison and manually audit claims and citations. A valid source ID is only a structural check; inspect whether the cited passage supports the claim.</p>
-<p>You are ready when you can justify one pipeline addition by a measured error reduction and state the quality, complexity, and latency costs.</p>
-<h3 id="a-deeper-pass-after-the-worked-introduction">A deeper pass after the worked introduction</h3>
-<p>The following reference treatment is for a second pass. First explain the ordinary example above, then use the equations and implementation details below to make the explanation more precise.</p>
-<h3 id="further-study-14-intuition">Further study 14 Intuition</h3>
-<p>Lexical and semantic search make different errors. Hybrid retrieval combines candidate lists; reranking spends more work judging the best candidates. These are separate operations. Reranking cannot recover a relevant document absent from its candidate set.</p>
-<p>Do not add BM25 scores directly to cosine scores without a justified calibration: their scales differ. Reciprocal rank fusion combines ranks: <code>RRF(d) = sum_lists 1/(c + rank_list(d))</code>, with ranks starting at one. c controls how sharply top ranks dominate. Choose settings on development data, and compare against each component alone.</p>
-<h3 id="further-study-14-worked-fusion">Further study 14 Worked fusion</h3>
-<p>With c=60, passage A ranked 1st lexically and 10th semantically scores <code>1/61 + 1/70</code>, approximately 0.03068. Passage B ranked 2nd in both scores <code>2/62</code>, approximately 0.03226. B wins because both systems support it. A document absent from one finite list contributes zero from that list. Fusion does not mean the scores are probabilities.</p>
-<p>A cross-encoder reads question and candidate together to assign a relevance score. Rerank a sufficiently broad candidate pool, then select a small evidence set. Diversification can reduce near-duplicates, but too much diversity may discard necessary details from one source. Parent-child retrieval can search small chunks and include a larger parent section for coherent context.</p>
-<h3 id="further-study-14-query-transformation">Further study 14 Query transformation</h3>
-<p>Query rewriting resolves conversational references or expands terms. Multi-query retrieval can broaden recall. Hypothetical-document approaches generate a possible answer-like passage to embed. These can help some distributions but may introduce unsupported assumptions, extra latency and correlated false evidence. Keep the original query and log transformations. Version and access constraints must survive rewriting.</p>
-<h3 id="further-study-14-experiment">Further study 14 Experiment</h3>
-<p>Compare lexical only, dense only, rank fusion, and fusion plus a reranker on the same frozen development split. In the notebook, a simple deterministic reranking demonstration teaches the interface; an actual neural reranker is an optional extension, not a claimed baseline result. Report candidate recall before reranking and answer metrics after generation. This separates a recall problem from an ordering problem.</p>
-<p>If hybrid improves identifiers but harms paraphrases, examine slice results and consider targeted routing. Do not add routing until you can explain its decision boundary and evaluation. A more complex pipeline has more timeouts, caches, artifacts and failure paths.</p>
-<p><strong>Exit criterion:</strong> calculate RRF, explain candidate recall, and justify whether the measured quality gain merits added latency. <strong>Reading:</strong> R07 for embedding side; optional R25 lexical model. <strong>Tutorial:</strong> 20.</p></article><nav aria-label="Adjacent lectures" class="chapter-pagination"><a href="19.html"><small>Previous week</small>RAG as an open book question</a><a href="21.html"><small>Next week</small>Evaluating retrieval answers and uncertainty</a></nav></div><footer class="footer"><span>Applied AI · An independent self-study course</span><span>32 weeks · 10 hours per week</span><a href="../resources.html#about-this-course">About and sources</a></footer></main><dialog aria-labelledby="search-title" class="search-dialog"><div class="dialog-head"><h2 id="search-title">Find a concept</h2><button aria-label="Close search" class="search-close" type="button">Close</button></div><label class="sr-only" for="course-search">Search all lectures and tutorials</label><input autocomplete="off" id="course-search" placeholder="Try attention, fine-tuning, or harness…" type="search"/><p aria-live="polite" class="search-status">Search lecture notes, tutorials, tests and readings.</p><div class="search-results"></div></dialog><div aria-live="polite" class="toast" role="status"></div></body></html>
+<html lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width,initial-scale=1" name="viewport"/>
+  <title>
+   Improving RAG without losing the basic task · Applied AI
+  </title>
+  <meta content="Applied generative AI and LLM systems course material" name="description"/>
+  <meta content="#173c36" name="theme-color"/>
+  <link href="../assets/favicon.svg" rel="icon" type="image/svg+xml"/>
+  <link href="../assets/style.css" rel="stylesheet"/>
+  <link href="../assets/slides.css" rel="stylesheet"/>
+  <script>
+   window.COURSE_BASE="../";
+  </script>
+  <script defer="" src="../assets/site-config.js">
+  </script>
+  <script defer="" src="../assets/search-index.js">
+  </script>
+  <script defer="" src="../assets/app.js">
+  </script>
+  <script defer="" src="../assets/visuals.js">
+  </script>
+  <script defer="" src="../assets/slides.js">
+  </script>
+  <script defer="" src="../assets/beginner-visuals.js">
+  </script>
+  <link href="../zh-HK/lectures/20.html" hreflang="zh-HK" rel="alternate"/>
+  <link href="../assets/bilingual.css" rel="stylesheet"/>
+  <link href="../assets/reader-v3.css" rel="stylesheet"/>
+  <script defer="True" src="../assets/reader-v3.js">
+  </script>
+ </head>
+ <body data-page-kind="lecture" data-week="20">
+  <a class="skip-link" href="#main">
+   Skip to content
+  </a>
+  <header class="topbar">
+   <button aria-controls="course-sidebar" aria-expanded="false" class="menu-toggle" type="button">
+    Menu
+   </button>
+   <a class="brand" href="../index.html">
+    <span aria-hidden="true" class="brand-mark">
+     a
+     <span>
+      i
+     </span>
+    </span>
+    <span>
+     APPLIED AI
+     <small>
+      Principles into practice
+     </small>
+    </span>
+   </a>
+   <nav aria-label="Main navigation">
+    <a href="../index.html">
+     The course
+    </a>
+    <a href="../visuals.html">
+     Visual lab
+    </a>
+    <a href="../project.html">
+     Project
+    </a>
+    <a class="language-switch" href="../zh-HK/lectures/20.html" hreflang="zh-HK" lang="zh-HK">
+     繁體中文
+    </a>
+   </nav>
+   <button class="search-open" type="button">
+    Search the course
+    <span aria-hidden="true">
+     /
+    </span>
+   </button>
+  </header>
+  <aside aria-label="Course chapters" class="sidebar" id="course-sidebar">
+   <a class="side-home" href="../index.html">
+    Course overview
+   </a>
+   <details class="semester-nav">
+    <summary>
+     Semester 1
+     <span>
+      Weeks 1–16
+     </span>
+    </summary>
+    <ol start="1">
+     <li>
+      <a href="../lectures/01.html">
+       <span class="week-number">
+        01
+       </span>
+       <span>
+        What a language model is trying to learn
+       </span>
+       <span class="week-tick" data-week-tick="1">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/02.html">
+       <span class="week-number">
+        02
+       </span>
+       <span>
+        From text to tokens and numerical IDs
+       </span>
+       <span class="week-tick" data-week-tick="2">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/03.html">
+       <span class="week-number">
+        03
+       </span>
+       <span>
+        What word vectors can represent
+       </span>
+       <span class="week-tick" data-week-tick="3">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/04.html">
+       <span class="week-number">
+        04
+       </span>
+       <span>
+        From scores to probabilities and learning signals
+       </span>
+       <span class="week-tick" data-week-tick="4">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/05.html">
+       <span class="week-number">
+        05
+       </span>
+       <span>
+        Why language needs context and order
+       </span>
+       <span class="week-tick" data-week-tick="5">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/06.html">
+       <span class="week-number">
+        06
+       </span>
+       <span>
+        Attention begins as a weighted mixture
+       </span>
+       <span class="week-tick" data-week-tick="6">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/07.html">
+       <span class="week-number">
+        07
+       </span>
+       <span>
+        Where queries keys and values come from
+       </span>
+       <span class="week-tick" data-week-tick="7">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/08.html">
+       <span class="week-number">
+        08
+       </span>
+       <span>
+        Scaling and masking attention correctly
+       </span>
+       <span class="week-tick" data-week-tick="8">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/09.html">
+       <span class="week-number">
+        09
+       </span>
+       <span>
+        Multiple attention heads and position
+       </span>
+       <span class="week-tick" data-week-tick="9">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/10.html">
+       <span class="week-number">
+        10
+       </span>
+       <span>
+        The transformer block step by step
+       </span>
+       <span class="week-tick" data-week-tick="10">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/11.html">
+       <span class="week-number">
+        11
+       </span>
+       <span>
+        Encoders decoders and complete model architectures
+       </span>
+       <span class="week-tick" data-week-tick="11">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/12.html">
+       <span class="week-number">
+        12
+       </span>
+       <span>
+        Training a small transformer
+       </span>
+       <span class="week-tick" data-week-tick="12">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/13.html">
+       <span class="week-number">
+        13
+       </span>
+       <span>
+        Generation decoding and the KV cache
+       </span>
+       <span class="week-tick" data-week-tick="13">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/14.html">
+       <span class="week-number">
+        14
+       </span>
+       <span>
+        From pretraining to instruction following and reasoning
+       </span>
+       <span class="week-tick" data-week-tick="14">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/15.html">
+       <span class="week-number">
+        15
+       </span>
+       <span>
+        Generative AI beyond text
+       </span>
+       <span class="week-tick" data-week-tick="15">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/16.html">
+       <span class="week-number">
+        16
+       </span>
+       <span>
+        A complete transformer walkthrough and first semester review
+       </span>
+       <span class="week-tick" data-week-tick="16">
+       </span>
+      </a>
+     </li>
+    </ol>
+   </details>
+   <details class="semester-nav" open="">
+    <summary>
+     Semester 2
+     <span>
+      Weeks 17–32
+     </span>
+    </summary>
+    <ol start="17">
+     <li>
+      <a href="../lectures/17.html">
+       <span class="week-number">
+        17
+       </span>
+       <span>
+        From word vectors to semantic search
+       </span>
+       <span class="week-tick" data-week-tick="17">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/18.html">
+       <span class="week-number">
+        18
+       </span>
+       <span>
+        A vector database from a list of vectors
+       </span>
+       <span class="week-tick" data-week-tick="18">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/19.html">
+       <span class="week-number">
+        19
+       </span>
+       <span>
+        RAG as an open book question
+       </span>
+       <span class="week-tick" data-week-tick="19">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a aria-current="page" href="../lectures/20.html">
+       <span class="week-number">
+        20
+       </span>
+       <span>
+        Improving RAG without losing the basic task
+       </span>
+       <span class="week-tick" data-week-tick="20">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/21.html">
+       <span class="week-number">
+        21
+       </span>
+       <span>
+        Evaluating retrieval answers and uncertainty
+       </span>
+       <span class="week-tick" data-week-tick="21">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/22.html">
+       <span class="week-number">
+        22
+       </span>
+       <span>
+        CPU GPU memory and model resource accounting
+       </span>
+       <span class="week-tick" data-week-tick="22">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/23.html">
+       <span class="week-number">
+        23
+       </span>
+       <span>
+        CUDA kernels and profiling
+       </span>
+       <span class="week-tick" data-week-tick="23">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/24.html">
+       <span class="week-number">
+        24
+       </span>
+       <span>
+        Fine tuning starts with a teaching dataset
+       </span>
+       <span class="week-tick" data-week-tick="24">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/25.html">
+       <span class="week-number">
+        25
+       </span>
+       <span>
+        LoRA and QLoRA from a small matrix
+       </span>
+       <span class="week-tick" data-week-tick="25">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/26.html">
+       <span class="week-number">
+        26
+       </span>
+       <span>
+        Fine tuning experiments preferences and distillation
+       </span>
+       <span class="week-tick" data-week-tick="26">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/27.html">
+       <span class="week-number">
+        27
+       </span>
+       <span>
+        Tools functions workflows and agents
+       </span>
+       <span class="week-tick" data-week-tick="27">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/28.html">
+       <span class="week-number">
+        28
+       </span>
+       <span>
+        Harnesses planning memory and bounded execution
+       </span>
+       <span class="week-tick" data-week-tick="28">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/29.html">
+       <span class="week-number">
+        29
+       </span>
+       <span>
+        From a notebook to MLOps and inference serving
+       </span>
+       <span class="week-tick" data-week-tick="29">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/30.html">
+       <span class="week-number">
+        30
+       </span>
+       <span>
+        Monitoring security regression tests and rollback
+       </span>
+       <span class="week-tick" data-week-tick="30">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/31.html">
+       <span class="week-number">
+        31
+       </span>
+       <span>
+        Integrating the documentation assistant and advanced extensions
+       </span>
+       <span class="week-tick" data-week-tick="31">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/32.html">
+       <span class="week-number">
+        32
+       </span>
+       <span>
+        Review defense and a continuing learning plan
+       </span>
+       <span class="week-tick" data-week-tick="32">
+       </span>
+      </a>
+     </li>
+    </ol>
+   </details>
+   <div class="side-links">
+    <a href="../visuals.html">
+     Visual laboratory
+     <span>
+      14 interactive lessons
+     </span>
+    </a>
+    <a href="../project.html">
+     Documentation assistant
+     <span>
+      Your capstone project
+     </span>
+    </a>
+    <a href="../resources.html">
+     Readings and setup
+    </a>
+   </div>
+   <div class="side-progress">
+    <div>
+     <span>
+      Your progress
+     </span>
+     <strong data-progress-count="">
+      0 / 32
+     </strong>
+    </div>
+    <progress aria-label="Completed lectures" max="32" value="0">
+    </progress>
+    <small>
+     Saved in this browser
+    </small>
+   </div>
+  </aside>
+  <main class="main" id="main">
+   <div class="content">
+    <div class="chapter-header">
+     <div class="eyebrow">
+      Semester 2 / Week 20
+     </div>
+     <h1>
+      Improving RAG without losing the basic task
+     </h1>
+    </div>
+    <div class="lesson-links">
+     <a href="../tutorials/20.html">
+      Tutorial 20
+     </a>
+     <a href="../tests/20.html">
+      Test your understanding
+     </a>
+     <button aria-pressed="false" class="mark-complete" data-week="20" type="button">
+      Mark as complete
+     </button>
+    </div>
+    <div aria-label="Lesson view" class="lesson-mode" role="tablist">
+     <button aria-controls="full-notes" aria-selected="true" data-mode="read" id="mode-read" role="tab" type="button">
+      Read lesson
+     </button>
+     <button aria-controls="lecture-slides" aria-selected="false" data-mode="slides" id="mode-slides" role="tab" type="button">
+      Lesson slides
+     </button>
+    </div>
+    <section aria-label="Lecture slides" class="lecture-deck" hidden="" id="lecture-slides" role="tabpanel">
+     <div class="deck-top">
+      <div>
+       <div class="eyebrow">
+        Lecture slides · Week 20
+       </div>
+       <h2>
+        Key steps and worked visuals
+       </h2>
+      </div>
+      <button class="deck-present" type="button">
+       Present
+      </button>
+     </div>
+     <p class="deck-help">
+      Use these slides to review the mechanism. Open “Read the worked explanation” for the complete notes and code.
+     </p>
+     <div aria-label="Presentation: use left and right arrow keys" class="slide-viewport" tabindex="0">
+      <section class="lecture-slide" data-slide="">
+       <div class="slide-stage">
+        Week 20 · Section 1
+       </div>
+       <h3>
+        A basic pipeline gives us observable failures
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Suppose the handbook assistant handles direct questions but misses “At what time can pupils board the morning transport?” The relevant passage uses bus leaves.
+         </li>
+         <li>
+          These are different problems.
+         </li>
+         <li>
+          Begin every change with an observed error and a hypothesis about the failed boundary.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#a-basic-pipeline-gives-us-observable-failures">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 20 · Section 2
+       </div>
+       <h3>
+        Combining lexical and dense candidates
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Lexical search can handle exact names well; dense search can handle some paraphrases.
+         </li>
+         <li>
+          Scores may live on different scales.
+         </li>
+         <li>
+          Reciprocal rank fusion uses a sum of 1/(c+rank) over candidate lists.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#combining-lexical-and-dense-candidates">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 20 · Section 3
+       </div>
+       <h3>
+        A worked fusion comparison
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Passage A is rank 1 in lexical search and rank 10 in dense search.
+         </li>
+         <li>
+          B wins this comparison because both lists rank it consistently well.
+         </li>
+         <li>
+          Changing c changes the weighting.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#a-worked-fusion-comparison">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 20 · Section 4
+       </div>
+       <h3>
+        Reranking spends more work on selected pairs
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          A cross-encoder can read the question and each candidate passage jointly to estimate relevance.
+         </li>
+         <li>
+          Rerank a sufficiently broad candidate pool, then select a smaller evidence set.
+         </li>
+         <li>
+          Measure candidate recall before reranking and answer quality afterward.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#reranking-spends-more-work-on-selected-pairs">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 20 · Section 5
+       </div>
+       <h3>
+        Context construction after ranking
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Deduplicate highly overlapping chunks, preserve source labels, and include needed exceptions.
+         </li>
+         <li>
+          A two-version comparison needs diversity of versions, while a precise single-version question needs the requested scope.
+         </li>
+         <li>
+          Pack against the actual token budget and reserve output space.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#context-construction-after-ranking">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 20 · Section 6
+       </div>
+       <h3>
+        Query rewriting and multi step retrieval
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          A conversational question such as “Does that apply next year?” may need reference resolution.
+         </li>
+         <li>
+          Rewriting can also introduce an unsupported assumption.
+         </li>
+         <li>
+          Multiple retrieval steps are useful when a task needs them.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#query-rewriting-and-multi-step-retrieval">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 20 · Section 7
+       </div>
+       <h3>
+        A controlled experiment
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Use the same corpus, chunks, question set, version rules, generator, decoding settings, and answer rubric.
+         </li>
+         <li>
+          Save raw candidate lists and answer outputs.
+         </li>
+         <li>
+          If one method improves paraphrases but harms exact names, investigate the pattern.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#a-controlled-experiment">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 20 · Section 8
+       </div>
+       <h3>
+        Worked practice and a readiness check
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Reproduce the RRF calculation, then remove a required passage from both candidate lists.
+         </li>
+         <li>
+          Run one real RAG comparison and manually audit claims and citations.
+         </li>
+         <li>
+          You are ready when you can justify one pipeline addition by a measured error reduction and state the quality, complexity, and latency costs.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#worked-practice-and-a-readiness-check">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+     </div>
+     <div class="deck-controls">
+      <button class="slide-prev" type="button">
+       ← Previous
+      </button>
+      <span aria-live="polite" class="slide-counter">
+       1 / 8
+      </span>
+      <button class="slide-next" type="button">
+       Next →
+      </button>
+     </div>
+     <label class="slide-jump-label">
+      Go to slide
+      <select aria-label="Go to slide" class="slide-jump">
+       <option value="0">
+        1. A basic pipeline gives us observable failures
+       </option>
+       <option value="1">
+        2. Combining lexical and dense candidates
+       </option>
+       <option value="2">
+        3. A worked fusion comparison
+       </option>
+       <option value="3">
+        4. Reranking spends more work on selected pairs
+       </option>
+       <option value="4">
+        5. Context construction after ranking
+       </option>
+       <option value="5">
+        6. Query rewriting and multi step retrieval
+       </option>
+       <option value="6">
+        7. A controlled experiment
+       </option>
+       <option value="7">
+        8. Worked practice and a readiness check
+       </option>
+      </select>
+     </label>
+     <button aria-pressed="false" class="deck-all" type="button">
+      Show all slides
+     </button>
+    </section>
+    <section aria-label="Hybrid retrieval" class="visual-lesson">
+     <div class="eyebrow">
+      Explore the mechanism
+     </div>
+     <h2>
+      Hybrid retrieval
+     </h2>
+     <p class="visual-intro">
+      Inspect rank fusion and candidate recall after understanding exact vector search.
+     </p>
+     <div data-widget="retrieval">
+      <p>
+       Enable JavaScript to use this illustration. The lecture notes below explain the same mechanism.
+      </p>
+     </div>
+    </section>
+    <nav aria-label="In this lesson" class="reader-toc">
+     <strong>
+      In this lesson
+     </strong>
+     <ol>
+      <li>
+       <a href="#a-basic-pipeline-gives-us-observable-failures">
+        A basic pipeline gives us observable failures
+       </a>
+      </li>
+      <li>
+       <a href="#combining-lexical-and-dense-candidates">
+        Combining lexical and dense candidates
+       </a>
+      </li>
+      <li>
+       <a href="#a-worked-fusion-comparison">
+        A worked fusion comparison
+       </a>
+      </li>
+      <li>
+       <a href="#reranking-spends-more-work-on-selected-pairs">
+        Reranking spends more work on selected pairs
+       </a>
+      </li>
+      <li>
+       <a href="#context-construction-after-ranking">
+        Context construction after ranking
+       </a>
+      </li>
+      <li>
+       <a href="#query-rewriting-and-multi-step-retrieval">
+        Query rewriting and multi step retrieval
+       </a>
+      </li>
+      <li>
+       <a href="#a-controlled-experiment">
+        A controlled experiment
+       </a>
+      </li>
+      <li>
+       <a href="#worked-practice-and-a-readiness-check">
+        Worked practice and a readiness check
+       </a>
+      </li>
+     </ol>
+    </nav>
+    <article class="prose full-notes" id="full-notes" role="tabpanel">
+     <div class="eyebrow">
+      Complete lecture reader
+     </div>
+     <h2>
+      Read the full explanation
+     </h2>
+     <h3 id="a-basic-pipeline-gives-us-observable-failures">
+      A basic pipeline gives us observable failures
+     </h3>
+     <p>
+      Suppose the handbook assistant handles direct questions but misses “At what time can pupils board the morning transport?” The relevant passage uses bus leaves. Another failure quotes a correct time from the wrong year.
+     </p>
+     <p>
+      These are different problems. Semantic retrieval may help with paraphrasing. Required version filtering addresses scope. A more elaborate prompt cannot reliably repair a mislabeled source record.
+     </p>
+     <p>
+      Begin every change with an observed error and a hypothesis about the failed boundary. This keeps improvements connected to a task rather than a list of fashionable components.
+     </p>
+     <h3 id="combining-lexical-and-dense-candidates">
+      Combining lexical and dense candidates
+     </h3>
+     <p>
+      Lexical search can handle exact names well; dense search can handle some paraphrases. Hybrid retrieval combines candidates from both.
+     </p>
+     <p>
+      Scores may live on different scales. Adding a BM25 score directly to a cosine score without calibration changes the meaning unpredictably. Rank fusion combines ordering information instead.
+     </p>
+     <p>
+      Reciprocal rank fusion uses a sum of 1/(c+rank) over candidate lists. An absent item contributes zero from that list. The constant c controls how sharply top positions dominate.
+     </p>
+     <h3 id="a-worked-fusion-comparison">
+      A worked fusion comparison
+     </h3>
+     <p>
+      Passage A is rank 1 in lexical search and rank 10 in dense search. Passage B is rank 2 in both. With c=60, A scores 1/61+1/70≈0.030679, while B scores 2/62≈0.032258.
+     </p>
+     <p>
+      B wins this comparison because both lists rank it consistently well. The values are rank-derived scores, not calibrated probabilities of correctness.
+     </p>
+     <p>
+      Changing c changes the weighting. Compare the final candidate set and downstream task result rather than judging a setting only by which passage wins one designed example.
+     </p>
+     <h3 id="reranking-spends-more-work-on-selected-pairs">
+      Reranking spends more work on selected pairs
+     </h3>
+     <p>
+      A cross-encoder can read the question and each candidate passage jointly to estimate relevance. Unlike cached bi-encoder vectors, this work happens for the query-passage pair.
+     </p>
+     <p>
+      Rerank a sufficiently broad candidate pool, then select a smaller evidence set. If necessary evidence never entered the pool, the reranker cannot restore it.
+     </p>
+     <p>
+      Measure candidate recall before reranking and answer quality afterward. The separation tells you whether failures concern finding evidence, ordering it, or using it.
+     </p>
+     <h3 id="context-construction-after-ranking">
+      Context construction after ranking
+     </h3>
+     <p>
+      Deduplicate highly overlapping chunks, preserve source labels, and include needed exceptions. A small retrieved chunk may point to a larger parent section that supplies coherent context.
+     </p>
+     <p>
+      A two-version comparison needs diversity of versions, while a precise single-version question needs the requested scope. Selection depends on the task rather than a universal instruction to maximize diversity.
+     </p>
+     <p>
+      Pack against the actual token budget and reserve output space. Record selected source IDs and the exact packed prompt so an error can be reproduced.
+     </p>
+     <h3 id="query-rewriting-and-multi-step-retrieval">
+      Query rewriting and multi step retrieval
+     </h3>
+     <p>
+      A conversational question such as “Does that apply next year?” may need reference resolution. A rewrite can make the intended year and subject explicit.
+     </p>
+     <p>
+      Rewriting can also introduce an unsupported assumption. Keep the original question, log the transformation, and preserve scope/authorization constraints independently.
+     </p>
+     <p>
+      Multiple retrieval steps are useful when a task needs them. They add latency and additional failure paths. Compare with a single-step baseline under a stated resource budget.
+     </p>
+     <h3 id="a-controlled-experiment">
+      A controlled experiment
+     </h3>
+     <p>
+      Use the same corpus, chunks, question set, version rules, generator, decoding settings, and answer rubric. Compare lexical, dense, fusion, and a reranking or selection improvement.
+     </p>
+     <p>
+      Save raw candidate lists and answer outputs. Slice by exact identifier, paraphrase, multi-source question, absence, and version comparison.
+     </p>
+     <p>
+      If one method improves paraphrases but harms exact names, investigate the pattern. Add routing only if you can define and test the rule, rather than hiding the tradeoff in an aggregate average.
+     </p>
+     <h3 id="worked-practice-and-a-readiness-check">
+      Worked practice and a readiness check
+     </h3>
+     <p>
+      Reproduce the RRF calculation, then remove a required passage from both candidate lists. Explain why increasing reranker quality cannot fix that particular absence.
+     </p>
+     <p>
+      Run one real RAG comparison and manually audit claims and citations. A valid source ID is only a structural check; inspect whether the cited passage supports the claim.
+     </p>
+     <p>
+      You are ready when you can justify one pipeline addition by a measured error reduction and state the quality, complexity, and latency costs.
+     </p>
+     <details class="reference-details" id="reference-details">
+      <summary>
+       Reference details and checks
+      </summary>
+      <h3 id="review-a-intuition">
+       Review A: Intuition
+      </h3>
+      <p>
+       Lexical and semantic search make different errors. Hybrid retrieval combines candidate lists; reranking spends more work judging the best candidates. These are separate operations. Reranking cannot recover a relevant document absent from its candidate set.
+      </p>
+      <p>
+       Do not add BM25 scores directly to cosine scores without a justified calibration: their scales differ. Reciprocal rank fusion combines ranks:
+       <code>
+        RRF(d) = sum_lists 1/(c + rank_list(d))
+       </code>
+       , with ranks starting at one. c controls how sharply top ranks dominate. Choose settings on development data, and compare against each component alone.
+      </p>
+      <h3 id="review-a-worked-fusion">
+       Review A: Worked fusion
+      </h3>
+      <p>
+       With c=60, passage A ranked 1st lexically and 10th semantically scores
+       <code>
+        1/61 + 1/70
+       </code>
+       , approximately 0.03068. Passage B ranked 2nd in both scores
+       <code>
+        2/62
+       </code>
+       , approximately 0.03226. B wins because both systems support it. A document absent from one finite list contributes zero from that list. Fusion does not mean the scores are probabilities.
+      </p>
+      <p>
+       A cross-encoder reads question and candidate together to assign a relevance score. Rerank a sufficiently broad candidate pool, then select a small evidence set. Diversification can reduce near-duplicates, but too much diversity may discard necessary details from one source. Parent-child retrieval can search small chunks and include a larger parent section for coherent context.
+      </p>
+      <h3 id="review-a-query-transformation">
+       Review A: Query transformation
+      </h3>
+      <p>
+       Query rewriting resolves conversational references or expands terms. Multi-query retrieval can broaden recall. Hypothetical-document approaches generate a possible answer-like passage to embed. These can help some distributions but may introduce unsupported assumptions, extra latency and correlated false evidence. Keep the original query and log transformations. Version and access constraints must survive rewriting.
+      </p>
+      <h3 id="review-a-experiment">
+       Review A: Experiment
+      </h3>
+      <p>
+       Compare lexical only, dense only, rank fusion, and fusion plus a reranker on the same frozen development split. In the notebook, a simple deterministic reranking demonstration teaches the interface; an actual neural reranker is an optional extension, not a claimed baseline result. Report candidate recall before reranking and answer metrics after generation. This separates a recall problem from an ordering problem.
+      </p>
+      <p>
+       If hybrid improves identifiers but harms paraphrases, examine slice results and consider targeted routing. Do not add routing until you can explain its decision boundary and evaluation. A more complex pipeline has more timeouts, caches, artifacts and failure paths.
+      </p>
+      <p>
+       <strong>
+        Exit criterion:
+       </strong>
+       calculate RRF, explain candidate recall, and justify whether the measured quality gain merits added latency.
+       <strong>
+        Reading:
+       </strong>
+       <a class="inline-reading" href="../resources.html#reference-r07">
+        Sentence Transformers semantic similarity (R07)
+       </a>
+       for embedding side; optional
+       <a class="inline-reading" href="../resources.html#reference-r25">
+        Robertson and Zaragoza Probabilistic Relevance Framework (R25)
+       </a>
+       lexical model.
+       <strong>
+        Tutorial:
+       </strong>
+       20.
+      </p>
+     </details>
+    </article>
+    <nav aria-label="Adjacent lectures" class="chapter-pagination">
+     <a href="19.html">
+      <small>
+       Previous week
+      </small>
+      RAG as an open book question
+     </a>
+     <a href="21.html">
+      <small>
+       Next week
+      </small>
+      Evaluating retrieval answers and uncertainty
+     </a>
+    </nav>
+   </div>
+   <footer class="footer">
+    <span>
+     Applied AI · An independent self-study course
+    </span>
+    <span>
+     32 weeks · 10 hours per week
+    </span>
+    <a href="../resources.html#about-this-course">
+     About and sources
+    </a>
+   </footer>
+  </main>
+  <dialog aria-labelledby="search-title" class="search-dialog">
+   <div class="dialog-head">
+    <h2 id="search-title">
+     Find a concept
+    </h2>
+    <button aria-label="Close search" class="search-close" type="button">
+     Close
+    </button>
+   </div>
+   <label class="sr-only" for="course-search">
+    Search all lectures and tutorials
+   </label>
+   <input autocomplete="off" id="course-search" placeholder="Try attention, fine-tuning, or harness…" type="search"/>
+   <p aria-live="polite" class="search-status">
+    Search lecture notes, tutorials, tests and readings.
+   </p>
+   <div class="search-results">
+   </div>
+  </dialog>
+  <div aria-live="polite" class="toast" role="status">
+  </div>
+ </body>
+</html>

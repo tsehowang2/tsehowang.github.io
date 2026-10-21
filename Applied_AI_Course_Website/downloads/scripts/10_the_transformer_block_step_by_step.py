@@ -1,4 +1,3 @@
-# %%
 from pathlib import Path
 import sys,json,time,random,hashlib,math
 if hasattr(sys.stdout,'reconfigure'): sys.stdout.reconfigure(encoding='utf-8')
@@ -11,7 +10,7 @@ from coursekit.core import *
 random.seed(7)
 print('Course root:',COURSE)
 
-# %%
+
 import numpy as np
 rng=np.random.default_rng(7);x=rng.normal(size=(6,4))
 def ln(a):return (a-a.mean(-1,keepdims=True))/np.sqrt(a.var(-1,keepdims=True)+1e-5)
@@ -25,3 +24,11 @@ delta=np.maximum(changed@W1,0)@W2-mlp
 assert np.allclose(np.delete(delta,2,axis=0),0)
 print('MLP is positionwise; a changed row did not change the other rows.')
 
+
+d_model=64;H=8;H_kv=2;d_head=d_model//H;d_ff=4*d_model
+mha=4*d_model*d_model
+gqa=2*d_model*d_model+2*d_model*H_kv*d_head
+plain_mlp=2*d_model*d_ff;gated_mlp=3*d_model*d_ff
+assert mha+plain_mlp==49152 and gqa<mha and gated_mlp>plain_mlp
+print('MHA, GQA:',mha,gqa,'Plain, gated MLP:',plain_mlp,gated_mlp)
+print('MHA plus plain MLP:',mha+plain_mlp,'GQA plus gated MLP:',gqa+gated_mlp)

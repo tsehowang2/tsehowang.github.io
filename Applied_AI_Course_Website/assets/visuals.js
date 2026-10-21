@@ -51,19 +51,19 @@
   };
 
   factories.geometry=root=>{
-    root.innerHTML='<div class="viz-controls"><label>Query direction <input class="angle" type="range" min="-30" max="90" value="0"><output class="degrees">0°</output></label><label><input class="normalize" type="checkbox"> Show unit vectors</label></div><div class="viz-display"><div class="geometry-svg"></div><div class="geometry-metrics" aria-live="polite"></div></div>'+note('A = (0.8, 0.6), B = (4, 3). Both point in the same direction. Unit normalization changes the drawing; the scores below compare the original vectors. These coordinates illustrate geometry, not real semantic embeddings.');
+    root.innerHTML='<div class="viz-controls"><label>Query direction <input class="angle" type="range" min="-30" max="90" value="0"><output class="degrees">0°</output></label><label><input class="normalize" type="checkbox"> Show unit vectors</label></div><div class="viz-display"><div class="geometry-svg"></div><div class="geometry-metrics" aria-live="polite"></div></div>'+note('A = (0.8, 0.6), B = (3, 4). At query = (1, 0), dot product ranks B first, while cosine ranks A first. Unit normalization changes the drawing; the scores compare the original vectors. These are teaching coordinates, not measured model embeddings.');
     function render(){
       const angle=+$('.angle',root).value*Math.PI/180,unit=$('.normalize',root).checked;
       text(root,'.degrees',$('.angle',root).value+'°');
-      const q=[Math.cos(angle),Math.sin(angle)],a=unit?[.8,.6]:[.8,.6],b=unit?[.8,.6]:[4,3];
+      const q=[Math.cos(angle),Math.sin(angle)],a=unit?[.8,.6]:[.8,.6],b=unit?[.6,.8]:[3,4];
       const width=Math.max(240,Math.round(root.getBoundingClientRect().width-42)),height=230,domain=unit?1.5:5.2;
       const scale=Math.min((width-75)/(domain+1),(height-70)/(domain+1)),ox=40+scale*.4,oy=height*.7;
       const coord=v=>[ox+v[0]*scale,oy-v[1]*scale];
       const vector=(v,label,color,dy)=>{const [x,y]=coord(v);return '<line x1="'+ox+'" y1="'+oy+'" x2="'+x+'" y2="'+y+'" stroke="'+color+'" stroke-width="2.5"/><circle cx="'+x+'" cy="'+y+'" r="4" fill="'+color+'"/><text x="'+(x+7)+'" y="'+(y+dy)+'" style="font-size:12px;fill:'+color+'">'+label+'</text>';};
       const radius=scale;
-      $('.geometry-svg',root).innerHTML='<svg viewBox="0 0 '+width+' '+height+'" role="img" aria-label="Two passage vectors have the same direction but different lengths; query direction is adjustable."><line x1="15" y1="'+oy+'" x2="'+(width-15)+'" y2="'+oy+'" stroke="#b4c2b0"/><line x1="'+ox+'" y1="10" x2="'+ox+'" y2="'+(height-13)+'" stroke="#b4c2b0"/><circle cx="'+ox+'" cy="'+oy+'" r="'+radius+'" fill="none" stroke="#c5d2bf" stroke-dasharray="4 4"/>'+vector(b,unit?'A and B (unit)':'B','#b76738',-7)+(unit?'':vector(a,'A','#375f82',-7))+vector(q,'query','#2d6a56',17)+'<text x="'+(width-36)+'" y="'+(oy+20)+'" style="font-size:10px">x</text><text x="'+(ox-15)+'" y="15" style="font-size:10px">y</text></svg>';
-      const da=q[0]*.8+q[1]*.6,db=q[0]*4+q[1]*3;
-      $('.geometry-metrics',root).innerHTML='<span>Dot A <strong>'+da.toFixed(3)+'</strong></span><span>Dot B <strong>'+db.toFixed(3)+'</strong></span><span>Cosine A and B <strong>'+da.toFixed(3)+'</strong></span>';
+      $('.geometry-svg',root).innerHTML='<svg viewBox="0 0 '+width+' '+height+'" role="img" aria-label="Two passage vectors differ in direction and length; query direction is adjustable."><line x1="15" y1="'+oy+'" x2="'+(width-15)+'" y2="'+oy+'" stroke="#b4c2b0"/><line x1="'+ox+'" y1="10" x2="'+ox+'" y2="'+(height-13)+'" stroke="#b4c2b0"/><circle cx="'+ox+'" cy="'+oy+'" r="'+radius+'" fill="none" stroke="#c5d2bf" stroke-dasharray="4 4"/>'+vector(b,unit?'B (unit)':'B','#b76738',-7)+vector(a,unit?'A (unit)':'A','#375f82',-7)+vector(q,'query','#2d6a56',17)+'<text x="'+(width-36)+'" y="'+(oy+20)+'" style="font-size:10px">x</text><text x="'+(ox-15)+'" y="15" style="font-size:10px">y</text></svg>';
+      const da=q[0]*.8+q[1]*.6,db=q[0]*3+q[1]*4;
+      $('.geometry-metrics',root).innerHTML='<span>Dot A <strong>'+da.toFixed(3)+'</strong></span><span>Dot B <strong>'+db.toFixed(3)+'</strong></span><span>Cosine A <strong>'+da.toFixed(3)+'</strong></span><span>Cosine B <strong>'+(db/5).toFixed(3)+'</strong></span>';
     }
     $('.angle',root).addEventListener('input',render);$('.normalize',root).addEventListener('change',render);
     new ResizeObserver(render).observe(root);render();

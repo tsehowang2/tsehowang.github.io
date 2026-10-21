@@ -1,55 +1,1522 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/><title>Generative AI beyond text · Applied AI</title><meta content="Applied generative AI and LLM systems course material" name="description"/><meta content="#173c36" name="theme-color"/><link href="../assets/favicon.svg" rel="icon" type="image/svg+xml"/><link href="../assets/style.css" rel="stylesheet"/><link href="../assets/slides.css" rel="stylesheet"/><script>window.COURSE_BASE="../";</script><script defer="" src="../assets/site-config.js"></script><script defer="" src="../assets/search-index.js"></script><script defer="" src="../assets/app.js"></script><script defer="" src="../assets/visuals.js"></script><script defer="" src="../assets/slides.js"></script><script defer="" src="../assets/beginner-visuals.js"></script><link href="../zh-HK/lectures/15.html" hreflang="zh-HK" rel="alternate"/><link href="../assets/bilingual.css" rel="stylesheet"/></head><body data-page-kind="lecture" data-week="15"><a class="skip-link" href="#main">Skip to content</a><header class="topbar"><button aria-controls="course-sidebar" aria-expanded="false" class="menu-toggle" type="button">Menu</button><a class="brand" href="../index.html"><span aria-hidden="true" class="brand-mark">a<span>i</span></span><span>APPLIED AI<small>Principles into practice</small></span></a><nav aria-label="Main navigation"><a href="../index.html">The course</a><a href="../visuals.html">Visual lab</a><a href="../project.html">Project</a><a class="language-switch" href="../zh-HK/lectures/15.html" hreflang="zh-HK" lang="zh-HK">繁體中文</a></nav><button class="search-open" type="button">Search the course <span aria-hidden="true">/</span></button></header><aside aria-label="Course chapters" class="sidebar" id="course-sidebar"><a class="side-home" href="../index.html">Course overview</a><details class="semester-nav" open=""><summary>Semester 1<span>Weeks 1–16</span></summary><ol start="1"><li><a href="../lectures/01.html"><span class="week-number">01</span><span>What a language model is trying to learn</span><span class="week-tick" data-week-tick="1"></span></a></li><li><a href="../lectures/02.html"><span class="week-number">02</span><span>From text to tokens and numerical IDs</span><span class="week-tick" data-week-tick="2"></span></a></li><li><a href="../lectures/03.html"><span class="week-number">03</span><span>What word vectors can represent</span><span class="week-tick" data-week-tick="3"></span></a></li><li><a href="../lectures/04.html"><span class="week-number">04</span><span>From scores to probabilities and learning signals</span><span class="week-tick" data-week-tick="4"></span></a></li><li><a href="../lectures/05.html"><span class="week-number">05</span><span>Why language needs context and order</span><span class="week-tick" data-week-tick="5"></span></a></li><li><a href="../lectures/06.html"><span class="week-number">06</span><span>Attention begins as a weighted mixture</span><span class="week-tick" data-week-tick="6"></span></a></li><li><a href="../lectures/07.html"><span class="week-number">07</span><span>Where queries keys and values come from</span><span class="week-tick" data-week-tick="7"></span></a></li><li><a href="../lectures/08.html"><span class="week-number">08</span><span>Scaling and masking attention correctly</span><span class="week-tick" data-week-tick="8"></span></a></li><li><a href="../lectures/09.html"><span class="week-number">09</span><span>Multiple attention heads and position</span><span class="week-tick" data-week-tick="9"></span></a></li><li><a href="../lectures/10.html"><span class="week-number">10</span><span>The transformer block step by step</span><span class="week-tick" data-week-tick="10"></span></a></li><li><a href="../lectures/11.html"><span class="week-number">11</span><span>Encoders decoders and complete model architectures</span><span class="week-tick" data-week-tick="11"></span></a></li><li><a href="../lectures/12.html"><span class="week-number">12</span><span>Training a small transformer</span><span class="week-tick" data-week-tick="12"></span></a></li><li><a href="../lectures/13.html"><span class="week-number">13</span><span>Generation decoding and the KV cache</span><span class="week-tick" data-week-tick="13"></span></a></li><li><a href="../lectures/14.html"><span class="week-number">14</span><span>From pretraining to instruction following and reasoning</span><span class="week-tick" data-week-tick="14"></span></a></li><li><a aria-current="page" href="../lectures/15.html"><span class="week-number">15</span><span>Generative AI beyond text</span><span class="week-tick" data-week-tick="15"></span></a></li><li><a href="../lectures/16.html"><span class="week-number">16</span><span>A complete transformer walkthrough and first semester review</span><span class="week-tick" data-week-tick="16"></span></a></li></ol></details><details class="semester-nav"><summary>Semester 2<span>Weeks 17–32</span></summary><ol start="17"><li><a href="../lectures/17.html"><span class="week-number">17</span><span>From word vectors to semantic search</span><span class="week-tick" data-week-tick="17"></span></a></li><li><a href="../lectures/18.html"><span class="week-number">18</span><span>A vector database from a list of vectors</span><span class="week-tick" data-week-tick="18"></span></a></li><li><a href="../lectures/19.html"><span class="week-number">19</span><span>RAG as an open book question</span><span class="week-tick" data-week-tick="19"></span></a></li><li><a href="../lectures/20.html"><span class="week-number">20</span><span>Improving RAG without losing the basic task</span><span class="week-tick" data-week-tick="20"></span></a></li><li><a href="../lectures/21.html"><span class="week-number">21</span><span>Evaluating retrieval answers and uncertainty</span><span class="week-tick" data-week-tick="21"></span></a></li><li><a href="../lectures/22.html"><span class="week-number">22</span><span>CPU GPU memory and model resource accounting</span><span class="week-tick" data-week-tick="22"></span></a></li><li><a href="../lectures/23.html"><span class="week-number">23</span><span>CUDA kernels and profiling</span><span class="week-tick" data-week-tick="23"></span></a></li><li><a href="../lectures/24.html"><span class="week-number">24</span><span>Fine tuning starts with a teaching dataset</span><span class="week-tick" data-week-tick="24"></span></a></li><li><a href="../lectures/25.html"><span class="week-number">25</span><span>LoRA and QLoRA from a small matrix</span><span class="week-tick" data-week-tick="25"></span></a></li><li><a href="../lectures/26.html"><span class="week-number">26</span><span>Fine tuning experiments preferences and distillation</span><span class="week-tick" data-week-tick="26"></span></a></li><li><a href="../lectures/27.html"><span class="week-number">27</span><span>Tools functions workflows and agents</span><span class="week-tick" data-week-tick="27"></span></a></li><li><a href="../lectures/28.html"><span class="week-number">28</span><span>Harnesses planning memory and bounded execution</span><span class="week-tick" data-week-tick="28"></span></a></li><li><a href="../lectures/29.html"><span class="week-number">29</span><span>From a notebook to MLOps and inference serving</span><span class="week-tick" data-week-tick="29"></span></a></li><li><a href="../lectures/30.html"><span class="week-number">30</span><span>Monitoring security regression tests and rollback</span><span class="week-tick" data-week-tick="30"></span></a></li><li><a href="../lectures/31.html"><span class="week-number">31</span><span>Integrating the documentation assistant and advanced extensions</span><span class="week-tick" data-week-tick="31"></span></a></li><li><a href="../lectures/32.html"><span class="week-number">32</span><span>Review defense and a continuing learning plan</span><span class="week-tick" data-week-tick="32"></span></a></li></ol></details><div class="side-links"><a href="../visuals.html">Visual laboratory <span>14 interactive lessons</span></a><a href="../project.html">Documentation assistant <span>Your capstone project</span></a><a href="../resources.html">Readings and setup</a></div><div class="side-progress"><div><span>Your progress</span><strong data-progress-count="">0 / 32</strong></div><progress aria-label="Completed lectures" max="32" value="0"></progress><small>Saved in this browser</small></div></aside><main class="main" id="main"><div class="content"><div class="chapter-header"><div class="eyebrow">Semester 1 / Week 15</div><h1>Generative AI beyond text</h1></div><div class="lesson-links"><a href="../tutorials/15.html">Tutorial 15</a><a href="../tests/15.html">Test your understanding</a><button aria-pressed="false" class="mark-complete" data-week="15" type="button">Mark as complete</button></div><section aria-label="Lecture slides" class="lecture-deck" id="lecture-slides"><div class="deck-top"><div><div class="eyebrow">Lecture slides · Week 15</div><h2>Learn one step at a time.</h2></div><button class="deck-present" type="button">Present</button></div><p class="deck-help">Read each explanation, pause to predict the result, then continue. Use the arrow keys while the presentation is focused. The complete lecture reader is below.</p><div aria-label="Presentation: use left and right arrow keys" class="slide-viewport" tabindex="0"><section class="lecture-slide" data-slide=""><div class="slide-stage">Start with an example</div><h3>Generation means modeling possible outputs</h3><div class="slide-prose"><p>Our text model generates a sequence by repeatedly predicting a token. Generative AI also includes images, sound, and other outputs. The common idea is learning a distribution or generation process; the mechanisms need not all be next-word prediction.</p>
-<p>Imagine a collection of handwritten pictures of buses. A classifier might predict whether an image contains a bus. A generator aims to produce new samples with relevant structure.</p>
-<p>A generated image can look plausible without reproducing a particular training image. It can also contain errors. As with language, plausibility and task correctness need separate evaluation.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Start with an example</div><h3>A latent representation and a decoder</h3><div class="slide-prose"><p>An autoencoder maps an input into a compressed representation and reconstructs it. A variational autoencoder adds a probabilistic latent formulation and regularization that encourages a useful latent distribution.</p>
-<p>Think of a small vector controlling several aspects of a drawing, but do not assume each coordinate automatically has a clean human label. The network learns a representation under its objective.</p>
-<p>A basic VAE objective balances reconstruction with a term relating an approximate latent posterior to a chosen prior. The model can then sample a latent and decode it. A bottleneck picture explains the roles before the full variational derivation.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Build the mechanism</div><h3>Adversarial learning</h3><div class="slide-prose"><p>A GAN trains a generator against a discriminator. The discriminator learns to distinguish relevant training examples from generated examples under the training setup; the generator tries to produce outputs that challenge it.</p>
-<p>The two objectives interact. A strong-looking sample alone does not show that the learned distribution covers all important cases. Training instability and limited diversity are issues to investigate.</p>
-<p>We study the arrangement to distinguish it from token likelihood training, not to build a production image generator during this course.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Build the mechanism</div><h3>Diffusion starts from corruption</h3><div class="slide-prose"><p>Take a simple eight-by-eight pattern representing a letter. Add controlled Gaussian noise to make increasingly corrupted versions. A diffusion model learns a denoising-related prediction across noise levels.</p>
-<p>The forward formula can be written x_t=√ᾱ_t x_0+√(1−ᾱ_t) ε, where ε is standard Gaussian noise. The coefficients determine the relative signal and noise.</p>
-<p>At ᾱ=1, the sample is the original signal. At ᾱ=0, the formula gives noise. Intermediate values are mixtures. A slider illustrating this forward formula does not itself implement a learned reverse model.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Build the mechanism</div><h3>A concrete scalar diffusion calculation</h3><div class="slide-prose"><p>Let x0=2, ε=-1, and ᾱ=0.64. Then √ᾱ=0.8 and √(1−ᾱ)=0.6, giving x_t=0.8×2+0.6×(-1)=1.</p>
-<p>This arithmetic is the same for each element of a simple tensor under the noising expression. A learned model predicts noise or a related target, and sampling uses a reverse procedure with a schedule.</p>
-<p>Moving a display slider backward can reveal less noisy versions because the original signal remains known to the visualization. That is different from learning to generate a new sample starting from unknown noise.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Build the mechanism</div><h3>Flow ideas and multimodal tokens</h3><div class="slide-prose"><p>Normalizing flows use invertible transformations with a tractable change-of-variables formulation. Flow matching learns a vector field transporting between distributions. They are related to generative modeling but should not be treated as synonyms for every diffusion implementation.</p>
-<p>Some multimodal systems represent images or audio using patches, features, or discrete tokens and connect them to transformer components. The representation and objective define what the model predicts.</p>
-<p>A language-model vocabulary and an image-patch representation have different semantics. “The model uses tokens” does not mean the tokens correspond to ordinary words.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Go deeper and check understanding</div><h3>Comparing families by the question each answers</h3><div class="slide-prose"><p>For autoregressive text, ask which next-token conditional is modeled and how generation proceeds. For a VAE, ask about latent variables, reconstruction, and prior matching. For a GAN, ask about the generator-discriminator training game. For diffusion, ask about forward corruption and the learned reverse-related predictions.</p>
-<p>These questions are more informative than memorizing a list of names. A system may combine components from several families.</p>
-<p>Keep the scope clear: our deep implementation path remains the text transformer. The other families receive conceptual and numerical introductions with optional deeper readings.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Go deeper and check understanding</div><h3>Worked practice and a readiness check</h3><div class="slide-prose"><p>Calculate the forward-noising formula at ᾱ=0 and ᾱ=1 for the scalar example. Then explain why an image classifier and image generator have different output tasks.</p>
-<p>Draw the roles in a VAE and a GAN without claiming that every latent coordinate has a fixed interpretation. Write one sentence describing what diffusion learns beyond displaying noisy pictures.</p>
-<p>You are ready when generative AI is broader than LLMs in your mental model and you can compare mechanisms without collapsing them into a single buzzword.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Go deeper and check understanding</div><h3>Different kinds of uncertainty</h3><div class="slide-prose"><p>A text prefix may have several sensible next words. An image prompt may admit many valid pictures. A spoken sentence may be delivered with different voices and timing. Generative modeling must accommodate variation rather than assume there is always one exact output.</p>
-<p>Evaluation therefore depends on the task. A bus fare calculation has a checkable numerical answer. A new bus illustration has many acceptable appearances, but it can still fail an instruction such as “show exactly two wheels.” A sample can be diverse yet wrong, or accurate to a narrow instruction yet repetitive across a collection.</p>
-<p>This helps explain why a classification accuracy, a text likelihood, and a human preference score cannot be substituted for one another without a task definition. The modeling family, training objective, and evaluation each answer a different question.</p></div></section></div><div class="deck-controls"><button class="slide-prev" type="button">← Previous</button><span aria-live="polite" class="slide-counter">1 / 9</span><button class="slide-next" type="button">Next →</button></div><label class="slide-jump-label">Go to slide <select aria-label="Go to slide" class="slide-jump"><option value="0">1</option><option value="1">2</option><option value="2">3</option><option value="3">4</option><option value="4">5</option><option value="5">6</option><option value="6">7</option><option value="7">8</option><option value="8">9</option></select></label><button aria-pressed="false" class="deck-all" type="button">Show all slides</button><a class="reader-link" href="#full-notes">Read the complete lecture ↓</a></section><section aria-label="From a signal to noise" class="visual-lesson"><div class="eyebrow">Explore the mechanism</div><h2>From a signal to noise</h2><p class="visual-intro">Move along a deterministic forward-noising schedule. This is not a trained image generator.</p><div data-widget="diffusion"><p>Enable JavaScript to use this illustration. The lecture notes below explain the same mechanism.</p></div></section><article class="prose full-notes" id="full-notes"><div class="eyebrow">Complete lecture reader</div><h2>Read the full explanation</h2><h3 id="generation-means-modeling-possible-outputs">Generation means modeling possible outputs</h3>
-<p>Our text model generates a sequence by repeatedly predicting a token. Generative AI also includes images, sound, and other outputs. The common idea is learning a distribution or generation process; the mechanisms need not all be next-word prediction.</p>
-<p>Imagine a collection of handwritten pictures of buses. A classifier might predict whether an image contains a bus. A generator aims to produce new samples with relevant structure.</p>
-<p>A generated image can look plausible without reproducing a particular training image. It can also contain errors. As with language, plausibility and task correctness need separate evaluation.</p>
-<h3 id="a-latent-representation-and-a-decoder">A latent representation and a decoder</h3>
-<p>An autoencoder maps an input into a compressed representation and reconstructs it. A variational autoencoder adds a probabilistic latent formulation and regularization that encourages a useful latent distribution.</p>
-<p>Think of a small vector controlling several aspects of a drawing, but do not assume each coordinate automatically has a clean human label. The network learns a representation under its objective.</p>
-<p>A basic VAE objective balances reconstruction with a term relating an approximate latent posterior to a chosen prior. The model can then sample a latent and decode it. A bottleneck picture explains the roles before the full variational derivation.</p>
-<h3 id="adversarial-learning">Adversarial learning</h3>
-<p>A GAN trains a generator against a discriminator. The discriminator learns to distinguish relevant training examples from generated examples under the training setup; the generator tries to produce outputs that challenge it.</p>
-<p>The two objectives interact. A strong-looking sample alone does not show that the learned distribution covers all important cases. Training instability and limited diversity are issues to investigate.</p>
-<p>We study the arrangement to distinguish it from token likelihood training, not to build a production image generator during this course.</p>
-<h3 id="diffusion-starts-from-corruption">Diffusion starts from corruption</h3>
-<p>Take a simple eight-by-eight pattern representing a letter. Add controlled Gaussian noise to make increasingly corrupted versions. A diffusion model learns a denoising-related prediction across noise levels.</p>
-<p>The forward formula can be written x_t=√ᾱ_t x_0+√(1−ᾱ_t) ε, where ε is standard Gaussian noise. The coefficients determine the relative signal and noise.</p>
-<p>At ᾱ=1, the sample is the original signal. At ᾱ=0, the formula gives noise. Intermediate values are mixtures. A slider illustrating this forward formula does not itself implement a learned reverse model.</p>
-<h3 id="a-concrete-scalar-diffusion-calculation">A concrete scalar diffusion calculation</h3>
-<p>Let x0=2, ε=-1, and ᾱ=0.64. Then √ᾱ=0.8 and √(1−ᾱ)=0.6, giving x_t=0.8×2+0.6×(-1)=1.</p>
-<p>This arithmetic is the same for each element of a simple tensor under the noising expression. A learned model predicts noise or a related target, and sampling uses a reverse procedure with a schedule.</p>
-<p>Moving a display slider backward can reveal less noisy versions because the original signal remains known to the visualization. That is different from learning to generate a new sample starting from unknown noise.</p>
-<h3 id="flow-ideas-and-multimodal-tokens">Flow ideas and multimodal tokens</h3>
-<p>Normalizing flows use invertible transformations with a tractable change-of-variables formulation. Flow matching learns a vector field transporting between distributions. They are related to generative modeling but should not be treated as synonyms for every diffusion implementation.</p>
-<p>Some multimodal systems represent images or audio using patches, features, or discrete tokens and connect them to transformer components. The representation and objective define what the model predicts.</p>
-<p>A language-model vocabulary and an image-patch representation have different semantics. “The model uses tokens” does not mean the tokens correspond to ordinary words.</p>
-<h3 id="comparing-families-by-the-question-each-answers">Comparing families by the question each answers</h3>
-<p>For autoregressive text, ask which next-token conditional is modeled and how generation proceeds. For a VAE, ask about latent variables, reconstruction, and prior matching. For a GAN, ask about the generator-discriminator training game. For diffusion, ask about forward corruption and the learned reverse-related predictions.</p>
-<p>These questions are more informative than memorizing a list of names. A system may combine components from several families.</p>
-<p>Keep the scope clear: our deep implementation path remains the text transformer. The other families receive conceptual and numerical introductions with optional deeper readings.</p>
-<h3 id="worked-practice-and-a-readiness-check">Worked practice and a readiness check</h3>
-<p>Calculate the forward-noising formula at ᾱ=0 and ᾱ=1 for the scalar example. Then explain why an image classifier and image generator have different output tasks.</p>
-<p>Draw the roles in a VAE and a GAN without claiming that every latent coordinate has a fixed interpretation. Write one sentence describing what diffusion learns beyond displaying noisy pictures.</p>
-<p>You are ready when generative AI is broader than LLMs in your mental model and you can compare mechanisms without collapsing them into a single buzzword.</p>
-<h3 id="different-kinds-of-uncertainty">Different kinds of uncertainty</h3>
-<p>A text prefix may have several sensible next words. An image prompt may admit many valid pictures. A spoken sentence may be delivered with different voices and timing. Generative modeling must accommodate variation rather than assume there is always one exact output.</p>
-<p>Evaluation therefore depends on the task. A bus fare calculation has a checkable numerical answer. A new bus illustration has many acceptable appearances, but it can still fail an instruction such as “show exactly two wheels.” A sample can be diverse yet wrong, or accurate to a narrow instruction yet repetitive across a collection.</p>
-<p>This helps explain why a classification accuracy, a text likelihood, and a human preference score cannot be substituted for one another without a task definition. The modeling family, training objective, and evaluation each answer a different question.</p></article><nav aria-label="Adjacent lectures" class="chapter-pagination"><a href="14.html"><small>Previous week</small>From pretraining to instruction following and reasoning</a><a href="16.html"><small>Next week</small>A complete transformer walkthrough and first semester review</a></nav></div><footer class="footer"><span>Applied AI · An independent self-study course</span><span>32 weeks · 10 hours per week</span><a href="../resources.html#about-this-course">About and sources</a></footer></main><dialog aria-labelledby="search-title" class="search-dialog"><div class="dialog-head"><h2 id="search-title">Find a concept</h2><button aria-label="Close search" class="search-close" type="button">Close</button></div><label class="sr-only" for="course-search">Search all lectures and tutorials</label><input autocomplete="off" id="course-search" placeholder="Try attention, fine-tuning, or harness…" type="search"/><p aria-live="polite" class="search-status">Search lecture notes, tutorials, tests and readings.</p><div class="search-results"></div></dialog><div aria-live="polite" class="toast" role="status"></div></body></html>
+<html lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width,initial-scale=1" name="viewport"/>
+  <title>
+   Generative AI beyond text · Applied AI
+  </title>
+  <meta content="Applied generative AI and LLM systems course material" name="description"/>
+  <meta content="#173c36" name="theme-color"/>
+  <link href="../assets/favicon.svg" rel="icon" type="image/svg+xml"/>
+  <link href="../assets/style.css" rel="stylesheet"/>
+  <link href="../assets/slides.css" rel="stylesheet"/>
+  <script>
+   window.COURSE_BASE="../";
+  </script>
+  <script defer="" src="../assets/site-config.js">
+  </script>
+  <script defer="" src="../assets/search-index.js">
+  </script>
+  <script defer="" src="../assets/app.js">
+  </script>
+  <script defer="" src="../assets/visuals.js">
+  </script>
+  <script defer="" src="../assets/slides.js">
+  </script>
+  <script defer="" src="../assets/beginner-visuals.js">
+  </script>
+  <link href="../zh-HK/lectures/15.html" hreflang="zh-HK" rel="alternate"/>
+  <link href="../assets/bilingual.css" rel="stylesheet"/>
+  <link href="../assets/reader-v3.css" rel="stylesheet"/>
+  <script defer="True" src="../assets/reader-v3.js">
+  </script>
+ </head>
+ <body data-page-kind="lecture" data-week="15">
+  <a class="skip-link" href="#main">
+   Skip to content
+  </a>
+  <header class="topbar">
+   <button aria-controls="course-sidebar" aria-expanded="false" class="menu-toggle" type="button">
+    Menu
+   </button>
+   <a class="brand" href="../index.html">
+    <span aria-hidden="true" class="brand-mark">
+     a
+     <span>
+      i
+     </span>
+    </span>
+    <span>
+     APPLIED AI
+     <small>
+      Principles into practice
+     </small>
+    </span>
+   </a>
+   <nav aria-label="Main navigation">
+    <a href="../index.html">
+     The course
+    </a>
+    <a href="../visuals.html">
+     Visual lab
+    </a>
+    <a href="../project.html">
+     Project
+    </a>
+    <a class="language-switch" href="../zh-HK/lectures/15.html" hreflang="zh-HK" lang="zh-HK">
+     繁體中文
+    </a>
+   </nav>
+   <button class="search-open" type="button">
+    Search the course
+    <span aria-hidden="true">
+     /
+    </span>
+   </button>
+  </header>
+  <aside aria-label="Course chapters" class="sidebar" id="course-sidebar">
+   <a class="side-home" href="../index.html">
+    Course overview
+   </a>
+   <details class="semester-nav" open="">
+    <summary>
+     Semester 1
+     <span>
+      Weeks 1–16
+     </span>
+    </summary>
+    <ol start="1">
+     <li>
+      <a href="../lectures/01.html">
+       <span class="week-number">
+        01
+       </span>
+       <span>
+        What a language model is trying to learn
+       </span>
+       <span class="week-tick" data-week-tick="1">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/02.html">
+       <span class="week-number">
+        02
+       </span>
+       <span>
+        From text to tokens and numerical IDs
+       </span>
+       <span class="week-tick" data-week-tick="2">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/03.html">
+       <span class="week-number">
+        03
+       </span>
+       <span>
+        What word vectors can represent
+       </span>
+       <span class="week-tick" data-week-tick="3">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/04.html">
+       <span class="week-number">
+        04
+       </span>
+       <span>
+        From scores to probabilities and learning signals
+       </span>
+       <span class="week-tick" data-week-tick="4">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/05.html">
+       <span class="week-number">
+        05
+       </span>
+       <span>
+        Why language needs context and order
+       </span>
+       <span class="week-tick" data-week-tick="5">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/06.html">
+       <span class="week-number">
+        06
+       </span>
+       <span>
+        Attention begins as a weighted mixture
+       </span>
+       <span class="week-tick" data-week-tick="6">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/07.html">
+       <span class="week-number">
+        07
+       </span>
+       <span>
+        Where queries keys and values come from
+       </span>
+       <span class="week-tick" data-week-tick="7">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/08.html">
+       <span class="week-number">
+        08
+       </span>
+       <span>
+        Scaling and masking attention correctly
+       </span>
+       <span class="week-tick" data-week-tick="8">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/09.html">
+       <span class="week-number">
+        09
+       </span>
+       <span>
+        Multiple attention heads and position
+       </span>
+       <span class="week-tick" data-week-tick="9">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/10.html">
+       <span class="week-number">
+        10
+       </span>
+       <span>
+        The transformer block step by step
+       </span>
+       <span class="week-tick" data-week-tick="10">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/11.html">
+       <span class="week-number">
+        11
+       </span>
+       <span>
+        Encoders decoders and complete model architectures
+       </span>
+       <span class="week-tick" data-week-tick="11">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/12.html">
+       <span class="week-number">
+        12
+       </span>
+       <span>
+        Training a small transformer
+       </span>
+       <span class="week-tick" data-week-tick="12">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/13.html">
+       <span class="week-number">
+        13
+       </span>
+       <span>
+        Generation decoding and the KV cache
+       </span>
+       <span class="week-tick" data-week-tick="13">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/14.html">
+       <span class="week-number">
+        14
+       </span>
+       <span>
+        From pretraining to instruction following and reasoning
+       </span>
+       <span class="week-tick" data-week-tick="14">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a aria-current="page" href="../lectures/15.html">
+       <span class="week-number">
+        15
+       </span>
+       <span>
+        Generative AI beyond text
+       </span>
+       <span class="week-tick" data-week-tick="15">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/16.html">
+       <span class="week-number">
+        16
+       </span>
+       <span>
+        A complete transformer walkthrough and first semester review
+       </span>
+       <span class="week-tick" data-week-tick="16">
+       </span>
+      </a>
+     </li>
+    </ol>
+   </details>
+   <details class="semester-nav">
+    <summary>
+     Semester 2
+     <span>
+      Weeks 17–32
+     </span>
+    </summary>
+    <ol start="17">
+     <li>
+      <a href="../lectures/17.html">
+       <span class="week-number">
+        17
+       </span>
+       <span>
+        From word vectors to semantic search
+       </span>
+       <span class="week-tick" data-week-tick="17">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/18.html">
+       <span class="week-number">
+        18
+       </span>
+       <span>
+        A vector database from a list of vectors
+       </span>
+       <span class="week-tick" data-week-tick="18">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/19.html">
+       <span class="week-number">
+        19
+       </span>
+       <span>
+        RAG as an open book question
+       </span>
+       <span class="week-tick" data-week-tick="19">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/20.html">
+       <span class="week-number">
+        20
+       </span>
+       <span>
+        Improving RAG without losing the basic task
+       </span>
+       <span class="week-tick" data-week-tick="20">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/21.html">
+       <span class="week-number">
+        21
+       </span>
+       <span>
+        Evaluating retrieval answers and uncertainty
+       </span>
+       <span class="week-tick" data-week-tick="21">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/22.html">
+       <span class="week-number">
+        22
+       </span>
+       <span>
+        CPU GPU memory and model resource accounting
+       </span>
+       <span class="week-tick" data-week-tick="22">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/23.html">
+       <span class="week-number">
+        23
+       </span>
+       <span>
+        CUDA kernels and profiling
+       </span>
+       <span class="week-tick" data-week-tick="23">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/24.html">
+       <span class="week-number">
+        24
+       </span>
+       <span>
+        Fine tuning starts with a teaching dataset
+       </span>
+       <span class="week-tick" data-week-tick="24">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/25.html">
+       <span class="week-number">
+        25
+       </span>
+       <span>
+        LoRA and QLoRA from a small matrix
+       </span>
+       <span class="week-tick" data-week-tick="25">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/26.html">
+       <span class="week-number">
+        26
+       </span>
+       <span>
+        Fine tuning experiments preferences and distillation
+       </span>
+       <span class="week-tick" data-week-tick="26">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/27.html">
+       <span class="week-number">
+        27
+       </span>
+       <span>
+        Tools functions workflows and agents
+       </span>
+       <span class="week-tick" data-week-tick="27">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/28.html">
+       <span class="week-number">
+        28
+       </span>
+       <span>
+        Harnesses planning memory and bounded execution
+       </span>
+       <span class="week-tick" data-week-tick="28">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/29.html">
+       <span class="week-number">
+        29
+       </span>
+       <span>
+        From a notebook to MLOps and inference serving
+       </span>
+       <span class="week-tick" data-week-tick="29">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/30.html">
+       <span class="week-number">
+        30
+       </span>
+       <span>
+        Monitoring security regression tests and rollback
+       </span>
+       <span class="week-tick" data-week-tick="30">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/31.html">
+       <span class="week-number">
+        31
+       </span>
+       <span>
+        Integrating the documentation assistant and advanced extensions
+       </span>
+       <span class="week-tick" data-week-tick="31">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/32.html">
+       <span class="week-number">
+        32
+       </span>
+       <span>
+        Review defense and a continuing learning plan
+       </span>
+       <span class="week-tick" data-week-tick="32">
+       </span>
+      </a>
+     </li>
+    </ol>
+   </details>
+   <div class="side-links">
+    <a href="../visuals.html">
+     Visual laboratory
+     <span>
+      14 interactive lessons
+     </span>
+    </a>
+    <a href="../project.html">
+     Documentation assistant
+     <span>
+      Your capstone project
+     </span>
+    </a>
+    <a href="../resources.html">
+     Readings and setup
+    </a>
+   </div>
+   <div class="side-progress">
+    <div>
+     <span>
+      Your progress
+     </span>
+     <strong data-progress-count="">
+      0 / 32
+     </strong>
+    </div>
+    <progress aria-label="Completed lectures" max="32" value="0">
+    </progress>
+    <small>
+     Saved in this browser
+    </small>
+   </div>
+  </aside>
+  <main class="main" id="main">
+   <div class="content">
+    <div class="chapter-header">
+     <div class="eyebrow">
+      Semester 1 / Week 15
+     </div>
+     <h1>
+      Generative AI beyond text
+     </h1>
+    </div>
+    <div class="lesson-links">
+     <a href="../tutorials/15.html">
+      Tutorial 15
+     </a>
+     <a href="../tests/15.html">
+      Test your understanding
+     </a>
+     <button aria-pressed="false" class="mark-complete" data-week="15" type="button">
+      Mark as complete
+     </button>
+    </div>
+    <div aria-label="Lesson view" class="lesson-mode" role="tablist">
+     <button aria-controls="full-notes" aria-selected="true" data-mode="read" id="mode-read" role="tab" type="button">
+      Read lesson
+     </button>
+     <button aria-controls="lecture-slides" aria-selected="false" data-mode="slides" id="mode-slides" role="tab" type="button">
+      Lesson slides
+     </button>
+    </div>
+    <section aria-label="Lecture slides" class="lecture-deck" hidden="" id="lecture-slides" role="tabpanel">
+     <div class="deck-top">
+      <div>
+       <div class="eyebrow">
+        Lecture slides · Week 15
+       </div>
+       <h2>
+        Key steps and worked visuals
+       </h2>
+      </div>
+      <button class="deck-present" type="button">
+       Present
+      </button>
+     </div>
+     <p class="deck-help">
+      Use these slides to review the mechanism. Open “Read the worked explanation” for the complete notes and code.
+     </p>
+     <div aria-label="Presentation: use left and right arrow keys" class="slide-viewport" tabindex="0">
+      <section class="lecture-slide" data-slide="">
+       <div class="slide-stage">
+        Week 15 · Section 1
+       </div>
+       <h3>
+        Generation means modeling possible outputs
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Our text model generates a sequence by repeatedly predicting a token.
+         </li>
+         <li>
+          Imagine a collection of handwritten pictures of buses.
+         </li>
+         <li>
+          A generated image can look plausible without reproducing a particular training image.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#generation-means-modeling-possible-outputs">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 15 · Section 2
+       </div>
+       <h3>
+        A latent representation and a decoder
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          An autoencoder maps an input into a compressed representation and reconstructs it.
+         </li>
+         <li>
+          Think of a small vector controlling several aspects of a drawing, but do not assume each coordinate automatically has a clean human label.
+         </li>
+         <li>
+          A basic VAE objective balances reconstruction with a term relating an approximate latent posterior to a chosen prior.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#a-latent-representation-and-a-decoder">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 15 · Section 3
+       </div>
+       <h3>
+        Adversarial learning
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          A GAN trains a generator against a discriminator.
+         </li>
+         <li>
+          The two objectives interact.
+         </li>
+         <li>
+          We study the arrangement to distinguish it from token likelihood training, not to build a production image generator during this course.
+         </li>
+        </ul>
+        <figure class="mechanism-figure">
+         <figcaption>
+          A diffusion training pair
+         </figcaption>
+         <ol class="mechanism-flow">
+          <li>
+           <span class="mechanism-number">
+            01
+           </span>
+           <strong>
+            Clean sample
+           </strong>
+           <small>
+            x₀
+           </small>
+          </li>
+          <li>
+           <span class="mechanism-number">
+            02
+           </span>
+           <strong>
+            Corrupt
+           </strong>
+           <small>
+            choose t, add noise ε
+           </small>
+          </li>
+          <li>
+           <span class="mechanism-number">
+            03
+           </span>
+           <strong>
+            Predict
+           </strong>
+           <small>
+            εθ(x_t, t, condition)
+           </small>
+          </li>
+          <li>
+           <span class="mechanism-number">
+            04
+           </span>
+           <strong>
+            Learn
+           </strong>
+           <small>
+            squared noise-prediction error
+           </small>
+          </li>
+         </ol>
+         <p>
+          Generation runs a learned reverse process; moving a forward-noising slider backward is not that learned process.
+         </p>
+        </figure>
+        <a class="slide-section-link" href="#adversarial-learning">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 15 · Section 4
+       </div>
+       <h3>
+        Diffusion starts from corruption
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Take a simple eight-by-eight pattern representing a letter.
+         </li>
+         <li>
+          The forward formula can be written x_t=√ᾱ_t x_0+√(1−ᾱ_t) ε, where ε is standard Gaussian noise.
+         </li>
+         <li>
+          At ᾱ=1, the sample is the original signal.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#diffusion-starts-from-corruption">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 15 · Section 5
+       </div>
+       <h3>
+        A concrete scalar diffusion calculation
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Let x0=2, ε=-1, and ᾱ=0.64.
+         </li>
+         <li>
+          This arithmetic is the same for each element of a simple tensor under the noising expression.
+         </li>
+         <li>
+          Moving a display slider backward can reveal less noisy versions because the original signal remains known to the visualization.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#a-concrete-scalar-diffusion-calculation">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 15 · Section 6
+       </div>
+       <h3>
+        What the denoiser learns and how generation runs backward
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          During training we know a clean example x_0.
+         </li>
+         <li>
+          Generation starts with a new noise sample, not the original image.
+         </li>
+        </ul>
+        <div class="table-wrap">
+         <table>
+          <thead>
+           <tr>
+            <th>
+             Stage
+            </th>
+            <th>
+             Known or supplied
+            </th>
+            <th>
+             Operation
+            </th>
+           </tr>
+          </thead>
+          <tbody>
+           <tr>
+            <td>
+             Training
+            </td>
+            <td>
+             x_0, t, ε
+            </td>
+            <td>
+             Create x_t; predict ε; calculate prediction error.
+            </td>
+           </tr>
+           <tr>
+            <td>
+             Sampling start
+            </td>
+            <td>
+             A fresh noise sample and optional condition.
+            </td>
+            <td>
+             Start at the noisiest scheduled state.
+            </td>
+           </tr>
+           <tr>
+            <td>
+             Reverse steps
+            </td>
+            <td>
+             x_t, t, condition
+            </td>
+            <td>
+             Predict a denoising target and update the state using a sampler.
+            </td>
+           </tr>
+          </tbody>
+         </table>
+        </div>
+        <a class="slide-section-link" href="#what-the-denoiser-learns-and-how-generation-runs-backward">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 15 · Section 7
+       </div>
+       <h3>
+        Latent diffusion and DiT move the same idea to different representations
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Latent diffusion first uses an image autoencoder to represent a clean image by a smaller latent tensor.
+         </li>
+         <li>
+          A Diffusion Transformer, or DiT, uses transformer blocks as the denoising backbone, often on patches of image latents.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#latent-diffusion-and-dit-move-the-same-idea-to-different-representations">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 15 · Section 8
+       </div>
+       <h3>
+        Classifier-free guidance combines conditional and unconditional predictions
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          For a prompt such as “a red school bus”, train a conditional denoiser while sometimes dropping the condition.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#classifier-free-guidance-combines-conditional-and-unconditional-predictions">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 15 · Section 9
+       </div>
+       <h3>
+        Flow matching learns a direction of transport
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          A simple flow-matching example joins a noise point x_noise=−1 to a data point x_data=2 by x_t=(1−t)x_noise+t*x_data.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#flow-matching-learns-a-direction-of-transport">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 15 · Section 10
+       </div>
+       <h3>
+        A vision-language model reads an image and produces language
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          A common VLM connects an image encoder, a projection or connector, and a language model.
+         </li>
+         <li>
+          Source: Denoising Diffusion Probabilistic Models .
+         </li>
+         <li>
+          Source: Latent diffusion models .
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#a-vision-language-model-reads-an-image-and-produces-language">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 15 · Section 11
+       </div>
+       <h3>
+        A vision-language model reads an image and produces language · continued
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Source: Diffusion Transformers .
+         </li>
+         <li>
+          Source: Classifier-free diffusion guidance .
+         </li>
+         <li>
+          Source: Flow matching .
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#a-vision-language-model-reads-an-image-and-produces-language">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 15 · Section 12
+       </div>
+       <h3>
+        Flow ideas and multimodal tokens
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Normalizing flows use invertible transformations with a tractable change-of-variables formulation.
+         </li>
+         <li>
+          Some multimodal systems represent images or audio using patches, features, or discrete tokens and connect them to transformer components.
+         </li>
+         <li>
+          A language-model vocabulary and an image-patch representation have different semantics.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#flow-ideas-and-multimodal-tokens">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 15 · Section 13
+       </div>
+       <h3>
+        Comparing families by the question each answers
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          For autoregressive text, ask which next-token conditional is modeled and how generation proceeds.
+         </li>
+         <li>
+          These questions are more informative than memorizing a list of names.
+         </li>
+         <li>
+          Keep the scope clear: our deep implementation path remains the text transformer.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#comparing-families-by-the-question-each-answers">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 15 · Section 14
+       </div>
+       <h3>
+        Worked practice and a readiness check
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Calculate the forward-noising formula at ᾱ=0 and ᾱ=1 for the scalar example.
+         </li>
+         <li>
+          Draw the roles in a VAE and a GAN without claiming that every latent coordinate has a fixed interpretation.
+         </li>
+         <li>
+          You are ready when generative AI is broader than LLMs in your mental model and you can compare mechanisms without collapsing them into a single buzzword.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#worked-practice-and-a-readiness-check">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 15 · Section 15
+       </div>
+       <h3>
+        Different kinds of uncertainty
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          A text prefix may have several sensible next words.
+         </li>
+         <li>
+          Evaluation therefore depends on the task.
+         </li>
+         <li>
+          This helps explain why a classification accuracy, a text likelihood, and a human preference score cannot be substituted for one another without a task definition.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#different-kinds-of-uncertainty">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+     </div>
+     <div class="deck-controls">
+      <button class="slide-prev" type="button">
+       ← Previous
+      </button>
+      <span aria-live="polite" class="slide-counter">
+       1 / 15
+      </span>
+      <button class="slide-next" type="button">
+       Next →
+      </button>
+     </div>
+     <label class="slide-jump-label">
+      Go to slide
+      <select aria-label="Go to slide" class="slide-jump">
+       <option value="0">
+        1. Generation means modeling possible outputs
+       </option>
+       <option value="1">
+        2. A latent representation and a decoder
+       </option>
+       <option value="2">
+        3. Adversarial learning
+       </option>
+       <option value="3">
+        4. Diffusion starts from corruption
+       </option>
+       <option value="4">
+        5. A concrete scalar diffusion calculation
+       </option>
+       <option value="5">
+        6. What the denoiser learns and how generation runs backward
+       </option>
+       <option value="6">
+        7. Latent diffusion and DiT move the same idea to different representations
+       </option>
+       <option value="7">
+        8. Classifier-free guidance combines conditional and unconditional predictions
+       </option>
+       <option value="8">
+        9. Flow matching learns a direction of transport
+       </option>
+       <option value="9">
+        10. A vision-language model reads an image and produces language
+       </option>
+       <option value="10">
+        11. A vision-language model reads an image and produces language · continued
+       </option>
+       <option value="11">
+        12. Flow ideas and multimodal tokens
+       </option>
+       <option value="12">
+        13. Comparing families by the question each answers
+       </option>
+       <option value="13">
+        14. Worked practice and a readiness check
+       </option>
+       <option value="14">
+        15. Different kinds of uncertainty
+       </option>
+      </select>
+     </label>
+     <button aria-pressed="false" class="deck-all" type="button">
+      Show all slides
+     </button>
+    </section>
+    <section aria-label="From a signal to noise" class="visual-lesson">
+     <div class="eyebrow">
+      Explore the mechanism
+     </div>
+     <h2>
+      From a signal to noise
+     </h2>
+     <p class="visual-intro">
+      Move along a deterministic forward-noising schedule. This is not a trained image generator.
+     </p>
+     <div data-widget="diffusion">
+      <p>
+       Enable JavaScript to use this illustration. The lecture notes below explain the same mechanism.
+      </p>
+     </div>
+    </section>
+    <nav aria-label="In this lesson" class="reader-toc">
+     <strong>
+      In this lesson
+     </strong>
+     <ol>
+      <li>
+       <a href="#generation-means-modeling-possible-outputs">
+        Generation means modeling possible outputs
+       </a>
+      </li>
+      <li>
+       <a href="#a-latent-representation-and-a-decoder">
+        A latent representation and a decoder
+       </a>
+      </li>
+      <li>
+       <a href="#adversarial-learning">
+        Adversarial learning
+       </a>
+      </li>
+      <li>
+       <a href="#diffusion-starts-from-corruption">
+        Diffusion starts from corruption
+       </a>
+      </li>
+      <li>
+       <a href="#a-concrete-scalar-diffusion-calculation">
+        A concrete scalar diffusion calculation
+       </a>
+      </li>
+      <li>
+       <a href="#what-the-denoiser-learns-and-how-generation-runs-backward">
+        What the denoiser learns and how generation runs backward
+       </a>
+      </li>
+      <li>
+       <a href="#latent-diffusion-and-dit-move-the-same-idea-to-different-representations">
+        Latent diffusion and DiT move the same idea to different representations
+       </a>
+      </li>
+      <li>
+       <a href="#classifier-free-guidance-combines-conditional-and-unconditional-predictions">
+        Classifier-free guidance combines conditional and unconditional predictions
+       </a>
+      </li>
+      <li>
+       <a href="#flow-matching-learns-a-direction-of-transport">
+        Flow matching learns a direction of transport
+       </a>
+      </li>
+      <li>
+       <a href="#a-vision-language-model-reads-an-image-and-produces-language">
+        A vision-language model reads an image and produces language
+       </a>
+      </li>
+      <li>
+       <a href="#flow-ideas-and-multimodal-tokens">
+        Flow ideas and multimodal tokens
+       </a>
+      </li>
+      <li>
+       <a href="#comparing-families-by-the-question-each-answers">
+        Comparing families by the question each answers
+       </a>
+      </li>
+      <li>
+       <a href="#worked-practice-and-a-readiness-check">
+        Worked practice and a readiness check
+       </a>
+      </li>
+      <li>
+       <a href="#different-kinds-of-uncertainty">
+        Different kinds of uncertainty
+       </a>
+      </li>
+     </ol>
+    </nav>
+    <article class="prose full-notes" id="full-notes" role="tabpanel">
+     <div class="eyebrow">
+      Complete lecture reader
+     </div>
+     <h2>
+      Read the full explanation
+     </h2>
+     <h3 id="generation-means-modeling-possible-outputs">
+      Generation means modeling possible outputs
+     </h3>
+     <p>
+      Our text model generates a sequence by repeatedly predicting a token. Generative AI also includes images, sound, and other outputs. The common idea is learning a distribution or generation process; the mechanisms need not all be next-word prediction.
+     </p>
+     <p>
+      Imagine a collection of handwritten pictures of buses. A classifier might predict whether an image contains a bus. A generator aims to produce new samples with relevant structure.
+     </p>
+     <p>
+      A generated image can look plausible without reproducing a particular training image. It can also contain errors. As with language, plausibility and task correctness need separate evaluation.
+     </p>
+     <h3 id="a-latent-representation-and-a-decoder">
+      A latent representation and a decoder
+     </h3>
+     <p>
+      An autoencoder maps an input into a compressed representation and reconstructs it. A variational autoencoder adds a probabilistic latent formulation and regularization that encourages a useful latent distribution.
+     </p>
+     <p>
+      Think of a small vector controlling several aspects of a drawing, but do not assume each coordinate automatically has a clean human label. The network learns a representation under its objective.
+     </p>
+     <p>
+      A basic VAE objective balances reconstruction with a term relating an approximate latent posterior to a chosen prior. The model can then sample a latent and decode it. A bottleneck picture explains the roles before the full variational derivation.
+     </p>
+     <h3 id="adversarial-learning">
+      Adversarial learning
+     </h3>
+     <figure class="mechanism-figure">
+      <figcaption>
+       A diffusion training pair
+      </figcaption>
+      <ol class="mechanism-flow">
+       <li>
+        <span class="mechanism-number">
+         01
+        </span>
+        <strong>
+         Clean sample
+        </strong>
+        <small>
+         x₀
+        </small>
+       </li>
+       <li>
+        <span class="mechanism-number">
+         02
+        </span>
+        <strong>
+         Corrupt
+        </strong>
+        <small>
+         choose t, add noise ε
+        </small>
+       </li>
+       <li>
+        <span class="mechanism-number">
+         03
+        </span>
+        <strong>
+         Predict
+        </strong>
+        <small>
+         εθ(x_t, t, condition)
+        </small>
+       </li>
+       <li>
+        <span class="mechanism-number">
+         04
+        </span>
+        <strong>
+         Learn
+        </strong>
+        <small>
+         squared noise-prediction error
+        </small>
+       </li>
+      </ol>
+      <p>
+       Generation runs a learned reverse process; moving a forward-noising slider backward is not that learned process.
+      </p>
+     </figure>
+     <p>
+      A GAN trains a generator against a discriminator. The discriminator learns to distinguish relevant training examples from generated examples under the training setup; the generator tries to produce outputs that challenge it.
+     </p>
+     <p>
+      The two objectives interact. A strong-looking sample alone does not show that the learned distribution covers all important cases. Training instability and limited diversity are issues to investigate.
+     </p>
+     <p>
+      We study the arrangement to distinguish it from token likelihood training, not to build a production image generator during this course.
+     </p>
+     <h3 id="diffusion-starts-from-corruption">
+      Diffusion starts from corruption
+     </h3>
+     <p>
+      Take a simple eight-by-eight pattern representing a letter. Add controlled Gaussian noise to make increasingly corrupted versions. A diffusion model learns a denoising-related prediction across noise levels.
+     </p>
+     <p>
+      The forward formula can be written x_t=√ᾱ_t x_0+√(1−ᾱ_t) ε, where ε is standard Gaussian noise. The coefficients determine the relative signal and noise.
+     </p>
+     <p>
+      At ᾱ=1, the sample is the original signal. At ᾱ=0, the formula gives noise. Intermediate values are mixtures. A slider illustrating this forward formula does not itself implement a learned reverse model.
+     </p>
+     <h3 id="a-concrete-scalar-diffusion-calculation">
+      A concrete scalar diffusion calculation
+     </h3>
+     <p>
+      Let x0=2, ε=-1, and ᾱ=0.64. Then √ᾱ=0.8 and √(1−ᾱ)=0.6, giving x_t=0.8×2+0.6×(-1)=1.
+     </p>
+     <p>
+      This arithmetic is the same for each element of a simple tensor under the noising expression. A learned model predicts noise or a related target, and sampling uses a reverse procedure with a schedule.
+     </p>
+     <p>
+      Moving a display slider backward can reveal less noisy versions because the original signal remains known to the visualization. That is different from learning to generate a new sample starting from unknown noise.
+     </p>
+     <h3 id="what-the-denoiser-learns-and-how-generation-runs-backward">
+      What the denoiser learns and how generation runs backward
+     </h3>
+     <p>
+      During training we know a clean example x_0. Sample a noise level t and Gaussian noise ε, construct x_t with the forward formula, and ask a network ε_θ(x_t,t) to predict that noise. A common simplified loss is the mean squared error between ε and ε_θ. For the scalar example above, if the actual ε is −1 and the prediction is −0.8, squared error is 0.04. The network must learn across many clean examples and noise levels.
+     </p>
+     <p>
+      Generation starts with a new noise sample, not the original image. At each scheduled step, the denoiser predicts noise or another trained target, and a sampler uses that prediction to form a less noisy state. In the DDPM parameterization, its reverse mean is μ_θ(x_t,t)=(x_t−β_t ε_θ(x_t,t)/√(1−ᾱ_t))/√α_t, where α_t=1−β_t and ᾱ_t is the accumulated product. A reverse step may add scheduled random noise as well. This is a learned transition; sliding backward through stored corruptions is only a visualization.
+     </p>
+     <div class="table-wrap">
+      <table>
+       <thead>
+        <tr>
+         <th>
+          Stage
+         </th>
+         <th>
+          Known or supplied
+         </th>
+         <th>
+          Operation
+         </th>
+        </tr>
+       </thead>
+       <tbody>
+        <tr>
+         <td>
+          Training
+         </td>
+         <td>
+          x_0, t, ε
+         </td>
+         <td>
+          Create x_t; predict ε; calculate prediction error.
+         </td>
+        </tr>
+        <tr>
+         <td>
+          Sampling start
+         </td>
+         <td>
+          A fresh noise sample and optional condition.
+         </td>
+         <td>
+          Start at the noisiest scheduled state.
+         </td>
+        </tr>
+        <tr>
+         <td>
+          Reverse steps
+         </td>
+         <td>
+          x_t, t, condition
+         </td>
+         <td>
+          Predict a denoising target and update the state using a sampler.
+         </td>
+        </tr>
+       </tbody>
+      </table>
+     </div>
+     <h3 id="latent-diffusion-and-dit-move-the-same-idea-to-different-representations">
+      Latent diffusion and DiT move the same idea to different representations
+     </h3>
+     <p>
+      Latent diffusion first uses an image autoencoder to represent a clean image by a smaller latent tensor. Diffusion training and sampling operate in that latent space; an image decoder converts the final latent back to pixels. This reduces the spatial size of repeated denoising work while making the autoencoder’s reconstruction quality part of the system.
+     </p>
+     <p>
+      A Diffusion Transformer, or DiT, uses transformer blocks as the denoising backbone, often on patches of image latents. Image-patch tokens carry spatial information and noise-level conditioning rather than ordinary word meanings. Replacing a U-Net with a transformer changes the predictor architecture; it does not turn diffusion into left-to-right word prediction.
+     </p>
+     <h3 id="classifier-free-guidance-combines-conditional-and-unconditional-predictions">
+      Classifier-free guidance combines conditional and unconditional predictions
+     </h3>
+     <p>
+      For a prompt such as “a red school bus”, train a conditional denoiser while sometimes dropping the condition. At sampling, obtain predictions ε_cond with the prompt and ε_uncond without it. One common convention combines them as ε_guided=ε_uncond+w(ε_cond−ε_uncond). Here w=1 gives the conditional prediction and w&gt;1 strengthens its difference from the unconditional prediction. If ε_uncond=0.2, ε_cond=0.5, and w=2, the combined scalar prediction is 0.8. Larger guidance can improve adherence while changing diversity or producing artifacts; report the convention because APIs may parameterize guidance differently.
+     </p>
+     <h3 id="flow-matching-learns-a-direction-of-transport">
+      Flow matching learns a direction of transport
+     </h3>
+     <p>
+      A simple flow-matching example joins a noise point x_noise=−1 to a data point x_data=2 by x_t=(1−t)x_noise+t*x_data. The target velocity along this chosen straight path is 3. At t=0.4 the point is 0.2. A neural network learns a velocity field from many such training paths; an ODE solver follows the learned field from noise toward data. Actual model designs choose paths and parameterizations carefully. This example distinguishes a learned transport direction from DDPM’s noise-prediction target.
+     </p>
+     <h3 id="a-vision-language-model-reads-an-image-and-produces-language">
+      A vision-language model reads an image and produces language
+     </h3>
+     <p>
+      A common VLM connects an image encoder, a projection or connector, and a language model. For a school-bus photograph, the image encoder produces visual features; the connector maps them into representations the language model can use alongside text tokens. The model then generates an answer to “What color is the bus?” Training may align image-text pairs and later use image-conditioned instructions. A VLM can still misread small text, count incorrectly, or infer unseen details, so evaluate visual evidence and answer accuracy separately.
+     </p>
+     <p>
+      Source:
+      <a href="https://arxiv.org/abs/2006.11239">
+       Denoising Diffusion Probabilistic Models
+      </a>
+      .
+     </p>
+     <p>
+      Source:
+      <a href="https://arxiv.org/abs/2112.10752">
+       Latent diffusion models
+      </a>
+      .
+     </p>
+     <p>
+      Source:
+      <a href="https://arxiv.org/abs/2212.09748">
+       Diffusion Transformers
+      </a>
+      .
+     </p>
+     <p>
+      Source:
+      <a href="https://arxiv.org/abs/2207.12598">
+       Classifier-free diffusion guidance
+      </a>
+      .
+     </p>
+     <p>
+      Source:
+      <a href="https://arxiv.org/abs/2210.02747">
+       Flow matching
+      </a>
+      .
+     </p>
+     <p>
+      Source:
+      <a href="https://arxiv.org/abs/2304.08485">
+       Visual instruction tuning
+      </a>
+      .
+     </p>
+     <h3 id="flow-ideas-and-multimodal-tokens">
+      Flow ideas and multimodal tokens
+     </h3>
+     <p>
+      Normalizing flows use invertible transformations with a tractable change-of-variables formulation. Flow matching learns a vector field transporting between distributions. They are related to generative modeling but should not be treated as synonyms for every diffusion implementation.
+     </p>
+     <p>
+      Some multimodal systems represent images or audio using patches, features, or discrete tokens and connect them to transformer components. The representation and objective define what the model predicts.
+     </p>
+     <p>
+      A language-model vocabulary and an image-patch representation have different semantics. “The model uses tokens” does not mean the tokens correspond to ordinary words.
+     </p>
+     <h3 id="comparing-families-by-the-question-each-answers">
+      Comparing families by the question each answers
+     </h3>
+     <p>
+      For autoregressive text, ask which next-token conditional is modeled and how generation proceeds. For a VAE, ask about latent variables, reconstruction, and prior matching. For a GAN, ask about the generator-discriminator training game. For diffusion, ask about forward corruption and the learned reverse-related predictions.
+     </p>
+     <p>
+      These questions are more informative than memorizing a list of names. A system may combine components from several families.
+     </p>
+     <p>
+      Keep the scope clear: our deep implementation path remains the text transformer. The other families receive conceptual and numerical introductions with optional deeper readings.
+     </p>
+     <h3 id="worked-practice-and-a-readiness-check">
+      Worked practice and a readiness check
+     </h3>
+     <p>
+      Calculate the forward-noising formula at ᾱ=0 and ᾱ=1 for the scalar example. Then explain why an image classifier and image generator have different output tasks.
+     </p>
+     <p>
+      Draw the roles in a VAE and a GAN without claiming that every latent coordinate has a fixed interpretation. Write one sentence describing what diffusion learns beyond displaying noisy pictures.
+     </p>
+     <p>
+      You are ready when generative AI is broader than LLMs in your mental model and you can compare mechanisms without collapsing them into a single buzzword.
+     </p>
+     <h3 id="different-kinds-of-uncertainty">
+      Different kinds of uncertainty
+     </h3>
+     <p>
+      A text prefix may have several sensible next words. An image prompt may admit many valid pictures. A spoken sentence may be delivered with different voices and timing. Generative modeling must accommodate variation rather than assume there is always one exact output.
+     </p>
+     <p>
+      Evaluation therefore depends on the task. A bus fare calculation has a checkable numerical answer. A new bus illustration has many acceptable appearances, but it can still fail an instruction such as “show exactly two wheels.” A sample can be diverse yet wrong, or accurate to a narrow instruction yet repetitive across a collection.
+     </p>
+     <p>
+      This helps explain why a classification accuracy, a text likelihood, and a human preference score cannot be substituted for one another without a task definition. The modeling family, training objective, and evaluation each answer a different question.
+     </p>
+    </article>
+    <nav aria-label="Adjacent lectures" class="chapter-pagination">
+     <a href="14.html">
+      <small>
+       Previous week
+      </small>
+      From pretraining to instruction following and reasoning
+     </a>
+     <a href="16.html">
+      <small>
+       Next week
+      </small>
+      A complete transformer walkthrough and first semester review
+     </a>
+    </nav>
+   </div>
+   <footer class="footer">
+    <span>
+     Applied AI · An independent self-study course
+    </span>
+    <span>
+     32 weeks · 10 hours per week
+    </span>
+    <a href="../resources.html#about-this-course">
+     About and sources
+    </a>
+   </footer>
+  </main>
+  <dialog aria-labelledby="search-title" class="search-dialog">
+   <div class="dialog-head">
+    <h2 id="search-title">
+     Find a concept
+    </h2>
+    <button aria-label="Close search" class="search-close" type="button">
+     Close
+    </button>
+   </div>
+   <label class="sr-only" for="course-search">
+    Search all lectures and tutorials
+   </label>
+   <input autocomplete="off" id="course-search" placeholder="Try attention, fine-tuning, or harness…" type="search"/>
+   <p aria-live="polite" class="search-status">
+    Search lecture notes, tutorials, tests and readings.
+   </p>
+   <div class="search-results">
+   </div>
+  </dialog>
+  <div aria-live="polite" class="toast" role="status">
+  </div>
+ </body>
+</html>

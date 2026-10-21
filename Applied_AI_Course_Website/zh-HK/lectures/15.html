@@ -1,56 +1,1528 @@
 <!DOCTYPE html>
-
-<html lang="zh-HK"><head><script src="../../assets/translations-zh-HK.js"></script><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/><title>文字以外的 Generative AI · Applied AI</title><meta content="Applied generative AI and LLM systems course material" name="description"/><meta content="#173c36" name="theme-color"/><link href="../../assets/favicon.svg" rel="icon" type="image/svg+xml"/><link href="../../assets/style.css" rel="stylesheet"/><link href="../../assets/slides.css" rel="stylesheet"/><script>window.COURSE_BASE="../";</script><script defer="" src="../../assets/site-config.js"></script><script defer="" src="../assets/search-index.js"></script><script defer="" src="../../assets/app.js"></script><script defer="" src="../../assets/visuals.js"></script><script defer="" src="../../assets/slides.js"></script><script defer="" src="../../assets/beginner-visuals.js"></script><script defer="True" src="../../assets/locale-patterns.js"></script><script defer="True" src="../../assets/locale.js"></script><link href="../../assets/bilingual.css" rel="stylesheet"/><link href="../../lectures/15.html" hreflang="en" rel="alternate"/></head><body data-page-kind="lecture" data-week="15"><a class="skip-link" href="#main">跳至內容</a><header class="topbar"><button aria-controls="course-sidebar" aria-expanded="false" class="menu-toggle" type="button">選單</button><a class="brand" href="../index.html"><span aria-hidden="true" class="brand-mark">a<span>i</span></span><span>APPLIED AI<small>從原理到實踐</small></span></a><nav aria-label="主要導覽"><a href="../index.html">課程</a><a href="../visuals.html">互動圖解</a><a href="../project.html">專題</a><a class="language-switch" href="../../lectures/15.html" hreflang="en" lang="en">English</a></nav><button class="search-open" type="button">搜尋課程 <span aria-hidden="true">/</span></button></header><aside aria-label="課程章節" class="sidebar" id="course-sidebar"><a class="side-home" href="../index.html">課程概覽</a><details class="semester-nav" open=""><summary>第一學期<span>第 1–16 週</span></summary><ol start="1"><li><a href="../lectures/01.html"><span class="week-number">01</span><span>Language model 究竟在學甚麼</span><span class="week-tick" data-week-tick="1"></span></a></li><li><a href="../lectures/02.html"><span class="week-number">02</span><span>從文字到 token 和數值 ID</span><span class="week-tick" data-week-tick="2"></span></a></li><li><a href="../lectures/03.html"><span class="week-number">03</span><span>Word vector 能表達甚麼</span><span class="week-tick" data-week-tick="3"></span></a></li><li><a href="../lectures/04.html"><span class="week-number">04</span><span>從 score 到 probability 和學習訊號</span><span class="week-tick" data-week-tick="4"></span></a></li><li><a href="../lectures/05.html"><span class="week-number">05</span><span>為甚麼語言需要 context 和次序</span><span class="week-tick" data-week-tick="5"></span></a></li><li><a href="../lectures/06.html"><span class="week-number">06</span><span>Attention 由 weighted mixture 開始</span><span class="week-tick" data-week-tick="6"></span></a></li><li><a href="../lectures/07.html"><span class="week-number">07</span><span>Query、key 和 value 從何而來</span><span class="week-tick" data-week-tick="7"></span></a></li><li><a href="../lectures/08.html"><span class="week-number">08</span><span>正確進行 attention scaling 和 masking</span><span class="week-tick" data-week-tick="8"></span></a></li><li><a href="../lectures/09.html"><span class="week-number">09</span><span>多個 attention head 與位置</span><span class="week-tick" data-week-tick="9"></span></a></li><li><a href="../lectures/10.html"><span class="week-number">10</span><span>逐步拆解 transformer block</span><span class="week-tick" data-week-tick="10"></span></a></li><li><a href="../lectures/11.html"><span class="week-number">11</span><span>Encoder、decoder 與完整 model architecture</span><span class="week-tick" data-week-tick="11"></span></a></li><li><a href="../lectures/12.html"><span class="week-number">12</span><span>訓練一個小型 transformer</span><span class="week-tick" data-week-tick="12"></span></a></li><li><a href="../lectures/13.html"><span class="week-number">13</span><span>Generation、decoding 與 KV cache</span><span class="week-tick" data-week-tick="13"></span></a></li><li><a href="../lectures/14.html"><span class="week-number">14</span><span>從 pretraining 到 instruction following 和 reasoning</span><span class="week-tick" data-week-tick="14"></span></a></li><li><a aria-current="page" href="../lectures/15.html"><span class="week-number">15</span><span>文字以外的 Generative AI</span><span class="week-tick" data-week-tick="15"></span></a></li><li><a href="../lectures/16.html"><span class="week-number">16</span><span>完整 transformer 導覽與第一學期溫習</span><span class="week-tick" data-week-tick="16"></span></a></li></ol></details><details class="semester-nav"><summary>第二學期<span>第 17–32 週</span></summary><ol start="17"><li><a href="../lectures/17.html"><span class="week-number">17</span><span>從 word vector 到 semantic search</span><span class="week-tick" data-week-tick="17"></span></a></li><li><a href="../lectures/18.html"><span class="week-number">18</span><span>從一列 vector 建立 vector database</span><span class="week-tick" data-week-tick="18"></span></a></li><li><a href="../lectures/19.html"><span class="week-number">19</span><span>把 RAG 理解為開卷作答</span><span class="week-tick" data-week-tick="19"></span></a></li><li><a href="../lectures/20.html"><span class="week-number">20</span><span>在保持基本任務的前提下改善 RAG</span><span class="week-tick" data-week-tick="20"></span></a></li><li><a href="../lectures/21.html"><span class="week-number">21</span><span>評估 retrieval、答案與 uncertainty</span><span class="week-tick" data-week-tick="21"></span></a></li><li><a href="../lectures/22.html"><span class="week-number">22</span><span>CPU、GPU、memory 與 model 資源計算</span><span class="week-tick" data-week-tick="22"></span></a></li><li><a href="../lectures/23.html"><span class="week-number">23</span><span>CUDA kernel 與 profiling</span><span class="week-tick" data-week-tick="23"></span></a></li><li><a href="../lectures/24.html"><span class="week-number">24</span><span>Fine-tuning 由教學 dataset 開始</span><span class="week-tick" data-week-tick="24"></span></a></li><li><a href="../lectures/25.html"><span class="week-number">25</span><span>從小型 matrix 理解 LoRA 和 QLoRA</span><span class="week-tick" data-week-tick="25"></span></a></li><li><a href="../lectures/26.html"><span class="week-number">26</span><span>Fine-tuning 實驗、preference 與 distillation</span><span class="week-tick" data-week-tick="26"></span></a></li><li><a href="../lectures/27.html"><span class="week-number">27</span><span>Tool、function、workflow 與 agent</span><span class="week-tick" data-week-tick="27"></span></a></li><li><a href="../lectures/28.html"><span class="week-number">28</span><span>Harness、planning、memory 與有界執行</span><span class="week-tick" data-week-tick="28"></span></a></li><li><a href="../lectures/29.html"><span class="week-number">29</span><span>從 notebook 到 MLOps 和 inference serving</span><span class="week-tick" data-week-tick="29"></span></a></li><li><a href="../lectures/30.html"><span class="week-number">30</span><span>Monitoring、security、regression test 與 rollback</span><span class="week-tick" data-week-tick="30"></span></a></li><li><a href="../lectures/31.html"><span class="week-number">31</span><span>整合文件助手與進階延伸</span><span class="week-tick" data-week-tick="31"></span></a></li><li><a href="../lectures/32.html"><span class="week-number">32</span><span>溫習、答辯與持續學習計劃</span><span class="week-tick" data-week-tick="32"></span></a></li></ol></details><div class="side-links"><a href="../visuals.html">互動圖解實驗室 <span>14 個互動課節</span></a><a href="../project.html">文件助手 <span>你的 capstone project</span></a><a href="../resources.html">閱讀材料與環境設定</a></div><div class="side-progress"><div><span>你的進度</span><strong data-progress-count="">0 / 32</strong></div><progress aria-label="已完成 lecture" max="32" value="0"></progress><small>儲存在這個瀏覽器</small></div></aside><main class="main" id="main"><div class="content"><div class="chapter-header"><div class="eyebrow">第一學期 / 第 15 週</div><h1>文字以外的 Generative AI</h1></div><div class="lesson-links"><a href="../tutorials/15.html">練習 15</a><a href="../tests/15.html">檢查你的理解</a><button aria-pressed="false" class="mark-complete" data-week="15" type="button">標記為已完成</button></div><section aria-label="Lecture slides" class="lecture-deck" id="lecture-slides"><div class="deck-top"><div><div class="eyebrow">課堂投影片 · 第 15 週</div><h2>一步一步學習。</h2></div><button class="deck-present" type="button">簡報模式</button></div><p class="deck-help">閱讀每段解說，停下來預測結果，然後繼續。選取簡報後，可用方向鍵操作。完整講義在下方。</p><div aria-label="簡報：使用左右方向鍵" class="slide-viewport" tabindex="0"><section class="lecture-slide" data-slide=""><div class="slide-stage">由例子開始</div><h3>generation 是對可能 output 建模</h3><div class="slide-prose"><p>我們的 text model 透過重複預測 token 產生 sequence。generative AI 亦包括 image、sound 和其他 output。共同概念是學習 distribution 或 generation process，但不一定全部採用 next-word prediction。</p>
-<p>想像一組手繪 bus 圖。classifier 可能預測圖中是否有 bus，generator 則旨在產生帶有相關結構的新 sample。</p>
-<p>生成 image 可以看似合理，卻沒有重現特定 training image，也可以包含錯誤。與語言一樣，合理外觀和任務正確性需要分開 evaluation。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">由例子開始</div><h3>latent representation 與 decoder</h3><div class="slide-prose"><p>autoencoder 將 input 映射到 compressed representation，再重建 input。variational autoencoder 加入 probabilistic latent formulation，以及鼓勵有用 latent distribution 的 regularization。</p>
-<p>可以想像一個小 vector 控制圖畫數個方面，但不要假設每個 coordinate 都自動有清楚的人類標籤。network 是按 objective 學習 representation。</p>
-<p>基本 VAE objective 平衡 reconstruction，以及將 approximate latent posterior 與所選 prior 聯繫的項目。model 便可 sample 一個 latent 再 decode。在完整 variational 推導前，先用 bottleneck 圖理解各部分作用。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">建立對機制的理解</div><h3>adversarial learning</h3><div class="slide-prose"><p>GAN 讓 generator 與 discriminator 對抗訓練。discriminator 在 training 設定下，學習分辨相關 training example 和 generated example；generator 則嘗試產生能挑戰它的 output。</p>
-<p>兩個 objective 互相影響。單一看似出色的 sample，不能證明學到的 distribution 涵蓋所有重要情況。training instability 和 diversity 有限，都是需要研究的問題。</p>
-<p>我們學這種排列，是為了將它與 token likelihood training 區分，而不是在本課程建立 production image generator。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">建立對機制的理解</div><h3>diffusion 從 corruption 開始</h3><div class="slide-prose"><p>取一個代表字母的簡單 eight-by-eight pattern，加入受控制的 Gaussian noise，產生逐步受損的版本。diffusion model 學習跨 noise level、與 denoising 相關的 prediction。</p>
-<p>forward formula 可以寫成 x_t=√ᾱ_t x_0+√(1−ᾱ_t) ε，ε 是 standard Gaussian noise。coefficient 決定 signal 與 noise 的相對分量。</p>
-<p>ᾱ=1 時，sample 是原來 signal；ᾱ=0 時，formula 產生 noise；中間值則是 mixture。展示這個 forward formula 的 slider，本身並沒有實作 learned reverse model。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">建立對機制的理解</div><h3>具體的 scalar diffusion 計算</h3><div class="slide-prose"><p>設 x0=2、ε=-1、ᾱ=0.64，則 √ᾱ=0.8、√(1−ᾱ)=0.6，得到 x_t=0.8×2+0.6×(-1)=1。</p>
-<p>在這個 noising expression 下，簡單 tensor 的每個 element 都用相同計算方式。學到的 model 預測 noise 或相關 target，而 sampling 用有 schedule 的 reverse procedure。</p>
-<p>把畫面 slider 往回拉，可以看見 noise 較少的版本，因為 visualization 仍知道原來 signal。這與學會從未知 noise 開始生成新 sample 不同。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">建立對機制的理解</div><h3>flow 概念與 multimodal token</h3><div class="slide-prose"><p>normalizing flow 使用 invertible transformation，配合可處理的 change-of-variables formulation。flow matching 學習在 distribution 之間運送的 vector field。它們都與 generative modeling 有關，但不應視作每種 diffusion 實作的同義詞。</p>
-<p>部分 multimodal system 使用 patch、feature 或 discrete token 表示 image/audio，再連接到 transformer component。representation 和 objective 決定 model 預測甚麼。</p>
-<p>language-model vocabulary 與 image-patch representation 的 semantics 不同。「model 使用 token」不代表 token 對應普通詞語。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">深入學習，檢查理解</div><h3>按各自回答的問題比較不同 model family</h3><div class="slide-prose"><p>對 autoregressive text，問它建模哪個 next-token conditional，以及 generation 如何進行。對 VAE，問 latent variable、reconstruction 和 prior matching。對 GAN，問 generator-discriminator 的 training game。對 diffusion，問 forward corruption 和學到的 reverse-related prediction。</p>
-<p>這些問題比背誦名稱清單更有意思。一個 system 可以結合數個 family 的 component。</p>
-<p>保持範圍清晰：我們深入實作的主線仍是 text transformer。其他 family 提供概念和數值入門，並有可選的深入閱讀。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">深入學習，檢查理解</div><h3>實例練習與學習檢查</h3><div class="slide-prose"><p>為 scalar 例子計算 ᾱ=0 和 ᾱ=1 時的 forward-noising formula。然後解釋 image classifier 與 image generator 的 output 任務為何不同。</p>
-<p>畫出 VAE 和 GAN 各部分的作用，不要聲稱每個 latent coordinate 都有固定意思。用一句話說明 diffusion 除了展示 noisy picture，還學習甚麼。</p>
-<p>當你理解 generative AI 比 LLM 更廣泛，並能比較不同 mechanism，而不將它們混成同一個 buzzword，就準備好了。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">深入學習，檢查理解</div><h3>不同種類的 uncertainty</h3><div class="slide-prose"><p>text prefix 可以有數個合理 next word；image prompt 可以容許很多有效圖畫；一句說話可以用不同聲線和節奏表達。generative modeling 必須容納變化，不能假設永遠只有一個精確 output。</p>
-<p>所以 evaluation 取決於任務。bus fare 計算有可核實的數值答案；一張新 bus illustration 可以有很多可接受外觀，但仍可能不符合「show exactly two wheels.」的 instruction。sample 可以多樣卻錯誤，也可以準確符合狹窄要求，卻在整組中高度重複。</p>
-<p>這解釋了為何沒有任務定義時，classification accuracy、text likelihood 和 human preference score 不能互相代替。modeling family、training objective 和 evaluation 各自回答不同問題。</p></div></section></div><div class="deck-controls"><button class="slide-prev" type="button">← 上一頁</button><span aria-live="polite" class="slide-counter">1 / 9</span><button class="slide-next" type="button">下一頁 →</button></div><label class="slide-jump-label">前往 slide <select aria-label="跳至 slide" class="slide-jump"><option value="0">1</option><option value="1">2</option><option value="2">3</option><option value="3">4</option><option value="4">5</option><option value="5">6</option><option value="6">7</option><option value="7">8</option><option value="8">9</option></select></label><button aria-pressed="false" class="deck-all" type="button">顯示全部 slides</button><a class="reader-link" href="#full-notes">閱讀完整講義 ↓</a></section><section aria-label="從 signal 到 noise" class="visual-lesson"><div class="eyebrow">探索機制</div><h2>從 signal 到 noise</h2><p class="visual-intro">沿 deterministic forward-noising schedule 移動。這並非已訓練 image generator。</p><div data-widget="diffusion"><p>啟用 JavaScript 以使用此圖解。下方 lecture notes 會解釋同一機制。</p></div></section><article class="prose full-notes" id="full-notes"><div class="eyebrow">完整講義</div><h2>閱讀完整解說</h2><h3 id="generation-means-modeling-possible-outputs">generation 是對可能 output 建模</h3>
-<p>我們的 text model 透過重複預測 token 產生 sequence。generative AI 亦包括 image、sound 和其他 output。共同概念是學習 distribution 或 generation process，但不一定全部採用 next-word prediction。</p>
-<p>想像一組手繪 bus 圖。classifier 可能預測圖中是否有 bus，generator 則旨在產生帶有相關結構的新 sample。</p>
-<p>生成 image 可以看似合理，卻沒有重現特定 training image，也可以包含錯誤。與語言一樣，合理外觀和任務正確性需要分開 evaluation。</p>
-<h3 id="a-latent-representation-and-a-decoder">latent representation 與 decoder</h3>
-<p>autoencoder 將 input 映射到 compressed representation，再重建 input。variational autoencoder 加入 probabilistic latent formulation，以及鼓勵有用 latent distribution 的 regularization。</p>
-<p>可以想像一個小 vector 控制圖畫數個方面，但不要假設每個 coordinate 都自動有清楚的人類標籤。network 是按 objective 學習 representation。</p>
-<p>基本 VAE objective 平衡 reconstruction，以及將 approximate latent posterior 與所選 prior 聯繫的項目。model 便可 sample 一個 latent 再 decode。在完整 variational 推導前，先用 bottleneck 圖理解各部分作用。</p>
-<h3 id="adversarial-learning">adversarial learning</h3>
-<p>GAN 讓 generator 與 discriminator 對抗訓練。discriminator 在 training 設定下，學習分辨相關 training example 和 generated example；generator 則嘗試產生能挑戰它的 output。</p>
-<p>兩個 objective 互相影響。單一看似出色的 sample，不能證明學到的 distribution 涵蓋所有重要情況。training instability 和 diversity 有限，都是需要研究的問題。</p>
-<p>我們學這種排列，是為了將它與 token likelihood training 區分，而不是在本課程建立 production image generator。</p>
-<h3 id="diffusion-starts-from-corruption">diffusion 從 corruption 開始</h3>
-<p>取一個代表字母的簡單 eight-by-eight pattern，加入受控制的 Gaussian noise，產生逐步受損的版本。diffusion model 學習跨 noise level、與 denoising 相關的 prediction。</p>
-<p>forward formula 可以寫成 x_t=√ᾱ_t x_0+√(1−ᾱ_t) ε，ε 是 standard Gaussian noise。coefficient 決定 signal 與 noise 的相對分量。</p>
-<p>ᾱ=1 時，sample 是原來 signal；ᾱ=0 時，formula 產生 noise；中間值則是 mixture。展示這個 forward formula 的 slider，本身並沒有實作 learned reverse model。</p>
-<h3 id="a-concrete-scalar-diffusion-calculation">具體的 scalar diffusion 計算</h3>
-<p>設 x0=2、ε=-1、ᾱ=0.64，則 √ᾱ=0.8、√(1−ᾱ)=0.6，得到 x_t=0.8×2+0.6×(-1)=1。</p>
-<p>在這個 noising expression 下，簡單 tensor 的每個 element 都用相同計算方式。學到的 model 預測 noise 或相關 target，而 sampling 用有 schedule 的 reverse procedure。</p>
-<p>把畫面 slider 往回拉，可以看見 noise 較少的版本，因為 visualization 仍知道原來 signal。這與學會從未知 noise 開始生成新 sample 不同。</p>
-<h3 id="flow-ideas-and-multimodal-tokens">flow 概念與 multimodal token</h3>
-<p>normalizing flow 使用 invertible transformation，配合可處理的 change-of-variables formulation。flow matching 學習在 distribution 之間運送的 vector field。它們都與 generative modeling 有關，但不應視作每種 diffusion 實作的同義詞。</p>
-<p>部分 multimodal system 使用 patch、feature 或 discrete token 表示 image/audio，再連接到 transformer component。representation 和 objective 決定 model 預測甚麼。</p>
-<p>language-model vocabulary 與 image-patch representation 的 semantics 不同。「model 使用 token」不代表 token 對應普通詞語。</p>
-<h3 id="comparing-families-by-the-question-each-answers">按各自回答的問題比較不同 model family</h3>
-<p>對 autoregressive text，問它建模哪個 next-token conditional，以及 generation 如何進行。對 VAE，問 latent variable、reconstruction 和 prior matching。對 GAN，問 generator-discriminator 的 training game。對 diffusion，問 forward corruption 和學到的 reverse-related prediction。</p>
-<p>這些問題比背誦名稱清單更有意思。一個 system 可以結合數個 family 的 component。</p>
-<p>保持範圍清晰：我們深入實作的主線仍是 text transformer。其他 family 提供概念和數值入門，並有可選的深入閱讀。</p>
-<h3 id="worked-practice-and-a-readiness-check">實例練習與學習檢查</h3>
-<p>為 scalar 例子計算 ᾱ=0 和 ᾱ=1 時的 forward-noising formula。然後解釋 image classifier 與 image generator 的 output 任務為何不同。</p>
-<p>畫出 VAE 和 GAN 各部分的作用，不要聲稱每個 latent coordinate 都有固定意思。用一句話說明 diffusion 除了展示 noisy picture，還學習甚麼。</p>
-<p>當你理解 generative AI 比 LLM 更廣泛，並能比較不同 mechanism，而不將它們混成同一個 buzzword，就準備好了。</p>
-<h3 id="different-kinds-of-uncertainty">不同種類的 uncertainty</h3>
-<p>text prefix 可以有數個合理 next word；image prompt 可以容許很多有效圖畫；一句說話可以用不同聲線和節奏表達。generative modeling 必須容納變化，不能假設永遠只有一個精確 output。</p>
-<p>所以 evaluation 取決於任務。bus fare 計算有可核實的數值答案；一張新 bus illustration 可以有很多可接受外觀，但仍可能不符合「show exactly two wheels.」的 instruction。sample 可以多樣卻錯誤，也可以準確符合狹窄要求，卻在整組中高度重複。</p>
-<p>這解釋了為何沒有任務定義時，classification accuracy、text likelihood 和 human preference score 不能互相代替。modeling family、training objective 和 evaluation 各自回答不同問題。</p></article><nav aria-label="前後 lecture" class="chapter-pagination"><a href="14.html"><small>上一週</small>從 pretraining 到 instruction following 和 reasoning</a><a href="16.html"><small>下一週</small>完整 transformer 導覽與第一學期溫習</a></nav></div><footer class="footer"><span>Applied AI · 獨立自學課程</span><span>32 週 · 每週 10 小時</span><a href="../resources.html#about-this-course">關於課程及資料來源</a></footer></main><dialog aria-labelledby="search-title" class="search-dialog"><div class="dialog-head"><h2 id="search-title">尋找概念</h2><button aria-label="關閉搜尋" class="search-close" type="button">關閉</button></div><label class="sr-only" for="course-search">搜尋所有 lecture 和 tutorial</label><input autocomplete="off" id="course-search" placeholder="試試 attention、fine-tuning 或 harness……" type="search"/><p aria-live="polite" class="search-status">搜尋 lecture notes、tutorial、測驗及閱讀材料。</p><div class="search-results"></div></dialog><div aria-live="polite" class="toast" role="status"></div></body></html>
+<html lang="zh-HK">
+ <head>
+  <script src="../../assets/translations-zh-HK.js">
+  </script>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width,initial-scale=1" name="viewport"/>
+  <title>
+   文字以外的 Generative AI · Applied AI
+  </title>
+  <meta content="Applied generative AI and LLM systems course material" name="description"/>
+  <meta content="#173c36" name="theme-color"/>
+  <link href="../../assets/favicon.svg" rel="icon" type="image/svg+xml"/>
+  <link href="../../assets/style.css" rel="stylesheet"/>
+  <link href="../../assets/slides.css" rel="stylesheet"/>
+  <script>
+   window.COURSE_BASE="../";
+  </script>
+  <script defer="" src="../../assets/site-config.js">
+  </script>
+  <script defer="" src="../assets/search-index.js">
+  </script>
+  <script defer="" src="../../assets/app.js">
+  </script>
+  <script defer="" src="../../assets/visuals.js">
+  </script>
+  <script defer="" src="../../assets/slides.js">
+  </script>
+  <script defer="" src="../../assets/beginner-visuals.js">
+  </script>
+  <script defer="True" src="../../assets/locale-patterns.js">
+  </script>
+  <script defer="True" src="../../assets/locale.js">
+  </script>
+  <link href="../../assets/bilingual.css" rel="stylesheet"/>
+  <link href="../../lectures/15.html" hreflang="en" rel="alternate"/>
+  <link href="../../assets/reader-v3.css" rel="stylesheet"/>
+  <script defer="True" src="../../assets/reader-v3.js">
+  </script>
+ </head>
+ <body data-page-kind="lecture" data-week="15">
+  <a class="skip-link" href="#main">
+   跳至內容
+  </a>
+  <header class="topbar">
+   <button aria-controls="course-sidebar" aria-expanded="false" class="menu-toggle" type="button">
+    選單
+   </button>
+   <a class="brand" href="../index.html">
+    <span aria-hidden="true" class="brand-mark">
+     a
+     <span>
+      i
+     </span>
+    </span>
+    <span>
+     APPLIED AI
+     <small>
+      從原理到實踐
+     </small>
+    </span>
+   </a>
+   <nav aria-label="主要導覽">
+    <a href="../index.html">
+     課程
+    </a>
+    <a href="../visuals.html">
+     互動圖解
+    </a>
+    <a href="../project.html">
+     專題
+    </a>
+    <a class="language-switch" href="../../lectures/15.html" hreflang="en" lang="en">
+     English
+    </a>
+   </nav>
+   <button class="search-open" type="button">
+    搜尋課程
+    <span aria-hidden="true">
+     /
+    </span>
+   </button>
+  </header>
+  <aside aria-label="課程章節" class="sidebar" id="course-sidebar">
+   <a class="side-home" href="../index.html">
+    課程概覽
+   </a>
+   <details class="semester-nav" open="">
+    <summary>
+     第一學期
+     <span>
+      第 1–16 週
+     </span>
+    </summary>
+    <ol start="1">
+     <li>
+      <a href="../lectures/01.html">
+       <span class="week-number">
+        01
+       </span>
+       <span>
+        Language model 究竟在學甚麼
+       </span>
+       <span class="week-tick" data-week-tick="1">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/02.html">
+       <span class="week-number">
+        02
+       </span>
+       <span>
+        從文字到 token 和數值 ID
+       </span>
+       <span class="week-tick" data-week-tick="2">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/03.html">
+       <span class="week-number">
+        03
+       </span>
+       <span>
+        Word vector 能表達甚麼
+       </span>
+       <span class="week-tick" data-week-tick="3">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/04.html">
+       <span class="week-number">
+        04
+       </span>
+       <span>
+        從 score 到 probability 和學習訊號
+       </span>
+       <span class="week-tick" data-week-tick="4">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/05.html">
+       <span class="week-number">
+        05
+       </span>
+       <span>
+        為甚麼語言需要 context 和次序
+       </span>
+       <span class="week-tick" data-week-tick="5">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/06.html">
+       <span class="week-number">
+        06
+       </span>
+       <span>
+        Attention 由 weighted mixture 開始
+       </span>
+       <span class="week-tick" data-week-tick="6">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/07.html">
+       <span class="week-number">
+        07
+       </span>
+       <span>
+        Query、key 和 value 從何而來
+       </span>
+       <span class="week-tick" data-week-tick="7">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/08.html">
+       <span class="week-number">
+        08
+       </span>
+       <span>
+        正確進行 attention scaling 和 masking
+       </span>
+       <span class="week-tick" data-week-tick="8">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/09.html">
+       <span class="week-number">
+        09
+       </span>
+       <span>
+        多個 attention head 與位置
+       </span>
+       <span class="week-tick" data-week-tick="9">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/10.html">
+       <span class="week-number">
+        10
+       </span>
+       <span>
+        逐步拆解 transformer block
+       </span>
+       <span class="week-tick" data-week-tick="10">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/11.html">
+       <span class="week-number">
+        11
+       </span>
+       <span>
+        Encoder、decoder 與完整 model architecture
+       </span>
+       <span class="week-tick" data-week-tick="11">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/12.html">
+       <span class="week-number">
+        12
+       </span>
+       <span>
+        訓練一個小型 transformer
+       </span>
+       <span class="week-tick" data-week-tick="12">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/13.html">
+       <span class="week-number">
+        13
+       </span>
+       <span>
+        Generation、decoding 與 KV cache
+       </span>
+       <span class="week-tick" data-week-tick="13">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/14.html">
+       <span class="week-number">
+        14
+       </span>
+       <span>
+        從 pretraining 到 instruction following 和 reasoning
+       </span>
+       <span class="week-tick" data-week-tick="14">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a aria-current="page" href="../lectures/15.html">
+       <span class="week-number">
+        15
+       </span>
+       <span>
+        文字以外的 Generative AI
+       </span>
+       <span class="week-tick" data-week-tick="15">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/16.html">
+       <span class="week-number">
+        16
+       </span>
+       <span>
+        完整 transformer 導覽與第一學期溫習
+       </span>
+       <span class="week-tick" data-week-tick="16">
+       </span>
+      </a>
+     </li>
+    </ol>
+   </details>
+   <details class="semester-nav">
+    <summary>
+     第二學期
+     <span>
+      第 17–32 週
+     </span>
+    </summary>
+    <ol start="17">
+     <li>
+      <a href="../lectures/17.html">
+       <span class="week-number">
+        17
+       </span>
+       <span>
+        從 word vector 到 semantic search
+       </span>
+       <span class="week-tick" data-week-tick="17">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/18.html">
+       <span class="week-number">
+        18
+       </span>
+       <span>
+        從一列 vector 建立 vector database
+       </span>
+       <span class="week-tick" data-week-tick="18">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/19.html">
+       <span class="week-number">
+        19
+       </span>
+       <span>
+        把 RAG 理解為開卷作答
+       </span>
+       <span class="week-tick" data-week-tick="19">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/20.html">
+       <span class="week-number">
+        20
+       </span>
+       <span>
+        在保持基本任務的前提下改善 RAG
+       </span>
+       <span class="week-tick" data-week-tick="20">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/21.html">
+       <span class="week-number">
+        21
+       </span>
+       <span>
+        評估 retrieval、答案與 uncertainty
+       </span>
+       <span class="week-tick" data-week-tick="21">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/22.html">
+       <span class="week-number">
+        22
+       </span>
+       <span>
+        CPU、GPU、memory 與 model 資源計算
+       </span>
+       <span class="week-tick" data-week-tick="22">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/23.html">
+       <span class="week-number">
+        23
+       </span>
+       <span>
+        CUDA kernel 與 profiling
+       </span>
+       <span class="week-tick" data-week-tick="23">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/24.html">
+       <span class="week-number">
+        24
+       </span>
+       <span>
+        Fine-tuning 由教學 dataset 開始
+       </span>
+       <span class="week-tick" data-week-tick="24">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/25.html">
+       <span class="week-number">
+        25
+       </span>
+       <span>
+        從小型 matrix 理解 LoRA 和 QLoRA
+       </span>
+       <span class="week-tick" data-week-tick="25">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/26.html">
+       <span class="week-number">
+        26
+       </span>
+       <span>
+        Fine-tuning 實驗、preference 與 distillation
+       </span>
+       <span class="week-tick" data-week-tick="26">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/27.html">
+       <span class="week-number">
+        27
+       </span>
+       <span>
+        Tool、function、workflow 與 agent
+       </span>
+       <span class="week-tick" data-week-tick="27">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/28.html">
+       <span class="week-number">
+        28
+       </span>
+       <span>
+        Harness、planning、memory 與有界執行
+       </span>
+       <span class="week-tick" data-week-tick="28">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/29.html">
+       <span class="week-number">
+        29
+       </span>
+       <span>
+        從 notebook 到 MLOps 和 inference serving
+       </span>
+       <span class="week-tick" data-week-tick="29">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/30.html">
+       <span class="week-number">
+        30
+       </span>
+       <span>
+        Monitoring、security、regression test 與 rollback
+       </span>
+       <span class="week-tick" data-week-tick="30">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/31.html">
+       <span class="week-number">
+        31
+       </span>
+       <span>
+        整合文件助手與進階延伸
+       </span>
+       <span class="week-tick" data-week-tick="31">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/32.html">
+       <span class="week-number">
+        32
+       </span>
+       <span>
+        溫習、答辯與持續學習計劃
+       </span>
+       <span class="week-tick" data-week-tick="32">
+       </span>
+      </a>
+     </li>
+    </ol>
+   </details>
+   <div class="side-links">
+    <a href="../visuals.html">
+     互動圖解實驗室
+     <span>
+      14 個互動課節
+     </span>
+    </a>
+    <a href="../project.html">
+     文件助手
+     <span>
+      你的 capstone project
+     </span>
+    </a>
+    <a href="../resources.html">
+     閱讀材料與環境設定
+    </a>
+   </div>
+   <div class="side-progress">
+    <div>
+     <span>
+      你的進度
+     </span>
+     <strong data-progress-count="">
+      0 / 32
+     </strong>
+    </div>
+    <progress aria-label="已完成 lecture" max="32" value="0">
+    </progress>
+    <small>
+     儲存在這個瀏覽器
+    </small>
+   </div>
+  </aside>
+  <main class="main" id="main">
+   <div class="content">
+    <div class="chapter-header">
+     <div class="eyebrow">
+      第一學期 / 第 15 週
+     </div>
+     <h1>
+      文字以外的 Generative AI
+     </h1>
+    </div>
+    <div class="lesson-links">
+     <a href="../tutorials/15.html">
+      練習 15
+     </a>
+     <a href="../tests/15.html">
+      檢查你的理解
+     </a>
+     <button aria-pressed="false" class="mark-complete" data-week="15" type="button">
+      標記為已完成
+     </button>
+    </div>
+    <div aria-label="課堂檢視" class="lesson-mode" role="tablist">
+     <button aria-controls="full-notes" aria-selected="true" data-mode="read" id="mode-read" role="tab" type="button">
+      閱讀講義
+     </button>
+     <button aria-controls="lecture-slides" aria-selected="false" data-mode="slides" id="mode-slides" role="tab" type="button">
+      課堂 slides
+     </button>
+    </div>
+    <section aria-label="Lecture slides" class="lecture-deck" hidden="" id="lecture-slides" role="tabpanel">
+     <div class="deck-top">
+      <div>
+       <div class="eyebrow">
+        課堂投影片 · 第 15 週
+       </div>
+       <h2>
+        重點步驟與圖解
+       </h2>
+      </div>
+      <button class="deck-present" type="button">
+       簡報模式
+      </button>
+     </div>
+     <p class="deck-help">
+      用 slides 溫習機制；按「閱讀完整解說」可開啟完整講義及程式碼。
+     </p>
+     <div aria-label="簡報：使用左右方向鍵" class="slide-viewport" tabindex="0">
+      <section class="lecture-slide" data-slide="">
+       <div class="slide-stage">
+        第 15 週 · 課節 1
+       </div>
+       <h3>
+        generation 是對可能 output 建模
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          我們的 text model 透過重複預測 token 產生 sequence。
+         </li>
+         <li>
+          想像一組手繪 bus 圖。classifier 可能預測圖中是否有 bus，generator 則旨在產生帶有相關結構的新 sample。
+         </li>
+         <li>
+          生成 image 可以看似合理，卻沒有重現特定 training image，也可以包含錯誤。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#generation-means-modeling-possible-outputs">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 15 週 · 課節 2
+       </div>
+       <h3>
+        latent representation 與 decoder
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          autoencoder 將 input 映射到 compressed representation，再重建 input。
+         </li>
+         <li>
+          可以想像一個小 vector 控制圖畫數個方面，但不要假設每個 coordinate 都自動有清楚的人類標籤。
+         </li>
+         <li>
+          基本 VAE objective 平衡 reconstruction，以及將 approximate latent posterior 與所選 prior 聯繫的項目。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#a-latent-representation-and-a-decoder">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 15 週 · 課節 3
+       </div>
+       <h3>
+        adversarial learning
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          GAN 讓 generator 與 discriminator 對抗訓練。
+         </li>
+         <li>
+          兩個 objective 互相影響。單一看似出色的 sample，不能證明學到的 distribution 涵蓋所有重要情況。training instability 和 diversity 有限，都是需要研究的問題。
+         </li>
+         <li>
+          我們學這種排列，是為了將它與 token likelihood training 區分，而不是在本課程建立 production image generator。
+         </li>
+        </ul>
+        <figure class="mechanism-figure">
+         <figcaption>
+          Diffusion training 的一組配對
+         </figcaption>
+         <ol class="mechanism-flow">
+          <li>
+           <span class="mechanism-number">
+            01
+           </span>
+           <strong>
+            Clean sample
+           </strong>
+           <small>
+            x₀
+           </small>
+          </li>
+          <li>
+           <span class="mechanism-number">
+            02
+           </span>
+           <strong>
+            Corrupt
+           </strong>
+           <small>
+            choose t, add noise ε
+           </small>
+          </li>
+          <li>
+           <span class="mechanism-number">
+            03
+           </span>
+           <strong>
+            Predict
+           </strong>
+           <small>
+            εθ(x_t, t, condition)
+           </small>
+          </li>
+          <li>
+           <span class="mechanism-number">
+            04
+           </span>
+           <strong>
+            Learn
+           </strong>
+           <small>
+            squared noise-prediction error
+           </small>
+          </li>
+         </ol>
+         <p>
+          Generation 使用學習得到的 reverse process；把 forward-noising slider 倒轉移動，並不等於該 process。
+         </p>
+        </figure>
+        <a class="slide-section-link" href="#adversarial-learning">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 15 週 · 課節 4
+       </div>
+       <h3>
+        diffusion 從 corruption 開始
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          取一個代表字母的簡單 eight-by-eight pattern，加入受控制的 Gaussian noise，產生逐步受損的版本。
+         </li>
+         <li>
+          forward formula 可以寫成 x_t=√ᾱ_t x_0+√(1−ᾱ_t) ε，ε 是 standard Gaussian noise。
+         </li>
+         <li>
+          ᾱ=1 時，sample 是原來 signal；ᾱ=0 時，formula 產生 noise；中間值則是 mixture。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#diffusion-starts-from-corruption">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 15 週 · 課節 5
+       </div>
+       <h3>
+        具體的 scalar diffusion 計算
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          設 x0=2、ε=-1、ᾱ=0.64，則 √ᾱ=0.8、√(1−ᾱ)=0.6，得到 x_t=0.8×2+0.6×(-1)=1。
+         </li>
+         <li>
+          在這個 noising expression 下，簡單 tensor 的每個 element 都用相同計算方式。
+         </li>
+         <li>
+          把畫面 slider 往回拉，可以看見 noise 較少的版本，因為 visualization 仍知道原來 signal。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#a-concrete-scalar-diffusion-calculation">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 15 週 · 課節 6
+       </div>
+       <h3>
+        Denoiser 學甚麼，以及 generation 如何逆向進行
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Training 時，我們知道 clean example x_0。
+         </li>
+         <li>
+          Generation 從一個新的 noise sample 開始，而非原本 image。
+         </li>
+        </ul>
+        <div class="table-wrap">
+         <table>
+          <thead>
+           <tr>
+            <th>
+             階段
+            </th>
+            <th>
+             已知或提供的內容
+            </th>
+            <th>
+             操作
+            </th>
+           </tr>
+          </thead>
+          <tbody>
+           <tr>
+            <td>
+             Training
+            </td>
+            <td>
+             x_0, t, ε
+            </td>
+            <td>
+             建立 x_t；預測 ε；計算 prediction error。
+            </td>
+           </tr>
+           <tr>
+            <td>
+             Sampling 開始
+            </td>
+            <td>
+             新的 noise sample，以及可選 condition。
+            </td>
+            <td>
+             由 schedule 中 noise 最多的 state 開始。
+            </td>
+           </tr>
+           <tr>
+            <td>
+             Reverse steps
+            </td>
+            <td>
+             x_t, t, condition
+            </td>
+            <td>
+             預測 denoising target，再以 sampler 更新 state。
+            </td>
+           </tr>
+          </tbody>
+         </table>
+        </div>
+        <a class="slide-section-link" href="#what-the-denoiser-learns-and-how-generation-runs-backward">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 15 週 · 課節 7
+       </div>
+       <h3>
+        Latent diffusion 和 DiT 把概念用於不同 representation
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Latent diffusion 先用 image autoencoder，把 clean image 表示為較小的 latent tensor。
+         </li>
+         <li>
+          Diffusion Transformer，簡稱 DiT，以 transformer blocks 作為 denoising backbone，常處理 image latents 的 patches。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#latent-diffusion-and-dit-move-the-same-idea-to-different-representations">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 15 週 · 課節 8
+       </div>
+       <h3>
+        Classifier-free guidance 結合 conditional 和 unconditional predictions
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          對「a red school bus」這類 prompt，training conditional denoiser 時會間中移除 condition。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#classifier-free-guidance-combines-conditional-and-unconditional-predictions">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 15 週 · 課節 9
+       </div>
+       <h3>
+        Flow matching 學習 transport 的方向
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          簡單的 flow-matching 例子，以 x_t=(1−t)x_noise+t*x_data，把 noise point x_noise=−1 連到 data point x_data=2。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#flow-matching-learns-a-direction-of-transport">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 15 週 · 課節 10
+       </div>
+       <h3>
+        Vision-language model 讀取 image 並產生語言
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          常見 VLM 連接 image encoder、projection 或 connector，以及 language model。
+         </li>
+         <li>
+          來源： Denoising Diffusion Probabilistic Models .
+         </li>
+         <li>
+          來源： Latent diffusion models .
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#a-vision-language-model-reads-an-image-and-produces-language">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 15 週 · 課節 11
+       </div>
+       <h3>
+        Vision-language model 讀取 image 並產生語言 · 續
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          來源： Diffusion Transformers .
+         </li>
+         <li>
+          來源： Classifier-free diffusion guidance .
+         </li>
+         <li>
+          來源： Flow matching .
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#a-vision-language-model-reads-an-image-and-produces-language">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 15 週 · 課節 12
+       </div>
+       <h3>
+        flow 概念與 multimodal token
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          normalizing flow 使用 invertible transformation，配合可處理的 change-of-variables formulation。
+         </li>
+         <li>
+          部分 multimodal system 使用 patch、feature 或 discrete token 表示 image/audio，再連接到 transformer component。
+         </li>
+         <li>
+          language-model vocabulary 與 image-patch representation 的 semantics 不同。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#flow-ideas-and-multimodal-tokens">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 15 週 · 課節 13
+       </div>
+       <h3>
+        按各自回答的問題比較不同 model family
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          對 autoregressive text，問它建模哪個 next-token conditional，以及 generation 如何進行。
+         </li>
+         <li>
+          這些問題比背誦名稱清單更有意思。一個 system 可以結合數個 family 的 component。
+         </li>
+         <li>
+          保持範圍清晰：我們深入實作的主線仍是 text transformer。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#comparing-families-by-the-question-each-answers">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 15 週 · 課節 14
+       </div>
+       <h3>
+        實例練習與學習檢查
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          為 scalar 例子計算 ᾱ=0 和 ᾱ=1 時的 forward-noising formula。
+         </li>
+         <li>
+          畫出 VAE 和 GAN 各部分的作用，不要聲稱每個 latent coordinate 都有固定意思。
+         </li>
+         <li>
+          當你理解 generative AI 比 LLM 更廣泛，並能比較不同 mechanism，而不將它們混成同一個 buzzword，就準備好了。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#worked-practice-and-a-readiness-check">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 15 週 · 課節 15
+       </div>
+       <h3>
+        不同種類的 uncertainty
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          text prefix 可以有數個合理 next word；image prompt 可以容許很多有效圖畫；一句說話可以用不同聲線和節奏表達。
+         </li>
+         <li>
+          所以 evaluation 取決於任務。bus fare 計算有可核實的數值答案；一張新 bus illustration 可以有很多可接受外觀，但仍可能不符合「show exactly two wheels.」的 instruction。sample 可以多樣卻錯誤，也可以準確符合狹窄要求，卻在整組中高度重複。
+         </li>
+         <li>
+          這解釋了為何沒有任務定義時，classification accuracy、text likelihood 和 human preference score 不能互相代替。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#different-kinds-of-uncertainty">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+     </div>
+     <div class="deck-controls">
+      <button class="slide-prev" type="button">
+       ← 上一頁
+      </button>
+      <span aria-live="polite" class="slide-counter">
+       1 / 15
+      </span>
+      <button class="slide-next" type="button">
+       下一頁 →
+      </button>
+     </div>
+     <label class="slide-jump-label">
+      前往 slide
+      <select aria-label="跳至 slide" class="slide-jump">
+       <option value="0">
+        1. generation 是對可能 output 建模
+       </option>
+       <option value="1">
+        2. latent representation 與 decoder
+       </option>
+       <option value="2">
+        3. adversarial learning
+       </option>
+       <option value="3">
+        4. diffusion 從 corruption 開始
+       </option>
+       <option value="4">
+        5. 具體的 scalar diffusion 計算
+       </option>
+       <option value="5">
+        6. Denoiser 學甚麼，以及 generation 如何逆向進行
+       </option>
+       <option value="6">
+        7. Latent diffusion 和 DiT 把概念用於不同 representation
+       </option>
+       <option value="7">
+        8. Classifier-free guidance 結合 conditional 和 unconditional predictions
+       </option>
+       <option value="8">
+        9. Flow matching 學習 transport 的方向
+       </option>
+       <option value="9">
+        10. Vision-language model 讀取 image 並產生語言
+       </option>
+       <option value="10">
+        11. Vision-language model 讀取 image 並產生語言 · 續
+       </option>
+       <option value="11">
+        12. flow 概念與 multimodal token
+       </option>
+       <option value="12">
+        13. 按各自回答的問題比較不同 model family
+       </option>
+       <option value="13">
+        14. 實例練習與學習檢查
+       </option>
+       <option value="14">
+        15. 不同種類的 uncertainty
+       </option>
+      </select>
+     </label>
+     <button aria-pressed="false" class="deck-all" type="button">
+      顯示全部 slides
+     </button>
+    </section>
+    <section aria-label="從 signal 到 noise" class="visual-lesson">
+     <div class="eyebrow">
+      探索機制
+     </div>
+     <h2>
+      從 signal 到 noise
+     </h2>
+     <p class="visual-intro">
+      沿 deterministic forward-noising schedule 移動。這並非已訓練 image generator。
+     </p>
+     <div data-widget="diffusion">
+      <p>
+       啟用 JavaScript 以使用此圖解。下方 lecture notes 會解釋同一機制。
+      </p>
+     </div>
+    </section>
+    <nav aria-label="本課內容" class="reader-toc">
+     <strong>
+      本課內容
+     </strong>
+     <ol>
+      <li>
+       <a href="#generation-means-modeling-possible-outputs">
+        generation 是對可能 output 建模
+       </a>
+      </li>
+      <li>
+       <a href="#a-latent-representation-and-a-decoder">
+        latent representation 與 decoder
+       </a>
+      </li>
+      <li>
+       <a href="#adversarial-learning">
+        adversarial learning
+       </a>
+      </li>
+      <li>
+       <a href="#diffusion-starts-from-corruption">
+        diffusion 從 corruption 開始
+       </a>
+      </li>
+      <li>
+       <a href="#a-concrete-scalar-diffusion-calculation">
+        具體的 scalar diffusion 計算
+       </a>
+      </li>
+      <li>
+       <a href="#what-the-denoiser-learns-and-how-generation-runs-backward">
+        Denoiser 學甚麼，以及 generation 如何逆向進行
+       </a>
+      </li>
+      <li>
+       <a href="#latent-diffusion-and-dit-move-the-same-idea-to-different-representations">
+        Latent diffusion 和 DiT 把概念用於不同 representation
+       </a>
+      </li>
+      <li>
+       <a href="#classifier-free-guidance-combines-conditional-and-unconditional-predictions">
+        Classifier-free guidance 結合 conditional 和 unconditional predictions
+       </a>
+      </li>
+      <li>
+       <a href="#flow-matching-learns-a-direction-of-transport">
+        Flow matching 學習 transport 的方向
+       </a>
+      </li>
+      <li>
+       <a href="#a-vision-language-model-reads-an-image-and-produces-language">
+        Vision-language model 讀取 image 並產生語言
+       </a>
+      </li>
+      <li>
+       <a href="#flow-ideas-and-multimodal-tokens">
+        flow 概念與 multimodal token
+       </a>
+      </li>
+      <li>
+       <a href="#comparing-families-by-the-question-each-answers">
+        按各自回答的問題比較不同 model family
+       </a>
+      </li>
+      <li>
+       <a href="#worked-practice-and-a-readiness-check">
+        實例練習與學習檢查
+       </a>
+      </li>
+      <li>
+       <a href="#different-kinds-of-uncertainty">
+        不同種類的 uncertainty
+       </a>
+      </li>
+     </ol>
+    </nav>
+    <article class="prose full-notes" id="full-notes" role="tabpanel">
+     <div class="eyebrow">
+      完整講義
+     </div>
+     <h2>
+      閱讀完整解說
+     </h2>
+     <h3 id="generation-means-modeling-possible-outputs">
+      generation 是對可能 output 建模
+     </h3>
+     <p>
+      我們的 text model 透過重複預測 token 產生 sequence。generative AI 亦包括 image、sound 和其他 output。共同概念是學習 distribution 或 generation process，但不一定全部採用 next-word prediction。
+     </p>
+     <p>
+      想像一組手繪 bus 圖。classifier 可能預測圖中是否有 bus，generator 則旨在產生帶有相關結構的新 sample。
+     </p>
+     <p>
+      生成 image 可以看似合理，卻沒有重現特定 training image，也可以包含錯誤。與語言一樣，合理外觀和任務正確性需要分開 evaluation。
+     </p>
+     <h3 id="a-latent-representation-and-a-decoder">
+      latent representation 與 decoder
+     </h3>
+     <p>
+      autoencoder 將 input 映射到 compressed representation，再重建 input。variational autoencoder 加入 probabilistic latent formulation，以及鼓勵有用 latent distribution 的 regularization。
+     </p>
+     <p>
+      可以想像一個小 vector 控制圖畫數個方面，但不要假設每個 coordinate 都自動有清楚的人類標籤。network 是按 objective 學習 representation。
+     </p>
+     <p>
+      基本 VAE objective 平衡 reconstruction，以及將 approximate latent posterior 與所選 prior 聯繫的項目。model 便可 sample 一個 latent 再 decode。在完整 variational 推導前，先用 bottleneck 圖理解各部分作用。
+     </p>
+     <h3 id="adversarial-learning">
+      adversarial learning
+     </h3>
+     <figure class="mechanism-figure">
+      <figcaption>
+       Diffusion training 的一組配對
+      </figcaption>
+      <ol class="mechanism-flow">
+       <li>
+        <span class="mechanism-number">
+         01
+        </span>
+        <strong>
+         Clean sample
+        </strong>
+        <small>
+         x₀
+        </small>
+       </li>
+       <li>
+        <span class="mechanism-number">
+         02
+        </span>
+        <strong>
+         Corrupt
+        </strong>
+        <small>
+         choose t, add noise ε
+        </small>
+       </li>
+       <li>
+        <span class="mechanism-number">
+         03
+        </span>
+        <strong>
+         Predict
+        </strong>
+        <small>
+         εθ(x_t, t, condition)
+        </small>
+       </li>
+       <li>
+        <span class="mechanism-number">
+         04
+        </span>
+        <strong>
+         Learn
+        </strong>
+        <small>
+         squared noise-prediction error
+        </small>
+       </li>
+      </ol>
+      <p>
+       Generation 使用學習得到的 reverse process；把 forward-noising slider 倒轉移動，並不等於該 process。
+      </p>
+     </figure>
+     <p>
+      GAN 讓 generator 與 discriminator 對抗訓練。discriminator 在 training 設定下，學習分辨相關 training example 和 generated example；generator 則嘗試產生能挑戰它的 output。
+     </p>
+     <p>
+      兩個 objective 互相影響。單一看似出色的 sample，不能證明學到的 distribution 涵蓋所有重要情況。training instability 和 diversity 有限，都是需要研究的問題。
+     </p>
+     <p>
+      我們學這種排列，是為了將它與 token likelihood training 區分，而不是在本課程建立 production image generator。
+     </p>
+     <h3 id="diffusion-starts-from-corruption">
+      diffusion 從 corruption 開始
+     </h3>
+     <p>
+      取一個代表字母的簡單 eight-by-eight pattern，加入受控制的 Gaussian noise，產生逐步受損的版本。diffusion model 學習跨 noise level、與 denoising 相關的 prediction。
+     </p>
+     <p>
+      forward formula 可以寫成 x_t=√ᾱ_t x_0+√(1−ᾱ_t) ε，ε 是 standard Gaussian noise。coefficient 決定 signal 與 noise 的相對分量。
+     </p>
+     <p>
+      ᾱ=1 時，sample 是原來 signal；ᾱ=0 時，formula 產生 noise；中間值則是 mixture。展示這個 forward formula 的 slider，本身並沒有實作 learned reverse model。
+     </p>
+     <h3 id="a-concrete-scalar-diffusion-calculation">
+      具體的 scalar diffusion 計算
+     </h3>
+     <p>
+      設 x0=2、ε=-1、ᾱ=0.64，則 √ᾱ=0.8、√(1−ᾱ)=0.6，得到 x_t=0.8×2+0.6×(-1)=1。
+     </p>
+     <p>
+      在這個 noising expression 下，簡單 tensor 的每個 element 都用相同計算方式。學到的 model 預測 noise 或相關 target，而 sampling 用有 schedule 的 reverse procedure。
+     </p>
+     <p>
+      把畫面 slider 往回拉，可以看見 noise 較少的版本，因為 visualization 仍知道原來 signal。這與學會從未知 noise 開始生成新 sample 不同。
+     </p>
+     <h3 id="what-the-denoiser-learns-and-how-generation-runs-backward">
+      Denoiser 學甚麼，以及 generation 如何逆向進行
+     </h3>
+     <p>
+      Training 時，我們知道 clean example x_0。抽樣 noise level t 和 Gaussian noise ε，以 forward formula 建立 x_t，再要求 network ε_θ(x_t,t) 預測該 noise。常見的 simplified loss 是 ε 與 ε_θ 之間的 mean squared error。對上方 scalar example，若真實 ε 是 −1，而 prediction 是 −0.8，squared error 就是 0.04。Network 需要從大量 clean examples 和 noise levels 學習。
+     </p>
+     <p>
+      Generation 從一個新的 noise sample 開始，而非原本 image。在每個 scheduled step，denoiser 預測 noise 或其他 training target，sampler 再利用 prediction 建立較少 noise 的 state。在 DDPM parameterization 中，reverse mean 是 μ_θ(x_t,t)=(x_t−β_t ε_θ(x_t,t)/√(1−ᾱ_t))/√α_t，其中 α_t=1−β_t，而 ᾱ_t 是累積乘積。Reverse step 亦可能加入 schedule 指定的 random noise。這是 learned transition；沿儲存的 corrupted images 向後移動，只是 visualization。
+     </p>
+     <div class="table-wrap">
+      <table>
+       <thead>
+        <tr>
+         <th>
+          階段
+         </th>
+         <th>
+          已知或提供的內容
+         </th>
+         <th>
+          操作
+         </th>
+        </tr>
+       </thead>
+       <tbody>
+        <tr>
+         <td>
+          Training
+         </td>
+         <td>
+          x_0, t, ε
+         </td>
+         <td>
+          建立 x_t；預測 ε；計算 prediction error。
+         </td>
+        </tr>
+        <tr>
+         <td>
+          Sampling 開始
+         </td>
+         <td>
+          新的 noise sample，以及可選 condition。
+         </td>
+         <td>
+          由 schedule 中 noise 最多的 state 開始。
+         </td>
+        </tr>
+        <tr>
+         <td>
+          Reverse steps
+         </td>
+         <td>
+          x_t, t, condition
+         </td>
+         <td>
+          預測 denoising target，再以 sampler 更新 state。
+         </td>
+        </tr>
+       </tbody>
+      </table>
+     </div>
+     <h3 id="latent-diffusion-and-dit-move-the-same-idea-to-different-representations">
+      Latent diffusion 和 DiT 把概念用於不同 representation
+     </h3>
+     <p>
+      Latent diffusion 先用 image autoencoder，把 clean image 表示為較小的 latent tensor。Diffusion training 和 sampling 在 latent space 進行，再由 image decoder 把 final latent 轉回 pixels。這減少重複 denoising work 的 spatial size，但 autoencoder 的 reconstruction quality 亦成為系統的一部分。
+     </p>
+     <p>
+      Diffusion Transformer，簡稱 DiT，以 transformer blocks 作為 denoising backbone，常處理 image latents 的 patches。Image-patch tokens 帶有 spatial information 和 noise-level conditioning，而非普通單字意思。用 transformer 取代 U-Net 是改變 predictor architecture，並不會令 diffusion 變成由左至右的 word prediction。
+     </p>
+     <h3 id="classifier-free-guidance-combines-conditional-and-unconditional-predictions">
+      Classifier-free guidance 結合 conditional 和 unconditional predictions
+     </h3>
+     <p>
+      對「a red school bus」這類 prompt，training conditional denoiser 時會間中移除 condition。Sampling 時，分別取得有 prompt 的 prediction ε_cond，以及沒有 prompt 的 ε_uncond。一種常見 convention 是 ε_guided=ε_uncond+w(ε_cond−ε_uncond)。在這個 convention 下，w=1 是 conditional prediction，w&gt;1 會加強它相對 unconditional prediction 的差異。若 ε_uncond=0.2、ε_cond=0.5、w=2，combined scalar prediction 是 0.8。較大 guidance 可以改善 adherence，同時改變 diversity 或產生 artifacts；由於 APIs 的 parameterization 可以不同，應說明所用 convention。
+     </p>
+     <h3 id="flow-matching-learns-a-direction-of-transport">
+      Flow matching 學習 transport 的方向
+     </h3>
+     <p>
+      簡單的 flow-matching 例子，以 x_t=(1−t)x_noise+t*x_data，把 noise point x_noise=−1 連到 data point x_data=2。沿這條指定直線 path 的 target velocity 是 3；t=0.4 時，point 是 0.2。Neural network 從大量 training paths 學習 velocity field，再由 ODE solver 沿 learned field 從 noise 移向 data。實際 model 會仔細選擇 paths 和 parameterizations。這個例子把 learned transport direction 與 DDPM 的 noise-prediction target 區分開。
+     </p>
+     <h3 id="a-vision-language-model-reads-an-image-and-produces-language">
+      Vision-language model 讀取 image 並產生語言
+     </h3>
+     <p>
+      常見 VLM 連接 image encoder、projection 或 connector，以及 language model。對 school-bus photograph，image encoder 產生 visual features；connector 把它們轉成 language model 能與 text tokens 一起使用的 representations，再生成「What color is the bus?」的答案。Training 可以先 align image-text pairs，再使用 image-conditioned instructions。VLM 仍可能看錯小字、數錯物件或推斷看不到的細節，因此應分開評估 visual evidence 和 answer accuracy。
+     </p>
+     <p>
+      來源：
+      <a href="https://arxiv.org/abs/2006.11239">
+       Denoising Diffusion Probabilistic Models
+      </a>
+      .
+     </p>
+     <p>
+      來源：
+      <a href="https://arxiv.org/abs/2112.10752">
+       Latent diffusion models
+      </a>
+      .
+     </p>
+     <p>
+      來源：
+      <a href="https://arxiv.org/abs/2212.09748">
+       Diffusion Transformers
+      </a>
+      .
+     </p>
+     <p>
+      來源：
+      <a href="https://arxiv.org/abs/2207.12598">
+       Classifier-free diffusion guidance
+      </a>
+      .
+     </p>
+     <p>
+      來源：
+      <a href="https://arxiv.org/abs/2210.02747">
+       Flow matching
+      </a>
+      .
+     </p>
+     <p>
+      來源：
+      <a href="https://arxiv.org/abs/2304.08485">
+       Visual instruction tuning
+      </a>
+      .
+     </p>
+     <h3 id="flow-ideas-and-multimodal-tokens">
+      flow 概念與 multimodal token
+     </h3>
+     <p>
+      normalizing flow 使用 invertible transformation，配合可處理的 change-of-variables formulation。flow matching 學習在 distribution 之間運送的 vector field。它們都與 generative modeling 有關，但不應視作每種 diffusion 實作的同義詞。
+     </p>
+     <p>
+      部分 multimodal system 使用 patch、feature 或 discrete token 表示 image/audio，再連接到 transformer component。representation 和 objective 決定 model 預測甚麼。
+     </p>
+     <p>
+      language-model vocabulary 與 image-patch representation 的 semantics 不同。「model 使用 token」不代表 token 對應普通詞語。
+     </p>
+     <h3 id="comparing-families-by-the-question-each-answers">
+      按各自回答的問題比較不同 model family
+     </h3>
+     <p>
+      對 autoregressive text，問它建模哪個 next-token conditional，以及 generation 如何進行。對 VAE，問 latent variable、reconstruction 和 prior matching。對 GAN，問 generator-discriminator 的 training game。對 diffusion，問 forward corruption 和學到的 reverse-related prediction。
+     </p>
+     <p>
+      這些問題比背誦名稱清單更有意思。一個 system 可以結合數個 family 的 component。
+     </p>
+     <p>
+      保持範圍清晰：我們深入實作的主線仍是 text transformer。其他 family 提供概念和數值入門，並有可選的深入閱讀。
+     </p>
+     <h3 id="worked-practice-and-a-readiness-check">
+      實例練習與學習檢查
+     </h3>
+     <p>
+      為 scalar 例子計算 ᾱ=0 和 ᾱ=1 時的 forward-noising formula。然後解釋 image classifier 與 image generator 的 output 任務為何不同。
+     </p>
+     <p>
+      畫出 VAE 和 GAN 各部分的作用，不要聲稱每個 latent coordinate 都有固定意思。用一句話說明 diffusion 除了展示 noisy picture，還學習甚麼。
+     </p>
+     <p>
+      當你理解 generative AI 比 LLM 更廣泛，並能比較不同 mechanism，而不將它們混成同一個 buzzword，就準備好了。
+     </p>
+     <h3 id="different-kinds-of-uncertainty">
+      不同種類的 uncertainty
+     </h3>
+     <p>
+      text prefix 可以有數個合理 next word；image prompt 可以容許很多有效圖畫；一句說話可以用不同聲線和節奏表達。generative modeling 必須容納變化，不能假設永遠只有一個精確 output。
+     </p>
+     <p>
+      所以 evaluation 取決於任務。bus fare 計算有可核實的數值答案；一張新 bus illustration 可以有很多可接受外觀，但仍可能不符合「show exactly two wheels.」的 instruction。sample 可以多樣卻錯誤，也可以準確符合狹窄要求，卻在整組中高度重複。
+     </p>
+     <p>
+      這解釋了為何沒有任務定義時，classification accuracy、text likelihood 和 human preference score 不能互相代替。modeling family、training objective 和 evaluation 各自回答不同問題。
+     </p>
+    </article>
+    <nav aria-label="前後 lecture" class="chapter-pagination">
+     <a href="14.html">
+      <small>
+       上一週
+      </small>
+      從 pretraining 到 instruction following 和 reasoning
+     </a>
+     <a href="16.html">
+      <small>
+       下一週
+      </small>
+      完整 transformer 導覽與第一學期溫習
+     </a>
+    </nav>
+   </div>
+   <footer class="footer">
+    <span>
+     Applied AI · 獨立自學課程
+    </span>
+    <span>
+     32 週 · 每週 10 小時
+    </span>
+    <a href="../resources.html#about-this-course">
+     關於課程及資料來源
+    </a>
+   </footer>
+  </main>
+  <dialog aria-labelledby="search-title" class="search-dialog">
+   <div class="dialog-head">
+    <h2 id="search-title">
+     尋找概念
+    </h2>
+    <button aria-label="關閉搜尋" class="search-close" type="button">
+     關閉
+    </button>
+   </div>
+   <label class="sr-only" for="course-search">
+    搜尋所有 lecture 和 tutorial
+   </label>
+   <input autocomplete="off" id="course-search" placeholder="試試 attention、fine-tuning 或 harness……" type="search"/>
+   <p aria-live="polite" class="search-status">
+    搜尋 lecture notes、tutorial、測驗及閱讀材料。
+   </p>
+   <div class="search-results">
+   </div>
+  </dialog>
+  <div aria-live="polite" class="toast" role="status">
+  </div>
+ </body>
+</html>

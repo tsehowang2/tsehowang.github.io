@@ -1,57 +1,1451 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/><title>Generation decoding and the KV cache · Applied AI</title><meta content="Applied generative AI and LLM systems course material" name="description"/><meta content="#173c36" name="theme-color"/><link href="../assets/favicon.svg" rel="icon" type="image/svg+xml"/><link href="../assets/style.css" rel="stylesheet"/><link href="../assets/slides.css" rel="stylesheet"/><script>window.COURSE_BASE="../";</script><script defer="" src="../assets/site-config.js"></script><script defer="" src="../assets/search-index.js"></script><script defer="" src="../assets/app.js"></script><script defer="" src="../assets/visuals.js"></script><script defer="" src="../assets/slides.js"></script><script defer="" src="../assets/beginner-visuals.js"></script><link href="../zh-HK/lectures/13.html" hreflang="zh-HK" rel="alternate"/><link href="../assets/bilingual.css" rel="stylesheet"/></head><body data-page-kind="lecture" data-week="13"><a class="skip-link" href="#main">Skip to content</a><header class="topbar"><button aria-controls="course-sidebar" aria-expanded="false" class="menu-toggle" type="button">Menu</button><a class="brand" href="../index.html"><span aria-hidden="true" class="brand-mark">a<span>i</span></span><span>APPLIED AI<small>Principles into practice</small></span></a><nav aria-label="Main navigation"><a href="../index.html">The course</a><a href="../visuals.html">Visual lab</a><a href="../project.html">Project</a><a class="language-switch" href="../zh-HK/lectures/13.html" hreflang="zh-HK" lang="zh-HK">繁體中文</a></nav><button class="search-open" type="button">Search the course <span aria-hidden="true">/</span></button></header><aside aria-label="Course chapters" class="sidebar" id="course-sidebar"><a class="side-home" href="../index.html">Course overview</a><details class="semester-nav" open=""><summary>Semester 1<span>Weeks 1–16</span></summary><ol start="1"><li><a href="../lectures/01.html"><span class="week-number">01</span><span>What a language model is trying to learn</span><span class="week-tick" data-week-tick="1"></span></a></li><li><a href="../lectures/02.html"><span class="week-number">02</span><span>From text to tokens and numerical IDs</span><span class="week-tick" data-week-tick="2"></span></a></li><li><a href="../lectures/03.html"><span class="week-number">03</span><span>What word vectors can represent</span><span class="week-tick" data-week-tick="3"></span></a></li><li><a href="../lectures/04.html"><span class="week-number">04</span><span>From scores to probabilities and learning signals</span><span class="week-tick" data-week-tick="4"></span></a></li><li><a href="../lectures/05.html"><span class="week-number">05</span><span>Why language needs context and order</span><span class="week-tick" data-week-tick="5"></span></a></li><li><a href="../lectures/06.html"><span class="week-number">06</span><span>Attention begins as a weighted mixture</span><span class="week-tick" data-week-tick="6"></span></a></li><li><a href="../lectures/07.html"><span class="week-number">07</span><span>Where queries keys and values come from</span><span class="week-tick" data-week-tick="7"></span></a></li><li><a href="../lectures/08.html"><span class="week-number">08</span><span>Scaling and masking attention correctly</span><span class="week-tick" data-week-tick="8"></span></a></li><li><a href="../lectures/09.html"><span class="week-number">09</span><span>Multiple attention heads and position</span><span class="week-tick" data-week-tick="9"></span></a></li><li><a href="../lectures/10.html"><span class="week-number">10</span><span>The transformer block step by step</span><span class="week-tick" data-week-tick="10"></span></a></li><li><a href="../lectures/11.html"><span class="week-number">11</span><span>Encoders decoders and complete model architectures</span><span class="week-tick" data-week-tick="11"></span></a></li><li><a href="../lectures/12.html"><span class="week-number">12</span><span>Training a small transformer</span><span class="week-tick" data-week-tick="12"></span></a></li><li><a aria-current="page" href="../lectures/13.html"><span class="week-number">13</span><span>Generation decoding and the KV cache</span><span class="week-tick" data-week-tick="13"></span></a></li><li><a href="../lectures/14.html"><span class="week-number">14</span><span>From pretraining to instruction following and reasoning</span><span class="week-tick" data-week-tick="14"></span></a></li><li><a href="../lectures/15.html"><span class="week-number">15</span><span>Generative AI beyond text</span><span class="week-tick" data-week-tick="15"></span></a></li><li><a href="../lectures/16.html"><span class="week-number">16</span><span>A complete transformer walkthrough and first semester review</span><span class="week-tick" data-week-tick="16"></span></a></li></ol></details><details class="semester-nav"><summary>Semester 2<span>Weeks 17–32</span></summary><ol start="17"><li><a href="../lectures/17.html"><span class="week-number">17</span><span>From word vectors to semantic search</span><span class="week-tick" data-week-tick="17"></span></a></li><li><a href="../lectures/18.html"><span class="week-number">18</span><span>A vector database from a list of vectors</span><span class="week-tick" data-week-tick="18"></span></a></li><li><a href="../lectures/19.html"><span class="week-number">19</span><span>RAG as an open book question</span><span class="week-tick" data-week-tick="19"></span></a></li><li><a href="../lectures/20.html"><span class="week-number">20</span><span>Improving RAG without losing the basic task</span><span class="week-tick" data-week-tick="20"></span></a></li><li><a href="../lectures/21.html"><span class="week-number">21</span><span>Evaluating retrieval answers and uncertainty</span><span class="week-tick" data-week-tick="21"></span></a></li><li><a href="../lectures/22.html"><span class="week-number">22</span><span>CPU GPU memory and model resource accounting</span><span class="week-tick" data-week-tick="22"></span></a></li><li><a href="../lectures/23.html"><span class="week-number">23</span><span>CUDA kernels and profiling</span><span class="week-tick" data-week-tick="23"></span></a></li><li><a href="../lectures/24.html"><span class="week-number">24</span><span>Fine tuning starts with a teaching dataset</span><span class="week-tick" data-week-tick="24"></span></a></li><li><a href="../lectures/25.html"><span class="week-number">25</span><span>LoRA and QLoRA from a small matrix</span><span class="week-tick" data-week-tick="25"></span></a></li><li><a href="../lectures/26.html"><span class="week-number">26</span><span>Fine tuning experiments preferences and distillation</span><span class="week-tick" data-week-tick="26"></span></a></li><li><a href="../lectures/27.html"><span class="week-number">27</span><span>Tools functions workflows and agents</span><span class="week-tick" data-week-tick="27"></span></a></li><li><a href="../lectures/28.html"><span class="week-number">28</span><span>Harnesses planning memory and bounded execution</span><span class="week-tick" data-week-tick="28"></span></a></li><li><a href="../lectures/29.html"><span class="week-number">29</span><span>From a notebook to MLOps and inference serving</span><span class="week-tick" data-week-tick="29"></span></a></li><li><a href="../lectures/30.html"><span class="week-number">30</span><span>Monitoring security regression tests and rollback</span><span class="week-tick" data-week-tick="30"></span></a></li><li><a href="../lectures/31.html"><span class="week-number">31</span><span>Integrating the documentation assistant and advanced extensions</span><span class="week-tick" data-week-tick="31"></span></a></li><li><a href="../lectures/32.html"><span class="week-number">32</span><span>Review defense and a continuing learning plan</span><span class="week-tick" data-week-tick="32"></span></a></li></ol></details><div class="side-links"><a href="../visuals.html">Visual laboratory <span>14 interactive lessons</span></a><a href="../project.html">Documentation assistant <span>Your capstone project</span></a><a href="../resources.html">Readings and setup</a></div><div class="side-progress"><div><span>Your progress</span><strong data-progress-count="">0 / 32</strong></div><progress aria-label="Completed lectures" max="32" value="0"></progress><small>Saved in this browser</small></div></aside><main class="main" id="main"><div class="content"><div class="chapter-header"><div class="eyebrow">Semester 1 / Week 13</div><h1>Generation decoding and the KV cache</h1></div><div class="lesson-links"><a href="../tutorials/13.html">Tutorial 13</a><a href="../tests/13.html">Test your understanding</a><button aria-pressed="false" class="mark-complete" data-week="13" type="button">Mark as complete</button></div><section aria-label="Lecture slides" class="lecture-deck" id="lecture-slides"><div class="deck-top"><div><div class="eyebrow">Lecture slides · Week 13</div><h2>Learn one step at a time.</h2></div><button class="deck-present" type="button">Present</button></div><p class="deck-help">Read each explanation, pause to predict the result, then continue. Use the arrow keys while the presentation is focused. The complete lecture reader is below.</p><div aria-label="Presentation: use left and right arrow keys" class="slide-viewport" tabindex="0"><section class="lecture-slide" data-slide=""><div class="slide-stage">Start with an example</div><h3>The model gives options before it gives a sentence</h3><div class="slide-prose"><p>Return to “I go to school by.” A trained model produces a score for each vocabulary token. A decoding rule turns those scores into the next selected token.</p>
-<p>Greedy decoding takes the largest score. Sampling chooses according to a distribution, possibly modified by temperature or filtering. These can generate different continuations from the same model.</p>
-<p>The decoder is a decision procedure over predictions. It does not check whether the selected sentence is a true report of someone's commute.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Start with an example</div><h3>A small sampling distribution</h3><div class="slide-prose"><p>Suppose bus, train, bicycle, and boat have probabilities [0.5,0.3,0.15,0.05]. Greedy selects bus. Repeated sampling may choose all four with frequencies approaching these probabilities under ideal repeated independent draws.</p>
-<p>With top-k=2, retain bus and train and renormalize to [0.625,0.375]. With top-p=0.8 under a convention including the token that reaches the threshold, the same two tokens remain.</p>
-<p>Boundary and tie conventions depend on the implementation. State them when comparing a hand calculation with a library.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Build the mechanism</div><h3>Generation changes the next input</h3><div class="slide-prose"><p>After choosing bus, the next prefix includes bus. The model may predict a period. After choosing train, subsequent words may differ.</p>
-<p>Generation is therefore not a list of independent classifications. Earlier selections change later conditions. A locally most probable token need not form the globally most probable complete sequence.</p>
-<p>Beam search keeps several partial sequences according to a scoring rule, but its usefulness depends on the task and decoding objectives. It is not a universal replacement for sampling in open-ended generation.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Build the mechanism</div><h3>Reusing keys and values</h3><div class="slide-prose"><p>In a causal transformer, earlier positions do not depend on future tokens. Their computed key/value states can be retained when appending a new token.</p>
-<p>Without caching, a naive generation loop repeatedly processes the entire prefix. With a KV cache, the new token can query cached keys/values plus its own new states, subject to the model's architecture.</p>
-<p>The cache stores intermediate representations, not a list of answers. It speeds repeated computation but does not improve the underlying evidence or factual reliability.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Build the mechanism</div><h3>A three-token cache trace</h3><div class="slide-prose"><p>Imagine the prefix I go to. For each layer, cached keys and values exist for these three positions. To append school, compute the new position's representations and let its query attend to the four available key positions.</p>
-<p>The old cached tensors remain associated with the exact earlier prefix. Change I to You, alter model weights, or change earlier role tokens, and reusing the old cache would generally be incorrect.</p>
-<p>We will calculate cache memory in week 22. The important idea now is the validity condition that permits reuse.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Build the mechanism</div><h3>Text models and chat formatting</h3><div class="slide-prose"><p>A conversational model still receives a serialized token sequence. Its tokenizer may include a chat template that marks roles and message boundaries.</p>
-<p>Writing the visible text “system:” is not automatically equivalent to the template's special tokens. Inspect a short rendered example and count tokens with the actual tokenizer.</p>
-<p>We introduce this interface after the basic generation loop so role formatting is another input construction choice you can explain. It should not hide the next-token mechanism underneath.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Go deeper and check understanding</div><h3>Stopping and evaluating a continuation</h3><div class="slide-prose"><p>Generation needs a stopping condition: an end token, a specified maximum number of new tokens, or another explicit rule. Maximum length prevents an unbounded continuation but can also truncate a response.</p>
-<p>Distinguish input tokens from newly generated tokens when decoding an output tensor. Returning the complete prompt as if it were generated text creates a misleading evaluation.</p>
-<p>For our simple examples, inspect whether the continuation is grammatical and consistent with the supplied context. Later tasks will require independent factual and task checks.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Go deeper and check understanding</div><h3>Worked practice and a readiness check</h3><div class="slide-prose"><p>Apply top-k=3 to [0.5,0.3,0.15,0.05] and renormalize by 0.95. Then explain the difference between temperature adjustment and deleting candidates outside top-k.</p>
-<p>Draw cache contents before and after appending one token. Explain why changing an earlier token invalidates reuse, even if the length stays the same.</p>
-<p>You are ready when you can trace a complete generation step from prefix IDs through logits, token selection, append, cache update, and termination.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Go deeper and check understanding</div><h3>The cached computation and a changed prefix</h3><div class="slide-prose"><p>Consider generating after “I go.” Cached keys and values represent those exact two input positions under the chosen model. Appending to can reuse those earlier states in a causal model because future inputs do not change their past computation.</p>
-<p>Replace the prefix with “You go.” Its length is still two, but the first token embedding and all dependent earlier states can differ. A cache indexed only by prefix length would return the wrong computation.</p>
-<p>Now change the system instruction of a chat prompt while leaving the visible user sentence identical. The full token prefix has changed again. Cache identity must reflect the actual preceding tokens and relevant model configuration, not just the human-visible last question.</p>
-<p>This example connects a numerical optimization to correctness. Saving computation is useful only when the reused state belongs to the computation you intend to perform.</p></div></section></div><div class="deck-controls"><button class="slide-prev" type="button">← Previous</button><span aria-live="polite" class="slide-counter">1 / 9</span><button class="slide-next" type="button">Next →</button></div><label class="slide-jump-label">Go to slide <select aria-label="Go to slide" class="slide-jump"><option value="0">1</option><option value="1">2</option><option value="2">3</option><option value="3">4</option><option value="4">5</option><option value="5">6</option><option value="6">7</option><option value="7">8</option><option value="8">9</option></select></label><button aria-pressed="false" class="deck-all" type="button">Show all slides</button><a class="reader-link" href="#full-notes">Read the complete lecture ↓</a></section><section aria-label="One token at a time" class="visual-lesson"><div class="eyebrow">Explore the mechanism</div><h2>One token at a time</h2><p class="visual-intro">Inspect next-token prediction and a growing prefix. The displayed probabilities are illustrative.</p><div data-widget="generation"><p>Enable JavaScript to use this illustration. The lecture notes below explain the same mechanism.</p></div></section><article class="prose full-notes" id="full-notes"><div class="eyebrow">Complete lecture reader</div><h2>Read the full explanation</h2><h3 id="the-model-gives-options-before-it-gives-a-sentence">The model gives options before it gives a sentence</h3>
-<p>Return to “I go to school by.” A trained model produces a score for each vocabulary token. A decoding rule turns those scores into the next selected token.</p>
-<p>Greedy decoding takes the largest score. Sampling chooses according to a distribution, possibly modified by temperature or filtering. These can generate different continuations from the same model.</p>
-<p>The decoder is a decision procedure over predictions. It does not check whether the selected sentence is a true report of someone's commute.</p>
-<h3 id="a-small-sampling-distribution">A small sampling distribution</h3>
-<p>Suppose bus, train, bicycle, and boat have probabilities [0.5,0.3,0.15,0.05]. Greedy selects bus. Repeated sampling may choose all four with frequencies approaching these probabilities under ideal repeated independent draws.</p>
-<p>With top-k=2, retain bus and train and renormalize to [0.625,0.375]. With top-p=0.8 under a convention including the token that reaches the threshold, the same two tokens remain.</p>
-<p>Boundary and tie conventions depend on the implementation. State them when comparing a hand calculation with a library.</p>
-<h3 id="generation-changes-the-next-input">Generation changes the next input</h3>
-<p>After choosing bus, the next prefix includes bus. The model may predict a period. After choosing train, subsequent words may differ.</p>
-<p>Generation is therefore not a list of independent classifications. Earlier selections change later conditions. A locally most probable token need not form the globally most probable complete sequence.</p>
-<p>Beam search keeps several partial sequences according to a scoring rule, but its usefulness depends on the task and decoding objectives. It is not a universal replacement for sampling in open-ended generation.</p>
-<h3 id="reusing-keys-and-values">Reusing keys and values</h3>
-<p>In a causal transformer, earlier positions do not depend on future tokens. Their computed key/value states can be retained when appending a new token.</p>
-<p>Without caching, a naive generation loop repeatedly processes the entire prefix. With a KV cache, the new token can query cached keys/values plus its own new states, subject to the model's architecture.</p>
-<p>The cache stores intermediate representations, not a list of answers. It speeds repeated computation but does not improve the underlying evidence or factual reliability.</p>
-<h3 id="a-three-token-cache-trace">A three-token cache trace</h3>
-<p>Imagine the prefix I go to. For each layer, cached keys and values exist for these three positions. To append school, compute the new position's representations and let its query attend to the four available key positions.</p>
-<p>The old cached tensors remain associated with the exact earlier prefix. Change I to You, alter model weights, or change earlier role tokens, and reusing the old cache would generally be incorrect.</p>
-<p>We will calculate cache memory in week 22. The important idea now is the validity condition that permits reuse.</p>
-<h3 id="text-models-and-chat-formatting">Text models and chat formatting</h3>
-<p>A conversational model still receives a serialized token sequence. Its tokenizer may include a chat template that marks roles and message boundaries.</p>
-<p>Writing the visible text “system:” is not automatically equivalent to the template's special tokens. Inspect a short rendered example and count tokens with the actual tokenizer.</p>
-<p>We introduce this interface after the basic generation loop so role formatting is another input construction choice you can explain. It should not hide the next-token mechanism underneath.</p>
-<h3 id="stopping-and-evaluating-a-continuation">Stopping and evaluating a continuation</h3>
-<p>Generation needs a stopping condition: an end token, a specified maximum number of new tokens, or another explicit rule. Maximum length prevents an unbounded continuation but can also truncate a response.</p>
-<p>Distinguish input tokens from newly generated tokens when decoding an output tensor. Returning the complete prompt as if it were generated text creates a misleading evaluation.</p>
-<p>For our simple examples, inspect whether the continuation is grammatical and consistent with the supplied context. Later tasks will require independent factual and task checks.</p>
-<h3 id="worked-practice-and-a-readiness-check">Worked practice and a readiness check</h3>
-<p>Apply top-k=3 to [0.5,0.3,0.15,0.05] and renormalize by 0.95. Then explain the difference between temperature adjustment and deleting candidates outside top-k.</p>
-<p>Draw cache contents before and after appending one token. Explain why changing an earlier token invalidates reuse, even if the length stays the same.</p>
-<p>You are ready when you can trace a complete generation step from prefix IDs through logits, token selection, append, cache update, and termination.</p>
-<h3 id="the-cached-computation-and-a-changed-prefix">The cached computation and a changed prefix</h3>
-<p>Consider generating after “I go.” Cached keys and values represent those exact two input positions under the chosen model. Appending to can reuse those earlier states in a causal model because future inputs do not change their past computation.</p>
-<p>Replace the prefix with “You go.” Its length is still two, but the first token embedding and all dependent earlier states can differ. A cache indexed only by prefix length would return the wrong computation.</p>
-<p>Now change the system instruction of a chat prompt while leaving the visible user sentence identical. The full token prefix has changed again. Cache identity must reflect the actual preceding tokens and relevant model configuration, not just the human-visible last question.</p>
-<p>This example connects a numerical optimization to correctness. Saving computation is useful only when the reused state belongs to the computation you intend to perform.</p></article><nav aria-label="Adjacent lectures" class="chapter-pagination"><a href="12.html"><small>Previous week</small>Training a small transformer</a><a href="14.html"><small>Next week</small>From pretraining to instruction following and reasoning</a></nav></div><footer class="footer"><span>Applied AI · An independent self-study course</span><span>32 weeks · 10 hours per week</span><a href="../resources.html#about-this-course">About and sources</a></footer></main><dialog aria-labelledby="search-title" class="search-dialog"><div class="dialog-head"><h2 id="search-title">Find a concept</h2><button aria-label="Close search" class="search-close" type="button">Close</button></div><label class="sr-only" for="course-search">Search all lectures and tutorials</label><input autocomplete="off" id="course-search" placeholder="Try attention, fine-tuning, or harness…" type="search"/><p aria-live="polite" class="search-status">Search lecture notes, tutorials, tests and readings.</p><div class="search-results"></div></dialog><div aria-live="polite" class="toast" role="status"></div></body></html>
+<html lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width,initial-scale=1" name="viewport"/>
+  <title>
+   Generation decoding and the KV cache · Applied AI
+  </title>
+  <meta content="Applied generative AI and LLM systems course material" name="description"/>
+  <meta content="#173c36" name="theme-color"/>
+  <link href="../assets/favicon.svg" rel="icon" type="image/svg+xml"/>
+  <link href="../assets/style.css" rel="stylesheet"/>
+  <link href="../assets/slides.css" rel="stylesheet"/>
+  <script>
+   window.COURSE_BASE="../";
+  </script>
+  <script defer="" src="../assets/site-config.js">
+  </script>
+  <script defer="" src="../assets/search-index.js">
+  </script>
+  <script defer="" src="../assets/app.js">
+  </script>
+  <script defer="" src="../assets/visuals.js">
+  </script>
+  <script defer="" src="../assets/slides.js">
+  </script>
+  <script defer="" src="../assets/beginner-visuals.js">
+  </script>
+  <link href="../zh-HK/lectures/13.html" hreflang="zh-HK" rel="alternate"/>
+  <link href="../assets/bilingual.css" rel="stylesheet"/>
+  <link href="../assets/reader-v3.css" rel="stylesheet"/>
+  <script defer="True" src="../assets/reader-v3.js">
+  </script>
+ </head>
+ <body data-page-kind="lecture" data-week="13">
+  <a class="skip-link" href="#main">
+   Skip to content
+  </a>
+  <header class="topbar">
+   <button aria-controls="course-sidebar" aria-expanded="false" class="menu-toggle" type="button">
+    Menu
+   </button>
+   <a class="brand" href="../index.html">
+    <span aria-hidden="true" class="brand-mark">
+     a
+     <span>
+      i
+     </span>
+    </span>
+    <span>
+     APPLIED AI
+     <small>
+      Principles into practice
+     </small>
+    </span>
+   </a>
+   <nav aria-label="Main navigation">
+    <a href="../index.html">
+     The course
+    </a>
+    <a href="../visuals.html">
+     Visual lab
+    </a>
+    <a href="../project.html">
+     Project
+    </a>
+    <a class="language-switch" href="../zh-HK/lectures/13.html" hreflang="zh-HK" lang="zh-HK">
+     繁體中文
+    </a>
+   </nav>
+   <button class="search-open" type="button">
+    Search the course
+    <span aria-hidden="true">
+     /
+    </span>
+   </button>
+  </header>
+  <aside aria-label="Course chapters" class="sidebar" id="course-sidebar">
+   <a class="side-home" href="../index.html">
+    Course overview
+   </a>
+   <details class="semester-nav" open="">
+    <summary>
+     Semester 1
+     <span>
+      Weeks 1–16
+     </span>
+    </summary>
+    <ol start="1">
+     <li>
+      <a href="../lectures/01.html">
+       <span class="week-number">
+        01
+       </span>
+       <span>
+        What a language model is trying to learn
+       </span>
+       <span class="week-tick" data-week-tick="1">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/02.html">
+       <span class="week-number">
+        02
+       </span>
+       <span>
+        From text to tokens and numerical IDs
+       </span>
+       <span class="week-tick" data-week-tick="2">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/03.html">
+       <span class="week-number">
+        03
+       </span>
+       <span>
+        What word vectors can represent
+       </span>
+       <span class="week-tick" data-week-tick="3">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/04.html">
+       <span class="week-number">
+        04
+       </span>
+       <span>
+        From scores to probabilities and learning signals
+       </span>
+       <span class="week-tick" data-week-tick="4">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/05.html">
+       <span class="week-number">
+        05
+       </span>
+       <span>
+        Why language needs context and order
+       </span>
+       <span class="week-tick" data-week-tick="5">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/06.html">
+       <span class="week-number">
+        06
+       </span>
+       <span>
+        Attention begins as a weighted mixture
+       </span>
+       <span class="week-tick" data-week-tick="6">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/07.html">
+       <span class="week-number">
+        07
+       </span>
+       <span>
+        Where queries keys and values come from
+       </span>
+       <span class="week-tick" data-week-tick="7">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/08.html">
+       <span class="week-number">
+        08
+       </span>
+       <span>
+        Scaling and masking attention correctly
+       </span>
+       <span class="week-tick" data-week-tick="8">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/09.html">
+       <span class="week-number">
+        09
+       </span>
+       <span>
+        Multiple attention heads and position
+       </span>
+       <span class="week-tick" data-week-tick="9">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/10.html">
+       <span class="week-number">
+        10
+       </span>
+       <span>
+        The transformer block step by step
+       </span>
+       <span class="week-tick" data-week-tick="10">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/11.html">
+       <span class="week-number">
+        11
+       </span>
+       <span>
+        Encoders decoders and complete model architectures
+       </span>
+       <span class="week-tick" data-week-tick="11">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/12.html">
+       <span class="week-number">
+        12
+       </span>
+       <span>
+        Training a small transformer
+       </span>
+       <span class="week-tick" data-week-tick="12">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a aria-current="page" href="../lectures/13.html">
+       <span class="week-number">
+        13
+       </span>
+       <span>
+        Generation decoding and the KV cache
+       </span>
+       <span class="week-tick" data-week-tick="13">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/14.html">
+       <span class="week-number">
+        14
+       </span>
+       <span>
+        From pretraining to instruction following and reasoning
+       </span>
+       <span class="week-tick" data-week-tick="14">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/15.html">
+       <span class="week-number">
+        15
+       </span>
+       <span>
+        Generative AI beyond text
+       </span>
+       <span class="week-tick" data-week-tick="15">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/16.html">
+       <span class="week-number">
+        16
+       </span>
+       <span>
+        A complete transformer walkthrough and first semester review
+       </span>
+       <span class="week-tick" data-week-tick="16">
+       </span>
+      </a>
+     </li>
+    </ol>
+   </details>
+   <details class="semester-nav">
+    <summary>
+     Semester 2
+     <span>
+      Weeks 17–32
+     </span>
+    </summary>
+    <ol start="17">
+     <li>
+      <a href="../lectures/17.html">
+       <span class="week-number">
+        17
+       </span>
+       <span>
+        From word vectors to semantic search
+       </span>
+       <span class="week-tick" data-week-tick="17">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/18.html">
+       <span class="week-number">
+        18
+       </span>
+       <span>
+        A vector database from a list of vectors
+       </span>
+       <span class="week-tick" data-week-tick="18">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/19.html">
+       <span class="week-number">
+        19
+       </span>
+       <span>
+        RAG as an open book question
+       </span>
+       <span class="week-tick" data-week-tick="19">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/20.html">
+       <span class="week-number">
+        20
+       </span>
+       <span>
+        Improving RAG without losing the basic task
+       </span>
+       <span class="week-tick" data-week-tick="20">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/21.html">
+       <span class="week-number">
+        21
+       </span>
+       <span>
+        Evaluating retrieval answers and uncertainty
+       </span>
+       <span class="week-tick" data-week-tick="21">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/22.html">
+       <span class="week-number">
+        22
+       </span>
+       <span>
+        CPU GPU memory and model resource accounting
+       </span>
+       <span class="week-tick" data-week-tick="22">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/23.html">
+       <span class="week-number">
+        23
+       </span>
+       <span>
+        CUDA kernels and profiling
+       </span>
+       <span class="week-tick" data-week-tick="23">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/24.html">
+       <span class="week-number">
+        24
+       </span>
+       <span>
+        Fine tuning starts with a teaching dataset
+       </span>
+       <span class="week-tick" data-week-tick="24">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/25.html">
+       <span class="week-number">
+        25
+       </span>
+       <span>
+        LoRA and QLoRA from a small matrix
+       </span>
+       <span class="week-tick" data-week-tick="25">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/26.html">
+       <span class="week-number">
+        26
+       </span>
+       <span>
+        Fine tuning experiments preferences and distillation
+       </span>
+       <span class="week-tick" data-week-tick="26">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/27.html">
+       <span class="week-number">
+        27
+       </span>
+       <span>
+        Tools functions workflows and agents
+       </span>
+       <span class="week-tick" data-week-tick="27">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/28.html">
+       <span class="week-number">
+        28
+       </span>
+       <span>
+        Harnesses planning memory and bounded execution
+       </span>
+       <span class="week-tick" data-week-tick="28">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/29.html">
+       <span class="week-number">
+        29
+       </span>
+       <span>
+        From a notebook to MLOps and inference serving
+       </span>
+       <span class="week-tick" data-week-tick="29">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/30.html">
+       <span class="week-number">
+        30
+       </span>
+       <span>
+        Monitoring security regression tests and rollback
+       </span>
+       <span class="week-tick" data-week-tick="30">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/31.html">
+       <span class="week-number">
+        31
+       </span>
+       <span>
+        Integrating the documentation assistant and advanced extensions
+       </span>
+       <span class="week-tick" data-week-tick="31">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/32.html">
+       <span class="week-number">
+        32
+       </span>
+       <span>
+        Review defense and a continuing learning plan
+       </span>
+       <span class="week-tick" data-week-tick="32">
+       </span>
+      </a>
+     </li>
+    </ol>
+   </details>
+   <div class="side-links">
+    <a href="../visuals.html">
+     Visual laboratory
+     <span>
+      14 interactive lessons
+     </span>
+    </a>
+    <a href="../project.html">
+     Documentation assistant
+     <span>
+      Your capstone project
+     </span>
+    </a>
+    <a href="../resources.html">
+     Readings and setup
+    </a>
+   </div>
+   <div class="side-progress">
+    <div>
+     <span>
+      Your progress
+     </span>
+     <strong data-progress-count="">
+      0 / 32
+     </strong>
+    </div>
+    <progress aria-label="Completed lectures" max="32" value="0">
+    </progress>
+    <small>
+     Saved in this browser
+    </small>
+   </div>
+  </aside>
+  <main class="main" id="main">
+   <div class="content">
+    <div class="chapter-header">
+     <div class="eyebrow">
+      Semester 1 / Week 13
+     </div>
+     <h1>
+      Generation decoding and the KV cache
+     </h1>
+    </div>
+    <div class="lesson-links">
+     <a href="../tutorials/13.html">
+      Tutorial 13
+     </a>
+     <a href="../tests/13.html">
+      Test your understanding
+     </a>
+     <button aria-pressed="false" class="mark-complete" data-week="13" type="button">
+      Mark as complete
+     </button>
+    </div>
+    <div aria-label="Lesson view" class="lesson-mode" role="tablist">
+     <button aria-controls="full-notes" aria-selected="true" data-mode="read" id="mode-read" role="tab" type="button">
+      Read lesson
+     </button>
+     <button aria-controls="lecture-slides" aria-selected="false" data-mode="slides" id="mode-slides" role="tab" type="button">
+      Lesson slides
+     </button>
+    </div>
+    <section aria-label="Lecture slides" class="lecture-deck" hidden="" id="lecture-slides" role="tabpanel">
+     <div class="deck-top">
+      <div>
+       <div class="eyebrow">
+        Lecture slides · Week 13
+       </div>
+       <h2>
+        Key steps and worked visuals
+       </h2>
+      </div>
+      <button class="deck-present" type="button">
+       Present
+      </button>
+     </div>
+     <p class="deck-help">
+      Use these slides to review the mechanism. Open “Read the worked explanation” for the complete notes and code.
+     </p>
+     <div aria-label="Presentation: use left and right arrow keys" class="slide-viewport" tabindex="0">
+      <section class="lecture-slide" data-slide="">
+       <div class="slide-stage">
+        Week 13 · Section 1
+       </div>
+       <h3>
+        The model gives options before it gives a sentence
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Return to “I go to school by.” A trained model produces a score for each vocabulary token.
+         </li>
+         <li>
+          Greedy decoding takes the largest score.
+         </li>
+         <li>
+          The decoder is a decision procedure over predictions.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#the-model-gives-options-before-it-gives-a-sentence">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 13 · Section 2
+       </div>
+       <h3>
+        A small sampling distribution
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Suppose bus, train, bicycle, and boat have probabilities [0.5,0.3,0.15,0.05].
+         </li>
+         <li>
+          With top-k=2, retain bus and train and renormalize to [0.625,0.375].
+         </li>
+         <li>
+          Boundary and tie conventions depend on the implementation.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#a-small-sampling-distribution">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 13 · Section 3
+       </div>
+       <h3>
+        Generation changes the next input
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          After choosing bus, the next prefix includes bus.
+         </li>
+         <li>
+          Generation is therefore not a list of independent classifications.
+         </li>
+         <li>
+          Beam search keeps several partial sequences according to a scoring rule, but its usefulness depends on the task and decoding objectives.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#generation-changes-the-next-input">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 13 · Section 4
+       </div>
+       <h3>
+        Reusing keys and values
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          In a causal transformer, earlier positions do not depend on future tokens.
+         </li>
+         <li>
+          Without caching, a naive generation loop repeatedly processes the entire prefix.
+         </li>
+         <li>
+          The cache stores intermediate representations, not a list of answers.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#reusing-keys-and-values">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 13 · Section 5
+       </div>
+       <h3>
+        A three-token cache trace
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Imagine the prefix I go to.
+         </li>
+         <li>
+          The old cached tensors remain associated with the exact earlier prefix.
+         </li>
+         <li>
+          We will calculate cache memory in week 22.
+         </li>
+        </ul>
+        <figure class="mechanism-figure">
+         <figcaption>
+          Prefill and cached decode
+         </figcaption>
+         <ol class="mechanism-flow">
+          <li>
+           <span class="mechanism-number">
+            01
+           </span>
+           <strong>
+            Prefill
+           </strong>
+           <small>
+            I go → cache K/V for I, go
+           </small>
+          </li>
+          <li>
+           <span class="mechanism-number">
+            02
+           </span>
+           <strong>
+            Choose
+           </strong>
+           <small>
+            last logits → to
+           </small>
+          </li>
+          <li>
+           <span class="mechanism-number">
+            03
+           </span>
+           <strong>
+            Decode
+           </strong>
+           <small>
+            process to; append its K/V
+           </small>
+          </li>
+          <li>
+           <span class="mechanism-number">
+            04
+           </span>
+           <strong>
+            Choose again
+           </strong>
+           <small>
+            last logits → school
+           </small>
+          </li>
+         </ol>
+         <p>
+          The cached entries are per-layer key/value tensors, not saved final answers.
+         </p>
+        </figure>
+        <a class="slide-section-link" href="#a-three-token-cache-trace">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 13 · Section 6
+       </div>
+       <h3>
+        A cache ledger for prefill and decode
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          The following ledger uses one word per teaching token.
+         </li>
+         <li>
+          At the end of the final row, bus has been chosen but its own K/V row is not yet present.
+         </li>
+        </ul>
+        <div class="table-wrap">
+         <table>
+          <thead>
+           <tr>
+            <th>
+             Operation
+            </th>
+            <th>
+             Input processed now
+            </th>
+            <th>
+             Cache after processing, per layer
+            </th>
+            <th>
+             Next-token choice
+            </th>
+           </tr>
+          </thead>
+          <tbody>
+           <tr>
+            <td>
+             Prefill
+            </td>
+            <td>
+             I go to
+            </td>
+            <td>
+             K/V(I), K/V(go), K/V(to)
+            </td>
+            <td>
+             school
+            </td>
+           </tr>
+           <tr>
+            <td>
+             Decode
+            </td>
+            <td>
+             school
+            </td>
+            <td>
+             K/V(I), K/V(go), K/V(to), K/V(school)
+            </td>
+            <td>
+             by
+            </td>
+           </tr>
+           <tr>
+            <td>
+             Decode
+            </td>
+            <td>
+             by
+            </td>
+            <td>
+             K/V(I), K/V(go), K/V(to), K/V(school), K/V(by)
+            </td>
+            <td>
+             bus
+            </td>
+           </tr>
+          </tbody>
+         </table>
+        </div>
+        <a class="slide-section-link" href="#a-cache-ledger-for-prefill-and-decode">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 13 · Section 7
+       </div>
+       <h3>
+        Text models and chat formatting
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          A conversational model still receives a serialized token sequence.
+         </li>
+         <li>
+          Writing the visible text “system:” is not automatically equivalent to the template's special tokens.
+         </li>
+         <li>
+          We introduce this interface after the basic generation loop so role formatting is another input construction choice you can explain.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#text-models-and-chat-formatting">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 13 · Section 8
+       </div>
+       <h3>
+        Min-p and repetition penalties modify selection
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Min-p retains tokens whose probability is at least a fraction of the most probable token.
+         </li>
+         <li>
+          A repetition penalty discourages tokens already present in the chosen scope.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#min-p-and-repetition-penalties-modify-selection">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 13 · Section 9
+       </div>
+       <h3>
+        Speculative decoding checks a draft with the target model
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          A cheaper draft model proposes several next tokens, for example “school by bus”.
+         </li>
+         <li>
+          Source: Transformers generation parameters .
+         </li>
+         <li>
+          Source: Exact speculative sampling .
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#speculative-decoding-checks-a-draft-with-the-target-model">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 13 · Section 10
+       </div>
+       <h3>
+        Stopping and evaluating a continuation
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Generation needs a stopping condition: an end token, a specified maximum number of new tokens, or another explicit rule.
+         </li>
+         <li>
+          Distinguish input tokens from newly generated tokens when decoding an output tensor.
+         </li>
+         <li>
+          For our simple examples, inspect whether the continuation is grammatical and consistent with the supplied context.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#stopping-and-evaluating-a-continuation">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 13 · Section 11
+       </div>
+       <h3>
+        Worked practice and a readiness check
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Apply top-k=3 to [0.5,0.3,0.15,0.05] and renormalize by 0.95.
+         </li>
+         <li>
+          Draw cache contents before and after appending one token.
+         </li>
+         <li>
+          You are ready when you can trace a complete generation step from prefix IDs through logits, token selection, append, cache update, and termination.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#worked-practice-and-a-readiness-check">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 13 · Section 12
+       </div>
+       <h3>
+        The cached computation and a changed prefix
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Consider generating after “I go.” Cached keys and values represent those exact two input positions under the chosen model.
+         </li>
+         <li>
+          Replace the prefix with “You go.” Its length is still two, but the first token embedding and all dependent earlier states can differ.
+         </li>
+         <li>
+          Now change the system instruction of a chat prompt while leaving the visible user sentence identical.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#the-cached-computation-and-a-changed-prefix">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 13 · Section 13
+       </div>
+       <h3>
+        The cached computation and a changed prefix · continued
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          This example connects a numerical optimization to correctness.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#the-cached-computation-and-a-changed-prefix">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+     </div>
+     <div class="deck-controls">
+      <button class="slide-prev" type="button">
+       ← Previous
+      </button>
+      <span aria-live="polite" class="slide-counter">
+       1 / 13
+      </span>
+      <button class="slide-next" type="button">
+       Next →
+      </button>
+     </div>
+     <label class="slide-jump-label">
+      Go to slide
+      <select aria-label="Go to slide" class="slide-jump">
+       <option value="0">
+        1. The model gives options before it gives a sentence
+       </option>
+       <option value="1">
+        2. A small sampling distribution
+       </option>
+       <option value="2">
+        3. Generation changes the next input
+       </option>
+       <option value="3">
+        4. Reusing keys and values
+       </option>
+       <option value="4">
+        5. A three-token cache trace
+       </option>
+       <option value="5">
+        6. A cache ledger for prefill and decode
+       </option>
+       <option value="6">
+        7. Text models and chat formatting
+       </option>
+       <option value="7">
+        8. Min-p and repetition penalties modify selection
+       </option>
+       <option value="8">
+        9. Speculative decoding checks a draft with the target model
+       </option>
+       <option value="9">
+        10. Stopping and evaluating a continuation
+       </option>
+       <option value="10">
+        11. Worked practice and a readiness check
+       </option>
+       <option value="11">
+        12. The cached computation and a changed prefix
+       </option>
+       <option value="12">
+        13. The cached computation and a changed prefix · continued
+       </option>
+      </select>
+     </label>
+     <button aria-pressed="false" class="deck-all" type="button">
+      Show all slides
+     </button>
+    </section>
+    <section aria-label="One token at a time" class="visual-lesson">
+     <div class="eyebrow">
+      Explore the mechanism
+     </div>
+     <h2>
+      One token at a time
+     </h2>
+     <p class="visual-intro">
+      Inspect next-token prediction and a growing prefix. The displayed probabilities are illustrative.
+     </p>
+     <div data-widget="generation">
+      <p>
+       Enable JavaScript to use this illustration. The lecture notes below explain the same mechanism.
+      </p>
+     </div>
+    </section>
+    <nav aria-label="In this lesson" class="reader-toc">
+     <strong>
+      In this lesson
+     </strong>
+     <ol>
+      <li>
+       <a href="#the-model-gives-options-before-it-gives-a-sentence">
+        The model gives options before it gives a sentence
+       </a>
+      </li>
+      <li>
+       <a href="#a-small-sampling-distribution">
+        A small sampling distribution
+       </a>
+      </li>
+      <li>
+       <a href="#generation-changes-the-next-input">
+        Generation changes the next input
+       </a>
+      </li>
+      <li>
+       <a href="#reusing-keys-and-values">
+        Reusing keys and values
+       </a>
+      </li>
+      <li>
+       <a href="#a-three-token-cache-trace">
+        A three-token cache trace
+       </a>
+      </li>
+      <li>
+       <a href="#a-cache-ledger-for-prefill-and-decode">
+        A cache ledger for prefill and decode
+       </a>
+      </li>
+      <li>
+       <a href="#text-models-and-chat-formatting">
+        Text models and chat formatting
+       </a>
+      </li>
+      <li>
+       <a href="#min-p-and-repetition-penalties-modify-selection">
+        Min-p and repetition penalties modify selection
+       </a>
+      </li>
+      <li>
+       <a href="#speculative-decoding-checks-a-draft-with-the-target-model">
+        Speculative decoding checks a draft with the target model
+       </a>
+      </li>
+      <li>
+       <a href="#stopping-and-evaluating-a-continuation">
+        Stopping and evaluating a continuation
+       </a>
+      </li>
+      <li>
+       <a href="#worked-practice-and-a-readiness-check">
+        Worked practice and a readiness check
+       </a>
+      </li>
+      <li>
+       <a href="#the-cached-computation-and-a-changed-prefix">
+        The cached computation and a changed prefix
+       </a>
+      </li>
+     </ol>
+    </nav>
+    <article class="prose full-notes" id="full-notes" role="tabpanel">
+     <div class="eyebrow">
+      Complete lecture reader
+     </div>
+     <h2>
+      Read the full explanation
+     </h2>
+     <h3 id="the-model-gives-options-before-it-gives-a-sentence">
+      The model gives options before it gives a sentence
+     </h3>
+     <p>
+      Return to “I go to school by.” A trained model produces a score for each vocabulary token. A decoding rule turns those scores into the next selected token.
+     </p>
+     <p>
+      Greedy decoding takes the largest score. Sampling chooses according to a distribution, possibly modified by temperature or filtering. These can generate different continuations from the same model.
+     </p>
+     <p>
+      The decoder is a decision procedure over predictions. It does not check whether the selected sentence is a true report of someone's commute.
+     </p>
+     <h3 id="a-small-sampling-distribution">
+      A small sampling distribution
+     </h3>
+     <p>
+      Suppose bus, train, bicycle, and boat have probabilities [0.5,0.3,0.15,0.05]. Greedy selects bus. Repeated sampling may choose all four with frequencies approaching these probabilities under ideal repeated independent draws.
+     </p>
+     <p>
+      With top-k=2, retain bus and train and renormalize to [0.625,0.375]. With top-p=0.8 under a convention including the token that reaches the threshold, the same two tokens remain.
+     </p>
+     <p>
+      Boundary and tie conventions depend on the implementation. State them when comparing a hand calculation with a library.
+     </p>
+     <h3 id="generation-changes-the-next-input">
+      Generation changes the next input
+     </h3>
+     <p>
+      After choosing bus, the next prefix includes bus. The model may predict a period. After choosing train, subsequent words may differ.
+     </p>
+     <p>
+      Generation is therefore not a list of independent classifications. Earlier selections change later conditions. A locally most probable token need not form the globally most probable complete sequence.
+     </p>
+     <p>
+      Beam search keeps several partial sequences according to a scoring rule, but its usefulness depends on the task and decoding objectives. It is not a universal replacement for sampling in open-ended generation.
+     </p>
+     <h3 id="reusing-keys-and-values">
+      Reusing keys and values
+     </h3>
+     <p>
+      In a causal transformer, earlier positions do not depend on future tokens. Their computed key/value states can be retained when appending a new token.
+     </p>
+     <p>
+      Without caching, a naive generation loop repeatedly processes the entire prefix. With a KV cache, the new token can query cached keys/values plus its own new states, subject to the model's architecture.
+     </p>
+     <p>
+      The cache stores intermediate representations, not a list of answers. It speeds repeated computation but does not improve the underlying evidence or factual reliability.
+     </p>
+     <h3 id="a-three-token-cache-trace">
+      A three-token cache trace
+     </h3>
+     <figure class="mechanism-figure">
+      <figcaption>
+       Prefill and cached decode
+      </figcaption>
+      <ol class="mechanism-flow">
+       <li>
+        <span class="mechanism-number">
+         01
+        </span>
+        <strong>
+         Prefill
+        </strong>
+        <small>
+         I go → cache K/V for I, go
+        </small>
+       </li>
+       <li>
+        <span class="mechanism-number">
+         02
+        </span>
+        <strong>
+         Choose
+        </strong>
+        <small>
+         last logits → to
+        </small>
+       </li>
+       <li>
+        <span class="mechanism-number">
+         03
+        </span>
+        <strong>
+         Decode
+        </strong>
+        <small>
+         process to; append its K/V
+        </small>
+       </li>
+       <li>
+        <span class="mechanism-number">
+         04
+        </span>
+        <strong>
+         Choose again
+        </strong>
+        <small>
+         last logits → school
+        </small>
+       </li>
+      </ol>
+      <p>
+       The cached entries are per-layer key/value tensors, not saved final answers.
+      </p>
+     </figure>
+     <p>
+      Imagine the prefix I go to. For each layer, cached keys and values exist for these three positions. To append school, compute the new position's representations and let its query attend to the four available key positions.
+     </p>
+     <p>
+      The old cached tensors remain associated with the exact earlier prefix. Change I to You, alter model weights, or change earlier role tokens, and reusing the old cache would generally be incorrect.
+     </p>
+     <p>
+      We will calculate cache memory in week 22. The important idea now is the validity condition that permits reuse.
+     </p>
+     <h3 id="a-cache-ledger-for-prefill-and-decode">
+      A cache ledger for prefill and decode
+     </h3>
+     <p>
+      The following ledger uses one word per teaching token. At every layer, write K(word) and V(word) for the cached projected states. Prefill processes all known prompt positions; decode then processes a newly supplied token using the retained past states. The first generated token is selected from the last prompt position’s logits before that generated token itself has been processed into the cache.
+     </p>
+     <div class="table-wrap">
+      <table>
+       <thead>
+        <tr>
+         <th>
+          Operation
+         </th>
+         <th>
+          Input processed now
+         </th>
+         <th>
+          Cache after processing, per layer
+         </th>
+         <th>
+          Next-token choice
+         </th>
+        </tr>
+       </thead>
+       <tbody>
+        <tr>
+         <td>
+          Prefill
+         </td>
+         <td>
+          I go to
+         </td>
+         <td>
+          K/V(I), K/V(go), K/V(to)
+         </td>
+         <td>
+          school
+         </td>
+        </tr>
+        <tr>
+         <td>
+          Decode
+         </td>
+         <td>
+          school
+         </td>
+         <td>
+          K/V(I), K/V(go), K/V(to), K/V(school)
+         </td>
+         <td>
+          by
+         </td>
+        </tr>
+        <tr>
+         <td>
+          Decode
+         </td>
+         <td>
+          by
+         </td>
+         <td>
+          K/V(I), K/V(go), K/V(to), K/V(school), K/V(by)
+         </td>
+         <td>
+          bus
+         </td>
+        </tr>
+       </tbody>
+      </table>
+     </div>
+     <p>
+      At the end of the final row, bus has been chosen but its own K/V row is not yet present. Process bus on the next decode step to cache it and predict what follows. Each cached position has a key and value vector for each retained K/V head at each layer. This ledger separates choosing a token from processing that token on the next forward pass.
+     </p>
+     <h3 id="text-models-and-chat-formatting">
+      Text models and chat formatting
+     </h3>
+     <p>
+      A conversational model still receives a serialized token sequence. Its tokenizer may include a chat template that marks roles and message boundaries.
+     </p>
+     <p>
+      Writing the visible text “system:” is not automatically equivalent to the template's special tokens. Inspect a short rendered example and count tokens with the actual tokenizer.
+     </p>
+     <p>
+      We introduce this interface after the basic generation loop so role formatting is another input construction choice you can explain. It should not hide the next-token mechanism underneath.
+     </p>
+     <h3 id="min-p-and-repetition-penalties-modify-selection">
+      Min-p and repetition penalties modify selection
+     </h3>
+     <p>
+      Min-p retains tokens whose probability is at least a fraction of the most probable token. For [0.5,0.3,0.15,0.05] and min_p=0.2, the cutoff is 0.2×0.5=0.1, so bus, train, and bicycle remain, then renormalize by 0.95. If the top probability changes, the cutoff changes with it. This differs from top-p, which accumulates probability mass, and top-k, which keeps a fixed count.
+     </p>
+     <p>
+      A repetition penalty discourages tokens already present in the chosen scope. One common implementation divides a previously used positive logit by a factor greater than one and multiplies a negative logit by that factor, reducing it in both cases. Other systems use frequency or presence penalties instead. Repeating an API identifier or a word such as “school” can be correct, so inspect both excessive repetition and damaged necessary repetition.
+     </p>
+     <h3 id="speculative-decoding-checks-a-draft-with-the-target-model">
+      Speculative decoding checks a draft with the target model
+     </h3>
+     <p>
+      A cheaper draft model proposes several next tokens, for example “school by bus”. The target model scores those proposed positions together and a verification rule accepts a prefix of them, then corrects where needed. Exact speculative sampling uses an acceptance-and-correction construction that preserves the target sampling distribution under its assumptions; simply accepting any plausible draft is a different, approximate procedure. The gain depends on draft cost, accepted-token rate, batching, and hardware. This changes how computation is scheduled, not what a token means.
+     </p>
+     <p>
+      Source:
+      <a href="https://huggingface.co/docs/transformers/main_classes/text_generation">
+       Transformers generation parameters
+      </a>
+      .
+     </p>
+     <p>
+      Source:
+      <a href="https://arxiv.org/abs/2302.01318">
+       Exact speculative sampling
+      </a>
+      .
+     </p>
+     <h3 id="stopping-and-evaluating-a-continuation">
+      Stopping and evaluating a continuation
+     </h3>
+     <p>
+      Generation needs a stopping condition: an end token, a specified maximum number of new tokens, or another explicit rule. Maximum length prevents an unbounded continuation but can also truncate a response.
+     </p>
+     <p>
+      Distinguish input tokens from newly generated tokens when decoding an output tensor. Returning the complete prompt as if it were generated text creates a misleading evaluation.
+     </p>
+     <p>
+      For our simple examples, inspect whether the continuation is grammatical and consistent with the supplied context. Later tasks will require independent factual and task checks.
+     </p>
+     <h3 id="worked-practice-and-a-readiness-check">
+      Worked practice and a readiness check
+     </h3>
+     <p>
+      Apply top-k=3 to [0.5,0.3,0.15,0.05] and renormalize by 0.95. Then explain the difference between temperature adjustment and deleting candidates outside top-k.
+     </p>
+     <p>
+      Draw cache contents before and after appending one token. Explain why changing an earlier token invalidates reuse, even if the length stays the same.
+     </p>
+     <p>
+      You are ready when you can trace a complete generation step from prefix IDs through logits, token selection, append, cache update, and termination.
+     </p>
+     <h3 id="the-cached-computation-and-a-changed-prefix">
+      The cached computation and a changed prefix
+     </h3>
+     <p>
+      Consider generating after “I go.” Cached keys and values represent those exact two input positions under the chosen model. Appending the token “to” can reuse those earlier states in a causal model because future inputs do not change their past computation.
+     </p>
+     <p>
+      Replace the prefix with “You go.” Its length is still two, but the first token embedding and all dependent earlier states can differ. A cache indexed only by prefix length would return the wrong computation.
+     </p>
+     <p>
+      Now change the system instruction of a chat prompt while leaving the visible user sentence identical. The full token prefix has changed again. Cache identity must reflect the actual preceding tokens and relevant model configuration, not just the human-visible last question.
+     </p>
+     <p>
+      This example connects a numerical optimization to correctness. Saving computation is useful only when the reused state belongs to the computation you intend to perform.
+     </p>
+    </article>
+    <nav aria-label="Adjacent lectures" class="chapter-pagination">
+     <a href="12.html">
+      <small>
+       Previous week
+      </small>
+      Training a small transformer
+     </a>
+     <a href="14.html">
+      <small>
+       Next week
+      </small>
+      From pretraining to instruction following and reasoning
+     </a>
+    </nav>
+   </div>
+   <footer class="footer">
+    <span>
+     Applied AI · An independent self-study course
+    </span>
+    <span>
+     32 weeks · 10 hours per week
+    </span>
+    <a href="../resources.html#about-this-course">
+     About and sources
+    </a>
+   </footer>
+  </main>
+  <dialog aria-labelledby="search-title" class="search-dialog">
+   <div class="dialog-head">
+    <h2 id="search-title">
+     Find a concept
+    </h2>
+    <button aria-label="Close search" class="search-close" type="button">
+     Close
+    </button>
+   </div>
+   <label class="sr-only" for="course-search">
+    Search all lectures and tutorials
+   </label>
+   <input autocomplete="off" id="course-search" placeholder="Try attention, fine-tuning, or harness…" type="search"/>
+   <p aria-live="polite" class="search-status">
+    Search lecture notes, tutorials, tests and readings.
+   </p>
+   <div class="search-results">
+   </div>
+  </dialog>
+  <div aria-live="polite" class="toast" role="status">
+  </div>
+ </body>
+</html>

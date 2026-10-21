@@ -1,4 +1,3 @@
-# %%
 from pathlib import Path
 import sys,json,time,random,hashlib,math
 if hasattr(sys.stdout,'reconfigure'): sys.stdout.reconfigure(encoding='utf-8')
@@ -11,7 +10,7 @@ from coursekit.core import *
 random.seed(7)
 print('Course root:',COURSE)
 
-# %%
+
 texts=['The school bus leaves at eight.','Lunch starts at noon.','The library closes at five.']
 query='When can I catch the bus?'
 print('Query:',query)
@@ -22,16 +21,37 @@ vectors=np.array([[1.,0.],[0.,1.],[.6,.8]])
 q=np.array([1.,0.]);scores=vectors@q
 print('Illustrative ranking:',np.argsort(-scores).tolist())
 
-# %%
+
+import math
+scores = [[2., 1., 0.], [0., 2., 1.], [1., 0., 2.]]
+def candidate_probs(row):
+    exps = [math.exp(x - max(row)) for x in row]
+    return [x / sum(exps) for x in exps]
+probs = [candidate_probs(row) for row in scores]
+losses = [-math.log(row[i]) for i, row in enumerate(probs)]
+print("Candidate probabilities:", probs)
+print("Mean contrastive loss:", sum(losses) / len(losses))
+print("False-negative example Q1 loss:", -math.log(candidate_probs([2., 2., 0.])[0]))
+
+
 RUN_EMBEDDINGS=False
 if RUN_EMBEDDINGS:
     import subprocess
     subprocess.check_call([sys.executable,'-m','pip','install','sentence-transformers>=3,<6'])
     from sentence_transformers import SentenceTransformer
-    encoder=SentenceTransformer('sentence-transformers/all-MiniLM-L6-v2')
-    matrix=encoder.encode(texts,normalize_embeddings=True)
-    q=encoder.encode([query],normalize_embeddings=True)[0]
+    encoder=SentenceTransformer('intfloat/multilingual-e5-small')
+    matrix=encoder.encode(['passage: '+t for t in texts],normalize_embeddings=True)
+    q=encoder.encode(['query: '+query],normalize_embeddings=True)[0]
     print('Actual model scores:',matrix@q)
     print('Actual ranking:',np.argsort(-(matrix@q)).tolist())
 else:print('Actual embedding model skipped; enable RUN_EMBEDDINGS for model results.')
 
+
+import math
+cosines=[.8,.6,.2]
+def probs_at_temperature(xs,tau):
+    logits=[x/tau for x in xs];m=max(logits);e=[math.exp(x-m) for x in logits]
+    return [x/sum(e) for x in e]
+for tau in [1.,.05]:
+    p=probs_at_temperature(cosines,tau);print('tau',tau,'p',p,'positive loss',-math.log(p[0]))
+assert -math.log(probs_at_temperature(cosines,.05)[0]) < -math.log(probs_at_temperature(cosines,1.)[0])

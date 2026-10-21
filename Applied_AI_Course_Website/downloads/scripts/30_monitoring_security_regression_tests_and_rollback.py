@@ -1,4 +1,3 @@
-# %%
 from pathlib import Path
 import sys,json,time,random,hashlib,math
 if hasattr(sys.stdout,'reconfigure'): sys.stdout.reconfigure(encoding='utf-8')
@@ -11,7 +10,7 @@ from coursekit.core import *
 random.seed(7)
 print('Course root:',COURSE)
 
-# %%
+
 # Synthetic telemetry, not measured service traffic.
 events=[{'id':i,'empty':i<3,'ms':10+i%5,'release':'A'} for i in range(100)]
 events += [{'id':100+i,'empty':i<25,'ms':10+i%5,'release':'B'} for i in range(100)]
@@ -32,7 +31,7 @@ for proposal in attacks:
     else: assert not result['trace'][0]['result']['valid']
 print('A valid tool call returning invalid config differs from an invalid call schema.')
 
-# %%
+
 import subprocess
 subprocess.check_call([sys.executable,'-m','unittest','discover','-s','tests','-v'],cwd=COURSE)
 previous=make_manifest({'release':'qualifying-A'})
@@ -48,3 +47,12 @@ report={'trigger':'incompatible corpus hash','impact':'candidate refused before 
         'remaining_checks':['semantic quality','real index/model compatibility','load behavior']}
 (RUNS/'week30_incident.json').write_text(json.dumps(report,indent=2))
 
+
+from urllib.parse import urlparse,parse_qs
+untrusted='https://example.invalid/pixel?data=PRIVATE_VALUE'
+parsed=urlparse(untrusted)
+assert parsed.hostname=='example.invalid' and 'data' in parse_qs(parsed.query)
+policy={'allow_external_images':False,'allowed_hosts':{'docs.example.invalid'}}
+allowed=policy['allow_external_images'] and parsed.hostname in policy['allowed_hosts']
+assert not allowed
+print('Blocked fixture; no URL was fetched.')

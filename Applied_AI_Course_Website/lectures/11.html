@@ -1,55 +1,1209 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/><title>Encoders decoders and complete model architectures · Applied AI</title><meta content="Applied generative AI and LLM systems course material" name="description"/><meta content="#173c36" name="theme-color"/><link href="../assets/favicon.svg" rel="icon" type="image/svg+xml"/><link href="../assets/style.css" rel="stylesheet"/><link href="../assets/slides.css" rel="stylesheet"/><script>window.COURSE_BASE="../";</script><script defer="" src="../assets/site-config.js"></script><script defer="" src="../assets/search-index.js"></script><script defer="" src="../assets/app.js"></script><script defer="" src="../assets/visuals.js"></script><script defer="" src="../assets/slides.js"></script><script defer="" src="../assets/beginner-visuals.js"></script><link href="../zh-HK/lectures/11.html" hreflang="zh-HK" rel="alternate"/><link href="../assets/bilingual.css" rel="stylesheet"/></head><body data-page-kind="lecture" data-week="11"><a class="skip-link" href="#main">Skip to content</a><header class="topbar"><button aria-controls="course-sidebar" aria-expanded="false" class="menu-toggle" type="button">Menu</button><a class="brand" href="../index.html"><span aria-hidden="true" class="brand-mark">a<span>i</span></span><span>APPLIED AI<small>Principles into practice</small></span></a><nav aria-label="Main navigation"><a href="../index.html">The course</a><a href="../visuals.html">Visual lab</a><a href="../project.html">Project</a><a class="language-switch" href="../zh-HK/lectures/11.html" hreflang="zh-HK" lang="zh-HK">繁體中文</a></nav><button class="search-open" type="button">Search the course <span aria-hidden="true">/</span></button></header><aside aria-label="Course chapters" class="sidebar" id="course-sidebar"><a class="side-home" href="../index.html">Course overview</a><details class="semester-nav" open=""><summary>Semester 1<span>Weeks 1–16</span></summary><ol start="1"><li><a href="../lectures/01.html"><span class="week-number">01</span><span>What a language model is trying to learn</span><span class="week-tick" data-week-tick="1"></span></a></li><li><a href="../lectures/02.html"><span class="week-number">02</span><span>From text to tokens and numerical IDs</span><span class="week-tick" data-week-tick="2"></span></a></li><li><a href="../lectures/03.html"><span class="week-number">03</span><span>What word vectors can represent</span><span class="week-tick" data-week-tick="3"></span></a></li><li><a href="../lectures/04.html"><span class="week-number">04</span><span>From scores to probabilities and learning signals</span><span class="week-tick" data-week-tick="4"></span></a></li><li><a href="../lectures/05.html"><span class="week-number">05</span><span>Why language needs context and order</span><span class="week-tick" data-week-tick="5"></span></a></li><li><a href="../lectures/06.html"><span class="week-number">06</span><span>Attention begins as a weighted mixture</span><span class="week-tick" data-week-tick="6"></span></a></li><li><a href="../lectures/07.html"><span class="week-number">07</span><span>Where queries keys and values come from</span><span class="week-tick" data-week-tick="7"></span></a></li><li><a href="../lectures/08.html"><span class="week-number">08</span><span>Scaling and masking attention correctly</span><span class="week-tick" data-week-tick="8"></span></a></li><li><a href="../lectures/09.html"><span class="week-number">09</span><span>Multiple attention heads and position</span><span class="week-tick" data-week-tick="9"></span></a></li><li><a href="../lectures/10.html"><span class="week-number">10</span><span>The transformer block step by step</span><span class="week-tick" data-week-tick="10"></span></a></li><li><a aria-current="page" href="../lectures/11.html"><span class="week-number">11</span><span>Encoders decoders and complete model architectures</span><span class="week-tick" data-week-tick="11"></span></a></li><li><a href="../lectures/12.html"><span class="week-number">12</span><span>Training a small transformer</span><span class="week-tick" data-week-tick="12"></span></a></li><li><a href="../lectures/13.html"><span class="week-number">13</span><span>Generation decoding and the KV cache</span><span class="week-tick" data-week-tick="13"></span></a></li><li><a href="../lectures/14.html"><span class="week-number">14</span><span>From pretraining to instruction following and reasoning</span><span class="week-tick" data-week-tick="14"></span></a></li><li><a href="../lectures/15.html"><span class="week-number">15</span><span>Generative AI beyond text</span><span class="week-tick" data-week-tick="15"></span></a></li><li><a href="../lectures/16.html"><span class="week-number">16</span><span>A complete transformer walkthrough and first semester review</span><span class="week-tick" data-week-tick="16"></span></a></li></ol></details><details class="semester-nav"><summary>Semester 2<span>Weeks 17–32</span></summary><ol start="17"><li><a href="../lectures/17.html"><span class="week-number">17</span><span>From word vectors to semantic search</span><span class="week-tick" data-week-tick="17"></span></a></li><li><a href="../lectures/18.html"><span class="week-number">18</span><span>A vector database from a list of vectors</span><span class="week-tick" data-week-tick="18"></span></a></li><li><a href="../lectures/19.html"><span class="week-number">19</span><span>RAG as an open book question</span><span class="week-tick" data-week-tick="19"></span></a></li><li><a href="../lectures/20.html"><span class="week-number">20</span><span>Improving RAG without losing the basic task</span><span class="week-tick" data-week-tick="20"></span></a></li><li><a href="../lectures/21.html"><span class="week-number">21</span><span>Evaluating retrieval answers and uncertainty</span><span class="week-tick" data-week-tick="21"></span></a></li><li><a href="../lectures/22.html"><span class="week-number">22</span><span>CPU GPU memory and model resource accounting</span><span class="week-tick" data-week-tick="22"></span></a></li><li><a href="../lectures/23.html"><span class="week-number">23</span><span>CUDA kernels and profiling</span><span class="week-tick" data-week-tick="23"></span></a></li><li><a href="../lectures/24.html"><span class="week-number">24</span><span>Fine tuning starts with a teaching dataset</span><span class="week-tick" data-week-tick="24"></span></a></li><li><a href="../lectures/25.html"><span class="week-number">25</span><span>LoRA and QLoRA from a small matrix</span><span class="week-tick" data-week-tick="25"></span></a></li><li><a href="../lectures/26.html"><span class="week-number">26</span><span>Fine tuning experiments preferences and distillation</span><span class="week-tick" data-week-tick="26"></span></a></li><li><a href="../lectures/27.html"><span class="week-number">27</span><span>Tools functions workflows and agents</span><span class="week-tick" data-week-tick="27"></span></a></li><li><a href="../lectures/28.html"><span class="week-number">28</span><span>Harnesses planning memory and bounded execution</span><span class="week-tick" data-week-tick="28"></span></a></li><li><a href="../lectures/29.html"><span class="week-number">29</span><span>From a notebook to MLOps and inference serving</span><span class="week-tick" data-week-tick="29"></span></a></li><li><a href="../lectures/30.html"><span class="week-number">30</span><span>Monitoring security regression tests and rollback</span><span class="week-tick" data-week-tick="30"></span></a></li><li><a href="../lectures/31.html"><span class="week-number">31</span><span>Integrating the documentation assistant and advanced extensions</span><span class="week-tick" data-week-tick="31"></span></a></li><li><a href="../lectures/32.html"><span class="week-number">32</span><span>Review defense and a continuing learning plan</span><span class="week-tick" data-week-tick="32"></span></a></li></ol></details><div class="side-links"><a href="../visuals.html">Visual laboratory <span>14 interactive lessons</span></a><a href="../project.html">Documentation assistant <span>Your capstone project</span></a><a href="../resources.html">Readings and setup</a></div><div class="side-progress"><div><span>Your progress</span><strong data-progress-count="">0 / 32</strong></div><progress aria-label="Completed lectures" max="32" value="0"></progress><small>Saved in this browser</small></div></aside><main class="main" id="main"><div class="content"><div class="chapter-header"><div class="eyebrow">Semester 1 / Week 11</div><h1>Encoders decoders and complete model architectures</h1></div><div class="lesson-links"><a href="../tutorials/11.html">Tutorial 11</a><a href="../tests/11.html">Test your understanding</a><button aria-pressed="false" class="mark-complete" data-week="11" type="button">Mark as complete</button></div><section aria-label="Lecture slides" class="lecture-deck" id="lecture-slides"><div class="deck-top"><div><div class="eyebrow">Lecture slides · Week 11</div><h2>Learn one step at a time.</h2></div><button class="deck-present" type="button">Present</button></div><p class="deck-help">Read each explanation, pause to predict the result, then continue. Use the arrow keys while the presentation is focused. The complete lecture reader is below.</p><div aria-label="Presentation: use left and right arrow keys" class="slide-viewport" tabindex="0"><section class="lecture-slide" data-slide=""><div class="slide-stage">Start with an example</div><h3>A block becomes part of a task specific arrangement</h3><div class="slide-prose"><p>The transformer is a family of architectures built from related components. An encoder, a causal decoder, and an encoder-decoder arrangement differ in visibility and information flow.</p>
-<p>Use three ordinary tasks. Represent the complete sentence “I go to school by bus.” Continue the prefix “I go to school by.” Translate a complete source sentence into another language. The available input and required output differ across these tasks.</p>
-<p>The word decoder does not simply mean “something that converts IDs back into strings.” In model architecture it names a neural sequence-processing arrangement. Tokenizer decoding is a separate operation.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Start with an example</div><h3>An encoder reads a complete input</h3><div class="slide-prose"><p>For an encoder representing a fully observed sentence, valid positions can commonly attend to both earlier and later valid positions. The representation of school can use bus to its right.</p>
-<p>That can help tasks such as labeling tokens or comparing complete inputs. A masked-language objective can hide a token and ask the model to predict it using the available surrounding text.</p>
-<p>If we hide bus in “I go to school by [MASK],” the model's input contains a special masking situation. The training objective and input construction differ from ordinary left-to-right continuation.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Build the mechanism</div><h3>A causal decoder predicts continuations</h3><div class="slide-prose"><p>A decoder-only language model uses causal self-attention over the input prefix. At a training position, it may read the current and earlier input tokens, but not the future target token.</p>
-<p>For “I go to school by,” the last representation produces vocabulary logits for the next token. After selecting bus, the model appends it and continues.</p>
-<p>Many familiar text-generating LLMs use this arrangement. The architecture explains the next-token computation; later post-training shapes conversational behavior.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Build the mechanism</div><h3>An encoder decoder connects two sequences</h3><div class="slide-prose"><p>An encoder-decoder system first represents a source sequence. Its decoder then generates a target sequence while consulting both its target prefix and source representations.</p>
-<p>The decoder's self-attention is causal over the target prefix. Its cross-attention takes queries from the decoder and keys/values from encoder outputs. Source positions need not obey the target's left-to-right order.</p>
-<p>If the source has seven tokens and the target currently has four positions, cross-attention scores can have shape [4,7]. This rectangular matrix is the shape distinction we introduced in week 7.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Build the mechanism</div><h3>A visibility table clarifies the difference</h3><div class="slide-prose"><p>For a four-token complete input, encoder self-attention can allow all four key positions in each valid query row. For a causal decoder, row 0 sees only 0, row 1 sees 0 and 1, and so on.</p>
-<p>Cross-attention visibility additionally depends on valid source positions and task constraints. Padding still needs handling. “Encoder sees everything” is shorthand for permitted valid input positions, not permission to ignore arbitrary constraints.</p>
-<p>Draw the three cases instead of memorizing model-name lists. The diagrams describe what information a position can use, which is often more useful than knowing a marketing label.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Build the mechanism</div><h3>Training time parallelism does not remove causality</h3><div class="slide-prose"><p>During training, the full target sequence is available as data. A masked transformer can compute representations for many positions in parallel because the mask constrains their dependencies.</p>
-<p>During ordinary autoregressive generation, the next generated token changes the next prefix. The model therefore proceeds sequentially across output-token decisions, even though each forward pass uses parallel numerical operations internally.</p>
-<p>This distinguishes parallel computation within a known sequence from sequential dependence across newly generated tokens. Both can be true at the same time.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Go deeper and check understanding</div><h3>Choosing the architecture for the learning exercise</h3><div class="slide-prose"><p>Our tiny model will be a causal decoder with learned absolute positions, two blocks, and a vocabulary output head. This keeps the path close to the sentence-completion task we began with.</p>
-<p>We are not claiming that this is the only useful architecture. We choose it because its labels, masks, and output selection can be inspected end to end.</p>
-<p>When you later load a pretrained model, identify its architecture and tokenizer before applying assumptions from the teaching model. Different normalization, attention-head sharing, position methods, and training objectives can change important details.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Go deeper and check understanding</div><h3>Worked practice and a readiness check</h3><div class="slide-prose"><p>For each task, identify the model arrangement and allowed context: filling a hidden word in a complete sentence, continuing an unfinished sentence, and generating a translation from a complete source.</p>
-<p>Explain why a causal decoder cannot use the answer bus at the by position during training. Then explain why a complete-input encoder may legitimately use a word to the right of school.</p>
-<p>You are ready when encoder, decoder, self-attention, cross-attention, training parallelism, and autoregressive generation refer to distinct operations and constraints in your explanation.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Go deeper and check understanding</div><h3>Three tasks with the same words</h3><div class="slide-prose"><p>Task A gives the complete sentence and asks which word refers to the vehicle. A complete-input representation may use both sides of a position. Task B gives “I go to school by” and asks for a continuation. It must not read an answer that has not been generated. Task C gives a source sentence and asks for a target-language sentence, requiring a relationship between two sequences.</p>
-<p>Write separate masks and tensor shapes for these cases. If Task C has six source tokens and eight target positions, cross-attention scores have shape [8,6]. Causal target self-attention has [8,8]. The two matrices answer different information-flow questions.</p>
-<p>This exercise prevents architecture names from becoming disconnected labels. Once you know the available inputs, the output task, and the attention sources, you can explain why a particular arrangement is appropriate and where leakage would occur.</p></div></section></div><div class="deck-controls"><button class="slide-prev" type="button">← Previous</button><span aria-live="polite" class="slide-counter">1 / 9</span><button class="slide-next" type="button">Next →</button></div><label class="slide-jump-label">Go to slide <select aria-label="Go to slide" class="slide-jump"><option value="0">1</option><option value="1">2</option><option value="2">3</option><option value="3">4</option><option value="4">5</option><option value="5">6</option><option value="6">7</option><option value="7">8</option><option value="8">9</option></select></label><button aria-pressed="false" class="deck-all" type="button">Show all slides</button><a class="reader-link" href="#full-notes">Read the complete lecture ↓</a></section><article class="prose full-notes" id="full-notes"><div class="eyebrow">Complete lecture reader</div><h2>Read the full explanation</h2><h3 id="a-block-becomes-part-of-a-task-specific-arrangement">A block becomes part of a task specific arrangement</h3>
-<p>The transformer is a family of architectures built from related components. An encoder, a causal decoder, and an encoder-decoder arrangement differ in visibility and information flow.</p>
-<p>Use three ordinary tasks. Represent the complete sentence “I go to school by bus.” Continue the prefix “I go to school by.” Translate a complete source sentence into another language. The available input and required output differ across these tasks.</p>
-<p>The word decoder does not simply mean “something that converts IDs back into strings.” In model architecture it names a neural sequence-processing arrangement. Tokenizer decoding is a separate operation.</p>
-<h3 id="an-encoder-reads-a-complete-input">An encoder reads a complete input</h3>
-<p>For an encoder representing a fully observed sentence, valid positions can commonly attend to both earlier and later valid positions. The representation of school can use bus to its right.</p>
-<p>That can help tasks such as labeling tokens or comparing complete inputs. A masked-language objective can hide a token and ask the model to predict it using the available surrounding text.</p>
-<p>If we hide bus in “I go to school by [MASK],” the model's input contains a special masking situation. The training objective and input construction differ from ordinary left-to-right continuation.</p>
-<h3 id="a-causal-decoder-predicts-continuations">A causal decoder predicts continuations</h3>
-<p>A decoder-only language model uses causal self-attention over the input prefix. At a training position, it may read the current and earlier input tokens, but not the future target token.</p>
-<p>For “I go to school by,” the last representation produces vocabulary logits for the next token. After selecting bus, the model appends it and continues.</p>
-<p>Many familiar text-generating LLMs use this arrangement. The architecture explains the next-token computation; later post-training shapes conversational behavior.</p>
-<h3 id="an-encoder-decoder-connects-two-sequences">An encoder decoder connects two sequences</h3>
-<p>An encoder-decoder system first represents a source sequence. Its decoder then generates a target sequence while consulting both its target prefix and source representations.</p>
-<p>The decoder's self-attention is causal over the target prefix. Its cross-attention takes queries from the decoder and keys/values from encoder outputs. Source positions need not obey the target's left-to-right order.</p>
-<p>If the source has seven tokens and the target currently has four positions, cross-attention scores can have shape [4,7]. This rectangular matrix is the shape distinction we introduced in week 7.</p>
-<h3 id="a-visibility-table-clarifies-the-difference">A visibility table clarifies the difference</h3>
-<p>For a four-token complete input, encoder self-attention can allow all four key positions in each valid query row. For a causal decoder, row 0 sees only 0, row 1 sees 0 and 1, and so on.</p>
-<p>Cross-attention visibility additionally depends on valid source positions and task constraints. Padding still needs handling. “Encoder sees everything” is shorthand for permitted valid input positions, not permission to ignore arbitrary constraints.</p>
-<p>Draw the three cases instead of memorizing model-name lists. The diagrams describe what information a position can use, which is often more useful than knowing a marketing label.</p>
-<h3 id="training-time-parallelism-does-not-remove-causality">Training time parallelism does not remove causality</h3>
-<p>During training, the full target sequence is available as data. A masked transformer can compute representations for many positions in parallel because the mask constrains their dependencies.</p>
-<p>During ordinary autoregressive generation, the next generated token changes the next prefix. The model therefore proceeds sequentially across output-token decisions, even though each forward pass uses parallel numerical operations internally.</p>
-<p>This distinguishes parallel computation within a known sequence from sequential dependence across newly generated tokens. Both can be true at the same time.</p>
-<h3 id="choosing-the-architecture-for-the-learning-exercise">Choosing the architecture for the learning exercise</h3>
-<p>Our tiny model will be a causal decoder with learned absolute positions, two blocks, and a vocabulary output head. This keeps the path close to the sentence-completion task we began with.</p>
-<p>We are not claiming that this is the only useful architecture. We choose it because its labels, masks, and output selection can be inspected end to end.</p>
-<p>When you later load a pretrained model, identify its architecture and tokenizer before applying assumptions from the teaching model. Different normalization, attention-head sharing, position methods, and training objectives can change important details.</p>
-<h3 id="worked-practice-and-a-readiness-check">Worked practice and a readiness check</h3>
-<p>For each task, identify the model arrangement and allowed context: filling a hidden word in a complete sentence, continuing an unfinished sentence, and generating a translation from a complete source.</p>
-<p>Explain why a causal decoder cannot use the answer bus at the by position during training. Then explain why a complete-input encoder may legitimately use a word to the right of school.</p>
-<p>You are ready when encoder, decoder, self-attention, cross-attention, training parallelism, and autoregressive generation refer to distinct operations and constraints in your explanation.</p>
-<h3 id="three-tasks-with-the-same-words">Three tasks with the same words</h3>
-<p>Task A gives the complete sentence and asks which word refers to the vehicle. A complete-input representation may use both sides of a position. Task B gives “I go to school by” and asks for a continuation. It must not read an answer that has not been generated. Task C gives a source sentence and asks for a target-language sentence, requiring a relationship between two sequences.</p>
-<p>Write separate masks and tensor shapes for these cases. If Task C has six source tokens and eight target positions, cross-attention scores have shape [8,6]. Causal target self-attention has [8,8]. The two matrices answer different information-flow questions.</p>
-<p>This exercise prevents architecture names from becoming disconnected labels. Once you know the available inputs, the output task, and the attention sources, you can explain why a particular arrangement is appropriate and where leakage would occur.</p></article><nav aria-label="Adjacent lectures" class="chapter-pagination"><a href="10.html"><small>Previous week</small>The transformer block step by step</a><a href="12.html"><small>Next week</small>Training a small transformer</a></nav></div><footer class="footer"><span>Applied AI · An independent self-study course</span><span>32 weeks · 10 hours per week</span><a href="../resources.html#about-this-course">About and sources</a></footer></main><dialog aria-labelledby="search-title" class="search-dialog"><div class="dialog-head"><h2 id="search-title">Find a concept</h2><button aria-label="Close search" class="search-close" type="button">Close</button></div><label class="sr-only" for="course-search">Search all lectures and tutorials</label><input autocomplete="off" id="course-search" placeholder="Try attention, fine-tuning, or harness…" type="search"/><p aria-live="polite" class="search-status">Search lecture notes, tutorials, tests and readings.</p><div class="search-results"></div></dialog><div aria-live="polite" class="toast" role="status"></div></body></html>
+<html lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width,initial-scale=1" name="viewport"/>
+  <title>
+   Encoders decoders and complete model architectures · Applied AI
+  </title>
+  <meta content="Applied generative AI and LLM systems course material" name="description"/>
+  <meta content="#173c36" name="theme-color"/>
+  <link href="../assets/favicon.svg" rel="icon" type="image/svg+xml"/>
+  <link href="../assets/style.css" rel="stylesheet"/>
+  <link href="../assets/slides.css" rel="stylesheet"/>
+  <script>
+   window.COURSE_BASE="../";
+  </script>
+  <script defer="" src="../assets/site-config.js">
+  </script>
+  <script defer="" src="../assets/search-index.js">
+  </script>
+  <script defer="" src="../assets/app.js">
+  </script>
+  <script defer="" src="../assets/visuals.js">
+  </script>
+  <script defer="" src="../assets/slides.js">
+  </script>
+  <script defer="" src="../assets/beginner-visuals.js">
+  </script>
+  <link href="../zh-HK/lectures/11.html" hreflang="zh-HK" rel="alternate"/>
+  <link href="../assets/bilingual.css" rel="stylesheet"/>
+  <link href="../assets/reader-v3.css" rel="stylesheet"/>
+  <script defer="True" src="../assets/reader-v3.js">
+  </script>
+ </head>
+ <body data-page-kind="lecture" data-week="11">
+  <a class="skip-link" href="#main">
+   Skip to content
+  </a>
+  <header class="topbar">
+   <button aria-controls="course-sidebar" aria-expanded="false" class="menu-toggle" type="button">
+    Menu
+   </button>
+   <a class="brand" href="../index.html">
+    <span aria-hidden="true" class="brand-mark">
+     a
+     <span>
+      i
+     </span>
+    </span>
+    <span>
+     APPLIED AI
+     <small>
+      Principles into practice
+     </small>
+    </span>
+   </a>
+   <nav aria-label="Main navigation">
+    <a href="../index.html">
+     The course
+    </a>
+    <a href="../visuals.html">
+     Visual lab
+    </a>
+    <a href="../project.html">
+     Project
+    </a>
+    <a class="language-switch" href="../zh-HK/lectures/11.html" hreflang="zh-HK" lang="zh-HK">
+     繁體中文
+    </a>
+   </nav>
+   <button class="search-open" type="button">
+    Search the course
+    <span aria-hidden="true">
+     /
+    </span>
+   </button>
+  </header>
+  <aside aria-label="Course chapters" class="sidebar" id="course-sidebar">
+   <a class="side-home" href="../index.html">
+    Course overview
+   </a>
+   <details class="semester-nav" open="">
+    <summary>
+     Semester 1
+     <span>
+      Weeks 1–16
+     </span>
+    </summary>
+    <ol start="1">
+     <li>
+      <a href="../lectures/01.html">
+       <span class="week-number">
+        01
+       </span>
+       <span>
+        What a language model is trying to learn
+       </span>
+       <span class="week-tick" data-week-tick="1">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/02.html">
+       <span class="week-number">
+        02
+       </span>
+       <span>
+        From text to tokens and numerical IDs
+       </span>
+       <span class="week-tick" data-week-tick="2">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/03.html">
+       <span class="week-number">
+        03
+       </span>
+       <span>
+        What word vectors can represent
+       </span>
+       <span class="week-tick" data-week-tick="3">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/04.html">
+       <span class="week-number">
+        04
+       </span>
+       <span>
+        From scores to probabilities and learning signals
+       </span>
+       <span class="week-tick" data-week-tick="4">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/05.html">
+       <span class="week-number">
+        05
+       </span>
+       <span>
+        Why language needs context and order
+       </span>
+       <span class="week-tick" data-week-tick="5">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/06.html">
+       <span class="week-number">
+        06
+       </span>
+       <span>
+        Attention begins as a weighted mixture
+       </span>
+       <span class="week-tick" data-week-tick="6">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/07.html">
+       <span class="week-number">
+        07
+       </span>
+       <span>
+        Where queries keys and values come from
+       </span>
+       <span class="week-tick" data-week-tick="7">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/08.html">
+       <span class="week-number">
+        08
+       </span>
+       <span>
+        Scaling and masking attention correctly
+       </span>
+       <span class="week-tick" data-week-tick="8">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/09.html">
+       <span class="week-number">
+        09
+       </span>
+       <span>
+        Multiple attention heads and position
+       </span>
+       <span class="week-tick" data-week-tick="9">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/10.html">
+       <span class="week-number">
+        10
+       </span>
+       <span>
+        The transformer block step by step
+       </span>
+       <span class="week-tick" data-week-tick="10">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a aria-current="page" href="../lectures/11.html">
+       <span class="week-number">
+        11
+       </span>
+       <span>
+        Encoders decoders and complete model architectures
+       </span>
+       <span class="week-tick" data-week-tick="11">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/12.html">
+       <span class="week-number">
+        12
+       </span>
+       <span>
+        Training a small transformer
+       </span>
+       <span class="week-tick" data-week-tick="12">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/13.html">
+       <span class="week-number">
+        13
+       </span>
+       <span>
+        Generation decoding and the KV cache
+       </span>
+       <span class="week-tick" data-week-tick="13">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/14.html">
+       <span class="week-number">
+        14
+       </span>
+       <span>
+        From pretraining to instruction following and reasoning
+       </span>
+       <span class="week-tick" data-week-tick="14">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/15.html">
+       <span class="week-number">
+        15
+       </span>
+       <span>
+        Generative AI beyond text
+       </span>
+       <span class="week-tick" data-week-tick="15">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/16.html">
+       <span class="week-number">
+        16
+       </span>
+       <span>
+        A complete transformer walkthrough and first semester review
+       </span>
+       <span class="week-tick" data-week-tick="16">
+       </span>
+      </a>
+     </li>
+    </ol>
+   </details>
+   <details class="semester-nav">
+    <summary>
+     Semester 2
+     <span>
+      Weeks 17–32
+     </span>
+    </summary>
+    <ol start="17">
+     <li>
+      <a href="../lectures/17.html">
+       <span class="week-number">
+        17
+       </span>
+       <span>
+        From word vectors to semantic search
+       </span>
+       <span class="week-tick" data-week-tick="17">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/18.html">
+       <span class="week-number">
+        18
+       </span>
+       <span>
+        A vector database from a list of vectors
+       </span>
+       <span class="week-tick" data-week-tick="18">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/19.html">
+       <span class="week-number">
+        19
+       </span>
+       <span>
+        RAG as an open book question
+       </span>
+       <span class="week-tick" data-week-tick="19">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/20.html">
+       <span class="week-number">
+        20
+       </span>
+       <span>
+        Improving RAG without losing the basic task
+       </span>
+       <span class="week-tick" data-week-tick="20">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/21.html">
+       <span class="week-number">
+        21
+       </span>
+       <span>
+        Evaluating retrieval answers and uncertainty
+       </span>
+       <span class="week-tick" data-week-tick="21">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/22.html">
+       <span class="week-number">
+        22
+       </span>
+       <span>
+        CPU GPU memory and model resource accounting
+       </span>
+       <span class="week-tick" data-week-tick="22">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/23.html">
+       <span class="week-number">
+        23
+       </span>
+       <span>
+        CUDA kernels and profiling
+       </span>
+       <span class="week-tick" data-week-tick="23">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/24.html">
+       <span class="week-number">
+        24
+       </span>
+       <span>
+        Fine tuning starts with a teaching dataset
+       </span>
+       <span class="week-tick" data-week-tick="24">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/25.html">
+       <span class="week-number">
+        25
+       </span>
+       <span>
+        LoRA and QLoRA from a small matrix
+       </span>
+       <span class="week-tick" data-week-tick="25">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/26.html">
+       <span class="week-number">
+        26
+       </span>
+       <span>
+        Fine tuning experiments preferences and distillation
+       </span>
+       <span class="week-tick" data-week-tick="26">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/27.html">
+       <span class="week-number">
+        27
+       </span>
+       <span>
+        Tools functions workflows and agents
+       </span>
+       <span class="week-tick" data-week-tick="27">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/28.html">
+       <span class="week-number">
+        28
+       </span>
+       <span>
+        Harnesses planning memory and bounded execution
+       </span>
+       <span class="week-tick" data-week-tick="28">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/29.html">
+       <span class="week-number">
+        29
+       </span>
+       <span>
+        From a notebook to MLOps and inference serving
+       </span>
+       <span class="week-tick" data-week-tick="29">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/30.html">
+       <span class="week-number">
+        30
+       </span>
+       <span>
+        Monitoring security regression tests and rollback
+       </span>
+       <span class="week-tick" data-week-tick="30">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/31.html">
+       <span class="week-number">
+        31
+       </span>
+       <span>
+        Integrating the documentation assistant and advanced extensions
+       </span>
+       <span class="week-tick" data-week-tick="31">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/32.html">
+       <span class="week-number">
+        32
+       </span>
+       <span>
+        Review defense and a continuing learning plan
+       </span>
+       <span class="week-tick" data-week-tick="32">
+       </span>
+      </a>
+     </li>
+    </ol>
+   </details>
+   <div class="side-links">
+    <a href="../visuals.html">
+     Visual laboratory
+     <span>
+      14 interactive lessons
+     </span>
+    </a>
+    <a href="../project.html">
+     Documentation assistant
+     <span>
+      Your capstone project
+     </span>
+    </a>
+    <a href="../resources.html">
+     Readings and setup
+    </a>
+   </div>
+   <div class="side-progress">
+    <div>
+     <span>
+      Your progress
+     </span>
+     <strong data-progress-count="">
+      0 / 32
+     </strong>
+    </div>
+    <progress aria-label="Completed lectures" max="32" value="0">
+    </progress>
+    <small>
+     Saved in this browser
+    </small>
+   </div>
+  </aside>
+  <main class="main" id="main">
+   <div class="content">
+    <div class="chapter-header">
+     <div class="eyebrow">
+      Semester 1 / Week 11
+     </div>
+     <h1>
+      Encoders decoders and complete model architectures
+     </h1>
+    </div>
+    <div class="lesson-links">
+     <a href="../tutorials/11.html">
+      Tutorial 11
+     </a>
+     <a href="../tests/11.html">
+      Test your understanding
+     </a>
+     <button aria-pressed="false" class="mark-complete" data-week="11" type="button">
+      Mark as complete
+     </button>
+    </div>
+    <div aria-label="Lesson view" class="lesson-mode" role="tablist">
+     <button aria-controls="full-notes" aria-selected="true" data-mode="read" id="mode-read" role="tab" type="button">
+      Read lesson
+     </button>
+     <button aria-controls="lecture-slides" aria-selected="false" data-mode="slides" id="mode-slides" role="tab" type="button">
+      Lesson slides
+     </button>
+    </div>
+    <section aria-label="Lecture slides" class="lecture-deck" hidden="" id="lecture-slides" role="tabpanel">
+     <div class="deck-top">
+      <div>
+       <div class="eyebrow">
+        Lecture slides · Week 11
+       </div>
+       <h2>
+        Key steps and worked visuals
+       </h2>
+      </div>
+      <button class="deck-present" type="button">
+       Present
+      </button>
+     </div>
+     <p class="deck-help">
+      Use these slides to review the mechanism. Open “Read the worked explanation” for the complete notes and code.
+     </p>
+     <div aria-label="Presentation: use left and right arrow keys" class="slide-viewport" tabindex="0">
+      <section class="lecture-slide" data-slide="">
+       <div class="slide-stage">
+        Week 11 · Section 1
+       </div>
+       <h3>
+        A block becomes part of a task specific arrangement
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          The transformer is a family of architectures built from related components.
+         </li>
+         <li>
+          Use three ordinary tasks.
+         </li>
+         <li>
+          The word decoder does not simply mean “something that converts IDs back into strings.” In model architecture it names a neural sequence-processing arrangement.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#a-block-becomes-part-of-a-task-specific-arrangement">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 11 · Section 2
+       </div>
+       <h3>
+        An encoder reads a complete input
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          For an encoder representing a fully observed sentence, valid positions can commonly attend to both earlier and later valid positions.
+         </li>
+         <li>
+          That can help tasks such as labeling tokens or comparing complete inputs.
+         </li>
+         <li>
+          If we hide bus in “I go to school by [MASK],” the model's input contains a special masking situation.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#an-encoder-reads-a-complete-input">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 11 · Section 3
+       </div>
+       <h3>
+        A causal decoder predicts continuations
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          A decoder-only language model uses causal self-attention over the input prefix.
+         </li>
+         <li>
+          For “I go to school by,” the last representation produces vocabulary logits for the next token.
+         </li>
+         <li>
+          Many familiar text-generating LLMs use this arrangement.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#a-causal-decoder-predicts-continuations">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 11 · Section 4
+       </div>
+       <h3>
+        An encoder decoder connects two sequences
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          An encoder-decoder system first represents a source sequence.
+         </li>
+         <li>
+          The decoder's self-attention is causal over the target prefix.
+         </li>
+         <li>
+          If the source has seven tokens and the target currently has four positions, cross-attention scores can have shape [4,7].
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#an-encoder-decoder-connects-two-sequences">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 11 · Section 5
+       </div>
+       <h3>
+        A visibility table clarifies the difference
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          For a four-token complete input, encoder self-attention can allow all four key positions in each valid query row.
+         </li>
+         <li>
+          Cross-attention visibility additionally depends on valid source positions and task constraints.
+         </li>
+         <li>
+          Draw the three cases instead of memorizing model-name lists.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#a-visibility-table-clarifies-the-difference">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 11 · Section 6
+       </div>
+       <h3>
+        Training time parallelism does not remove causality
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          During training, the full target sequence is available as data.
+         </li>
+         <li>
+          During ordinary autoregressive generation, the next generated token changes the next prefix.
+         </li>
+         <li>
+          This distinguishes parallel computation within a known sequence from sequential dependence across newly generated tokens.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#training-time-parallelism-does-not-remove-causality">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 11 · Section 7
+       </div>
+       <h3>
+        Choosing the architecture for the learning exercise
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Our tiny model will be a causal decoder with learned absolute positions, two blocks, and a vocabulary output head.
+         </li>
+         <li>
+          We are not claiming that this is the only useful architecture.
+         </li>
+         <li>
+          When you later load a pretrained model, identify its architecture and tokenizer before applying assumptions from the teaching model.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#choosing-the-architecture-for-the-learning-exercise">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 11 · Section 8
+       </div>
+       <h3>
+        Attention variants keep different amounts of state
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Imagine eight students asking questions about the same handbook.
+         </li>
+         <li>
+          Multi-head latent attention, or MLA, compresses key/value information into a lower-dimensional latent state and uses learned projections to recover the information needed by attention.
+         </li>
+         <li>
+          Sliding-window attention limits a position to a recent window, for example the last four allowed tokens in a teaching sequence.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#attention-variants-keep-different-amounts-of-state">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 11 · Section 9
+       </div>
+       <h3>
+        MoE and state-space models change different parts
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          A mixture-of-experts, or MoE, commonly replaces a dense MLP with several expert MLPs and a learned router.
+         </li>
+         <li>
+          A state-space sequence model updates a compact recurrent state while reading the sequence.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#moe-and-state-space-models-change-different-parts">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 11 · Section 10
+       </div>
+       <h3>
+        Scaling laws connect model size, data, and compute
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Suppose you can afford a fixed number of training operations.
+         </li>
+         <li>
+          Source: DeepSeek-V2: MLA and MoE .
+         </li>
+         <li>
+          Source: Mamba: selective state-space models .
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#scaling-laws-connect-model-size-data-and-compute">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 11 · Section 11
+       </div>
+       <h3>
+        Scaling laws connect model size, data, and compute · continued
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Source: Training compute-optimal language models .
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#scaling-laws-connect-model-size-data-and-compute">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 11 · Section 12
+       </div>
+       <h3>
+        Worked practice and a readiness check
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          For each task, identify the model arrangement and allowed context: filling a hidden word in a complete sentence, continuing an unfinished sentence, and generating a translation from a complete source.
+         </li>
+         <li>
+          Explain why a causal decoder cannot use the answer bus at the by position during training.
+         </li>
+         <li>
+          You are ready when encoder, decoder, self-attention, cross-attention, training parallelism, and autoregressive generation refer to distinct operations and constraints in your explanation.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#worked-practice-and-a-readiness-check">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 11 · Section 13
+       </div>
+       <h3>
+        Three tasks with the same words
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Task A gives the complete sentence and asks which word refers to the vehicle.
+         </li>
+         <li>
+          Write separate masks and tensor shapes for these cases.
+         </li>
+         <li>
+          This exercise prevents architecture names from becoming disconnected labels.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#three-tasks-with-the-same-words">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+     </div>
+     <div class="deck-controls">
+      <button class="slide-prev" type="button">
+       ← Previous
+      </button>
+      <span aria-live="polite" class="slide-counter">
+       1 / 13
+      </span>
+      <button class="slide-next" type="button">
+       Next →
+      </button>
+     </div>
+     <label class="slide-jump-label">
+      Go to slide
+      <select aria-label="Go to slide" class="slide-jump">
+       <option value="0">
+        1. A block becomes part of a task specific arrangement
+       </option>
+       <option value="1">
+        2. An encoder reads a complete input
+       </option>
+       <option value="2">
+        3. A causal decoder predicts continuations
+       </option>
+       <option value="3">
+        4. An encoder decoder connects two sequences
+       </option>
+       <option value="4">
+        5. A visibility table clarifies the difference
+       </option>
+       <option value="5">
+        6. Training time parallelism does not remove causality
+       </option>
+       <option value="6">
+        7. Choosing the architecture for the learning exercise
+       </option>
+       <option value="7">
+        8. Attention variants keep different amounts of state
+       </option>
+       <option value="8">
+        9. MoE and state-space models change different parts
+       </option>
+       <option value="9">
+        10. Scaling laws connect model size, data, and compute
+       </option>
+       <option value="10">
+        11. Scaling laws connect model size, data, and compute · continued
+       </option>
+       <option value="11">
+        12. Worked practice and a readiness check
+       </option>
+       <option value="12">
+        13. Three tasks with the same words
+       </option>
+      </select>
+     </label>
+     <button aria-pressed="false" class="deck-all" type="button">
+      Show all slides
+     </button>
+    </section>
+    <nav aria-label="In this lesson" class="reader-toc">
+     <strong>
+      In this lesson
+     </strong>
+     <ol>
+      <li>
+       <a href="#a-block-becomes-part-of-a-task-specific-arrangement">
+        A block becomes part of a task specific arrangement
+       </a>
+      </li>
+      <li>
+       <a href="#an-encoder-reads-a-complete-input">
+        An encoder reads a complete input
+       </a>
+      </li>
+      <li>
+       <a href="#a-causal-decoder-predicts-continuations">
+        A causal decoder predicts continuations
+       </a>
+      </li>
+      <li>
+       <a href="#an-encoder-decoder-connects-two-sequences">
+        An encoder decoder connects two sequences
+       </a>
+      </li>
+      <li>
+       <a href="#a-visibility-table-clarifies-the-difference">
+        A visibility table clarifies the difference
+       </a>
+      </li>
+      <li>
+       <a href="#training-time-parallelism-does-not-remove-causality">
+        Training time parallelism does not remove causality
+       </a>
+      </li>
+      <li>
+       <a href="#choosing-the-architecture-for-the-learning-exercise">
+        Choosing the architecture for the learning exercise
+       </a>
+      </li>
+      <li>
+       <a href="#attention-variants-keep-different-amounts-of-state">
+        Attention variants keep different amounts of state
+       </a>
+      </li>
+      <li>
+       <a href="#moe-and-state-space-models-change-different-parts">
+        MoE and state-space models change different parts
+       </a>
+      </li>
+      <li>
+       <a href="#scaling-laws-connect-model-size-data-and-compute">
+        Scaling laws connect model size, data, and compute
+       </a>
+      </li>
+      <li>
+       <a href="#worked-practice-and-a-readiness-check">
+        Worked practice and a readiness check
+       </a>
+      </li>
+      <li>
+       <a href="#three-tasks-with-the-same-words">
+        Three tasks with the same words
+       </a>
+      </li>
+     </ol>
+    </nav>
+    <article class="prose full-notes" id="full-notes" role="tabpanel">
+     <div class="eyebrow">
+      Complete lecture reader
+     </div>
+     <h2>
+      Read the full explanation
+     </h2>
+     <h3 id="a-block-becomes-part-of-a-task-specific-arrangement">
+      A block becomes part of a task specific arrangement
+     </h3>
+     <p>
+      The transformer is a family of architectures built from related components. An encoder, a causal decoder, and an encoder-decoder arrangement differ in visibility and information flow.
+     </p>
+     <p>
+      Use three ordinary tasks. Represent the complete sentence “I go to school by bus.” Continue the prefix “I go to school by.” Translate a complete source sentence into another language. The available input and required output differ across these tasks.
+     </p>
+     <p>
+      The word decoder does not simply mean “something that converts IDs back into strings.” In model architecture it names a neural sequence-processing arrangement. Tokenizer decoding is a separate operation.
+     </p>
+     <h3 id="an-encoder-reads-a-complete-input">
+      An encoder reads a complete input
+     </h3>
+     <p>
+      For an encoder representing a fully observed sentence, valid positions can commonly attend to both earlier and later valid positions. The representation of school can use bus to its right.
+     </p>
+     <p>
+      That can help tasks such as labeling tokens or comparing complete inputs. A masked-language objective can hide a token and ask the model to predict it using the available surrounding text.
+     </p>
+     <p>
+      If we hide bus in “I go to school by [MASK],” the model's input contains a special masking situation. The training objective and input construction differ from ordinary left-to-right continuation.
+     </p>
+     <h3 id="a-causal-decoder-predicts-continuations">
+      A causal decoder predicts continuations
+     </h3>
+     <p>
+      A decoder-only language model uses causal self-attention over the input prefix. At a training position, it may read the current and earlier input tokens, but not the future target token.
+     </p>
+     <p>
+      For “I go to school by,” the last representation produces vocabulary logits for the next token. After selecting bus, the model appends it and continues.
+     </p>
+     <p>
+      Many familiar text-generating LLMs use this arrangement. The architecture explains the next-token computation; later post-training shapes conversational behavior.
+     </p>
+     <h3 id="an-encoder-decoder-connects-two-sequences">
+      An encoder decoder connects two sequences
+     </h3>
+     <p>
+      An encoder-decoder system first represents a source sequence. Its decoder then generates a target sequence while consulting both its target prefix and source representations.
+     </p>
+     <p>
+      The decoder's self-attention is causal over the target prefix. Its cross-attention takes queries from the decoder and keys/values from encoder outputs. Source positions need not obey the target's left-to-right order.
+     </p>
+     <p>
+      If the source has seven tokens and the target currently has four positions, cross-attention scores can have shape [4,7]. This rectangular matrix is the shape distinction we introduced in week 7.
+     </p>
+     <h3 id="a-visibility-table-clarifies-the-difference">
+      A visibility table clarifies the difference
+     </h3>
+     <p>
+      For a four-token complete input, encoder self-attention can allow all four key positions in each valid query row. For a causal decoder, row 0 sees only 0, row 1 sees 0 and 1, and so on.
+     </p>
+     <p>
+      Cross-attention visibility additionally depends on valid source positions and task constraints. Padding still needs handling. “Encoder sees everything” is shorthand for permitted valid input positions, not permission to ignore arbitrary constraints.
+     </p>
+     <p>
+      Draw the three cases instead of memorizing model-name lists. The diagrams describe what information a position can use, which is often more useful than knowing a marketing label.
+     </p>
+     <h3 id="training-time-parallelism-does-not-remove-causality">
+      Training time parallelism does not remove causality
+     </h3>
+     <p>
+      During training, the full target sequence is available as data. A masked transformer can compute representations for many positions in parallel because the mask constrains their dependencies.
+     </p>
+     <p>
+      During ordinary autoregressive generation, the next generated token changes the next prefix. The model therefore proceeds sequentially across output-token decisions, even though each forward pass uses parallel numerical operations internally.
+     </p>
+     <p>
+      This distinguishes parallel computation within a known sequence from sequential dependence across newly generated tokens. Both can be true at the same time.
+     </p>
+     <h3 id="choosing-the-architecture-for-the-learning-exercise">
+      Choosing the architecture for the learning exercise
+     </h3>
+     <p>
+      Our tiny model will be a causal decoder with learned absolute positions, two blocks, and a vocabulary output head. This keeps the path close to the sentence-completion task we began with.
+     </p>
+     <p>
+      We are not claiming that this is the only useful architecture. We choose it because its labels, masks, and output selection can be inspected end to end.
+     </p>
+     <p>
+      When you later load a pretrained model, identify its architecture and tokenizer before applying assumptions from the teaching model. Different normalization, attention-head sharing, position methods, and training objectives can change important details.
+     </p>
+     <h3 id="attention-variants-keep-different-amounts-of-state">
+      Attention variants keep different amounts of state
+     </h3>
+     <p>
+      Imagine eight students asking questions about the same handbook. MHA gives every question head its own K/V projections. MQA gives all query heads one shared K/V head. GQA shares K/V within groups. In an H=8 layer with the same head widths, H_kv values of 8, 1, and 2 respectively make the cached K/V element counts proportional to 8, 1, and 2. Sharing reduces cache storage and bandwidth, while the trained model must learn to work with that sharing.
+     </p>
+     <p>
+      Multi-head latent attention, or MLA, compresses key/value information into a lower-dimensional latent state and uses learned projections to recover the information needed by attention. It is another way to reduce cached state, with a more involved projection and position-encoding design. Do not estimate its cache by copying the ordinary MHA formula; inspect what its implementation actually retains.
+     </p>
+     <p>
+      Sliding-window attention limits a position to a recent window, for example the last four allowed tokens in a teaching sequence. One layer then cannot directly read a fact ten positions earlier. Stacked layers, occasional global-attention layers, or another memory mechanism can enlarge access. Long-context techniques also include position-method changes and training on longer sequences. A configured context limit states accepted input length; task evaluation establishes whether distant evidence is used well.
+     </p>
+     <h3 id="moe-and-state-space-models-change-different-parts">
+      MoE and state-space models change different parts
+     </h3>
+     <p>
+      A mixture-of-experts, or MoE, commonly replaces a dense MLP with several expert MLPs and a learned router. If there are eight experts but each token selects two, the model stores all eight while executing the selected experts for that token. Active parameter count and total parameter count therefore differ. Routing adds load-balancing and communication issues; MoE is not a promise that a large model fits in the memory needed by only two experts.
+     </p>
+     <p>
+      A state-space sequence model updates a compact recurrent state while reading the sequence. Think of carrying forward a changing numerical notebook rather than keeping every past K/V row available for a new query. Selective state-space models such as Mamba make parts of the update depend on the input. This offers different computation and memory behavior; retrieving an exact old detail and maintaining a compact state are different demands. Hybrid models combine attention and state-space layers.
+     </p>
+     <h3 id="scaling-laws-connect-model-size-data-and-compute">
+      Scaling laws connect model size, data, and compute
+     </h3>
+     <p>
+      Suppose you can afford a fixed number of training operations. Spending all of it on a larger model leaves fewer operations for reading training tokens. Spending it on more tokens with an extremely small model limits capacity. Scaling-law studies fit empirical relationships between validation loss, model size, training tokens, and compute. Compute-optimal training balances these quantities for the studied setup; a training-optimal choice can differ from the cheapest model to serve many times.
+     </p>
+     <p>
+      Source:
+      <a href="https://arxiv.org/abs/2405.04434">
+       DeepSeek-V2: MLA and MoE
+      </a>
+      .
+     </p>
+     <p>
+      Source:
+      <a href="https://arxiv.org/abs/2312.00752">
+       Mamba: selective state-space models
+      </a>
+      .
+     </p>
+     <p>
+      Source:
+      <a href="https://arxiv.org/abs/2203.15556">
+       Training compute-optimal language models
+      </a>
+      .
+     </p>
+     <h3 id="worked-practice-and-a-readiness-check">
+      Worked practice and a readiness check
+     </h3>
+     <p>
+      For each task, identify the model arrangement and allowed context: filling a hidden word in a complete sentence, continuing an unfinished sentence, and generating a translation from a complete source.
+     </p>
+     <p>
+      Explain why a causal decoder cannot use the answer bus at the by position during training. Then explain why a complete-input encoder may legitimately use a word to the right of school.
+     </p>
+     <p>
+      You are ready when encoder, decoder, self-attention, cross-attention, training parallelism, and autoregressive generation refer to distinct operations and constraints in your explanation.
+     </p>
+     <h3 id="three-tasks-with-the-same-words">
+      Three tasks with the same words
+     </h3>
+     <p>
+      Task A gives the complete sentence and asks which word refers to the vehicle. A complete-input representation may use both sides of a position. Task B gives “I go to school by” and asks for a continuation. It must not read an answer that has not been generated. Task C gives a source sentence and asks for a target-language sentence, requiring a relationship between two sequences.
+     </p>
+     <p>
+      Write separate masks and tensor shapes for these cases. If Task C has six source tokens and eight target positions, cross-attention scores have shape [8,6]. Causal target self-attention has [8,8]. The two matrices answer different information-flow questions.
+     </p>
+     <p>
+      This exercise prevents architecture names from becoming disconnected labels. Once you know the available inputs, the output task, and the attention sources, you can explain why a particular arrangement is appropriate and where leakage would occur.
+     </p>
+    </article>
+    <nav aria-label="Adjacent lectures" class="chapter-pagination">
+     <a href="10.html">
+      <small>
+       Previous week
+      </small>
+      The transformer block step by step
+     </a>
+     <a href="12.html">
+      <small>
+       Next week
+      </small>
+      Training a small transformer
+     </a>
+    </nav>
+   </div>
+   <footer class="footer">
+    <span>
+     Applied AI · An independent self-study course
+    </span>
+    <span>
+     32 weeks · 10 hours per week
+    </span>
+    <a href="../resources.html#about-this-course">
+     About and sources
+    </a>
+   </footer>
+  </main>
+  <dialog aria-labelledby="search-title" class="search-dialog">
+   <div class="dialog-head">
+    <h2 id="search-title">
+     Find a concept
+    </h2>
+    <button aria-label="Close search" class="search-close" type="button">
+     Close
+    </button>
+   </div>
+   <label class="sr-only" for="course-search">
+    Search all lectures and tutorials
+   </label>
+   <input autocomplete="off" id="course-search" placeholder="Try attention, fine-tuning, or harness…" type="search"/>
+   <p aria-live="polite" class="search-status">
+    Search lecture notes, tutorials, tests and readings.
+   </p>
+   <div class="search-results">
+   </div>
+  </dialog>
+  <div aria-live="polite" class="toast" role="status">
+  </div>
+ </body>
+</html>

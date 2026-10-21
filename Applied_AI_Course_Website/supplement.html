@@ -1,41 +1,692 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/><title>Worked supplement · Applied AI</title><meta content="Applied generative AI and LLM systems course material" name="description"/><meta content="#173c36" name="theme-color"/><link href="assets/favicon.svg" rel="icon" type="image/svg+xml"/><link href="assets/style.css" rel="stylesheet"/><link href="assets/slides.css" rel="stylesheet"/><script>window.COURSE_BASE="";</script><script defer="" src="assets/site-config.js"></script><script defer="" src="assets/search-index.js"></script><script defer="" src="assets/app.js"></script><script defer="" src="assets/visuals.js"></script><script defer="" src="assets/slides.js"></script><script defer="" src="assets/beginner-visuals.js"></script><link href="zh-HK/supplement.html" hreflang="zh-HK" rel="alternate"/><link href="assets/bilingual.css" rel="stylesheet"/></head><body data-page-kind="guide" data-week="0"><a class="skip-link" href="#main">Skip to content</a><header class="topbar"><button aria-controls="course-sidebar" aria-expanded="false" class="menu-toggle" type="button">Menu</button><a class="brand" href="index.html"><span aria-hidden="true" class="brand-mark">a<span>i</span></span><span>APPLIED AI<small>Principles into practice</small></span></a><nav aria-label="Main navigation"><a href="index.html">The course</a><a href="visuals.html">Visual lab</a><a href="project.html">Project</a><a class="language-switch" href="zh-HK/supplement.html" hreflang="zh-HK" lang="zh-HK">繁體中文</a></nav><button class="search-open" type="button">Search the course <span aria-hidden="true">/</span></button></header><aside aria-label="Course chapters" class="sidebar" id="course-sidebar"><a class="side-home" href="index.html">Course overview</a><details class="semester-nav" open=""><summary>Semester 1<span>Weeks 1–16</span></summary><ol start="1"><li><a href="lectures/01.html"><span class="week-number">01</span><span>What a language model is trying to learn</span><span class="week-tick" data-week-tick="1"></span></a></li><li><a href="lectures/02.html"><span class="week-number">02</span><span>From text to tokens and numerical IDs</span><span class="week-tick" data-week-tick="2"></span></a></li><li><a href="lectures/03.html"><span class="week-number">03</span><span>What word vectors can represent</span><span class="week-tick" data-week-tick="3"></span></a></li><li><a href="lectures/04.html"><span class="week-number">04</span><span>From scores to probabilities and learning signals</span><span class="week-tick" data-week-tick="4"></span></a></li><li><a href="lectures/05.html"><span class="week-number">05</span><span>Why language needs context and order</span><span class="week-tick" data-week-tick="5"></span></a></li><li><a href="lectures/06.html"><span class="week-number">06</span><span>Attention begins as a weighted mixture</span><span class="week-tick" data-week-tick="6"></span></a></li><li><a href="lectures/07.html"><span class="week-number">07</span><span>Where queries keys and values come from</span><span class="week-tick" data-week-tick="7"></span></a></li><li><a href="lectures/08.html"><span class="week-number">08</span><span>Scaling and masking attention correctly</span><span class="week-tick" data-week-tick="8"></span></a></li><li><a href="lectures/09.html"><span class="week-number">09</span><span>Multiple attention heads and position</span><span class="week-tick" data-week-tick="9"></span></a></li><li><a href="lectures/10.html"><span class="week-number">10</span><span>The transformer block step by step</span><span class="week-tick" data-week-tick="10"></span></a></li><li><a href="lectures/11.html"><span class="week-number">11</span><span>Encoders decoders and complete model architectures</span><span class="week-tick" data-week-tick="11"></span></a></li><li><a href="lectures/12.html"><span class="week-number">12</span><span>Training a small transformer</span><span class="week-tick" data-week-tick="12"></span></a></li><li><a href="lectures/13.html"><span class="week-number">13</span><span>Generation decoding and the KV cache</span><span class="week-tick" data-week-tick="13"></span></a></li><li><a href="lectures/14.html"><span class="week-number">14</span><span>From pretraining to instruction following and reasoning</span><span class="week-tick" data-week-tick="14"></span></a></li><li><a href="lectures/15.html"><span class="week-number">15</span><span>Generative AI beyond text</span><span class="week-tick" data-week-tick="15"></span></a></li><li><a href="lectures/16.html"><span class="week-number">16</span><span>A complete transformer walkthrough and first semester review</span><span class="week-tick" data-week-tick="16"></span></a></li></ol></details><details class="semester-nav"><summary>Semester 2<span>Weeks 17–32</span></summary><ol start="17"><li><a href="lectures/17.html"><span class="week-number">17</span><span>From word vectors to semantic search</span><span class="week-tick" data-week-tick="17"></span></a></li><li><a href="lectures/18.html"><span class="week-number">18</span><span>A vector database from a list of vectors</span><span class="week-tick" data-week-tick="18"></span></a></li><li><a href="lectures/19.html"><span class="week-number">19</span><span>RAG as an open book question</span><span class="week-tick" data-week-tick="19"></span></a></li><li><a href="lectures/20.html"><span class="week-number">20</span><span>Improving RAG without losing the basic task</span><span class="week-tick" data-week-tick="20"></span></a></li><li><a href="lectures/21.html"><span class="week-number">21</span><span>Evaluating retrieval answers and uncertainty</span><span class="week-tick" data-week-tick="21"></span></a></li><li><a href="lectures/22.html"><span class="week-number">22</span><span>CPU GPU memory and model resource accounting</span><span class="week-tick" data-week-tick="22"></span></a></li><li><a href="lectures/23.html"><span class="week-number">23</span><span>CUDA kernels and profiling</span><span class="week-tick" data-week-tick="23"></span></a></li><li><a href="lectures/24.html"><span class="week-number">24</span><span>Fine tuning starts with a teaching dataset</span><span class="week-tick" data-week-tick="24"></span></a></li><li><a href="lectures/25.html"><span class="week-number">25</span><span>LoRA and QLoRA from a small matrix</span><span class="week-tick" data-week-tick="25"></span></a></li><li><a href="lectures/26.html"><span class="week-number">26</span><span>Fine tuning experiments preferences and distillation</span><span class="week-tick" data-week-tick="26"></span></a></li><li><a href="lectures/27.html"><span class="week-number">27</span><span>Tools functions workflows and agents</span><span class="week-tick" data-week-tick="27"></span></a></li><li><a href="lectures/28.html"><span class="week-number">28</span><span>Harnesses planning memory and bounded execution</span><span class="week-tick" data-week-tick="28"></span></a></li><li><a href="lectures/29.html"><span class="week-number">29</span><span>From a notebook to MLOps and inference serving</span><span class="week-tick" data-week-tick="29"></span></a></li><li><a href="lectures/30.html"><span class="week-number">30</span><span>Monitoring security regression tests and rollback</span><span class="week-tick" data-week-tick="30"></span></a></li><li><a href="lectures/31.html"><span class="week-number">31</span><span>Integrating the documentation assistant and advanced extensions</span><span class="week-tick" data-week-tick="31"></span></a></li><li><a href="lectures/32.html"><span class="week-number">32</span><span>Review defense and a continuing learning plan</span><span class="week-tick" data-week-tick="32"></span></a></li></ol></details><div class="side-links"><a href="visuals.html">Visual laboratory <span>14 interactive lessons</span></a><a href="project.html">Documentation assistant <span>Your capstone project</span></a><a href="resources.html">Readings and setup</a></div><div class="side-progress"><div><span>Your progress</span><strong data-progress-count="">0 / 32</strong></div><progress aria-label="Completed lectures" max="32" value="0"></progress><small>Saved in this browser</small></div></aside><main class="main" id="main"><div class="content"><div class="chapter-header"><div class="eyebrow">Extra mechanisms and examples</div><h1>The worked supplement</h1></div><article class="prose"><p>These examples deepen selected mechanisms without adding required study hours. Use them in place of optional reading or when correcting a test. All numbers are illustrative calculations.</p>
-<h2 id="byte-pair-encoding-by-hand">Byte pair encoding by hand</h2>
-<p>Start with a tiny corpus: low, low, lower. Begin from characters and an end-of-word marker: l o w _, l o w _, l o w e r _. Count adjacent pairs across the corpus. The pairs (l,o) and (o,w) each occur three times, while (w,_) occurs twice. Choose a deterministic tie rule, merge (l,o) into lo, then count again. The pair (lo,w) occurs three times, so merge into low. The resulting vocabulary now includes common pieces learned from counts. Real byte-level BPE starts from a byte vocabulary and has additional implementation details.</p>
-<p>Encoding a new word applies the learned merge rules rather than fitting new rules on that word. A tokenizer trained on one corpus may split unfamiliar identifiers into many pieces. The tokenization used for training and serving must match. Changing the merge vocabulary changes the model's input/output ID interpretation, not merely its chunk lengths.</p>
-<p><strong>Exercise:</strong> add lowest twice, repeat three merge steps and explain which count changes. Do not interpret a merge's frequency as semantic importance.</p>
-<h2 id="softmax-stability-and-cross-entropy">Softmax stability and cross entropy</h2>
-<p>For logits z, subtract max(z) before exponentiating: exp(z_i−m)/sum_j exp(z_j−m). This leaves probabilities unchanged because the common factor cancels, while reducing overflow risk. For logits (1000,999), direct exponentiation can overflow; shifted logits (0,−1) give approximately (.7311,.2689).</p>
-<p>Cross entropy for target class two is −log(.2689)≈1.3133 nats. Computing a log-softmax or fused cross-entropy is generally more numerically stable than forming tiny probabilities and taking logs manually. A loss close to zero on train data can still reflect memorization or leakage.</p>
-<h2 id="residuals-and-normalization">Residuals and normalization</h2>
-<p>Layer normalization subtracts the per-token feature mean and scales by the square root of feature variance plus epsilon, then applies learned affine parameters. RMS normalization scales by a root-mean-square statistic without subtracting the mean in its basic form. Both are per-token feature operations in this setting; they do not mix future positions. Residual addition requires compatible shapes.</p>
-<p>In a pre-norm block, normalization occurs before the attention/MLP transformation and the residual stream remains an additive path. In post-norm, the addition is normalized afterward. These are meaningful architectural differences; our teaching implementation chooses one explicitly rather than claiming it is the only transformer design.</p>
-<h2 id="rotary-position-intuition">Rotary position intuition</h2>
-<p>For a two-dimensional component pair, a rotation by angle theta maps (x1,x2) to (x1 cos theta−x2 sin theta, x1 sin theta+x2 cos theta). Applying position-dependent rotations to query/key component pairs can make their dot product depend on relative displacement. Different pairs use different frequencies. The construction explains a way of encoding position; it does not prove unlimited long-context extrapolation.</p>
-<p><strong>Exercise:</strong> rotate (1,0) by zero and by pi/2 and compute the dot product. Then rotate both vectors by the same angle: the relative dot product is unchanged. Relate this invariance to relative position.</p>
-<h2 id="query-key-and-value-head-counts">Query, key and value head counts</h2>
-<p>Standard multi-head attention uses the same number of query and KV heads. Multi-query attention shares one KV head among multiple query heads; grouped-query attention uses an intermediate number. Cache storage scales with KV heads, not merely query heads. A model can therefore have many query heads without storing separate cached keys/values for all of them.</p>
-<p>Always inspect the actual architecture configuration before using a memory formula. Learned projections, head dimensions and number of layers matter. The 96 MiB week-9 example assumes the stated KV count, batch, precision and context length.</p>
-<h2 id="kv-cache-correctness">KV-cache correctness</h2>
-<p>At generation step t, earlier positions' causal key/value states can be reused. Cache identity must include the actual preceding tokens and relevant model configuration. Reusing a cache after changing the system prompt, model weights or token prefix gives the wrong computation. Prefix caching in a server requires correct identity and authorization handling, especially when prompts can contain private content.</p>
-<p>Caching accelerates repeated computation but does not improve evidence quality. Longer cached context still occupies memory. Batching and eviction policies can change throughput and tail latency.</p>
-<h2 id="sampling-worked-example">Sampling worked example</h2>
-<p>Let next-token probabilities be (.50,.30,.15,.05). With top-p=.8 and the convention that includes the token crossing/reaching the threshold, retain the first two tokens, then renormalize to (.625,.375). With top-k=3 retain the first three and renormalize by .95. Implementations may differ on boundary conventions, so inspect the selected library rather than assuming a universal tie rule.</p>
-<p>Sampling several candidates multiplies generation work. If five candidates each use 100 output tokens, the generation budget is 500 output tokens before judging or verification. Report all of it.</p>
-<h2 id="chunking-a-technical-page">Chunking a technical page</h2>
-<p>Suppose a page contains a heading, a paragraph defining timeout_ms, a code block, an exception note and a version-change table. A fixed-length splitter can separate the exception from its rule or cut a code block in half. A structure-aware splitter first respects headings and code/table boundaries, then divides oversized sections with source offsets. Store parent ID, section path, version, offsets and content hash.</p>
-<p>Overlap is a parameter to evaluate, not a requirement to maximize. Excessive overlap duplicates evidence and index storage. Compare chunk sizes with the embedding tokenizer's input limit and the generator context budget. An evidence recall improvement can disappear if useful text is truncated during embedding.</p>
-<h2 id="claim-level-citation-audit">Claim-level citation audit</h2>
-<p>Answer: “Version 2 defaults to 30000 ms and permits unlimited retries [timeout-v2].” The first claim is supported by timeout-v2. The second is unsupported and conflicts with the retry/config evidence. The source ID exists, the JSON could be valid and the first clause could be correct, yet the answer is unsafe to trust as a whole.</p>
-<p>For a manual audit, split factual clauses, identify supporting passages and label supported, contradicted or not established. Track incomplete answers separately: a fully supported answer can omit a required caveat. For your project, score a reviewed subset at claim level and state the sample size. Do not label every response with a plausible citation “grounded.”</p>
-<h2 id="calibration-and-selective-prediction">Calibration and selective prediction</h2>
-<p>A cosine score of .82 is not an 82% correctness probability. To use a threshold, choose it on development examples under a specified corpus/model distribution. Plot or tabulate the tradeoff between answering more questions and making more unsupported answers. Preserve a held-out check of the selected threshold.</p>
-<p>If 9 of 10 answered questions are correct, selective accuracy is 90%. If the system answered only 10 of 100 relevant tasks, coverage is 10%. Both numbers matter. An abstention policy must also distinguish genuine absence from retrieval failure.</p>
-<h2 id="quantization-and-resource-estimates">Quantization and resource estimates</h2>
-<p>An ideal four-bit representation uses .5 bytes per weight, but practical quantized layers also need scales, metadata and compatible kernels. Some tensors stay in higher precision. Activation memory and KV cache need separate accounting. A model that appears to fit by multiplying parameters by .5 can still OOM.</p>
-<p>Quantization may alter outputs, so compare actual task behavior before deployment. A smaller file is not proof of lower latency on a device lacking an efficient kernel for that representation.</p>
-<h2 id="tool-result-semantics">Tool result semantics</h2>
-<p>The call validate_config({timeout_ms:0,retries:3}) can be a valid invocation of the validator while returning valid=false. That is not the same as an invalid tool-call schema containing an unexpected command field. Error taxonomies should distinguish proposal parsing, argument schema, authorization, tool execution, domain-invalid results and final-answer correctness.</p>
-<p>Likewise, an agent's completed status means its controller accepted a final response. Your task checker must still verify that the requested calculation or validation occurred and that the response matches the result. Controller acceptance and task success are different metrics.</p>
-<h2 id="a-paper-reading-routine">A paper-reading routine</h2>
-<p>Spend ten minutes on the problem, task setup and main claim; ten minutes drawing the mechanism and following one equation's shapes; ten minutes checking the evaluation controls and one limitation. Write a prediction you could test on a smaller system. Read the whole paper later if that question requires it. For optional Stanford or Hung-yi Lee materials, use this routine to connect the source to your current lab rather than accumulating unwatched lectures.</p></article></div><footer class="footer"><span>Applied AI · An independent self-study course</span><span>32 weeks · 10 hours per week</span><a href="resources.html#about-this-course">About and sources</a></footer></main><dialog aria-labelledby="search-title" class="search-dialog"><div class="dialog-head"><h2 id="search-title">Find a concept</h2><button aria-label="Close search" class="search-close" type="button">Close</button></div><label class="sr-only" for="course-search">Search all lectures and tutorials</label><input autocomplete="off" id="course-search" placeholder="Try attention, fine-tuning, or harness…" type="search"/><p aria-live="polite" class="search-status">Search lecture notes, tutorials, tests and readings.</p><div class="search-results"></div></dialog><div aria-live="polite" class="toast" role="status"></div></body></html>
+<html lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width,initial-scale=1" name="viewport"/>
+  <title>
+   Worked supplement · Applied AI
+  </title>
+  <meta content="Applied generative AI and LLM systems course material" name="description"/>
+  <meta content="#173c36" name="theme-color"/>
+  <link href="assets/favicon.svg" rel="icon" type="image/svg+xml"/>
+  <link href="assets/style.css" rel="stylesheet"/>
+  <link href="assets/slides.css" rel="stylesheet"/>
+  <script>
+   window.COURSE_BASE="";
+  </script>
+  <script defer="" src="assets/site-config.js">
+  </script>
+  <script defer="" src="assets/search-index.js">
+  </script>
+  <script defer="" src="assets/app.js">
+  </script>
+  <script defer="" src="assets/visuals.js">
+  </script>
+  <script defer="" src="assets/slides.js">
+  </script>
+  <script defer="" src="assets/beginner-visuals.js">
+  </script>
+  <link href="zh-HK/supplement.html" hreflang="zh-HK" rel="alternate"/>
+  <link href="assets/bilingual.css" rel="stylesheet"/>
+  <link href="assets/reader-v3.css" rel="stylesheet"/>
+  <script defer="True" src="assets/reader-v3.js">
+  </script>
+ </head>
+ <body data-page-kind="guide" data-week="0">
+  <a class="skip-link" href="#main">
+   Skip to content
+  </a>
+  <header class="topbar">
+   <button aria-controls="course-sidebar" aria-expanded="false" class="menu-toggle" type="button">
+    Menu
+   </button>
+   <a class="brand" href="index.html">
+    <span aria-hidden="true" class="brand-mark">
+     a
+     <span>
+      i
+     </span>
+    </span>
+    <span>
+     APPLIED AI
+     <small>
+      Principles into practice
+     </small>
+    </span>
+   </a>
+   <nav aria-label="Main navigation">
+    <a href="index.html">
+     The course
+    </a>
+    <a href="visuals.html">
+     Visual lab
+    </a>
+    <a href="project.html">
+     Project
+    </a>
+    <a class="language-switch" href="zh-HK/supplement.html" hreflang="zh-HK" lang="zh-HK">
+     繁體中文
+    </a>
+   </nav>
+   <button class="search-open" type="button">
+    Search the course
+    <span aria-hidden="true">
+     /
+    </span>
+   </button>
+  </header>
+  <aside aria-label="Course chapters" class="sidebar" id="course-sidebar">
+   <a class="side-home" href="index.html">
+    Course overview
+   </a>
+   <details class="semester-nav" open="">
+    <summary>
+     Semester 1
+     <span>
+      Weeks 1–16
+     </span>
+    </summary>
+    <ol start="1">
+     <li>
+      <a href="lectures/01.html">
+       <span class="week-number">
+        01
+       </span>
+       <span>
+        What a language model is trying to learn
+       </span>
+       <span class="week-tick" data-week-tick="1">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="lectures/02.html">
+       <span class="week-number">
+        02
+       </span>
+       <span>
+        From text to tokens and numerical IDs
+       </span>
+       <span class="week-tick" data-week-tick="2">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="lectures/03.html">
+       <span class="week-number">
+        03
+       </span>
+       <span>
+        What word vectors can represent
+       </span>
+       <span class="week-tick" data-week-tick="3">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="lectures/04.html">
+       <span class="week-number">
+        04
+       </span>
+       <span>
+        From scores to probabilities and learning signals
+       </span>
+       <span class="week-tick" data-week-tick="4">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="lectures/05.html">
+       <span class="week-number">
+        05
+       </span>
+       <span>
+        Why language needs context and order
+       </span>
+       <span class="week-tick" data-week-tick="5">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="lectures/06.html">
+       <span class="week-number">
+        06
+       </span>
+       <span>
+        Attention begins as a weighted mixture
+       </span>
+       <span class="week-tick" data-week-tick="6">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="lectures/07.html">
+       <span class="week-number">
+        07
+       </span>
+       <span>
+        Where queries keys and values come from
+       </span>
+       <span class="week-tick" data-week-tick="7">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="lectures/08.html">
+       <span class="week-number">
+        08
+       </span>
+       <span>
+        Scaling and masking attention correctly
+       </span>
+       <span class="week-tick" data-week-tick="8">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="lectures/09.html">
+       <span class="week-number">
+        09
+       </span>
+       <span>
+        Multiple attention heads and position
+       </span>
+       <span class="week-tick" data-week-tick="9">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="lectures/10.html">
+       <span class="week-number">
+        10
+       </span>
+       <span>
+        The transformer block step by step
+       </span>
+       <span class="week-tick" data-week-tick="10">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="lectures/11.html">
+       <span class="week-number">
+        11
+       </span>
+       <span>
+        Encoders decoders and complete model architectures
+       </span>
+       <span class="week-tick" data-week-tick="11">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="lectures/12.html">
+       <span class="week-number">
+        12
+       </span>
+       <span>
+        Training a small transformer
+       </span>
+       <span class="week-tick" data-week-tick="12">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="lectures/13.html">
+       <span class="week-number">
+        13
+       </span>
+       <span>
+        Generation decoding and the KV cache
+       </span>
+       <span class="week-tick" data-week-tick="13">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="lectures/14.html">
+       <span class="week-number">
+        14
+       </span>
+       <span>
+        From pretraining to instruction following and reasoning
+       </span>
+       <span class="week-tick" data-week-tick="14">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="lectures/15.html">
+       <span class="week-number">
+        15
+       </span>
+       <span>
+        Generative AI beyond text
+       </span>
+       <span class="week-tick" data-week-tick="15">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="lectures/16.html">
+       <span class="week-number">
+        16
+       </span>
+       <span>
+        A complete transformer walkthrough and first semester review
+       </span>
+       <span class="week-tick" data-week-tick="16">
+       </span>
+      </a>
+     </li>
+    </ol>
+   </details>
+   <details class="semester-nav">
+    <summary>
+     Semester 2
+     <span>
+      Weeks 17–32
+     </span>
+    </summary>
+    <ol start="17">
+     <li>
+      <a href="lectures/17.html">
+       <span class="week-number">
+        17
+       </span>
+       <span>
+        From word vectors to semantic search
+       </span>
+       <span class="week-tick" data-week-tick="17">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="lectures/18.html">
+       <span class="week-number">
+        18
+       </span>
+       <span>
+        A vector database from a list of vectors
+       </span>
+       <span class="week-tick" data-week-tick="18">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="lectures/19.html">
+       <span class="week-number">
+        19
+       </span>
+       <span>
+        RAG as an open book question
+       </span>
+       <span class="week-tick" data-week-tick="19">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="lectures/20.html">
+       <span class="week-number">
+        20
+       </span>
+       <span>
+        Improving RAG without losing the basic task
+       </span>
+       <span class="week-tick" data-week-tick="20">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="lectures/21.html">
+       <span class="week-number">
+        21
+       </span>
+       <span>
+        Evaluating retrieval answers and uncertainty
+       </span>
+       <span class="week-tick" data-week-tick="21">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="lectures/22.html">
+       <span class="week-number">
+        22
+       </span>
+       <span>
+        CPU GPU memory and model resource accounting
+       </span>
+       <span class="week-tick" data-week-tick="22">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="lectures/23.html">
+       <span class="week-number">
+        23
+       </span>
+       <span>
+        CUDA kernels and profiling
+       </span>
+       <span class="week-tick" data-week-tick="23">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="lectures/24.html">
+       <span class="week-number">
+        24
+       </span>
+       <span>
+        Fine tuning starts with a teaching dataset
+       </span>
+       <span class="week-tick" data-week-tick="24">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="lectures/25.html">
+       <span class="week-number">
+        25
+       </span>
+       <span>
+        LoRA and QLoRA from a small matrix
+       </span>
+       <span class="week-tick" data-week-tick="25">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="lectures/26.html">
+       <span class="week-number">
+        26
+       </span>
+       <span>
+        Fine tuning experiments preferences and distillation
+       </span>
+       <span class="week-tick" data-week-tick="26">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="lectures/27.html">
+       <span class="week-number">
+        27
+       </span>
+       <span>
+        Tools functions workflows and agents
+       </span>
+       <span class="week-tick" data-week-tick="27">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="lectures/28.html">
+       <span class="week-number">
+        28
+       </span>
+       <span>
+        Harnesses planning memory and bounded execution
+       </span>
+       <span class="week-tick" data-week-tick="28">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="lectures/29.html">
+       <span class="week-number">
+        29
+       </span>
+       <span>
+        From a notebook to MLOps and inference serving
+       </span>
+       <span class="week-tick" data-week-tick="29">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="lectures/30.html">
+       <span class="week-number">
+        30
+       </span>
+       <span>
+        Monitoring security regression tests and rollback
+       </span>
+       <span class="week-tick" data-week-tick="30">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="lectures/31.html">
+       <span class="week-number">
+        31
+       </span>
+       <span>
+        Integrating the documentation assistant and advanced extensions
+       </span>
+       <span class="week-tick" data-week-tick="31">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="lectures/32.html">
+       <span class="week-number">
+        32
+       </span>
+       <span>
+        Review defense and a continuing learning plan
+       </span>
+       <span class="week-tick" data-week-tick="32">
+       </span>
+      </a>
+     </li>
+    </ol>
+   </details>
+   <div class="side-links">
+    <a href="visuals.html">
+     Visual laboratory
+     <span>
+      14 interactive lessons
+     </span>
+    </a>
+    <a href="project.html">
+     Documentation assistant
+     <span>
+      Your capstone project
+     </span>
+    </a>
+    <a href="resources.html">
+     Readings and setup
+    </a>
+   </div>
+   <div class="side-progress">
+    <div>
+     <span>
+      Your progress
+     </span>
+     <strong data-progress-count="">
+      0 / 32
+     </strong>
+    </div>
+    <progress aria-label="Completed lectures" max="32" value="0">
+    </progress>
+    <small>
+     Saved in this browser
+    </small>
+   </div>
+  </aside>
+  <main class="main" id="main">
+   <div class="content">
+    <div class="chapter-header">
+     <div class="eyebrow">
+      Extra mechanisms and examples
+     </div>
+     <h1>
+      The worked supplement
+     </h1>
+    </div>
+    <article class="prose">
+     <p>
+      These examples deepen selected mechanisms without adding required study hours. Use them in place of optional reading or when correcting a test. All numbers are illustrative calculations.
+     </p>
+     <h2 id="byte-pair-encoding-by-hand">
+      Byte pair encoding by hand
+     </h2>
+     <p>
+      Start with a tiny corpus: low, low, lower. Begin from characters and an end-of-word marker: l o w _, l o w _, l o w e r _. Count adjacent pairs across the corpus. The pairs (l,o) and (o,w) each occur three times, while (w,_) occurs twice. Choose a deterministic tie rule, merge (l,o) into lo, then count again. The pair (lo,w) occurs three times, so merge into low. The resulting vocabulary now includes common pieces learned from counts. Real byte-level BPE starts from a byte vocabulary and has additional implementation details.
+     </p>
+     <p>
+      Encoding a new word applies the learned merge rules rather than fitting new rules on that word. A tokenizer trained on one corpus may split unfamiliar identifiers into many pieces. The tokenization used for training and serving must match. Changing the merge vocabulary changes the model's input/output ID interpretation, not merely its chunk lengths.
+     </p>
+     <p>
+      <strong>
+       Exercise:
+      </strong>
+      add lowest twice, repeat three merge steps and explain which count changes. Do not interpret a merge's frequency as semantic importance.
+     </p>
+     <h2 id="softmax-stability-and-cross-entropy">
+      Softmax stability and cross entropy
+     </h2>
+     <p>
+      For logits z, subtract max(z) before exponentiating: exp(z_i−m)/sum_j exp(z_j−m). This leaves probabilities unchanged because the common factor cancels, while reducing overflow risk. For logits (1000,999), direct exponentiation can overflow; shifted logits (0,−1) give approximately (.7311,.2689).
+     </p>
+     <p>
+      Cross entropy for target class two is −log(.2689)≈1.3133 nats. Computing a log-softmax or fused cross-entropy is generally more numerically stable than forming tiny probabilities and taking logs manually. A loss close to zero on train data can still reflect memorization or leakage.
+     </p>
+     <h2 id="residuals-and-normalization">
+      Residuals and normalization
+     </h2>
+     <p>
+      Layer normalization subtracts the per-token feature mean and scales by the square root of feature variance plus epsilon, then applies learned affine parameters. RMS normalization scales by a root-mean-square statistic without subtracting the mean in its basic form. Both are per-token feature operations in this setting; they do not mix future positions. Residual addition requires compatible shapes.
+     </p>
+     <p>
+      In a pre-norm block, normalization occurs before the attention/MLP transformation and the residual stream remains an additive path. In post-norm, the addition is normalized afterward. These are meaningful architectural differences; our teaching implementation chooses one explicitly rather than claiming it is the only transformer design.
+     </p>
+     <h2 id="rotary-position-intuition">
+      Rotary position intuition
+     </h2>
+     <p>
+      For a two-dimensional component pair, a rotation by angle theta maps (x1,x2) to (x1 cos theta−x2 sin theta, x1 sin theta+x2 cos theta). Applying position-dependent rotations to query/key component pairs can make their dot product depend on relative displacement. Different pairs use different frequencies. The construction explains a way of encoding position; it does not prove unlimited long-context extrapolation.
+     </p>
+     <p>
+      <strong>
+       Exercise:
+      </strong>
+      rotate (1,0) by zero and by pi/2 and compute the dot product. Then rotate both vectors by the same angle: the relative dot product is unchanged. Relate this invariance to relative position.
+     </p>
+     <h2 id="query-key-and-value-head-counts">
+      Query, key and value head counts
+     </h2>
+     <p>
+      Standard multi-head attention uses the same number of query and KV heads. Multi-query attention shares one KV head among multiple query heads; grouped-query attention uses an intermediate number. Cache storage scales with KV heads, not merely query heads. A model can therefore have many query heads without storing separate cached keys/values for all of them.
+     </p>
+     <p>
+      Always inspect the actual architecture configuration before using a memory formula. Learned projections, head dimensions and number of layers matter. The 96 MiB week-9 example assumes the stated KV count, batch, precision and context length.
+     </p>
+     <h2 id="kv-cache-correctness">
+      KV-cache correctness
+     </h2>
+     <p>
+      At generation step t, earlier positions' causal key/value states can be reused. Cache identity must include the actual preceding tokens and relevant model configuration. Reusing a cache after changing the system prompt, model weights or token prefix gives the wrong computation. Prefix caching in a server requires correct identity and authorization handling, especially when prompts can contain private content.
+     </p>
+     <p>
+      Caching accelerates repeated computation but does not improve evidence quality. Longer cached context still occupies memory. Batching and eviction policies can change throughput and tail latency.
+     </p>
+     <h2 id="sampling-worked-example">
+      Sampling worked example
+     </h2>
+     <p>
+      Let next-token probabilities be (.50,.30,.15,.05). With top-p=.8 and the convention that includes the token crossing/reaching the threshold, retain the first two tokens, then renormalize to (.625,.375). With top-k=3 retain the first three and renormalize by .95. Implementations may differ on boundary conventions, so inspect the selected library rather than assuming a universal tie rule.
+     </p>
+     <p>
+      Sampling several candidates multiplies generation work. If five candidates each use 100 output tokens, the generation budget is 500 output tokens before judging or verification. Report all of it.
+     </p>
+     <h2 id="chunking-a-technical-page">
+      Chunking a technical page
+     </h2>
+     <p>
+      Suppose a page contains a heading, a paragraph defining timeout_ms, a code block, an exception note and a version-change table. A fixed-length splitter can separate the exception from its rule or cut a code block in half. A structure-aware splitter first respects headings and code/table boundaries, then divides oversized sections with source offsets. Store parent ID, section path, version, offsets and content hash.
+     </p>
+     <p>
+      Overlap is a parameter to evaluate, not a requirement to maximize. Excessive overlap duplicates evidence and index storage. Compare chunk sizes with the embedding tokenizer's input limit and the generator context budget. An evidence recall improvement can disappear if useful text is truncated during embedding.
+     </p>
+     <h2 id="claim-level-citation-audit">
+      Claim-level citation audit
+     </h2>
+     <p>
+      Answer: “Version 2 defaults to 30000 ms and permits unlimited retries [timeout-v2].” The first claim is supported by timeout-v2. The second is unsupported and conflicts with the retry/config evidence. The source ID exists, the JSON could be valid and the first clause could be correct, yet the answer is unsafe to trust as a whole.
+     </p>
+     <p>
+      For a manual audit, split factual clauses, identify supporting passages and label supported, contradicted or not established. Track incomplete answers separately: a fully supported answer can omit a required caveat. For your project, score a reviewed subset at claim level and state the sample size. Do not label every response with a plausible citation “grounded.”
+     </p>
+     <h2 id="calibration-and-selective-prediction">
+      Calibration and selective prediction
+     </h2>
+     <p>
+      A cosine score of .82 is not an 82% correctness probability. To use a threshold, choose it on development examples under a specified corpus/model distribution. Plot or tabulate the tradeoff between answering more questions and making more unsupported answers. Preserve a held-out check of the selected threshold.
+     </p>
+     <p>
+      If 9 of 10 answered questions are correct, selective accuracy is 90%. If the system answered only 10 of 100 relevant tasks, coverage is 10%. Both numbers matter. An abstention policy must also distinguish genuine absence from retrieval failure.
+     </p>
+     <h2 id="quantization-and-resource-estimates">
+      Quantization and resource estimates
+     </h2>
+     <p>
+      An ideal four-bit representation uses .5 bytes per weight, but practical quantized layers also need scales, metadata and compatible kernels. Some tensors stay in higher precision. Activation memory and KV cache need separate accounting. A model that appears to fit by multiplying parameters by .5 can still OOM.
+     </p>
+     <p>
+      Quantization may alter outputs, so compare actual task behavior before deployment. A smaller file is not proof of lower latency on a device lacking an efficient kernel for that representation.
+     </p>
+     <h2 id="tool-result-semantics">
+      Tool result semantics
+     </h2>
+     <p>
+      The call validate_config({timeout_ms:0,retries:3}) can be a valid invocation of the validator while returning valid=false. That is not the same as an invalid tool-call schema containing an unexpected command field. Error taxonomies should distinguish proposal parsing, argument schema, authorization, tool execution, domain-invalid results and final-answer correctness.
+     </p>
+     <p>
+      Likewise, an agent's completed status means its controller accepted a final response. Your task checker must still verify that the requested calculation or validation occurred and that the response matches the result. Controller acceptance and task success are different metrics.
+     </p>
+     <h2 id="a-paper-reading-routine">
+      A paper-reading routine
+     </h2>
+     <p>
+      Spend ten minutes on the problem, task setup and main claim; ten minutes drawing the mechanism and following one equation's shapes; ten minutes checking the evaluation controls and one limitation. Write a prediction you could test on a smaller system. Read the whole paper later if that question requires it. For optional Stanford or Hung-yi Lee materials, use this routine to connect the source to your current lab rather than accumulating unwatched lectures.
+     </p>
+    </article>
+   </div>
+   <footer class="footer">
+    <span>
+     Applied AI · An independent self-study course
+    </span>
+    <span>
+     32 weeks · 10 hours per week
+    </span>
+    <a href="resources.html#about-this-course">
+     About and sources
+    </a>
+   </footer>
+  </main>
+  <dialog aria-labelledby="search-title" class="search-dialog">
+   <div class="dialog-head">
+    <h2 id="search-title">
+     Find a concept
+    </h2>
+    <button aria-label="Close search" class="search-close" type="button">
+     Close
+    </button>
+   </div>
+   <label class="sr-only" for="course-search">
+    Search all lectures and tutorials
+   </label>
+   <input autocomplete="off" id="course-search" placeholder="Try attention, fine-tuning, or harness…" type="search"/>
+   <p aria-live="polite" class="search-status">
+    Search lecture notes, tutorials, tests and readings.
+   </p>
+   <div class="search-results">
+   </div>
+  </dialog>
+  <div aria-live="polite" class="toast" role="status">
+  </div>
+ </body>
+</html>

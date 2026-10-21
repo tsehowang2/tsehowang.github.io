@@ -1,68 +1,1141 @@
 <!DOCTYPE html>
-
-<html lang="zh-HK"><head><script src="../../assets/translations-zh-HK.js"></script><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/><title>正確進行 attention scaling 和 masking · Applied AI</title><meta content="Applied generative AI and LLM systems course material" name="description"/><meta content="#173c36" name="theme-color"/><link href="../../assets/favicon.svg" rel="icon" type="image/svg+xml"/><link href="../../assets/style.css" rel="stylesheet"/><link href="../../assets/slides.css" rel="stylesheet"/><script>window.COURSE_BASE="../";</script><script defer="" src="../../assets/site-config.js"></script><script defer="" src="../assets/search-index.js"></script><script defer="" src="../../assets/app.js"></script><script defer="" src="../../assets/visuals.js"></script><script defer="" src="../../assets/slides.js"></script><script defer="" src="../../assets/beginner-visuals.js"></script><script defer="True" src="../../assets/locale-patterns.js"></script><script defer="True" src="../../assets/locale.js"></script><link href="../../assets/bilingual.css" rel="stylesheet"/><link href="../../lectures/08.html" hreflang="en" rel="alternate"/></head><body data-page-kind="lecture" data-week="8"><a class="skip-link" href="#main">跳至內容</a><header class="topbar"><button aria-controls="course-sidebar" aria-expanded="false" class="menu-toggle" type="button">選單</button><a class="brand" href="../index.html"><span aria-hidden="true" class="brand-mark">a<span>i</span></span><span>APPLIED AI<small>從原理到實踐</small></span></a><nav aria-label="主要導覽"><a href="../index.html">課程</a><a href="../visuals.html">互動圖解</a><a href="../project.html">專題</a><a class="language-switch" href="../../lectures/08.html" hreflang="en" lang="en">English</a></nav><button class="search-open" type="button">搜尋課程 <span aria-hidden="true">/</span></button></header><aside aria-label="課程章節" class="sidebar" id="course-sidebar"><a class="side-home" href="../index.html">課程概覽</a><details class="semester-nav" open=""><summary>第一學期<span>第 1–16 週</span></summary><ol start="1"><li><a href="../lectures/01.html"><span class="week-number">01</span><span>Language model 究竟在學甚麼</span><span class="week-tick" data-week-tick="1"></span></a></li><li><a href="../lectures/02.html"><span class="week-number">02</span><span>從文字到 token 和數值 ID</span><span class="week-tick" data-week-tick="2"></span></a></li><li><a href="../lectures/03.html"><span class="week-number">03</span><span>Word vector 能表達甚麼</span><span class="week-tick" data-week-tick="3"></span></a></li><li><a href="../lectures/04.html"><span class="week-number">04</span><span>從 score 到 probability 和學習訊號</span><span class="week-tick" data-week-tick="4"></span></a></li><li><a href="../lectures/05.html"><span class="week-number">05</span><span>為甚麼語言需要 context 和次序</span><span class="week-tick" data-week-tick="5"></span></a></li><li><a href="../lectures/06.html"><span class="week-number">06</span><span>Attention 由 weighted mixture 開始</span><span class="week-tick" data-week-tick="6"></span></a></li><li><a href="../lectures/07.html"><span class="week-number">07</span><span>Query、key 和 value 從何而來</span><span class="week-tick" data-week-tick="7"></span></a></li><li><a aria-current="page" href="../lectures/08.html"><span class="week-number">08</span><span>正確進行 attention scaling 和 masking</span><span class="week-tick" data-week-tick="8"></span></a></li><li><a href="../lectures/09.html"><span class="week-number">09</span><span>多個 attention head 與位置</span><span class="week-tick" data-week-tick="9"></span></a></li><li><a href="../lectures/10.html"><span class="week-number">10</span><span>逐步拆解 transformer block</span><span class="week-tick" data-week-tick="10"></span></a></li><li><a href="../lectures/11.html"><span class="week-number">11</span><span>Encoder、decoder 與完整 model architecture</span><span class="week-tick" data-week-tick="11"></span></a></li><li><a href="../lectures/12.html"><span class="week-number">12</span><span>訓練一個小型 transformer</span><span class="week-tick" data-week-tick="12"></span></a></li><li><a href="../lectures/13.html"><span class="week-number">13</span><span>Generation、decoding 與 KV cache</span><span class="week-tick" data-week-tick="13"></span></a></li><li><a href="../lectures/14.html"><span class="week-number">14</span><span>從 pretraining 到 instruction following 和 reasoning</span><span class="week-tick" data-week-tick="14"></span></a></li><li><a href="../lectures/15.html"><span class="week-number">15</span><span>文字以外的 Generative AI</span><span class="week-tick" data-week-tick="15"></span></a></li><li><a href="../lectures/16.html"><span class="week-number">16</span><span>完整 transformer 導覽與第一學期溫習</span><span class="week-tick" data-week-tick="16"></span></a></li></ol></details><details class="semester-nav"><summary>第二學期<span>第 17–32 週</span></summary><ol start="17"><li><a href="../lectures/17.html"><span class="week-number">17</span><span>從 word vector 到 semantic search</span><span class="week-tick" data-week-tick="17"></span></a></li><li><a href="../lectures/18.html"><span class="week-number">18</span><span>從一列 vector 建立 vector database</span><span class="week-tick" data-week-tick="18"></span></a></li><li><a href="../lectures/19.html"><span class="week-number">19</span><span>把 RAG 理解為開卷作答</span><span class="week-tick" data-week-tick="19"></span></a></li><li><a href="../lectures/20.html"><span class="week-number">20</span><span>在保持基本任務的前提下改善 RAG</span><span class="week-tick" data-week-tick="20"></span></a></li><li><a href="../lectures/21.html"><span class="week-number">21</span><span>評估 retrieval、答案與 uncertainty</span><span class="week-tick" data-week-tick="21"></span></a></li><li><a href="../lectures/22.html"><span class="week-number">22</span><span>CPU、GPU、memory 與 model 資源計算</span><span class="week-tick" data-week-tick="22"></span></a></li><li><a href="../lectures/23.html"><span class="week-number">23</span><span>CUDA kernel 與 profiling</span><span class="week-tick" data-week-tick="23"></span></a></li><li><a href="../lectures/24.html"><span class="week-number">24</span><span>Fine-tuning 由教學 dataset 開始</span><span class="week-tick" data-week-tick="24"></span></a></li><li><a href="../lectures/25.html"><span class="week-number">25</span><span>從小型 matrix 理解 LoRA 和 QLoRA</span><span class="week-tick" data-week-tick="25"></span></a></li><li><a href="../lectures/26.html"><span class="week-number">26</span><span>Fine-tuning 實驗、preference 與 distillation</span><span class="week-tick" data-week-tick="26"></span></a></li><li><a href="../lectures/27.html"><span class="week-number">27</span><span>Tool、function、workflow 與 agent</span><span class="week-tick" data-week-tick="27"></span></a></li><li><a href="../lectures/28.html"><span class="week-number">28</span><span>Harness、planning、memory 與有界執行</span><span class="week-tick" data-week-tick="28"></span></a></li><li><a href="../lectures/29.html"><span class="week-number">29</span><span>從 notebook 到 MLOps 和 inference serving</span><span class="week-tick" data-week-tick="29"></span></a></li><li><a href="../lectures/30.html"><span class="week-number">30</span><span>Monitoring、security、regression test 與 rollback</span><span class="week-tick" data-week-tick="30"></span></a></li><li><a href="../lectures/31.html"><span class="week-number">31</span><span>整合文件助手與進階延伸</span><span class="week-tick" data-week-tick="31"></span></a></li><li><a href="../lectures/32.html"><span class="week-number">32</span><span>溫習、答辯與持續學習計劃</span><span class="week-tick" data-week-tick="32"></span></a></li></ol></details><div class="side-links"><a href="../visuals.html">互動圖解實驗室 <span>14 個互動課節</span></a><a href="../project.html">文件助手 <span>你的 capstone project</span></a><a href="../resources.html">閱讀材料與環境設定</a></div><div class="side-progress"><div><span>你的進度</span><strong data-progress-count="">0 / 32</strong></div><progress aria-label="已完成 lecture" max="32" value="0"></progress><small>儲存在這個瀏覽器</small></div></aside><main class="main" id="main"><div class="content"><div class="chapter-header"><div class="eyebrow">第一學期 / 第 08 週</div><h1>正確進行 attention scaling 和 masking</h1></div><div class="lesson-links"><a href="../tutorials/08.html">練習 08</a><a href="../tests/08.html">檢查你的理解</a><button aria-pressed="false" class="mark-complete" data-week="8" type="button">標記為已完成</button></div><section aria-label="Lecture slides" class="lecture-deck" id="lecture-slides"><div class="deck-top"><div><div class="eyebrow">課堂投影片 · 第 08 週</div><h2>一步一步學習。</h2></div><button class="deck-present" type="button">簡報模式</button></div><p class="deck-help">閱讀每段解說，停下來預測結果，然後繼續。選取簡報後，可用方向鍵操作。完整講義在下方。</p><div aria-label="簡報：使用左右方向鍵" class="slide-viewport" tabindex="0"><section class="lecture-slide" data-slide=""><div class="slide-stage">由例子開始</div><h3>Prediction 只能使用可用資訊</h3><div class="slide-prose"><p>Training 時，我們有完整句子「I go to school by bus.」。在 by 後面的位置，model 必須只用 prefix 預測 bus，即使 training tensor 右邊已經包含答案。</p>
-<p>Causal mask 防止 query position attend 到未來 position。若 index 從零開始，query i 只可使用 j≤i 的 key。Diagonal 保持可見，因為當前 input token 本來就是用來預測 next token 的 prefix 一部分。</p>
-<p>這是 information-access rule，與是否把某個 position 計入 loss 是兩回事。Padding mask、causal mask 和 loss mask 各有用途。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">由例子開始</div><h3>簡潔的 attention equation</h3><div class="slide-prose"><p>標準 single-head 表達式是 softmax(QKᵀ/√Dk + mask)V。要把它讀成一連串操作：比較 query 與 key、scale score、移除禁止 position、normalize 每個 query row，再混合 value。</p>
-<p>對 T 個 position，Q/K 的 shape 是 [T,Dk]，score 和 weight 是 [T,T]，V 是 [T,Dv]。Output 是 [T,Dv]。</p>
-<p>不要把整個表達式當成不可拆開的符號去背。如果 implementation 出錯，要逐個檢查 intermediate tensor。小型 input 比大型 model 的最終 loss，更容易揭示錯誤。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">建立對機制的理解</div><h3>Scaling 的完整計算例子</h3><div class="slide-prose"><p>取 q=[1,0]，key 為 [1,0] 和 [0,1]，value 為 [2,0] 和 [0,4]。這裏 Dk=2，所以 score 是 [1/√2,0]，約為 [0.7071,0]。</p>
-<p>Softmax 約得到 [0.6698,0.3302]。混合 output 是 [1.3395,1.3210]。兩個 position 都有貢獻。</p>
-<p>現在假設第二個 key 位於未來。在 softmax 前，把它的 score 設為負無限。Weight 變成 [1,0]，output 變成 [2,0]。Masking 不只移除禁止項的貢獻，也會改變 normalization。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">建立對機制的理解</div><h3>為何把 probability 乘零並不一樣</h3><div class="slide-prose"><p>假設先計算未 masking 的 weight [0.6698,0.3302]，然後把第二個 weight 乘零。結果是 [0.6698,0]，總和不是一。Output 變成 [1.3395,0]，與正確 masking 的結果不同。</p>
-<p>你可以重新 normalize 剩下的 probability，但在 softmax 前 mask logit，是直接而標準的實作。重點是理解自己想執行甚麼計算。</p>
-<p>如果某行的所有 key 都被禁止，softmax 就沒有有效 normalization。設計 padding 和 batching 時，應確保每個受評估 query 都有適當的可見 key，或明確處理無效 row。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">建立對機制的理解</div><h3>為何要除以 square root</h3><div class="slide-prose"><p>在簡化假設下，query/key coordinate 互相獨立、zero-mean、unit-variance，它們的 dot product variance 會隨 Dk 增長。很大的 score magnitude 可以令 softmax 極度集中。</p>
-<p>基於這個直覺，除以 √Dk 可以較好控制 scale。這不保證學習得到的 score 永遠服從特定 distribution，只是解釋 scaling term 的動機。</p>
-<p>試用有很多 random coordinate 的 vector，比較 scaling 前後的 score spread。要檢查統計數字，不要直接斷言較尖銳的 attention map 就比較好。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">建立對機制的理解</div><h3>Padding 帶來另一項 visibility 條件</h3><div class="slide-prose"><p>一個 batch 可以包含不同長度的句子。我們可以把較短句子 pad 到共同長度，但 padding position 不應像有意義的 source word 一樣參與。</p>
-<p>允許使用的 key position 必須同時符合 causal rule 和 sequence 的 validity rule。未來 token 即使是真字，仍然被禁止。Padding token 即使位於左邊，也不會因此成為有用 context。</p>
-<p>Loss masking 再決定哪些 target prediction 計入 objective。即使 attention masking 正確，如果拿 padding label 來 training，loss 仍然可以出錯。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">建立對機制的理解</div><h3>用 invariant 找出 future leakage</h3><div class="slide-prose"><p>固定 model parameter，並關掉 dropout 等 randomness。先跑一次 sequence，再只改變最後一個 token。較早的 causal output 應在指定 numerical tolerance 內維持不變。</p>
-<p>這項 property 檢查實際行為，而不是只看 matrix 是否呈三角形。在合適例子中，移除 mask 應令同一 property 失敗。這個失敗證明測試能偵測目標 bug。</p>
-<p>移除 mask 後 training loss 變低，可能只表示答案洩漏，並不代表 autoregressive model 更好。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">建立對機制的理解</div><h3>實例練習與學習檢查</h3><div class="slide-prose"><p>為本例句子畫出六乘六的 causal visibility table。對 index 3 的 query school，列出可見 input token：I、go、to、school。解釋為何 by 和 bus 對該 query 不可用。</p>
-<p>然後在 two-position 例子中，分別計算有 masking 和沒有 masking 時第一個 query 的 output。指出 normalization axis，並確認每個有效 row 的 weight 總和為一。</p>
-<p>當你能獨立追蹤 Q、K、V、scaling、masking、softmax 和 value mixing，就準備好把 attention 放進更大的結構。下週會加入多個 head 和明確的 position information。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">選讀：深入學習</div><h3>完成引導例子後，再深入一層</h3><div class="slide-prose"><p>以下內容適合第二次閱讀。先解釋上面的日常例子，再用以下 equation 和實作細節，把解釋說得更精確。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">選讀：深入學習</div><h3>深入閱讀 4：直覺</h3><div class="slide-prose"><p>讀「set timeout_ms before calling send」時，「send」的 representation 應包含有用的較早資訊。Attention 讓每個 position 對可用 token representation 作 weighted combination。Weight 取決於內容和 learned projection，而不是固定 window 的 average。</p>
-<p>對一個 batch element，其中 <code>X</code> 的 shape 為 <code>[T,d_model]</code>，計算 <code>Q=XWq</code>, <code>K=XWk</code>，以及 <code>V=XWv</code>。如果 head dimension 是 <code>d_head</code>，Q 和 K 的 shape 為 <code>[T,d_head]</code>。Score <code>QK^T/sqrt(d_head)</code> 的 shape 為 <code>[T,T]</code>。套用 mask，對每個 query row 沿 key 取 softmax，再乘 V。Output shape 是 <code>[T,d_head]</code>.</p>
-<p>為何除以 square root？在簡化的 independent unit-variance 假設下，dot product 的 variance 隨以下維度增長： <code>d_head</code>。Scaling 有助防止 logit 過大，令 softmax 飽和。這個假設是 normalization 的直覺，不是適用於所有 learned layer 的定理。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">選讀：深入學習</div><h3>深入閱讀 4：Masking 是正確性的一部分</h3><div class="slide-prose"><p>Causal mask 禁止 position i attend 到 j 大於 i 的 position。在 softmax 前，對禁止的 logit 加上負無限；事後只把 probability 乘零而不重新 normalize，並不是相同操作。Padding mask 是另一回事：padded token 不應成為有用證據。要測試兩種維度，並確保每個 query 至少有一個有效 key，以免出現全被 mask 的 softmax row。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">選讀：深入學習</div><h3>深入閱讀 4：計算例子</h3><div class="slide-prose"><p>取 query <code>(1,0)</code>，key 為 <code>(1,0)</code> 及 <code>(0,1)</code>，value 為 <code>(2,0)</code> 及 <code>(0,4)</code>。Scaled logit 約為 <code>(0.7071,0)</code>。Softmax 得到 <code>(0.6698,0.3302)</code>，所以混合結果約為 <code>(1.3395,1.3208)</code>。如果第二個 key 是未來 context，causal masking 會把結果改成 <code>(2,0)</code>。在 notebook 08 驗證這些數字。</p>
-<p>多個 head 會學習不同 projection，把各自 output concatenate 後，再 project 回 residual stream。一個 head 不一定對應簡單的人類概念。單靠 attention weight，不能完整解釋 model 為何如此回答：value、residual connection 和後續 layer 都有影響。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">選讀：深入學習</div><h3>深入閱讀 4：實驗</h3><div class="slide-prose"><p>不用 attention library，自己實作 attention。只改最後一個 input token，並 assert 在 causal mask 下較早 output 不變。然後移除 mask，觀察 invariance 失敗。即使 training loss 看起來很好，這個測試仍能找出 leakage。估算 T 增加時 score-matrix 所需儲存量：在開始 optimization 之前，就要留意 T 的 quadratic 增長。</p>
-<p><strong>完成標準：</strong> 推導每個 tensor shape、重現計算例子，並解釋 mask bug 為何造成誤導的 language-model performance。 <strong>閱讀材料：</strong> R04 的 attention equation 與圖解。 <strong>Tutorial：</strong> 08. <strong>評核：</strong> Checkpoint A 與每週測驗。</p></div></section></div><div class="deck-controls"><button class="slide-prev" type="button">← 上一頁</button><span aria-live="polite" class="slide-counter">1 / 13</span><button class="slide-next" type="button">下一頁 →</button></div><label class="slide-jump-label">前往 slide <select aria-label="跳至 slide" class="slide-jump"><option value="0">1</option><option value="1">2</option><option value="2">3</option><option value="3">4</option><option value="4">5</option><option value="5">6</option><option value="6">7</option><option value="7">8</option><option value="8">9</option><option value="9">10</option><option value="10">11</option><option value="11">12</option><option value="12">13</option></select></label><button aria-pressed="false" class="deck-all" type="button">顯示全部 slides</button><a class="reader-link" href="#full-notes">閱讀完整講義 ↓</a></section><section aria-label="深入 scaled causal attention" class="visual-lesson"><div class="eyebrow">探索機制</div><h2>深入 scaled causal attention</h2><p class="visual-intro">選擇 query，查看 scoring、scaling、causal mask 及 value mixing。</p><div data-widget="attention"><p>啟用 JavaScript 以使用此圖解。下方 lecture notes 會解釋同一機制。</p></div></section><article class="prose full-notes" id="full-notes"><div class="eyebrow">完整講義</div><h2>閱讀完整解說</h2><h3 id="a-prediction-must-use-only-available-information">Prediction 只能使用可用資訊</h3>
-<p>Training 時，我們有完整句子「I go to school by bus.」。在 by 後面的位置，model 必須只用 prefix 預測 bus，即使 training tensor 右邊已經包含答案。</p>
-<p>Causal mask 防止 query position attend 到未來 position。若 index 從零開始，query i 只可使用 j≤i 的 key。Diagonal 保持可見，因為當前 input token 本來就是用來預測 next token 的 prefix 一部分。</p>
-<p>這是 information-access rule，與是否把某個 position 計入 loss 是兩回事。Padding mask、causal mask 和 loss mask 各有用途。</p>
-<h3 id="the-compact-attention-equation">簡潔的 attention equation</h3>
-<p>標準 single-head 表達式是 softmax(QKᵀ/√Dk + mask)V。要把它讀成一連串操作：比較 query 與 key、scale score、移除禁止 position、normalize 每個 query row，再混合 value。</p>
-<p>對 T 個 position，Q/K 的 shape 是 [T,Dk]，score 和 weight 是 [T,T]，V 是 [T,Dv]。Output 是 [T,Dv]。</p>
-<p>不要把整個表達式當成不可拆開的符號去背。如果 implementation 出錯，要逐個檢查 intermediate tensor。小型 input 比大型 model 的最終 loss，更容易揭示錯誤。</p>
-<h3 id="a-worked-scaled-example">Scaling 的完整計算例子</h3>
-<p>取 q=[1,0]，key 為 [1,0] 和 [0,1]，value 為 [2,0] 和 [0,4]。這裏 Dk=2，所以 score 是 [1/√2,0]，約為 [0.7071,0]。</p>
-<p>Softmax 約得到 [0.6698,0.3302]。混合 output 是 [1.3395,1.3210]。兩個 position 都有貢獻。</p>
-<p>現在假設第二個 key 位於未來。在 softmax 前，把它的 score 設為負無限。Weight 變成 [1,0]，output 變成 [2,0]。Masking 不只移除禁止項的貢獻，也會改變 normalization。</p>
-<h3 id="why-multiplying-probabilities-by-zero-is-different">為何把 probability 乘零並不一樣</h3>
-<p>假設先計算未 masking 的 weight [0.6698,0.3302]，然後把第二個 weight 乘零。結果是 [0.6698,0]，總和不是一。Output 變成 [1.3395,0]，與正確 masking 的結果不同。</p>
-<p>你可以重新 normalize 剩下的 probability，但在 softmax 前 mask logit，是直接而標準的實作。重點是理解自己想執行甚麼計算。</p>
-<p>如果某行的所有 key 都被禁止，softmax 就沒有有效 normalization。設計 padding 和 batching 時，應確保每個受評估 query 都有適當的可見 key，或明確處理無效 row。</p>
-<h3 id="why-divide-by-the-square-root">為何要除以 square root</h3>
-<p>在簡化假設下，query/key coordinate 互相獨立、zero-mean、unit-variance，它們的 dot product variance 會隨 Dk 增長。很大的 score magnitude 可以令 softmax 極度集中。</p>
-<p>基於這個直覺，除以 √Dk 可以較好控制 scale。這不保證學習得到的 score 永遠服從特定 distribution，只是解釋 scaling term 的動機。</p>
-<p>試用有很多 random coordinate 的 vector，比較 scaling 前後的 score spread。要檢查統計數字，不要直接斷言較尖銳的 attention map 就比較好。</p>
-<h3 id="padding-introduces-another-visibility-condition">Padding 帶來另一項 visibility 條件</h3>
-<p>一個 batch 可以包含不同長度的句子。我們可以把較短句子 pad 到共同長度，但 padding position 不應像有意義的 source word 一樣參與。</p>
-<p>允許使用的 key position 必須同時符合 causal rule 和 sequence 的 validity rule。未來 token 即使是真字，仍然被禁止。Padding token 即使位於左邊，也不會因此成為有用 context。</p>
-<p>Loss masking 再決定哪些 target prediction 計入 objective。即使 attention masking 正確，如果拿 padding label 來 training，loss 仍然可以出錯。</p>
-<h3 id="an-invariant-catches-future-leakage">用 invariant 找出 future leakage</h3>
-<p>固定 model parameter，並關掉 dropout 等 randomness。先跑一次 sequence，再只改變最後一個 token。較早的 causal output 應在指定 numerical tolerance 內維持不變。</p>
-<p>這項 property 檢查實際行為，而不是只看 matrix 是否呈三角形。在合適例子中，移除 mask 應令同一 property 失敗。這個失敗證明測試能偵測目標 bug。</p>
-<p>移除 mask 後 training loss 變低，可能只表示答案洩漏，並不代表 autoregressive model 更好。</p>
-<h3 id="worked-practice-and-a-readiness-check">實例練習與學習檢查</h3>
-<p>為本例句子畫出六乘六的 causal visibility table。對 index 3 的 query school，列出可見 input token：I、go、to、school。解釋為何 by 和 bus 對該 query 不可用。</p>
-<p>然後在 two-position 例子中，分別計算有 masking 和沒有 masking 時第一個 query 的 output。指出 normalization axis，並確認每個有效 row 的 weight 總和為一。</p>
-<p>當你能獨立追蹤 Q、K、V、scaling、masking、softmax 和 value mixing，就準備好把 attention 放進更大的結構。下週會加入多個 head 和明確的 position information。</p>
-<h3 id="a-deeper-pass-after-the-worked-introduction">完成引導例子後，再深入一層</h3>
-<p>以下內容適合第二次閱讀。先解釋上面的日常例子，再用以下 equation 和實作細節，把解釋說得更精確。</p>
-<h3 id="further-study-4-intuition">深入閱讀 4：直覺</h3>
-<p>讀「set timeout_ms before calling send」時，「send」的 representation 應包含有用的較早資訊。Attention 讓每個 position 對可用 token representation 作 weighted combination。Weight 取決於內容和 learned projection，而不是固定 window 的 average。</p>
-<p>對一個 batch element，其中 <code>X</code> 的 shape 為 <code>[T,d_model]</code>，計算 <code>Q=XWq</code>, <code>K=XWk</code>，以及 <code>V=XWv</code>。如果 head dimension 是 <code>d_head</code>，Q 和 K 的 shape 為 <code>[T,d_head]</code>。Score <code>QK^T/sqrt(d_head)</code> 的 shape 為 <code>[T,T]</code>。套用 mask，對每個 query row 沿 key 取 softmax，再乘 V。Output shape 是 <code>[T,d_head]</code>.</p>
-<p>為何除以 square root？在簡化的 independent unit-variance 假設下，dot product 的 variance 隨以下維度增長： <code>d_head</code>。Scaling 有助防止 logit 過大，令 softmax 飽和。這個假設是 normalization 的直覺，不是適用於所有 learned layer 的定理。</p>
-<h3 id="further-study-4-masking-is-part-of-correctness">深入閱讀 4：Masking 是正確性的一部分</h3>
-<p>Causal mask 禁止 position i attend 到 j 大於 i 的 position。在 softmax 前，對禁止的 logit 加上負無限；事後只把 probability 乘零而不重新 normalize，並不是相同操作。Padding mask 是另一回事：padded token 不應成為有用證據。要測試兩種維度，並確保每個 query 至少有一個有效 key，以免出現全被 mask 的 softmax row。</p>
-<h3 id="further-study-4-worked-example">深入閱讀 4：計算例子</h3>
-<p>取 query <code>(1,0)</code>，key 為 <code>(1,0)</code> 及 <code>(0,1)</code>，value 為 <code>(2,0)</code> 及 <code>(0,4)</code>。Scaled logit 約為 <code>(0.7071,0)</code>。Softmax 得到 <code>(0.6698,0.3302)</code>，所以混合結果約為 <code>(1.3395,1.3208)</code>。如果第二個 key 是未來 context，causal masking 會把結果改成 <code>(2,0)</code>。在 notebook 08 驗證這些數字。</p>
-<p>多個 head 會學習不同 projection，把各自 output concatenate 後，再 project 回 residual stream。一個 head 不一定對應簡單的人類概念。單靠 attention weight，不能完整解釋 model 為何如此回答：value、residual connection 和後續 layer 都有影響。</p>
-<h3 id="further-study-4-experiment">深入閱讀 4：實驗</h3>
-<p>不用 attention library，自己實作 attention。只改最後一個 input token，並 assert 在 causal mask 下較早 output 不變。然後移除 mask，觀察 invariance 失敗。即使 training loss 看起來很好，這個測試仍能找出 leakage。估算 T 增加時 score-matrix 所需儲存量：在開始 optimization 之前，就要留意 T 的 quadratic 增長。</p>
-<p><strong>完成標準：</strong> 推導每個 tensor shape、重現計算例子，並解釋 mask bug 為何造成誤導的 language-model performance。 <strong>閱讀材料：</strong> R04 的 attention equation 與圖解。 <strong>Tutorial：</strong> 08. <strong>評核：</strong> Checkpoint A 與每週測驗。</p></article><nav aria-label="前後 lecture" class="chapter-pagination"><a href="07.html"><small>上一週</small>Query、key 和 value 從何而來</a><a href="09.html"><small>下一週</small>多個 attention head 與位置</a></nav></div><footer class="footer"><span>Applied AI · 獨立自學課程</span><span>32 週 · 每週 10 小時</span><a href="../resources.html#about-this-course">關於課程及資料來源</a></footer></main><dialog aria-labelledby="search-title" class="search-dialog"><div class="dialog-head"><h2 id="search-title">尋找概念</h2><button aria-label="關閉搜尋" class="search-close" type="button">關閉</button></div><label class="sr-only" for="course-search">搜尋所有 lecture 和 tutorial</label><input autocomplete="off" id="course-search" placeholder="試試 attention、fine-tuning 或 harness……" type="search"/><p aria-live="polite" class="search-status">搜尋 lecture notes、tutorial、測驗及閱讀材料。</p><div class="search-results"></div></dialog><div aria-live="polite" class="toast" role="status"></div></body></html>
+<html lang="zh-HK">
+ <head>
+  <script src="../../assets/translations-zh-HK.js">
+  </script>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width,initial-scale=1" name="viewport"/>
+  <title>
+   正確進行 attention scaling 和 masking · Applied AI
+  </title>
+  <meta content="Applied generative AI and LLM systems course material" name="description"/>
+  <meta content="#173c36" name="theme-color"/>
+  <link href="../../assets/favicon.svg" rel="icon" type="image/svg+xml"/>
+  <link href="../../assets/style.css" rel="stylesheet"/>
+  <link href="../../assets/slides.css" rel="stylesheet"/>
+  <script>
+   window.COURSE_BASE="../";
+  </script>
+  <script defer="" src="../../assets/site-config.js">
+  </script>
+  <script defer="" src="../assets/search-index.js">
+  </script>
+  <script defer="" src="../../assets/app.js">
+  </script>
+  <script defer="" src="../../assets/visuals.js">
+  </script>
+  <script defer="" src="../../assets/slides.js">
+  </script>
+  <script defer="" src="../../assets/beginner-visuals.js">
+  </script>
+  <script defer="True" src="../../assets/locale-patterns.js">
+  </script>
+  <script defer="True" src="../../assets/locale.js">
+  </script>
+  <link href="../../assets/bilingual.css" rel="stylesheet"/>
+  <link href="../../lectures/08.html" hreflang="en" rel="alternate"/>
+  <link href="../../assets/reader-v3.css" rel="stylesheet"/>
+  <script defer="True" src="../../assets/reader-v3.js">
+  </script>
+ </head>
+ <body data-page-kind="lecture" data-week="8">
+  <a class="skip-link" href="#main">
+   跳至內容
+  </a>
+  <header class="topbar">
+   <button aria-controls="course-sidebar" aria-expanded="false" class="menu-toggle" type="button">
+    選單
+   </button>
+   <a class="brand" href="../index.html">
+    <span aria-hidden="true" class="brand-mark">
+     a
+     <span>
+      i
+     </span>
+    </span>
+    <span>
+     APPLIED AI
+     <small>
+      從原理到實踐
+     </small>
+    </span>
+   </a>
+   <nav aria-label="主要導覽">
+    <a href="../index.html">
+     課程
+    </a>
+    <a href="../visuals.html">
+     互動圖解
+    </a>
+    <a href="../project.html">
+     專題
+    </a>
+    <a class="language-switch" href="../../lectures/08.html" hreflang="en" lang="en">
+     English
+    </a>
+   </nav>
+   <button class="search-open" type="button">
+    搜尋課程
+    <span aria-hidden="true">
+     /
+    </span>
+   </button>
+  </header>
+  <aside aria-label="課程章節" class="sidebar" id="course-sidebar">
+   <a class="side-home" href="../index.html">
+    課程概覽
+   </a>
+   <details class="semester-nav" open="">
+    <summary>
+     第一學期
+     <span>
+      第 1–16 週
+     </span>
+    </summary>
+    <ol start="1">
+     <li>
+      <a href="../lectures/01.html">
+       <span class="week-number">
+        01
+       </span>
+       <span>
+        Language model 究竟在學甚麼
+       </span>
+       <span class="week-tick" data-week-tick="1">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/02.html">
+       <span class="week-number">
+        02
+       </span>
+       <span>
+        從文字到 token 和數值 ID
+       </span>
+       <span class="week-tick" data-week-tick="2">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/03.html">
+       <span class="week-number">
+        03
+       </span>
+       <span>
+        Word vector 能表達甚麼
+       </span>
+       <span class="week-tick" data-week-tick="3">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/04.html">
+       <span class="week-number">
+        04
+       </span>
+       <span>
+        從 score 到 probability 和學習訊號
+       </span>
+       <span class="week-tick" data-week-tick="4">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/05.html">
+       <span class="week-number">
+        05
+       </span>
+       <span>
+        為甚麼語言需要 context 和次序
+       </span>
+       <span class="week-tick" data-week-tick="5">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/06.html">
+       <span class="week-number">
+        06
+       </span>
+       <span>
+        Attention 由 weighted mixture 開始
+       </span>
+       <span class="week-tick" data-week-tick="6">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/07.html">
+       <span class="week-number">
+        07
+       </span>
+       <span>
+        Query、key 和 value 從何而來
+       </span>
+       <span class="week-tick" data-week-tick="7">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a aria-current="page" href="../lectures/08.html">
+       <span class="week-number">
+        08
+       </span>
+       <span>
+        正確進行 attention scaling 和 masking
+       </span>
+       <span class="week-tick" data-week-tick="8">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/09.html">
+       <span class="week-number">
+        09
+       </span>
+       <span>
+        多個 attention head 與位置
+       </span>
+       <span class="week-tick" data-week-tick="9">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/10.html">
+       <span class="week-number">
+        10
+       </span>
+       <span>
+        逐步拆解 transformer block
+       </span>
+       <span class="week-tick" data-week-tick="10">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/11.html">
+       <span class="week-number">
+        11
+       </span>
+       <span>
+        Encoder、decoder 與完整 model architecture
+       </span>
+       <span class="week-tick" data-week-tick="11">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/12.html">
+       <span class="week-number">
+        12
+       </span>
+       <span>
+        訓練一個小型 transformer
+       </span>
+       <span class="week-tick" data-week-tick="12">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/13.html">
+       <span class="week-number">
+        13
+       </span>
+       <span>
+        Generation、decoding 與 KV cache
+       </span>
+       <span class="week-tick" data-week-tick="13">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/14.html">
+       <span class="week-number">
+        14
+       </span>
+       <span>
+        從 pretraining 到 instruction following 和 reasoning
+       </span>
+       <span class="week-tick" data-week-tick="14">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/15.html">
+       <span class="week-number">
+        15
+       </span>
+       <span>
+        文字以外的 Generative AI
+       </span>
+       <span class="week-tick" data-week-tick="15">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/16.html">
+       <span class="week-number">
+        16
+       </span>
+       <span>
+        完整 transformer 導覽與第一學期溫習
+       </span>
+       <span class="week-tick" data-week-tick="16">
+       </span>
+      </a>
+     </li>
+    </ol>
+   </details>
+   <details class="semester-nav">
+    <summary>
+     第二學期
+     <span>
+      第 17–32 週
+     </span>
+    </summary>
+    <ol start="17">
+     <li>
+      <a href="../lectures/17.html">
+       <span class="week-number">
+        17
+       </span>
+       <span>
+        從 word vector 到 semantic search
+       </span>
+       <span class="week-tick" data-week-tick="17">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/18.html">
+       <span class="week-number">
+        18
+       </span>
+       <span>
+        從一列 vector 建立 vector database
+       </span>
+       <span class="week-tick" data-week-tick="18">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/19.html">
+       <span class="week-number">
+        19
+       </span>
+       <span>
+        把 RAG 理解為開卷作答
+       </span>
+       <span class="week-tick" data-week-tick="19">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/20.html">
+       <span class="week-number">
+        20
+       </span>
+       <span>
+        在保持基本任務的前提下改善 RAG
+       </span>
+       <span class="week-tick" data-week-tick="20">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/21.html">
+       <span class="week-number">
+        21
+       </span>
+       <span>
+        評估 retrieval、答案與 uncertainty
+       </span>
+       <span class="week-tick" data-week-tick="21">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/22.html">
+       <span class="week-number">
+        22
+       </span>
+       <span>
+        CPU、GPU、memory 與 model 資源計算
+       </span>
+       <span class="week-tick" data-week-tick="22">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/23.html">
+       <span class="week-number">
+        23
+       </span>
+       <span>
+        CUDA kernel 與 profiling
+       </span>
+       <span class="week-tick" data-week-tick="23">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/24.html">
+       <span class="week-number">
+        24
+       </span>
+       <span>
+        Fine-tuning 由教學 dataset 開始
+       </span>
+       <span class="week-tick" data-week-tick="24">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/25.html">
+       <span class="week-number">
+        25
+       </span>
+       <span>
+        從小型 matrix 理解 LoRA 和 QLoRA
+       </span>
+       <span class="week-tick" data-week-tick="25">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/26.html">
+       <span class="week-number">
+        26
+       </span>
+       <span>
+        Fine-tuning 實驗、preference 與 distillation
+       </span>
+       <span class="week-tick" data-week-tick="26">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/27.html">
+       <span class="week-number">
+        27
+       </span>
+       <span>
+        Tool、function、workflow 與 agent
+       </span>
+       <span class="week-tick" data-week-tick="27">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/28.html">
+       <span class="week-number">
+        28
+       </span>
+       <span>
+        Harness、planning、memory 與有界執行
+       </span>
+       <span class="week-tick" data-week-tick="28">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/29.html">
+       <span class="week-number">
+        29
+       </span>
+       <span>
+        從 notebook 到 MLOps 和 inference serving
+       </span>
+       <span class="week-tick" data-week-tick="29">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/30.html">
+       <span class="week-number">
+        30
+       </span>
+       <span>
+        Monitoring、security、regression test 與 rollback
+       </span>
+       <span class="week-tick" data-week-tick="30">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/31.html">
+       <span class="week-number">
+        31
+       </span>
+       <span>
+        整合文件助手與進階延伸
+       </span>
+       <span class="week-tick" data-week-tick="31">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/32.html">
+       <span class="week-number">
+        32
+       </span>
+       <span>
+        溫習、答辯與持續學習計劃
+       </span>
+       <span class="week-tick" data-week-tick="32">
+       </span>
+      </a>
+     </li>
+    </ol>
+   </details>
+   <div class="side-links">
+    <a href="../visuals.html">
+     互動圖解實驗室
+     <span>
+      14 個互動課節
+     </span>
+    </a>
+    <a href="../project.html">
+     文件助手
+     <span>
+      你的 capstone project
+     </span>
+    </a>
+    <a href="../resources.html">
+     閱讀材料與環境設定
+    </a>
+   </div>
+   <div class="side-progress">
+    <div>
+     <span>
+      你的進度
+     </span>
+     <strong data-progress-count="">
+      0 / 32
+     </strong>
+    </div>
+    <progress aria-label="已完成 lecture" max="32" value="0">
+    </progress>
+    <small>
+     儲存在這個瀏覽器
+    </small>
+   </div>
+  </aside>
+  <main class="main" id="main">
+   <div class="content">
+    <div class="chapter-header">
+     <div class="eyebrow">
+      第一學期 / 第 08 週
+     </div>
+     <h1>
+      正確進行 attention scaling 和 masking
+     </h1>
+    </div>
+    <div class="lesson-links">
+     <a href="../tutorials/08.html">
+      練習 08
+     </a>
+     <a href="../tests/08.html">
+      檢查你的理解
+     </a>
+     <button aria-pressed="false" class="mark-complete" data-week="8" type="button">
+      標記為已完成
+     </button>
+    </div>
+    <div aria-label="課堂檢視" class="lesson-mode" role="tablist">
+     <button aria-controls="full-notes" aria-selected="true" data-mode="read" id="mode-read" role="tab" type="button">
+      閱讀講義
+     </button>
+     <button aria-controls="lecture-slides" aria-selected="false" data-mode="slides" id="mode-slides" role="tab" type="button">
+      課堂 slides
+     </button>
+    </div>
+    <section aria-label="Lecture slides" class="lecture-deck" hidden="" id="lecture-slides" role="tabpanel">
+     <div class="deck-top">
+      <div>
+       <div class="eyebrow">
+        課堂投影片 · 第 08 週
+       </div>
+       <h2>
+        重點步驟與圖解
+       </h2>
+      </div>
+      <button class="deck-present" type="button">
+       簡報模式
+      </button>
+     </div>
+     <p class="deck-help">
+      用 slides 溫習機制；按「閱讀完整解說」可開啟完整講義及程式碼。
+     </p>
+     <div aria-label="簡報：使用左右方向鍵" class="slide-viewport" tabindex="0">
+      <section class="lecture-slide" data-slide="">
+       <div class="slide-stage">
+        第 08 週 · 課節 1
+       </div>
+       <h3>
+        Prediction 只能使用可用資訊
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Training 時，我們有完整句子「I go to school by bus.」。
+         </li>
+         <li>
+          Causal mask 防止 query position attend 到未來 position。
+         </li>
+         <li>
+          這是 information-access rule，與是否把某個 position 計入 loss 是兩回事。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#a-prediction-must-use-only-available-information">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 08 週 · 課節 2
+       </div>
+       <h3>
+        簡潔的 attention equation
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          標準 single-head 表達式是 softmax(QKᵀ/√d_head + mask)V。
+         </li>
+         <li>
+          對 T 個 position，Q/K 的 shape 是 [T,d_head]，score 和 weight 是 [T,T]，V 是 [T,d_value]。
+         </li>
+         <li>
+          不要把整個表達式當成不可拆開的符號去背。如果 implementation 出錯，要逐個檢查 intermediate tensor。小型 input 比大型 model 的最終 loss，更容易揭示錯誤。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#the-compact-attention-equation">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 08 週 · 課節 3
+       </div>
+       <h3>
+        Scaling 的完整計算例子
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          取 q=[1,0]，key 為 [1,0] 和 [0,1]，value 為 [2,0] 和 [0,4]。
+         </li>
+         <li>
+          Softmax 約得到 [0.6698,0.3302]。
+         </li>
+         <li>
+          現在假設第二個 key 位於未來。在 softmax 前，把它的 score 設為負無限。Weight 變成 [1,0]，output 變成 [2,0]。Masking 不只移除禁止項的貢獻，也會改變 normalization。
+         </li>
+        </ul>
+        <figure class="mechanism-figure">
+         <figcaption>
+          一個 attention row 的執行次序
+         </figcaption>
+         <ol class="mechanism-flow">
+          <li>
+           <span class="mechanism-number">
+            01
+           </span>
+           <strong>
+            Compare
+           </strong>
+           <small>
+            QKᵀ / √d_head
+           </small>
+          </li>
+          <li>
+           <span class="mechanism-number">
+            02
+           </span>
+           <strong>
+            Restrict
+           </strong>
+           <small>
+            apply mask
+           </small>
+          </li>
+          <li>
+           <span class="mechanism-number">
+            03
+           </span>
+           <strong>
+            Normalize
+           </strong>
+           <small>
+            softmax over keys
+           </small>
+          </li>
+          <li>
+           <span class="mechanism-number">
+            04
+           </span>
+           <strong>
+            Mix
+           </strong>
+           <small>
+            weights × V
+           </small>
+          </li>
+         </ol>
+         <p>
+          在 softmax 前 mask scores。不可見的未來 key，其 weight 為零。
+         </p>
+        </figure>
+        <a class="slide-section-link" href="#a-worked-scaled-example">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 08 週 · 課節 4
+       </div>
+       <h3>
+        為何把 probability 乘零並不一樣
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          假設先計算未 masking 的 weight [0.6698,0.3302]，然後把第二個 weight 乘零。
+         </li>
+         <li>
+          你可以重新 normalize 剩下的 probability，但在 softmax 前 mask logit，是直接而標準的實作。
+         </li>
+         <li>
+          如果某行的所有 key 都被禁止，softmax 就沒有有效 normalization。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#why-multiplying-probabilities-by-zero-is-different">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 08 週 · 課節 5
+       </div>
+       <h3>
+        為何要除以 square root
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          在簡化假設下，query/key coordinate 互相獨立、zero-mean、unit-variance，它們的 dot product variance 會隨 d_head 增長。
+         </li>
+         <li>
+          基於這個直覺，除以 √d_head 可以較好控制 scale。
+         </li>
+         <li>
+          試用有很多 random coordinate 的 vector，比較 scaling 前後的 score spread。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#why-divide-by-the-square-root">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 08 週 · 課節 6
+       </div>
+       <h3>
+        Padding 帶來另一項 visibility 條件
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          一個 batch 可以包含不同長度的句子。我們可以把較短句子 pad 到共同長度，但 padding position 不應像有意義的 source word 一樣參與。
+         </li>
+         <li>
+          允許使用的 key position 必須同時符合 causal rule 和 sequence 的 validity rule。
+         </li>
+         <li>
+          Loss masking 再決定哪些 target prediction 計入 objective。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#padding-introduces-another-visibility-condition">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 08 週 · 課節 7
+       </div>
+       <h3>
+        用 invariant 找出 future leakage
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          固定 model parameter，並關掉 dropout 等 randomness。
+         </li>
+         <li>
+          這項 property 檢查實際行為，而不是只看 matrix 是否呈三角形。
+         </li>
+         <li>
+          移除 mask 後 training loss 降低，可能是 answer leakage。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#an-invariant-catches-future-leakage">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 08 週 · 課節 8
+       </div>
+       <h3>
+        實例練習與學習檢查
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          為本例句子畫出六乘六的 causal visibility table。
+         </li>
+         <li>
+          然後在 two-position 例子中，分別計算有 masking 和沒有 masking 時第一個 query 的 output。
+         </li>
+         <li>
+          當你能獨立追蹤 Q、K、V、scaling、masking、softmax 和 value mixing，就準備好把 attention 放進更大的結構。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#worked-practice-and-a-readiness-check">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+     </div>
+     <div class="deck-controls">
+      <button class="slide-prev" type="button">
+       ← 上一頁
+      </button>
+      <span aria-live="polite" class="slide-counter">
+       1 / 8
+      </span>
+      <button class="slide-next" type="button">
+       下一頁 →
+      </button>
+     </div>
+     <label class="slide-jump-label">
+      前往 slide
+      <select aria-label="跳至 slide" class="slide-jump">
+       <option value="0">
+        1. Prediction 只能使用可用資訊
+       </option>
+       <option value="1">
+        2. 簡潔的 attention equation
+       </option>
+       <option value="2">
+        3. Scaling 的完整計算例子
+       </option>
+       <option value="3">
+        4. 為何把 probability 乘零並不一樣
+       </option>
+       <option value="4">
+        5. 為何要除以 square root
+       </option>
+       <option value="5">
+        6. Padding 帶來另一項 visibility 條件
+       </option>
+       <option value="6">
+        7. 用 invariant 找出 future leakage
+       </option>
+       <option value="7">
+        8. 實例練習與學習檢查
+       </option>
+      </select>
+     </label>
+     <button aria-pressed="false" class="deck-all" type="button">
+      顯示全部 slides
+     </button>
+    </section>
+    <section aria-label="深入 scaled causal attention" class="visual-lesson">
+     <div class="eyebrow">
+      探索機制
+     </div>
+     <h2>
+      深入 scaled causal attention
+     </h2>
+     <p class="visual-intro">
+      選擇 query，查看 scoring、scaling、causal mask 及 value mixing。
+     </p>
+     <div data-widget="attention">
+      <p>
+       啟用 JavaScript 以使用此圖解。下方 lecture notes 會解釋同一機制。
+      </p>
+     </div>
+    </section>
+    <nav aria-label="本課內容" class="reader-toc">
+     <strong>
+      本課內容
+     </strong>
+     <ol>
+      <li>
+       <a href="#a-prediction-must-use-only-available-information">
+        Prediction 只能使用可用資訊
+       </a>
+      </li>
+      <li>
+       <a href="#the-compact-attention-equation">
+        簡潔的 attention equation
+       </a>
+      </li>
+      <li>
+       <a href="#a-worked-scaled-example">
+        Scaling 的完整計算例子
+       </a>
+      </li>
+      <li>
+       <a href="#why-multiplying-probabilities-by-zero-is-different">
+        為何把 probability 乘零並不一樣
+       </a>
+      </li>
+      <li>
+       <a href="#why-divide-by-the-square-root">
+        為何要除以 square root
+       </a>
+      </li>
+      <li>
+       <a href="#padding-introduces-another-visibility-condition">
+        Padding 帶來另一項 visibility 條件
+       </a>
+      </li>
+      <li>
+       <a href="#an-invariant-catches-future-leakage">
+        用 invariant 找出 future leakage
+       </a>
+      </li>
+      <li>
+       <a href="#worked-practice-and-a-readiness-check">
+        實例練習與學習檢查
+       </a>
+      </li>
+     </ol>
+    </nav>
+    <article class="prose full-notes" id="full-notes" role="tabpanel">
+     <div class="eyebrow">
+      完整講義
+     </div>
+     <h2>
+      閱讀完整解說
+     </h2>
+     <aside class="notation-key">
+      <strong>
+       本課 notation
+      </strong>
+      <p>
+       B: batch · T: tokens · d_model: model width · H: query heads · H_kv: key/value heads · d_head: query/key width per head · d_value: value width per head
+      </p>
+     </aside>
+     <h3 id="a-prediction-must-use-only-available-information">
+      Prediction 只能使用可用資訊
+     </h3>
+     <p>
+      Training 時，我們有完整句子「I go to school by bus.」。在 by 後面的位置，model 必須只用 prefix 預測 bus，即使 training tensor 右邊已經包含答案。
+     </p>
+     <p>
+      Causal mask 防止 query position attend 到未來 position。若 index 從零開始，query i 只可使用 j≤i 的 key。Diagonal 保持可見，因為當前 input token 本來就是用來預測 next token 的 prefix 一部分。
+     </p>
+     <p>
+      這是 information-access rule，與是否把某個 position 計入 loss 是兩回事。Padding mask、causal mask 和 loss mask 各有用途。
+     </p>
+     <h3 id="the-compact-attention-equation">
+      簡潔的 attention equation
+     </h3>
+     <p>
+      標準 single-head 表達式是 softmax(QKᵀ/√d_head + mask)V。要把它讀成一連串操作：比較 query 與 key、scale score、移除禁止 position、normalize 每個 query row，再混合 value。
+     </p>
+     <p>
+      對 T 個 position，Q/K 的 shape 是 [T,d_head]，score 和 weight 是 [T,T]，V 是 [T,d_value]。Output 是 [T,d_value]。
+     </p>
+     <p>
+      不要把整個表達式當成不可拆開的符號去背。如果 implementation 出錯，要逐個檢查 intermediate tensor。小型 input 比大型 model 的最終 loss，更容易揭示錯誤。
+     </p>
+     <h3 id="a-worked-scaled-example">
+      Scaling 的完整計算例子
+     </h3>
+     <figure class="mechanism-figure">
+      <figcaption>
+       一個 attention row 的執行次序
+      </figcaption>
+      <ol class="mechanism-flow">
+       <li>
+        <span class="mechanism-number">
+         01
+        </span>
+        <strong>
+         Compare
+        </strong>
+        <small>
+         QKᵀ / √d_head
+        </small>
+       </li>
+       <li>
+        <span class="mechanism-number">
+         02
+        </span>
+        <strong>
+         Restrict
+        </strong>
+        <small>
+         apply mask
+        </small>
+       </li>
+       <li>
+        <span class="mechanism-number">
+         03
+        </span>
+        <strong>
+         Normalize
+        </strong>
+        <small>
+         softmax over keys
+        </small>
+       </li>
+       <li>
+        <span class="mechanism-number">
+         04
+        </span>
+        <strong>
+         Mix
+        </strong>
+        <small>
+         weights × V
+        </small>
+       </li>
+      </ol>
+      <p>
+       在 softmax 前 mask scores。不可見的未來 key，其 weight 為零。
+      </p>
+     </figure>
+     <p>
+      取 q=[1,0]，key 為 [1,0] 和 [0,1]，value 為 [2,0] 和 [0,4]。這裏 d_head=2，所以 score 是 [1/√2,0]，約為 [0.7071,0]。
+     </p>
+     <p>
+      Softmax 約得到 [0.6698,0.3302]。混合 output 是 [1.3395,1.3210]。兩個 position 都有貢獻。
+     </p>
+     <p>
+      現在假設第二個 key 位於未來。在 softmax 前，把它的 score 設為負無限。Weight 變成 [1,0]，output 變成 [2,0]。Masking 不只移除禁止項的貢獻，也會改變 normalization。
+     </p>
+     <h3 id="why-multiplying-probabilities-by-zero-is-different">
+      為何把 probability 乘零並不一樣
+     </h3>
+     <p>
+      假設先計算未 masking 的 weight [0.6698,0.3302]，然後把第二個 weight 乘零。結果是 [0.6698,0]，總和不是一。Output 變成 [1.3395,0]，與正確 masking 的結果不同。
+     </p>
+     <p>
+      你可以重新 normalize 剩下的 probability，但在 softmax 前 mask logit，是直接而標準的實作。重點是理解自己想執行甚麼計算。
+     </p>
+     <p>
+      如果某行的所有 key 都被禁止，softmax 就沒有有效 normalization。設計 padding 和 batching 時，應確保每個受評估 query 都有適當的可見 key，或明確處理無效 row。
+     </p>
+     <h3 id="why-divide-by-the-square-root">
+      為何要除以 square root
+     </h3>
+     <p>
+      在簡化假設下，query/key coordinate 互相獨立、zero-mean、unit-variance，它們的 dot product variance 會隨 d_head 增長。很大的 score magnitude 可以令 softmax 極度集中。
+     </p>
+     <p>
+      基於這個直覺，除以 √d_head 可以較好控制 scale。這不保證學習得到的 score 永遠服從特定 distribution，只是解釋 scaling term 的動機。
+     </p>
+     <p>
+      試用有很多 random coordinate 的 vector，比較 scaling 前後的 score spread。要檢查統計數字，不要直接斷言較尖銳的 attention map 就比較好。
+     </p>
+     <h3 id="padding-introduces-another-visibility-condition">
+      Padding 帶來另一項 visibility 條件
+     </h3>
+     <p>
+      一個 batch 可以包含不同長度的句子。我們可以把較短句子 pad 到共同長度，但 padding position 不應像有意義的 source word 一樣參與。
+     </p>
+     <p>
+      允許使用的 key position 必須同時符合 causal rule 和 sequence 的 validity rule。未來 token 即使是真字，仍然被禁止。Padding token 即使位於左邊，也不會因此成為有用 context。
+     </p>
+     <p>
+      Loss masking 再決定哪些 target prediction 計入 objective。即使 attention masking 正確，如果拿 padding label 來 training，loss 仍然可以出錯。
+     </p>
+     <h3 id="an-invariant-catches-future-leakage">
+      用 invariant 找出 future leakage
+     </h3>
+     <p>
+      固定 model parameter，並關掉 dropout 等 randomness。先跑一次 sequence，再只改變最後一個 token。較早的 causal output 應在指定 numerical tolerance 內維持不變。
+     </p>
+     <p>
+      這項 property 檢查實際行為，而不是只看 matrix 是否呈三角形。在合適例子中，移除 mask 應令同一 property 失敗。這個失敗證明測試能偵測目標 bug。
+     </p>
+     <p>
+      移除 mask 後 training loss 降低，可能是 answer leakage。在 tutorial 08，實作 attention 計算，執行 invariance check，再移除 mask，令 check 失敗。一個 [T,T] score matrix 每個 head 儲存 T² 個數值；未計 batching 或多個 heads，T 加倍已令這部分 storage 變成四倍。
+     </p>
+     <h3 id="worked-practice-and-a-readiness-check">
+      實例練習與學習檢查
+     </h3>
+     <p>
+      為本例句子畫出六乘六的 causal visibility table。對 index 3 的 query school，列出可見 input token：I、go、to、school。解釋為何 by 和 bus 對該 query 不可用。
+     </p>
+     <p>
+      然後在 two-position 例子中，分別計算有 masking 和沒有 masking 時第一個 query 的 output。指出 normalization axis，並確認每個有效 row 的 weight 總和為一。
+     </p>
+     <p>
+      當你能獨立追蹤 Q、K、V、scaling、masking、softmax 和 value mixing，就準備好把 attention 放進更大的結構。下週會加入多個 head 和明確的 position information。
+     </p>
+    </article>
+    <nav aria-label="前後 lecture" class="chapter-pagination">
+     <a href="07.html">
+      <small>
+       上一週
+      </small>
+      Query、key 和 value 從何而來
+     </a>
+     <a href="09.html">
+      <small>
+       下一週
+      </small>
+      多個 attention head 與位置
+     </a>
+    </nav>
+   </div>
+   <footer class="footer">
+    <span>
+     Applied AI · 獨立自學課程
+    </span>
+    <span>
+     32 週 · 每週 10 小時
+    </span>
+    <a href="../resources.html#about-this-course">
+     關於課程及資料來源
+    </a>
+   </footer>
+  </main>
+  <dialog aria-labelledby="search-title" class="search-dialog">
+   <div class="dialog-head">
+    <h2 id="search-title">
+     尋找概念
+    </h2>
+    <button aria-label="關閉搜尋" class="search-close" type="button">
+     關閉
+    </button>
+   </div>
+   <label class="sr-only" for="course-search">
+    搜尋所有 lecture 和 tutorial
+   </label>
+   <input autocomplete="off" id="course-search" placeholder="試試 attention、fine-tuning 或 harness……" type="search"/>
+   <p aria-live="polite" class="search-status">
+    搜尋 lecture notes、tutorial、測驗及閱讀材料。
+   </p>
+   <div class="search-results">
+   </div>
+  </dialog>
+  <div aria-live="polite" class="toast" role="status">
+  </div>
+ </body>
+</html>

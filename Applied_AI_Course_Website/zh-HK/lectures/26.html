@@ -1,86 +1,1221 @@
 <!DOCTYPE html>
-
-<html lang="zh-HK"><head><script src="../../assets/translations-zh-HK.js"></script><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/><title>Fine-tuning 實驗、preference 與 distillation · Applied AI</title><meta content="Applied generative AI and LLM systems course material" name="description"/><meta content="#173c36" name="theme-color"/><link href="../../assets/favicon.svg" rel="icon" type="image/svg+xml"/><link href="../../assets/style.css" rel="stylesheet"/><link href="../../assets/slides.css" rel="stylesheet"/><script>window.COURSE_BASE="../";</script><script defer="" src="../../assets/site-config.js"></script><script defer="" src="../assets/search-index.js"></script><script defer="" src="../../assets/app.js"></script><script defer="" src="../../assets/visuals.js"></script><script defer="" src="../../assets/slides.js"></script><script defer="" src="../../assets/beginner-visuals.js"></script><script defer="True" src="../../assets/locale-patterns.js"></script><script defer="True" src="../../assets/locale.js"></script><link href="../../assets/bilingual.css" rel="stylesheet"/><link href="../../lectures/26.html" hreflang="en" rel="alternate"/></head><body data-page-kind="lecture" data-week="26"><a class="skip-link" href="#main">跳至內容</a><header class="topbar"><button aria-controls="course-sidebar" aria-expanded="false" class="menu-toggle" type="button">選單</button><a class="brand" href="../index.html"><span aria-hidden="true" class="brand-mark">a<span>i</span></span><span>APPLIED AI<small>從原理到實踐</small></span></a><nav aria-label="主要導覽"><a href="../index.html">課程</a><a href="../visuals.html">互動圖解</a><a href="../project.html">專題</a><a class="language-switch" href="../../lectures/26.html" hreflang="en" lang="en">English</a></nav><button class="search-open" type="button">搜尋課程 <span aria-hidden="true">/</span></button></header><aside aria-label="課程章節" class="sidebar" id="course-sidebar"><a class="side-home" href="../index.html">課程概覽</a><details class="semester-nav"><summary>第一學期<span>第 1–16 週</span></summary><ol start="1"><li><a href="../lectures/01.html"><span class="week-number">01</span><span>Language model 究竟在學甚麼</span><span class="week-tick" data-week-tick="1"></span></a></li><li><a href="../lectures/02.html"><span class="week-number">02</span><span>從文字到 token 和數值 ID</span><span class="week-tick" data-week-tick="2"></span></a></li><li><a href="../lectures/03.html"><span class="week-number">03</span><span>Word vector 能表達甚麼</span><span class="week-tick" data-week-tick="3"></span></a></li><li><a href="../lectures/04.html"><span class="week-number">04</span><span>從 score 到 probability 和學習訊號</span><span class="week-tick" data-week-tick="4"></span></a></li><li><a href="../lectures/05.html"><span class="week-number">05</span><span>為甚麼語言需要 context 和次序</span><span class="week-tick" data-week-tick="5"></span></a></li><li><a href="../lectures/06.html"><span class="week-number">06</span><span>Attention 由 weighted mixture 開始</span><span class="week-tick" data-week-tick="6"></span></a></li><li><a href="../lectures/07.html"><span class="week-number">07</span><span>Query、key 和 value 從何而來</span><span class="week-tick" data-week-tick="7"></span></a></li><li><a href="../lectures/08.html"><span class="week-number">08</span><span>正確進行 attention scaling 和 masking</span><span class="week-tick" data-week-tick="8"></span></a></li><li><a href="../lectures/09.html"><span class="week-number">09</span><span>多個 attention head 與位置</span><span class="week-tick" data-week-tick="9"></span></a></li><li><a href="../lectures/10.html"><span class="week-number">10</span><span>逐步拆解 transformer block</span><span class="week-tick" data-week-tick="10"></span></a></li><li><a href="../lectures/11.html"><span class="week-number">11</span><span>Encoder、decoder 與完整 model architecture</span><span class="week-tick" data-week-tick="11"></span></a></li><li><a href="../lectures/12.html"><span class="week-number">12</span><span>訓練一個小型 transformer</span><span class="week-tick" data-week-tick="12"></span></a></li><li><a href="../lectures/13.html"><span class="week-number">13</span><span>Generation、decoding 與 KV cache</span><span class="week-tick" data-week-tick="13"></span></a></li><li><a href="../lectures/14.html"><span class="week-number">14</span><span>從 pretraining 到 instruction following 和 reasoning</span><span class="week-tick" data-week-tick="14"></span></a></li><li><a href="../lectures/15.html"><span class="week-number">15</span><span>文字以外的 Generative AI</span><span class="week-tick" data-week-tick="15"></span></a></li><li><a href="../lectures/16.html"><span class="week-number">16</span><span>完整 transformer 導覽與第一學期溫習</span><span class="week-tick" data-week-tick="16"></span></a></li></ol></details><details class="semester-nav" open=""><summary>第二學期<span>第 17–32 週</span></summary><ol start="17"><li><a href="../lectures/17.html"><span class="week-number">17</span><span>從 word vector 到 semantic search</span><span class="week-tick" data-week-tick="17"></span></a></li><li><a href="../lectures/18.html"><span class="week-number">18</span><span>從一列 vector 建立 vector database</span><span class="week-tick" data-week-tick="18"></span></a></li><li><a href="../lectures/19.html"><span class="week-number">19</span><span>把 RAG 理解為開卷作答</span><span class="week-tick" data-week-tick="19"></span></a></li><li><a href="../lectures/20.html"><span class="week-number">20</span><span>在保持基本任務的前提下改善 RAG</span><span class="week-tick" data-week-tick="20"></span></a></li><li><a href="../lectures/21.html"><span class="week-number">21</span><span>評估 retrieval、答案與 uncertainty</span><span class="week-tick" data-week-tick="21"></span></a></li><li><a href="../lectures/22.html"><span class="week-number">22</span><span>CPU、GPU、memory 與 model 資源計算</span><span class="week-tick" data-week-tick="22"></span></a></li><li><a href="../lectures/23.html"><span class="week-number">23</span><span>CUDA kernel 與 profiling</span><span class="week-tick" data-week-tick="23"></span></a></li><li><a href="../lectures/24.html"><span class="week-number">24</span><span>Fine-tuning 由教學 dataset 開始</span><span class="week-tick" data-week-tick="24"></span></a></li><li><a href="../lectures/25.html"><span class="week-number">25</span><span>從小型 matrix 理解 LoRA 和 QLoRA</span><span class="week-tick" data-week-tick="25"></span></a></li><li><a aria-current="page" href="../lectures/26.html"><span class="week-number">26</span><span>Fine-tuning 實驗、preference 與 distillation</span><span class="week-tick" data-week-tick="26"></span></a></li><li><a href="../lectures/27.html"><span class="week-number">27</span><span>Tool、function、workflow 與 agent</span><span class="week-tick" data-week-tick="27"></span></a></li><li><a href="../lectures/28.html"><span class="week-number">28</span><span>Harness、planning、memory 與有界執行</span><span class="week-tick" data-week-tick="28"></span></a></li><li><a href="../lectures/29.html"><span class="week-number">29</span><span>從 notebook 到 MLOps 和 inference serving</span><span class="week-tick" data-week-tick="29"></span></a></li><li><a href="../lectures/30.html"><span class="week-number">30</span><span>Monitoring、security、regression test 與 rollback</span><span class="week-tick" data-week-tick="30"></span></a></li><li><a href="../lectures/31.html"><span class="week-number">31</span><span>整合文件助手與進階延伸</span><span class="week-tick" data-week-tick="31"></span></a></li><li><a href="../lectures/32.html"><span class="week-number">32</span><span>溫習、答辯與持續學習計劃</span><span class="week-tick" data-week-tick="32"></span></a></li></ol></details><div class="side-links"><a href="../visuals.html">互動圖解實驗室 <span>14 個互動課節</span></a><a href="../project.html">文件助手 <span>你的 capstone project</span></a><a href="../resources.html">閱讀材料與環境設定</a></div><div class="side-progress"><div><span>你的進度</span><strong data-progress-count="">0 / 32</strong></div><progress aria-label="已完成 lecture" max="32" value="0"></progress><small>儲存在這個瀏覽器</small></div></aside><main class="main" id="main"><div class="content"><div class="chapter-header"><div class="eyebrow">第二學期 / 第 26 週</div><h1>Fine-tuning 實驗、preference 與 distillation</h1></div><div class="lesson-links"><a href="../tutorials/26.html">練習 26</a><a href="../tests/26.html">檢查你的理解</a><button aria-pressed="false" class="mark-complete" data-week="26" type="button">標記為已完成</button></div><section aria-label="Lecture slides" class="lecture-deck" id="lecture-slides"><div class="deck-top"><div><div class="eyebrow">課堂投影片 · 第 26 週</div><h2>一步一步學習。</h2></div><button class="deck-present" type="button">簡報模式</button></div><p class="deck-help">閱讀每段解說，停下來預測結果，然後繼續。選取簡報後，可用方向鍵操作。完整講義在下方。</p><div aria-label="簡報：使用左右方向鍵" class="slide-viewport" tabindex="0"><section class="lecture-slide" data-slide=""><div class="slide-stage">由例子開始</div><h3>Training 後的 artifact 需要比較</h3><div class="slide-prose"><p>School 例子的一字 completion task 提供簡單 format target。Documentation project 之後加入有 citations 的 answers 或 typed tool proposals。Fine-tuning run 應檢驗清楚說明的 behavior gap，而非只產生 checkpoint。</p>
-<p>令 base model、inputs、context、decoding 和 evaluator 保持可比較。如果同時改善 prompt，亦要加入 prompt-only control。</p>
-<p>實驗可以得出 adapter 沒有幫助的結論。只要誠實記錄 data、training 和 evaluation，這種發現同樣有用。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">由例子開始</div><h3>最基本的 training 與 reload 流程</h3><div class="slide-prose"><p>檢查準備好的 examples，以及非空的 answer masks。確認 loss 為 finite、trainable factors 有非零 gradients，而 frozen base parameters 沒有 gradients。</p>
-<p>先跑短 pilot，儲存 adapter 和 tokenizer/config metadata；若 memory 有限，釋放 training instance，再對應 pinned base 重新載入。</p>
-<p>在獨立 task cases 上產生 outputs。Reload 後 loss 為 finite 只是 smoke check，不能證明 response behavior 改善了。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">建立對機制的理解</div><h3>一個隱藏 regression 的結果</h3><div class="slide-prose"><p>假設 valid JSON 由 80% 升至 96%，但 correct arguments 仍弱，unsupported answers 則由 5% 升至 15%。Model 學會了一種行為，同時令另一種行為變差。</p>
-<p>檢查 targets 是否獎勵自信作答、漏掉 absence cases，或把正確 formatting 與錯誤 facts 配對。更多 valid JSON 並不足以支持 release。</p>
-<p>比較各項 task outcomes，保留新 errors。選擇較強、符合要求的 system，而非自動部署最新 artifact。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">建立對機制的理解</div><h3>Preferences 由 rubric 開始</h3><div class="slide-prose"><p>對 ticket question，應偏好 “3×4=12 dollars”，而非自信的 10-dollar answer。Preference 反映 task correctness，不是 response length。</p>
-<p>按照明確 rubric 收集 preferred/rejected pairs，涵蓋 evidence、completeness、valid actions 和有用解釋。審核互相矛盾及不確定的 labels。</p>
-<p>LLM teacher 可以產生 candidate pairs，但它的 errors 可能變成 training targets。可行時，human 或 executable checks 仍很重要。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">建立對機制的理解</div><h3>以小計算理解 DPO margin</h3><div class="slide-prose"><p>DPO 比較 learned policy 相對 reference，如何改變 preferred response 與 rejected response 的 relative likelihood。</p>
-<p>若 preferred response 相對 reference 改善 0.4 log units，而 rejected response 改善 0.1，relative margin 就是 0.3。當 β=2，sigmoid input 為 0.6，loss -ln(sigmoid(0.6)) 約為 0.4375。</p>
-<p>這項計算解釋 objective 的方向。它沒有執行 preference training，也不保證 labels 代表我們真正想要的行為。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">建立對機制的理解</div><h3>Reinforcement learning 與 verifiable rewards</h3><div class="slide-prose"><p>RLHF 可包含 learned reward model，以及帶 reference-policy constraint 的 reinforcement-learning optimization。Verifiable-reward 方法則使用可檢查 outcomes，例如正確 arithmetic 或 executable result。</p>
-<p>Checker 仍可能不完整，或被鑽漏洞。Reward 改善衡量的是對該 reward procedure 的成功，不是普遍可靠性。</p>
-<p>Reasoning prompts、reasoning training、preference optimization 和 executable verification 是不同 interventions。要說明實驗實際用了哪一種。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">建立對機制的理解</div><h3>Distillation 與 forgetting</h3><div class="slide-prose"><p>Distillation 利用 teacher 的 outputs、probabilities 或 demonstrations 教 student。它可傳遞有用行為，亦可傳遞 teacher errors 和表面 style。</p>
-<p>對狹窄 task 進行 fine-tuning，可能削弱其他原本有用的行為。除 target task 外，也要加入 general formatting、refusal 和基本 instruction-following checks。</p>
-<p>儲存 raw examples、measured results、environment 和 model revisions。這些記錄讓負面或混合結果可理解，而非只有一句無法解釋的 “fine-tuning failed.”</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">建立對機制的理解</div><h3>實例練習與學習檢查</h3><div class="slide-prose"><p>執行真正的小型 model LoRA tutorial，並進行 controlled base comparison。報告 task quality、invalid outputs、unsupported behavior、memory 和 elapsed time。</p>
-<p>建立 20 組經審核的 preference pairs，解釋一個模糊 preference，並重現 DPO scalar loss。清楚區分這項 objective 練習與真正 SFT training。</p>
-<p>當你能根據 application outcomes 支持 release decision，並討論 preference/distillation 方法而不聲稱做過未做的實驗，就已準備好。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">選讀：深入學習</div><h3>完成引導例子後，再深入一層</h3><div class="slide-prose"><p>以下內容適合第二次閱讀。先解釋上面的日常例子，再用以下 equation 和實作細節，把解釋說得更精確。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">選讀：深入學習</div><h3>深入學習 19：直觀理解</h3><div class="slide-prose"><p>Training loss 回答 model 是否正在擬合 supervised targets。Application 要問的是：儲存後的 adapter，能否在沒有不可接受 regressions 的情況下改善 target task。完整實驗包括 baseline、controlled training run、held-out comparison 和可重現 checkpoint。</p>
-<p>Base 和 adapted models 應使用相同 base revision、task contexts、decoding settings 和 evaluation parser。若加入 adapter 時亦改善 prompt，另外跑 prompt-only control。最基本 comparison matrix 可以是 base prompt、improved prompt、improved prompt plus RAG，以及 RAG plus adapter，並按 task 設定 constraints。若某些組合無法回答 research question，就不必強求每個組合。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">選讀：深入學習</div><h3>深入學習 19：Training 機制</h3><div class="slide-prose"><p>使用小 batch、短 sequence length、gradient accumulation 和 checkpoints。先跑少量 batches，確認 valid-token counts、非零 gradients 和 finite loss。若所選 setup 需要，則 clip gradients。若 model 要求，training 時關閉 inference-only caches。Preparation 和 evaluation 都要一致使用實際 chat template。</p>
-<p>Prompt loss masking 必須配合 serialization。Tutorial 使用單一 user message 和 assistant response；tokenize prefix 和完整 conversation 時，不重複加入 special tokens，並檢查 prefix IDs 與完整 sequence 的 prefix 相同。若假設不成立，就拒絕或重新設計 examples。更複雜的 multi-turn data，需要正確 assistant-token mask，不能靠 string length 猜測。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">選讀：深入學習</div><h3>深入學習 19：結果解讀實例</h3><div class="slide-prose"><p>假設 JSON validity 由 80% 升至 96%，factual completeness 仍是 70%，而對 unsupported questions 的不當回答由 5% 升至 15%。Adapter 學會了 formatting，但 release 並非明顯更好。較低 loss 或更多 valid JSON，不能抵銷 refusal regression。檢查哪些 training examples 獎勵了過度自信作答。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">選讀：深入學習</div><h3>深入學習 19：實驗</h3><div class="slide-prose"><p>notebook 26 執行短時間小型 model LoRA adaptation，並儲存 adapter、tokenizer 和 training metadata。附帶 task 刻意設計得很小、很狹窄，不能據此推論 generalization。必交 project report 要使用經審核 training data 和獨立 development cases；若 resources/data 不足，就清楚標示為小型 pilot。</p>
-<p>量度 runtime、peak GPU memory、trainable parameter count、task correctness、format validity 和 unsupported-answer behavior。在乾淨 session 重新載入儲存的 adapter，再 evaluation 一組 smoke set。若 quality 沒改善，記錄 negative result，最終 release 保留較強 baseline。</p>
-<p><strong>完成標準：</strong> 重現一次真正的小型 training run，並解釋該 artifact 是否應部署。 <strong>閱讀材料：</strong> R14 adapter save/load；R18 precision。 <strong>Tutorial：</strong> 26.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">選讀：深入學習</div><h3>完成引導例子後，再深入一層</h3><div class="slide-prose"><p>以下內容適合第二次閱讀。先解釋上面的日常例子，再用以下 equation 和實作細節，把解釋說得更精確。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">選讀：深入學習</div><h3>深入學習 20：直觀理解</h3><div class="slide-prose"><p>SFT 表示 “imitate this answer.” Preference data 表示 “prefer this answer to that answer for this prompt.” 這些 signals 並不直接編碼普遍真相。Rater 可能偏好討好但錯誤的 answer，而 teacher model 可能產生系統性 errors。</p>
-<p>RLHF 通常包含由 preferences 得來的 reward model，以及以它作目標的 reinforcement learning。Reference-policy constraint 有助限制不受控 policy drift。RL with verifiable rewards 使用可檢查 outcomes，例如正確 executable result；但 checker 本身仍可能不完整或被鑽漏洞。在狹窄 checker 上取得高 reward，不等於證明廣泛可靠性。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">選讀：深入學習</div><h3>深入學習 20：DPO 機制</h3><div class="slide-prose"><p>DPO 直接利用 preferred 和 rejected responses，相對 reference model 進行 training。其中一種形式是最小化 <code>-log sigmoid(beta * [(log pi(y+|x)-log pi_ref(y+|x)) - (log pi(y-|x)-log pi_ref(y-|x))])</code>。括號比較 relative policy changes，而非只比較 raw sequence likelihoods。beta 是控制這種關係的 tuning parameter；實際效果取決於 setup。</p>
-<p>若 preferred response 相對 rejected response 改善，loss 便下降。但錯標 preference pairs 可能 optimization 出錯誤行為。應 deduplicate pairs、審核矛盾 labels，並確保 answers 依相同 context 和 task 判斷。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">選讀：深入學習</div><h3>深入學習 20：Distillation 與 forgetting</h3><div class="slide-prose"><p>Distillation 利用 teacher outputs、probabilities 或 demonstrations training student。它可較節省地傳遞行為，但 student 可能繼承 teacher errors，或只學到表面 formatting。記錄 provenance，驗證 teacher-generated data。Fine-tuning 亦可能削弱原有有用行為；除狹窄 task 外，也 evaluation general-format、refusal 和基本 instruction-following cases。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">選讀：深入學習</div><h3>深入學習 20：比較實例</h3><div class="slide-prose"><p>Teacher 產生長解釋，但 API name 錯誤；較短 response 引用正確 source，並承認 version difference 尚未解決。若 preference label 獎勵 length，system 可能 optimization verbosity，而非 correctness。收集 labels 前，先寫涵蓋 factuality、evidence、completeness 和 action validity 的 rubric。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">選讀：深入學習</div><h3>深入學習 20：實驗</h3><div class="slide-prose"><p>notebook 26 包含 numerical DPO loss calculation，並非完整 RLHF training pipeline。從 development failures 建立 20 preference pairs，用明確 rubric 標記，並以小型 blinded re-labeling 檢查 agreement。找一個 binary preference 掩蓋重要 tradeoff 的 case。完整 DPO/RL training 為選做延伸；若選擇它，便取代另一實驗。</p>
-<p><strong>完成標準：</strong> 區分 SFT、reward-model RLHF、DPO、verifiable rewards 和 distillation，並解釋 optimization proxy 的風險。 <strong>閱讀材料：</strong> R15 objective；R03 post-training 主題。 <strong>Tutorial：</strong> 26.</p></div></section></div><div class="deck-controls"><button class="slide-prev" type="button">← 上一頁</button><span aria-live="polite" class="slide-counter">1 / 19</span><button class="slide-next" type="button">下一頁 →</button></div><label class="slide-jump-label">前往 slide <select aria-label="跳至 slide" class="slide-jump"><option value="0">1</option><option value="1">2</option><option value="2">3</option><option value="3">4</option><option value="4">5</option><option value="5">6</option><option value="6">7</option><option value="7">8</option><option value="8">9</option><option value="9">10</option><option value="10">11</option><option value="11">12</option><option value="12">13</option><option value="13">14</option><option value="14">15</option><option value="15">16</option><option value="16">17</option><option value="17">18</option><option value="18">19</option></select></label><button aria-pressed="false" class="deck-all" type="button">顯示全部 slides</button><a class="reader-link" href="#full-notes">閱讀完整講義 ↓</a></section><article class="prose full-notes" id="full-notes"><div class="eyebrow">完整講義</div><h2>閱讀完整解說</h2><h3 id="a-trained-artifact-needs-a-comparison">Training 後的 artifact 需要比較</h3>
-<p>School 例子的一字 completion task 提供簡單 format target。Documentation project 之後加入有 citations 的 answers 或 typed tool proposals。Fine-tuning run 應檢驗清楚說明的 behavior gap，而非只產生 checkpoint。</p>
-<p>令 base model、inputs、context、decoding 和 evaluator 保持可比較。如果同時改善 prompt，亦要加入 prompt-only control。</p>
-<p>實驗可以得出 adapter 沒有幫助的結論。只要誠實記錄 data、training 和 evaluation，這種發現同樣有用。</p>
-<h3 id="a-minimal-training-and-reload-procedure">最基本的 training 與 reload 流程</h3>
-<p>檢查準備好的 examples，以及非空的 answer masks。確認 loss 為 finite、trainable factors 有非零 gradients，而 frozen base parameters 沒有 gradients。</p>
-<p>先跑短 pilot，儲存 adapter 和 tokenizer/config metadata；若 memory 有限，釋放 training instance，再對應 pinned base 重新載入。</p>
-<p>在獨立 task cases 上產生 outputs。Reload 後 loss 為 finite 只是 smoke check，不能證明 response behavior 改善了。</p>
-<h3 id="a-result-with-a-hidden-regression">一個隱藏 regression 的結果</h3>
-<p>假設 valid JSON 由 80% 升至 96%，但 correct arguments 仍弱，unsupported answers 則由 5% 升至 15%。Model 學會了一種行為，同時令另一種行為變差。</p>
-<p>檢查 targets 是否獎勵自信作答、漏掉 absence cases，或把正確 formatting 與錯誤 facts 配對。更多 valid JSON 並不足以支持 release。</p>
-<p>比較各項 task outcomes，保留新 errors。選擇較強、符合要求的 system，而非自動部署最新 artifact。</p>
-<h3 id="preferences-begin-with-a-rubric">Preferences 由 rubric 開始</h3>
-<p>對 ticket question，應偏好 “3×4=12 dollars”，而非自信的 10-dollar answer。Preference 反映 task correctness，不是 response length。</p>
-<p>按照明確 rubric 收集 preferred/rejected pairs，涵蓋 evidence、completeness、valid actions 和有用解釋。審核互相矛盾及不確定的 labels。</p>
-<p>LLM teacher 可以產生 candidate pairs，但它的 errors 可能變成 training targets。可行時，human 或 executable checks 仍很重要。</p>
-<h3 id="the-dpo-margin-in-a-small-calculation">以小計算理解 DPO margin</h3>
-<p>DPO 比較 learned policy 相對 reference，如何改變 preferred response 與 rejected response 的 relative likelihood。</p>
-<p>若 preferred response 相對 reference 改善 0.4 log units，而 rejected response 改善 0.1，relative margin 就是 0.3。當 β=2，sigmoid input 為 0.6，loss -ln(sigmoid(0.6)) 約為 0.4375。</p>
-<p>這項計算解釋 objective 的方向。它沒有執行 preference training，也不保證 labels 代表我們真正想要的行為。</p>
-<h3 id="reinforcement-learning-and-verifiable-rewards">Reinforcement learning 與 verifiable rewards</h3>
-<p>RLHF 可包含 learned reward model，以及帶 reference-policy constraint 的 reinforcement-learning optimization。Verifiable-reward 方法則使用可檢查 outcomes，例如正確 arithmetic 或 executable result。</p>
-<p>Checker 仍可能不完整，或被鑽漏洞。Reward 改善衡量的是對該 reward procedure 的成功，不是普遍可靠性。</p>
-<p>Reasoning prompts、reasoning training、preference optimization 和 executable verification 是不同 interventions。要說明實驗實際用了哪一種。</p>
-<h3 id="distillation-and-forgetting">Distillation 與 forgetting</h3>
-<p>Distillation 利用 teacher 的 outputs、probabilities 或 demonstrations 教 student。它可傳遞有用行為，亦可傳遞 teacher errors 和表面 style。</p>
-<p>對狹窄 task 進行 fine-tuning，可能削弱其他原本有用的行為。除 target task 外，也要加入 general formatting、refusal 和基本 instruction-following checks。</p>
-<p>儲存 raw examples、measured results、environment 和 model revisions。這些記錄讓負面或混合結果可理解，而非只有一句無法解釋的 “fine-tuning failed.”</p>
-<h3 id="worked-practice-and-a-readiness-check">實例練習與學習檢查</h3>
-<p>執行真正的小型 model LoRA tutorial，並進行 controlled base comparison。報告 task quality、invalid outputs、unsupported behavior、memory 和 elapsed time。</p>
-<p>建立 20 組經審核的 preference pairs，解釋一個模糊 preference，並重現 DPO scalar loss。清楚區分這項 objective 練習與真正 SFT training。</p>
-<p>當你能根據 application outcomes 支持 release decision，並討論 preference/distillation 方法而不聲稱做過未做的實驗，就已準備好。</p>
-<h3 id="a-deeper-pass-after-the-worked-introduction">完成引導例子後，再深入一層</h3>
-<p>以下內容適合第二次閱讀。先解釋上面的日常例子，再用以下 equation 和實作細節，把解釋說得更精確。</p>
-<h3 id="further-study-19-intuition">深入學習 19：直觀理解</h3>
-<p>Training loss 回答 model 是否正在擬合 supervised targets。Application 要問的是：儲存後的 adapter，能否在沒有不可接受 regressions 的情況下改善 target task。完整實驗包括 baseline、controlled training run、held-out comparison 和可重現 checkpoint。</p>
-<p>Base 和 adapted models 應使用相同 base revision、task contexts、decoding settings 和 evaluation parser。若加入 adapter 時亦改善 prompt，另外跑 prompt-only control。最基本 comparison matrix 可以是 base prompt、improved prompt、improved prompt plus RAG，以及 RAG plus adapter，並按 task 設定 constraints。若某些組合無法回答 research question，就不必強求每個組合。</p>
-<h3 id="further-study-19-training-mechanics">深入學習 19：Training 機制</h3>
-<p>使用小 batch、短 sequence length、gradient accumulation 和 checkpoints。先跑少量 batches，確認 valid-token counts、非零 gradients 和 finite loss。若所選 setup 需要，則 clip gradients。若 model 要求，training 時關閉 inference-only caches。Preparation 和 evaluation 都要一致使用實際 chat template。</p>
-<p>Prompt loss masking 必須配合 serialization。Tutorial 使用單一 user message 和 assistant response；tokenize prefix 和完整 conversation 時，不重複加入 special tokens，並檢查 prefix IDs 與完整 sequence 的 prefix 相同。若假設不成立，就拒絕或重新設計 examples。更複雜的 multi-turn data，需要正確 assistant-token mask，不能靠 string length 猜測。</p>
-<h3 id="further-study-19-worked-result-interpretation">深入學習 19：結果解讀實例</h3>
-<p>假設 JSON validity 由 80% 升至 96%，factual completeness 仍是 70%，而對 unsupported questions 的不當回答由 5% 升至 15%。Adapter 學會了 formatting，但 release 並非明顯更好。較低 loss 或更多 valid JSON，不能抵銷 refusal regression。檢查哪些 training examples 獎勵了過度自信作答。</p>
-<h3 id="further-study-19-experiment">深入學習 19：實驗</h3>
-<p>notebook 26 執行短時間小型 model LoRA adaptation，並儲存 adapter、tokenizer 和 training metadata。附帶 task 刻意設計得很小、很狹窄，不能據此推論 generalization。必交 project report 要使用經審核 training data 和獨立 development cases；若 resources/data 不足，就清楚標示為小型 pilot。</p>
-<p>量度 runtime、peak GPU memory、trainable parameter count、task correctness、format validity 和 unsupported-answer behavior。在乾淨 session 重新載入儲存的 adapter，再 evaluation 一組 smoke set。若 quality 沒改善，記錄 negative result，最終 release 保留較強 baseline。</p>
-<p><strong>完成標準：</strong> 重現一次真正的小型 training run，並解釋該 artifact 是否應部署。 <strong>閱讀材料：</strong> R14 adapter save/load；R18 precision。 <strong>Tutorial：</strong> 26.</p>
-<h3 id="a-deeper-pass-after-the-worked-introduction-2">完成引導例子後，再深入一層</h3>
-<p>以下內容適合第二次閱讀。先解釋上面的日常例子，再用以下 equation 和實作細節，把解釋說得更精確。</p>
-<h3 id="further-study-20-intuition">深入學習 20：直觀理解</h3>
-<p>SFT 表示 “imitate this answer.” Preference data 表示 “prefer this answer to that answer for this prompt.” 這些 signals 並不直接編碼普遍真相。Rater 可能偏好討好但錯誤的 answer，而 teacher model 可能產生系統性 errors。</p>
-<p>RLHF 通常包含由 preferences 得來的 reward model，以及以它作目標的 reinforcement learning。Reference-policy constraint 有助限制不受控 policy drift。RL with verifiable rewards 使用可檢查 outcomes，例如正確 executable result；但 checker 本身仍可能不完整或被鑽漏洞。在狹窄 checker 上取得高 reward，不等於證明廣泛可靠性。</p>
-<h3 id="further-study-20-dpo-mechanism">深入學習 20：DPO 機制</h3>
-<p>DPO 直接利用 preferred 和 rejected responses，相對 reference model 進行 training。其中一種形式是最小化 <code>-log sigmoid(beta * [(log pi(y+|x)-log pi_ref(y+|x)) - (log pi(y-|x)-log pi_ref(y-|x))])</code>。括號比較 relative policy changes，而非只比較 raw sequence likelihoods。beta 是控制這種關係的 tuning parameter；實際效果取決於 setup。</p>
-<p>若 preferred response 相對 rejected response 改善，loss 便下降。但錯標 preference pairs 可能 optimization 出錯誤行為。應 deduplicate pairs、審核矛盾 labels，並確保 answers 依相同 context 和 task 判斷。</p>
-<h3 id="further-study-20-distillation-and-forgetting">深入學習 20：Distillation 與 forgetting</h3>
-<p>Distillation 利用 teacher outputs、probabilities 或 demonstrations training student。它可較節省地傳遞行為，但 student 可能繼承 teacher errors，或只學到表面 formatting。記錄 provenance，驗證 teacher-generated data。Fine-tuning 亦可能削弱原有有用行為；除狹窄 task 外，也 evaluation general-format、refusal 和基本 instruction-following cases。</p>
-<h3 id="further-study-20-worked-comparison">深入學習 20：比較實例</h3>
-<p>Teacher 產生長解釋，但 API name 錯誤；較短 response 引用正確 source，並承認 version difference 尚未解決。若 preference label 獎勵 length，system 可能 optimization verbosity，而非 correctness。收集 labels 前，先寫涵蓋 factuality、evidence、completeness 和 action validity 的 rubric。</p>
-<h3 id="further-study-20-experiment">深入學習 20：實驗</h3>
-<p>notebook 26 包含 numerical DPO loss calculation，並非完整 RLHF training pipeline。從 development failures 建立 20 preference pairs，用明確 rubric 標記，並以小型 blinded re-labeling 檢查 agreement。找一個 binary preference 掩蓋重要 tradeoff 的 case。完整 DPO/RL training 為選做延伸；若選擇它，便取代另一實驗。</p>
-<p><strong>完成標準：</strong> 區分 SFT、reward-model RLHF、DPO、verifiable rewards 和 distillation，並解釋 optimization proxy 的風險。 <strong>閱讀材料：</strong> R15 objective；R03 post-training 主題。 <strong>Tutorial：</strong> 26.</p></article><nav aria-label="前後 lecture" class="chapter-pagination"><a href="25.html"><small>上一週</small>從小型 matrix 理解 LoRA 和 QLoRA</a><a href="27.html"><small>下一週</small>Tool、function、workflow 與 agent</a></nav></div><footer class="footer"><span>Applied AI · 獨立自學課程</span><span>32 週 · 每週 10 小時</span><a href="../resources.html#about-this-course">關於課程及資料來源</a></footer></main><dialog aria-labelledby="search-title" class="search-dialog"><div class="dialog-head"><h2 id="search-title">尋找概念</h2><button aria-label="關閉搜尋" class="search-close" type="button">關閉</button></div><label class="sr-only" for="course-search">搜尋所有 lecture 和 tutorial</label><input autocomplete="off" id="course-search" placeholder="試試 attention、fine-tuning 或 harness……" type="search"/><p aria-live="polite" class="search-status">搜尋 lecture notes、tutorial、測驗及閱讀材料。</p><div class="search-results"></div></dialog><div aria-live="polite" class="toast" role="status"></div></body></html>
+<html lang="zh-HK">
+ <head>
+  <script src="../../assets/translations-zh-HK.js">
+  </script>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width,initial-scale=1" name="viewport"/>
+  <title>
+   Fine-tuning 實驗、preference 與 distillation · Applied AI
+  </title>
+  <meta content="Applied generative AI and LLM systems course material" name="description"/>
+  <meta content="#173c36" name="theme-color"/>
+  <link href="../../assets/favicon.svg" rel="icon" type="image/svg+xml"/>
+  <link href="../../assets/style.css" rel="stylesheet"/>
+  <link href="../../assets/slides.css" rel="stylesheet"/>
+  <script>
+   window.COURSE_BASE="../";
+  </script>
+  <script defer="" src="../../assets/site-config.js">
+  </script>
+  <script defer="" src="../assets/search-index.js">
+  </script>
+  <script defer="" src="../../assets/app.js">
+  </script>
+  <script defer="" src="../../assets/visuals.js">
+  </script>
+  <script defer="" src="../../assets/slides.js">
+  </script>
+  <script defer="" src="../../assets/beginner-visuals.js">
+  </script>
+  <script defer="True" src="../../assets/locale-patterns.js">
+  </script>
+  <script defer="True" src="../../assets/locale.js">
+  </script>
+  <link href="../../assets/bilingual.css" rel="stylesheet"/>
+  <link href="../../lectures/26.html" hreflang="en" rel="alternate"/>
+  <link href="../../assets/reader-v3.css" rel="stylesheet"/>
+  <script defer="True" src="../../assets/reader-v3.js">
+  </script>
+ </head>
+ <body data-page-kind="lecture" data-week="26">
+  <a class="skip-link" href="#main">
+   跳至內容
+  </a>
+  <header class="topbar">
+   <button aria-controls="course-sidebar" aria-expanded="false" class="menu-toggle" type="button">
+    選單
+   </button>
+   <a class="brand" href="../index.html">
+    <span aria-hidden="true" class="brand-mark">
+     a
+     <span>
+      i
+     </span>
+    </span>
+    <span>
+     APPLIED AI
+     <small>
+      從原理到實踐
+     </small>
+    </span>
+   </a>
+   <nav aria-label="主要導覽">
+    <a href="../index.html">
+     課程
+    </a>
+    <a href="../visuals.html">
+     互動圖解
+    </a>
+    <a href="../project.html">
+     專題
+    </a>
+    <a class="language-switch" href="../../lectures/26.html" hreflang="en" lang="en">
+     English
+    </a>
+   </nav>
+   <button class="search-open" type="button">
+    搜尋課程
+    <span aria-hidden="true">
+     /
+    </span>
+   </button>
+  </header>
+  <aside aria-label="課程章節" class="sidebar" id="course-sidebar">
+   <a class="side-home" href="../index.html">
+    課程概覽
+   </a>
+   <details class="semester-nav">
+    <summary>
+     第一學期
+     <span>
+      第 1–16 週
+     </span>
+    </summary>
+    <ol start="1">
+     <li>
+      <a href="../lectures/01.html">
+       <span class="week-number">
+        01
+       </span>
+       <span>
+        Language model 究竟在學甚麼
+       </span>
+       <span class="week-tick" data-week-tick="1">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/02.html">
+       <span class="week-number">
+        02
+       </span>
+       <span>
+        從文字到 token 和數值 ID
+       </span>
+       <span class="week-tick" data-week-tick="2">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/03.html">
+       <span class="week-number">
+        03
+       </span>
+       <span>
+        Word vector 能表達甚麼
+       </span>
+       <span class="week-tick" data-week-tick="3">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/04.html">
+       <span class="week-number">
+        04
+       </span>
+       <span>
+        從 score 到 probability 和學習訊號
+       </span>
+       <span class="week-tick" data-week-tick="4">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/05.html">
+       <span class="week-number">
+        05
+       </span>
+       <span>
+        為甚麼語言需要 context 和次序
+       </span>
+       <span class="week-tick" data-week-tick="5">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/06.html">
+       <span class="week-number">
+        06
+       </span>
+       <span>
+        Attention 由 weighted mixture 開始
+       </span>
+       <span class="week-tick" data-week-tick="6">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/07.html">
+       <span class="week-number">
+        07
+       </span>
+       <span>
+        Query、key 和 value 從何而來
+       </span>
+       <span class="week-tick" data-week-tick="7">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/08.html">
+       <span class="week-number">
+        08
+       </span>
+       <span>
+        正確進行 attention scaling 和 masking
+       </span>
+       <span class="week-tick" data-week-tick="8">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/09.html">
+       <span class="week-number">
+        09
+       </span>
+       <span>
+        多個 attention head 與位置
+       </span>
+       <span class="week-tick" data-week-tick="9">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/10.html">
+       <span class="week-number">
+        10
+       </span>
+       <span>
+        逐步拆解 transformer block
+       </span>
+       <span class="week-tick" data-week-tick="10">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/11.html">
+       <span class="week-number">
+        11
+       </span>
+       <span>
+        Encoder、decoder 與完整 model architecture
+       </span>
+       <span class="week-tick" data-week-tick="11">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/12.html">
+       <span class="week-number">
+        12
+       </span>
+       <span>
+        訓練一個小型 transformer
+       </span>
+       <span class="week-tick" data-week-tick="12">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/13.html">
+       <span class="week-number">
+        13
+       </span>
+       <span>
+        Generation、decoding 與 KV cache
+       </span>
+       <span class="week-tick" data-week-tick="13">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/14.html">
+       <span class="week-number">
+        14
+       </span>
+       <span>
+        從 pretraining 到 instruction following 和 reasoning
+       </span>
+       <span class="week-tick" data-week-tick="14">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/15.html">
+       <span class="week-number">
+        15
+       </span>
+       <span>
+        文字以外的 Generative AI
+       </span>
+       <span class="week-tick" data-week-tick="15">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/16.html">
+       <span class="week-number">
+        16
+       </span>
+       <span>
+        完整 transformer 導覽與第一學期溫習
+       </span>
+       <span class="week-tick" data-week-tick="16">
+       </span>
+      </a>
+     </li>
+    </ol>
+   </details>
+   <details class="semester-nav" open="">
+    <summary>
+     第二學期
+     <span>
+      第 17–32 週
+     </span>
+    </summary>
+    <ol start="17">
+     <li>
+      <a href="../lectures/17.html">
+       <span class="week-number">
+        17
+       </span>
+       <span>
+        從 word vector 到 semantic search
+       </span>
+       <span class="week-tick" data-week-tick="17">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/18.html">
+       <span class="week-number">
+        18
+       </span>
+       <span>
+        從一列 vector 建立 vector database
+       </span>
+       <span class="week-tick" data-week-tick="18">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/19.html">
+       <span class="week-number">
+        19
+       </span>
+       <span>
+        把 RAG 理解為開卷作答
+       </span>
+       <span class="week-tick" data-week-tick="19">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/20.html">
+       <span class="week-number">
+        20
+       </span>
+       <span>
+        在保持基本任務的前提下改善 RAG
+       </span>
+       <span class="week-tick" data-week-tick="20">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/21.html">
+       <span class="week-number">
+        21
+       </span>
+       <span>
+        評估 retrieval、答案與 uncertainty
+       </span>
+       <span class="week-tick" data-week-tick="21">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/22.html">
+       <span class="week-number">
+        22
+       </span>
+       <span>
+        CPU、GPU、memory 與 model 資源計算
+       </span>
+       <span class="week-tick" data-week-tick="22">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/23.html">
+       <span class="week-number">
+        23
+       </span>
+       <span>
+        CUDA kernel 與 profiling
+       </span>
+       <span class="week-tick" data-week-tick="23">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/24.html">
+       <span class="week-number">
+        24
+       </span>
+       <span>
+        Fine-tuning 由教學 dataset 開始
+       </span>
+       <span class="week-tick" data-week-tick="24">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/25.html">
+       <span class="week-number">
+        25
+       </span>
+       <span>
+        從小型 matrix 理解 LoRA 和 QLoRA
+       </span>
+       <span class="week-tick" data-week-tick="25">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a aria-current="page" href="../lectures/26.html">
+       <span class="week-number">
+        26
+       </span>
+       <span>
+        Fine-tuning 實驗、preference 與 distillation
+       </span>
+       <span class="week-tick" data-week-tick="26">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/27.html">
+       <span class="week-number">
+        27
+       </span>
+       <span>
+        Tool、function、workflow 與 agent
+       </span>
+       <span class="week-tick" data-week-tick="27">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/28.html">
+       <span class="week-number">
+        28
+       </span>
+       <span>
+        Harness、planning、memory 與有界執行
+       </span>
+       <span class="week-tick" data-week-tick="28">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/29.html">
+       <span class="week-number">
+        29
+       </span>
+       <span>
+        從 notebook 到 MLOps 和 inference serving
+       </span>
+       <span class="week-tick" data-week-tick="29">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/30.html">
+       <span class="week-number">
+        30
+       </span>
+       <span>
+        Monitoring、security、regression test 與 rollback
+       </span>
+       <span class="week-tick" data-week-tick="30">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/31.html">
+       <span class="week-number">
+        31
+       </span>
+       <span>
+        整合文件助手與進階延伸
+       </span>
+       <span class="week-tick" data-week-tick="31">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/32.html">
+       <span class="week-number">
+        32
+       </span>
+       <span>
+        溫習、答辯與持續學習計劃
+       </span>
+       <span class="week-tick" data-week-tick="32">
+       </span>
+      </a>
+     </li>
+    </ol>
+   </details>
+   <div class="side-links">
+    <a href="../visuals.html">
+     互動圖解實驗室
+     <span>
+      14 個互動課節
+     </span>
+    </a>
+    <a href="../project.html">
+     文件助手
+     <span>
+      你的 capstone project
+     </span>
+    </a>
+    <a href="../resources.html">
+     閱讀材料與環境設定
+    </a>
+   </div>
+   <div class="side-progress">
+    <div>
+     <span>
+      你的進度
+     </span>
+     <strong data-progress-count="">
+      0 / 32
+     </strong>
+    </div>
+    <progress aria-label="已完成 lecture" max="32" value="0">
+    </progress>
+    <small>
+     儲存在這個瀏覽器
+    </small>
+   </div>
+  </aside>
+  <main class="main" id="main">
+   <div class="content">
+    <div class="chapter-header">
+     <div class="eyebrow">
+      第二學期 / 第 26 週
+     </div>
+     <h1>
+      Fine-tuning 實驗、preference 與 distillation
+     </h1>
+    </div>
+    <div class="lesson-links">
+     <a href="../tutorials/26.html">
+      練習 26
+     </a>
+     <a href="../tests/26.html">
+      檢查你的理解
+     </a>
+     <button aria-pressed="false" class="mark-complete" data-week="26" type="button">
+      標記為已完成
+     </button>
+    </div>
+    <div aria-label="課堂檢視" class="lesson-mode" role="tablist">
+     <button aria-controls="full-notes" aria-selected="true" data-mode="read" id="mode-read" role="tab" type="button">
+      閱讀講義
+     </button>
+     <button aria-controls="lecture-slides" aria-selected="false" data-mode="slides" id="mode-slides" role="tab" type="button">
+      課堂 slides
+     </button>
+    </div>
+    <section aria-label="Lecture slides" class="lecture-deck" hidden="" id="lecture-slides" role="tabpanel">
+     <div class="deck-top">
+      <div>
+       <div class="eyebrow">
+        課堂投影片 · 第 26 週
+       </div>
+       <h2>
+        重點步驟與圖解
+       </h2>
+      </div>
+      <button class="deck-present" type="button">
+       簡報模式
+      </button>
+     </div>
+     <p class="deck-help">
+      用 slides 溫習機制；按「閱讀完整解說」可開啟完整講義及程式碼。
+     </p>
+     <div aria-label="簡報：使用左右方向鍵" class="slide-viewport" tabindex="0">
+      <section class="lecture-slide" data-slide="">
+       <div class="slide-stage">
+        第 26 週 · 課節 1
+       </div>
+       <h3>
+        Training 後的 artifact 需要比較
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          School 例子的一字 completion task 提供簡單 format target。
+         </li>
+         <li>
+          令 base model、inputs、context、decoding 和 evaluator 保持可比較。
+         </li>
+         <li>
+          實驗可以得出 adapter 沒有幫助的結論。只要誠實記錄 data、training 和 evaluation，這種發現同樣有用。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#a-trained-artifact-needs-a-comparison">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 26 週 · 課節 2
+       </div>
+       <h3>
+        最基本的 training 與 reload 流程
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          檢查準備好的 examples，以及非空的 answer masks。
+         </li>
+         <li>
+          先跑短 pilot，儲存 adapter 和 tokenizer/config metadata；若 memory 有限，釋放 training instance，再對應 pinned base 重新載入。
+         </li>
+         <li>
+          在獨立 task cases 上產生 outputs。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#a-minimal-training-and-reload-procedure">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 26 週 · 課節 3
+       </div>
+       <h3>
+        一個隱藏 regression 的結果
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          假設 valid JSON 由 80% 升至 96%，但 correct arguments 仍弱，unsupported answers 則由 5% 升至 15%。
+         </li>
+         <li>
+          檢查 targets 是否獎勵自信作答、漏掉 absence cases，或把正確 formatting 與錯誤 facts 配對。
+         </li>
+         <li>
+          比較各項 task outcomes，保留新 errors。
+         </li>
+        </ul>
+        <figure class="mechanism-figure">
+         <figcaption>
+          一個小正值的 DPO margin
+         </figcaption>
+         <ol class="mechanism-flow">
+          <li>
+           <span class="mechanism-number">
+            01
+           </span>
+           <strong>
+            Relative margin
+           </strong>
+           <small>
+            0.4 − 0.1 = 0.3
+           </small>
+          </li>
+          <li>
+           <span class="mechanism-number">
+            02
+           </span>
+           <strong>
+            Scale
+           </strong>
+           <small>
+            β=0.1 → 0.03
+           </small>
+          </li>
+          <li>
+           <span class="mechanism-number">
+            03
+           </span>
+           <strong>
+            Loss
+           </strong>
+           <small>
+            −ln σ(0.03) ≈ 0.67826
+           </small>
+          </li>
+         </ol>
+         <p>
+          Zero-margin 參考值是 ln(2)≈0.69315。β 是 configuration 選擇，並無通用最佳值。
+         </p>
+        </figure>
+        <a class="slide-section-link" href="#a-result-with-a-hidden-regression">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 26 週 · 課節 4
+       </div>
+       <h3>
+        Preferences 由 rubric 開始
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          對 ticket question，應偏好 “3×4=12 dollars”，而非自信的 10-dollar answer。
+         </li>
+         <li>
+          按照明確 rubric 收集 preferred/rejected pairs，涵蓋 evidence、completeness、valid actions 和有用解釋。
+         </li>
+         <li>
+          LLM teacher 可以產生 candidate pairs，但它的 errors 可能變成 training targets。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#preferences-begin-with-a-rubric">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 26 週 · 課節 5
+       </div>
+       <h3>
+        以小計算理解 DPO margin
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          DPO 比較 learned policy 相對 reference，如何改變 preferred response 與 rejected response 的 relative likelihood。
+         </li>
+         <li>
+          如果 preferred response 相對 reference 改善 0.4 natural-log units，而 rejected response 改善 0.1，relative margin 就是 0.3。
+         </li>
+         <li>
+          這項計算解釋 objective 的方向。它沒有執行 preference training，也不保證 labels 代表我們真正想要的行為。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#the-dpo-margin-in-a-small-calculation">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 26 週 · 課節 6
+       </div>
+       <h3>
+        Reinforcement learning 與 verifiable rewards
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          RLHF 可包含 learned reward model，以及帶 reference-policy constraint 的 reinforcement-learning optimization。
+         </li>
+         <li>
+          Checker 仍可能不完整，或被鑽漏洞。Reward 改善衡量的是對該 reward procedure 的成功，不是普遍可靠性。
+         </li>
+         <li>
+          Reasoning prompts、reasoning training、preference optimization 和 executable verification 是不同 interventions。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#reinforcement-learning-and-verifiable-rewards">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 26 週 · 課節 7
+       </div>
+       <h3>
+        Distillation 與 forgetting
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Distillation 利用 teacher 的 outputs、probabilities 或 demonstrations 教 student。
+         </li>
+         <li>
+          對狹窄 task 進行 fine-tuning，可能削弱其他原本有用的行為。
+         </li>
+         <li>
+          儲存 raw examples、measured results、environment 和 model revisions。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#distillation-and-forgetting">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 26 週 · 課節 8
+       </div>
+       <h3>
+        實例練習與學習檢查
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          執行真正的小型 model LoRA tutorial，並進行 controlled base comparison。
+         </li>
+         <li>
+          建立 20 組經審核的 preference pairs，解釋一個模糊 preference，並重現 DPO scalar loss。
+         </li>
+         <li>
+          當你能根據 application outcomes 支持 release decision，並討論 preference/distillation 方法而不聲稱做過未做的實驗，就已準備好。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#worked-practice-and-a-readiness-check">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+     </div>
+     <div class="deck-controls">
+      <button class="slide-prev" type="button">
+       ← 上一頁
+      </button>
+      <span aria-live="polite" class="slide-counter">
+       1 / 8
+      </span>
+      <button class="slide-next" type="button">
+       下一頁 →
+      </button>
+     </div>
+     <label class="slide-jump-label">
+      前往 slide
+      <select aria-label="跳至 slide" class="slide-jump">
+       <option value="0">
+        1. Training 後的 artifact 需要比較
+       </option>
+       <option value="1">
+        2. 最基本的 training 與 reload 流程
+       </option>
+       <option value="2">
+        3. 一個隱藏 regression 的結果
+       </option>
+       <option value="3">
+        4. Preferences 由 rubric 開始
+       </option>
+       <option value="4">
+        5. 以小計算理解 DPO margin
+       </option>
+       <option value="5">
+        6. Reinforcement learning 與 verifiable rewards
+       </option>
+       <option value="6">
+        7. Distillation 與 forgetting
+       </option>
+       <option value="7">
+        8. 實例練習與學習檢查
+       </option>
+      </select>
+     </label>
+     <button aria-pressed="false" class="deck-all" type="button">
+      顯示全部 slides
+     </button>
+    </section>
+    <nav aria-label="本課內容" class="reader-toc">
+     <strong>
+      本課內容
+     </strong>
+     <ol>
+      <li>
+       <a href="#a-trained-artifact-needs-a-comparison">
+        Training 後的 artifact 需要比較
+       </a>
+      </li>
+      <li>
+       <a href="#a-minimal-training-and-reload-procedure">
+        最基本的 training 與 reload 流程
+       </a>
+      </li>
+      <li>
+       <a href="#a-result-with-a-hidden-regression">
+        一個隱藏 regression 的結果
+       </a>
+      </li>
+      <li>
+       <a href="#preferences-begin-with-a-rubric">
+        Preferences 由 rubric 開始
+       </a>
+      </li>
+      <li>
+       <a href="#the-dpo-margin-in-a-small-calculation">
+        以小計算理解 DPO margin
+       </a>
+      </li>
+      <li>
+       <a href="#reinforcement-learning-and-verifiable-rewards">
+        Reinforcement learning 與 verifiable rewards
+       </a>
+      </li>
+      <li>
+       <a href="#distillation-and-forgetting">
+        Distillation 與 forgetting
+       </a>
+      </li>
+      <li>
+       <a href="#worked-practice-and-a-readiness-check">
+        實例練習與學習檢查
+       </a>
+      </li>
+     </ol>
+    </nav>
+    <article class="prose full-notes" id="full-notes" role="tabpanel">
+     <div class="eyebrow">
+      完整講義
+     </div>
+     <h2>
+      閱讀完整解說
+     </h2>
+     <h3 id="a-trained-artifact-needs-a-comparison">
+      Training 後的 artifact 需要比較
+     </h3>
+     <p>
+      School 例子的一字 completion task 提供簡單 format target。Documentation project 之後加入有 citations 的 answers 或 typed tool proposals。Fine-tuning run 應檢驗清楚說明的 behavior gap，而非只產生 checkpoint。
+     </p>
+     <p>
+      令 base model、inputs、context、decoding 和 evaluator 保持可比較。如果同時改善 prompt，亦要加入 prompt-only control。
+     </p>
+     <p>
+      實驗可以得出 adapter 沒有幫助的結論。只要誠實記錄 data、training 和 evaluation，這種發現同樣有用。
+     </p>
+     <h3 id="a-minimal-training-and-reload-procedure">
+      最基本的 training 與 reload 流程
+     </h3>
+     <p>
+      檢查準備好的 examples，以及非空的 answer masks。確認 loss 為 finite、trainable factors 有非零 gradients，而 frozen base parameters 沒有 gradients。
+     </p>
+     <p>
+      先跑短 pilot，儲存 adapter 和 tokenizer/config metadata；若 memory 有限，釋放 training instance，再對應 pinned base 重新載入。
+     </p>
+     <p>
+      在獨立 task cases 上產生 outputs。Reload 後 loss 為 finite 只是 smoke check，不能證明 response behavior 改善了。
+     </p>
+     <h3 id="a-result-with-a-hidden-regression">
+      一個隱藏 regression 的結果
+     </h3>
+     <figure class="mechanism-figure">
+      <figcaption>
+       一個小正值的 DPO margin
+      </figcaption>
+      <ol class="mechanism-flow">
+       <li>
+        <span class="mechanism-number">
+         01
+        </span>
+        <strong>
+         Relative margin
+        </strong>
+        <small>
+         0.4 − 0.1 = 0.3
+        </small>
+       </li>
+       <li>
+        <span class="mechanism-number">
+         02
+        </span>
+        <strong>
+         Scale
+        </strong>
+        <small>
+         β=0.1 → 0.03
+        </small>
+       </li>
+       <li>
+        <span class="mechanism-number">
+         03
+        </span>
+        <strong>
+         Loss
+        </strong>
+        <small>
+         −ln σ(0.03) ≈ 0.67826
+        </small>
+       </li>
+      </ol>
+      <p>
+       Zero-margin 參考值是 ln(2)≈0.69315。β 是 configuration 選擇，並無通用最佳值。
+      </p>
+     </figure>
+     <p>
+      假設 valid JSON 由 80% 升至 96%，但 correct arguments 仍弱，unsupported answers 則由 5% 升至 15%。Model 學會了一種行為，同時令另一種行為變差。
+     </p>
+     <p>
+      檢查 targets 是否獎勵自信作答、漏掉 absence cases，或把正確 formatting 與錯誤 facts 配對。更多 valid JSON 並不足以支持 release。
+     </p>
+     <p>
+      比較各項 task outcomes，保留新 errors。選擇較強、符合要求的 system，而非自動部署最新 artifact。
+     </p>
+     <h3 id="preferences-begin-with-a-rubric">
+      Preferences 由 rubric 開始
+     </h3>
+     <p>
+      對 ticket question，應偏好 “3×4=12 dollars”，而非自信的 10-dollar answer。Preference 反映 task correctness，不是 response length。
+     </p>
+     <p>
+      按照明確 rubric 收集 preferred/rejected pairs，涵蓋 evidence、completeness、valid actions 和有用解釋。審核互相矛盾及不確定的 labels。
+     </p>
+     <p>
+      LLM teacher 可以產生 candidate pairs，但它的 errors 可能變成 training targets。可行時，human 或 executable checks 仍很重要。
+     </p>
+     <h3 id="the-dpo-margin-in-a-small-calculation">
+      以小計算理解 DPO margin
+     </h3>
+     <p>
+      DPO 比較 learned policy 相對 reference，如何改變 preferred response 與 rejected response 的 relative likelihood。
+     </p>
+     <p>
+      如果 preferred response 相對 reference 改善 0.4 natural-log units，而 rejected response 改善 0.1，relative margin 就是 0.3。使用 beta=0.1 時，sigmoid input 是 0.03，loss 為 −ln(sigmoid(0.03))≈0.67826。Zero-margin loss 是 ln(2)≈0.69315，因此這個 positive margin 令 loss 稍微下降。beta 是 tuning parameter：0.1 是常見的 implementation default，並非 universal best value，亦不是每種 setup 都必須使用 0.1–0.5 的規則。
+     </p>
+     <p>
+      這項計算解釋 objective 的方向。它沒有執行 preference training，也不保證 labels 代表我們真正想要的行為。
+     </p>
+     <h3 id="reinforcement-learning-and-verifiable-rewards">
+      Reinforcement learning 與 verifiable rewards
+     </h3>
+     <p>
+      RLHF 可包含 learned reward model，以及帶 reference-policy constraint 的 reinforcement-learning optimization。Verifiable-reward 方法則使用可檢查 outcomes，例如正確 arithmetic 或 executable result。
+     </p>
+     <p>
+      Checker 仍可能不完整，或被鑽漏洞。Reward 改善衡量的是對該 reward procedure 的成功，不是普遍可靠性。
+     </p>
+     <p>
+      Reasoning prompts、reasoning training、preference optimization 和 executable verification 是不同 interventions。要說明實驗實際用了哪一種。
+     </p>
+     <h3 id="distillation-and-forgetting">
+      Distillation 與 forgetting
+     </h3>
+     <p>
+      Distillation 利用 teacher 的 outputs、probabilities 或 demonstrations 教 student。它可傳遞有用行為，亦可傳遞 teacher errors 和表面 style。
+     </p>
+     <p>
+      對狹窄 task 進行 fine-tuning，可能削弱其他原本有用的行為。除 target task 外，也要加入 general formatting、refusal 和基本 instruction-following checks。
+     </p>
+     <p>
+      儲存 raw examples、measured results、environment 和 model revisions。這些記錄讓負面或混合結果可理解，而非只有一句無法解釋的 “fine-tuning failed.”
+     </p>
+     <h3 id="worked-practice-and-a-readiness-check">
+      實例練習與學習檢查
+     </h3>
+     <p>
+      執行真正的小型 model LoRA tutorial，並進行 controlled base comparison。報告 task quality、invalid outputs、unsupported behavior、memory 和 elapsed time。
+     </p>
+     <p>
+      建立 20 組經審核的 preference pairs，解釋一個模糊 preference，並重現 DPO scalar loss。清楚區分這項 objective 練習與真正 SFT training。
+     </p>
+     <p>
+      當你能根據 application outcomes 支持 release decision，並討論 preference/distillation 方法而不聲稱做過未做的實驗，就已準備好。
+     </p>
+     <details class="reference-details" id="reference-details">
+      <summary>
+       參考細節與學習檢查
+      </summary>
+      <h3 id="review-a-intuition">
+       複習 A：直觀理解
+      </h3>
+      <p>
+       Training loss 回答 model 是否正在擬合 supervised targets。Application 要問的是：儲存後的 adapter，能否在沒有不可接受 regressions 的情況下改善 target task。完整實驗包括 baseline、controlled training run、held-out comparison 和可重現 checkpoint。
+      </p>
+      <p>
+       Base 和 adapted models 應使用相同 base revision、task contexts、decoding settings 和 evaluation parser。若加入 adapter 時亦改善 prompt，另外跑 prompt-only control。最基本 comparison matrix 可以是 base prompt、improved prompt、improved prompt plus RAG，以及 RAG plus adapter，並按 task 設定 constraints。若某些組合無法回答 research question，就不必強求每個組合。
+      </p>
+      <h3 id="review-a-training-mechanics">
+       複習 A：Training 機制
+      </h3>
+      <p>
+       使用小 batch、短 sequence length、gradient accumulation 和 checkpoints。先跑少量 batches，確認 valid-token counts、非零 gradients 和 finite loss。若所選 setup 需要，則 clip gradients。若 model 要求，training 時關閉 inference-only caches。Preparation 和 evaluation 都要一致使用實際 chat template。
+      </p>
+      <p>
+       Prompt loss masking 必須配合 serialization。Tutorial 使用單一 user message 和 assistant response；tokenize prefix 和完整 conversation 時，不重複加入 special tokens，並檢查 prefix IDs 與完整 sequence 的 prefix 相同。若假設不成立，就拒絕或重新設計 examples。更複雜的 multi-turn data，需要正確 assistant-token mask，不能靠 string length 猜測。
+      </p>
+      <h3 id="review-a-worked-result-interpretation">
+       複習 A：結果解讀實例
+      </h3>
+      <p>
+       假設 JSON validity 由 80% 升至 96%，factual completeness 仍是 70%，而對 unsupported questions 的不當回答由 5% 升至 15%。Adapter 學會了 formatting，但 release 並非明顯更好。較低 loss 或更多 valid JSON，不能抵銷 refusal regression。檢查哪些 training examples 獎勵了過度自信作答。
+      </p>
+      <h3 id="review-a-experiment">
+       複習 A：實驗
+      </h3>
+      <p>
+       <a href="../tutorials/26.html">
+        Tutorial 26: Fine-tuning 實驗、preference 與 distillation
+       </a>
+       執行短時間小型 model LoRA adaptation，並儲存 adapter、tokenizer 和 training metadata。附帶 task 刻意設計得很小、很狹窄，不能據此推論 generalization。必交 project report 要使用經審核 training data 和獨立 development cases；若 resources/data 不足，就清楚標示為小型 pilot。
+      </p>
+      <p>
+       量度 runtime、peak GPU memory、trainable parameter count、task correctness、format validity 和 unsupported-answer behavior。在乾淨 session 重新載入儲存的 adapter，再 evaluation 一組 smoke set。若 quality 沒改善，記錄 negative result，最終 release 保留較強 baseline。
+      </p>
+      <p>
+       <strong>
+        完成標準：
+       </strong>
+       重現一次真正的小型 training run，並解釋該 artifact 是否應部署。
+       <strong>
+        閱讀材料：
+       </strong>
+       <a class="inline-reading" href="../resources.html#reference-r14">
+        Hugging Face PEFT LoRA guide (R14)
+       </a>
+       adapter save/load；
+       <a class="inline-reading" href="../resources.html#reference-r18">
+        PyTorch automatic mixed precision recipe (R18)
+       </a>
+       precision。
+       <strong>
+        Tutorial：
+       </strong>
+       26.
+      </p>
+      <h3 id="review-b-intuition">
+       複習 B：直觀理解
+      </h3>
+      <p>
+       SFT 表示 “imitate this answer.” Preference data 表示 “prefer this answer to that answer for this prompt.” 這些 signals 並不直接編碼普遍真相。Rater 可能偏好討好但錯誤的 answer，而 teacher model 可能產生系統性 errors。
+      </p>
+      <p>
+       RLHF 通常包含由 preferences 得來的 reward model，以及以它作目標的 reinforcement learning。Reference-policy constraint 有助限制不受控 policy drift。RL with verifiable rewards 使用可檢查 outcomes，例如正確 executable result；但 checker 本身仍可能不完整或被鑽漏洞。在狹窄 checker 上取得高 reward，不等於證明廣泛可靠性。
+      </p>
+      <h3 id="review-b-dpo-mechanism">
+       複習 B：DPO 機制
+      </h3>
+      <p>
+       DPO 直接利用 preferred 和 rejected responses，相對 reference model 進行 training。其中一種形式是最小化
+       <code>
+        -log sigmoid(beta * [(log pi(y+|x)-log pi_ref(y+|x)) - (log pi(y-|x)-log pi_ref(y-|x))])
+       </code>
+       。括號比較 relative policy changes，而非只比較 raw sequence likelihoods。beta 是控制這種關係的 tuning parameter；實際效果取決於 setup。
+      </p>
+      <p>
+       若 preferred response 相對 rejected response 改善，loss 便下降。但錯標 preference pairs 可能 optimization 出錯誤行為。應 deduplicate pairs、審核矛盾 labels，並確保 answers 依相同 context 和 task 判斷。
+      </p>
+      <h3 id="review-b-distillation-and-forgetting">
+       複習 B：Distillation 與 forgetting
+      </h3>
+      <p>
+       Distillation 利用 teacher outputs、probabilities 或 demonstrations training student。它可較節省地傳遞行為，但 student 可能繼承 teacher errors，或只學到表面 formatting。記錄 provenance，驗證 teacher-generated data。Fine-tuning 亦可能削弱原有有用行為；除狹窄 task 外，也 evaluation general-format、refusal 和基本 instruction-following cases。
+      </p>
+      <h3 id="review-b-worked-comparison">
+       複習 B：比較實例
+      </h3>
+      <p>
+       Teacher 產生長解釋，但 API name 錯誤；較短 response 引用正確 source，並承認 version difference 尚未解決。若 preference label 獎勵 length，system 可能 optimization verbosity，而非 correctness。收集 labels 前，先寫涵蓋 factuality、evidence、completeness 和 action validity 的 rubric。
+      </p>
+      <h3 id="review-b-experiment">
+       複習 B：實驗
+      </h3>
+      <p>
+       <a href="../tutorials/26.html">
+        Tutorial 26: Fine-tuning 實驗、preference 與 distillation
+       </a>
+       包含 numerical DPO loss calculation，並非完整 RLHF training pipeline。從 development failures 建立 20 preference pairs，用明確 rubric 標記，並以小型 blinded re-labeling 檢查 agreement。找一個 binary preference 掩蓋重要 tradeoff 的 case。完整 DPO/RL training 為選做延伸；若選擇它，便取代另一實驗。
+      </p>
+      <p>
+       <strong>
+        完成標準：
+       </strong>
+       區分 SFT、reward-model RLHF、DPO、verifiable rewards 和 distillation，並解釋 optimization proxy 的風險。
+       <strong>
+        閱讀材料：
+       </strong>
+       <a class="inline-reading" href="../resources.html#reference-r15">
+        Rafailov et al. Direct Preference Optimization (R15)
+       </a>
+       objective；
+       <a class="inline-reading" href="../resources.html#reference-r03">
+        Hung-yi Lee Introduction to GenAI and ML 2025 (R03)
+       </a>
+       post-training 主題。
+       <strong>
+        Tutorial：
+       </strong>
+       26.
+      </p>
+     </details>
+    </article>
+    <nav aria-label="前後 lecture" class="chapter-pagination">
+     <a href="25.html">
+      <small>
+       上一週
+      </small>
+      從小型 matrix 理解 LoRA 和 QLoRA
+     </a>
+     <a href="27.html">
+      <small>
+       下一週
+      </small>
+      Tool、function、workflow 與 agent
+     </a>
+    </nav>
+   </div>
+   <footer class="footer">
+    <span>
+     Applied AI · 獨立自學課程
+    </span>
+    <span>
+     32 週 · 每週 10 小時
+    </span>
+    <a href="../resources.html#about-this-course">
+     關於課程及資料來源
+    </a>
+   </footer>
+  </main>
+  <dialog aria-labelledby="search-title" class="search-dialog">
+   <div class="dialog-head">
+    <h2 id="search-title">
+     尋找概念
+    </h2>
+    <button aria-label="關閉搜尋" class="search-close" type="button">
+     關閉
+    </button>
+   </div>
+   <label class="sr-only" for="course-search">
+    搜尋所有 lecture 和 tutorial
+   </label>
+   <input autocomplete="off" id="course-search" placeholder="試試 attention、fine-tuning 或 harness……" type="search"/>
+   <p aria-live="polite" class="search-status">
+    搜尋 lecture notes、tutorial、測驗及閱讀材料。
+   </p>
+   <div class="search-results">
+   </div>
+  </dialog>
+  <div aria-live="polite" class="toast" role="status">
+  </div>
+ </body>
+</html>

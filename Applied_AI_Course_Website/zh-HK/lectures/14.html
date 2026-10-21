@@ -1,56 +1,1218 @@
 <!DOCTYPE html>
-
-<html lang="zh-HK"><head><script src="../../assets/translations-zh-HK.js"></script><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/><title>從 pretraining 到 instruction following 和 reasoning · Applied AI</title><meta content="Applied generative AI and LLM systems course material" name="description"/><meta content="#173c36" name="theme-color"/><link href="../../assets/favicon.svg" rel="icon" type="image/svg+xml"/><link href="../../assets/style.css" rel="stylesheet"/><link href="../../assets/slides.css" rel="stylesheet"/><script>window.COURSE_BASE="../";</script><script defer="" src="../../assets/site-config.js"></script><script defer="" src="../assets/search-index.js"></script><script defer="" src="../../assets/app.js"></script><script defer="" src="../../assets/visuals.js"></script><script defer="" src="../../assets/slides.js"></script><script defer="" src="../../assets/beginner-visuals.js"></script><script defer="True" src="../../assets/locale-patterns.js"></script><script defer="True" src="../../assets/locale.js"></script><link href="../../assets/bilingual.css" rel="stylesheet"/><link href="../../lectures/14.html" hreflang="en" rel="alternate"/></head><body data-page-kind="lecture" data-week="14"><a class="skip-link" href="#main">跳至內容</a><header class="topbar"><button aria-controls="course-sidebar" aria-expanded="false" class="menu-toggle" type="button">選單</button><a class="brand" href="../index.html"><span aria-hidden="true" class="brand-mark">a<span>i</span></span><span>APPLIED AI<small>從原理到實踐</small></span></a><nav aria-label="主要導覽"><a href="../index.html">課程</a><a href="../visuals.html">互動圖解</a><a href="../project.html">專題</a><a class="language-switch" href="../../lectures/14.html" hreflang="en" lang="en">English</a></nav><button class="search-open" type="button">搜尋課程 <span aria-hidden="true">/</span></button></header><aside aria-label="課程章節" class="sidebar" id="course-sidebar"><a class="side-home" href="../index.html">課程概覽</a><details class="semester-nav" open=""><summary>第一學期<span>第 1–16 週</span></summary><ol start="1"><li><a href="../lectures/01.html"><span class="week-number">01</span><span>Language model 究竟在學甚麼</span><span class="week-tick" data-week-tick="1"></span></a></li><li><a href="../lectures/02.html"><span class="week-number">02</span><span>從文字到 token 和數值 ID</span><span class="week-tick" data-week-tick="2"></span></a></li><li><a href="../lectures/03.html"><span class="week-number">03</span><span>Word vector 能表達甚麼</span><span class="week-tick" data-week-tick="3"></span></a></li><li><a href="../lectures/04.html"><span class="week-number">04</span><span>從 score 到 probability 和學習訊號</span><span class="week-tick" data-week-tick="4"></span></a></li><li><a href="../lectures/05.html"><span class="week-number">05</span><span>為甚麼語言需要 context 和次序</span><span class="week-tick" data-week-tick="5"></span></a></li><li><a href="../lectures/06.html"><span class="week-number">06</span><span>Attention 由 weighted mixture 開始</span><span class="week-tick" data-week-tick="6"></span></a></li><li><a href="../lectures/07.html"><span class="week-number">07</span><span>Query、key 和 value 從何而來</span><span class="week-tick" data-week-tick="7"></span></a></li><li><a href="../lectures/08.html"><span class="week-number">08</span><span>正確進行 attention scaling 和 masking</span><span class="week-tick" data-week-tick="8"></span></a></li><li><a href="../lectures/09.html"><span class="week-number">09</span><span>多個 attention head 與位置</span><span class="week-tick" data-week-tick="9"></span></a></li><li><a href="../lectures/10.html"><span class="week-number">10</span><span>逐步拆解 transformer block</span><span class="week-tick" data-week-tick="10"></span></a></li><li><a href="../lectures/11.html"><span class="week-number">11</span><span>Encoder、decoder 與完整 model architecture</span><span class="week-tick" data-week-tick="11"></span></a></li><li><a href="../lectures/12.html"><span class="week-number">12</span><span>訓練一個小型 transformer</span><span class="week-tick" data-week-tick="12"></span></a></li><li><a href="../lectures/13.html"><span class="week-number">13</span><span>Generation、decoding 與 KV cache</span><span class="week-tick" data-week-tick="13"></span></a></li><li><a aria-current="page" href="../lectures/14.html"><span class="week-number">14</span><span>從 pretraining 到 instruction following 和 reasoning</span><span class="week-tick" data-week-tick="14"></span></a></li><li><a href="../lectures/15.html"><span class="week-number">15</span><span>文字以外的 Generative AI</span><span class="week-tick" data-week-tick="15"></span></a></li><li><a href="../lectures/16.html"><span class="week-number">16</span><span>完整 transformer 導覽與第一學期溫習</span><span class="week-tick" data-week-tick="16"></span></a></li></ol></details><details class="semester-nav"><summary>第二學期<span>第 17–32 週</span></summary><ol start="17"><li><a href="../lectures/17.html"><span class="week-number">17</span><span>從 word vector 到 semantic search</span><span class="week-tick" data-week-tick="17"></span></a></li><li><a href="../lectures/18.html"><span class="week-number">18</span><span>從一列 vector 建立 vector database</span><span class="week-tick" data-week-tick="18"></span></a></li><li><a href="../lectures/19.html"><span class="week-number">19</span><span>把 RAG 理解為開卷作答</span><span class="week-tick" data-week-tick="19"></span></a></li><li><a href="../lectures/20.html"><span class="week-number">20</span><span>在保持基本任務的前提下改善 RAG</span><span class="week-tick" data-week-tick="20"></span></a></li><li><a href="../lectures/21.html"><span class="week-number">21</span><span>評估 retrieval、答案與 uncertainty</span><span class="week-tick" data-week-tick="21"></span></a></li><li><a href="../lectures/22.html"><span class="week-number">22</span><span>CPU、GPU、memory 與 model 資源計算</span><span class="week-tick" data-week-tick="22"></span></a></li><li><a href="../lectures/23.html"><span class="week-number">23</span><span>CUDA kernel 與 profiling</span><span class="week-tick" data-week-tick="23"></span></a></li><li><a href="../lectures/24.html"><span class="week-number">24</span><span>Fine-tuning 由教學 dataset 開始</span><span class="week-tick" data-week-tick="24"></span></a></li><li><a href="../lectures/25.html"><span class="week-number">25</span><span>從小型 matrix 理解 LoRA 和 QLoRA</span><span class="week-tick" data-week-tick="25"></span></a></li><li><a href="../lectures/26.html"><span class="week-number">26</span><span>Fine-tuning 實驗、preference 與 distillation</span><span class="week-tick" data-week-tick="26"></span></a></li><li><a href="../lectures/27.html"><span class="week-number">27</span><span>Tool、function、workflow 與 agent</span><span class="week-tick" data-week-tick="27"></span></a></li><li><a href="../lectures/28.html"><span class="week-number">28</span><span>Harness、planning、memory 與有界執行</span><span class="week-tick" data-week-tick="28"></span></a></li><li><a href="../lectures/29.html"><span class="week-number">29</span><span>從 notebook 到 MLOps 和 inference serving</span><span class="week-tick" data-week-tick="29"></span></a></li><li><a href="../lectures/30.html"><span class="week-number">30</span><span>Monitoring、security、regression test 與 rollback</span><span class="week-tick" data-week-tick="30"></span></a></li><li><a href="../lectures/31.html"><span class="week-number">31</span><span>整合文件助手與進階延伸</span><span class="week-tick" data-week-tick="31"></span></a></li><li><a href="../lectures/32.html"><span class="week-number">32</span><span>溫習、答辯與持續學習計劃</span><span class="week-tick" data-week-tick="32"></span></a></li></ol></details><div class="side-links"><a href="../visuals.html">互動圖解實驗室 <span>14 個互動課節</span></a><a href="../project.html">文件助手 <span>你的 capstone project</span></a><a href="../resources.html">閱讀材料與環境設定</a></div><div class="side-progress"><div><span>你的進度</span><strong data-progress-count="">0 / 32</strong></div><progress aria-label="已完成 lecture" max="32" value="0"></progress><small>儲存在這個瀏覽器</small></div></aside><main class="main" id="main"><div class="content"><div class="chapter-header"><div class="eyebrow">第一學期 / 第 14 週</div><h1>從 pretraining 到 instruction following 和 reasoning</h1></div><div class="lesson-links"><a href="../tutorials/14.html">練習 14</a><a href="../tests/14.html">檢查你的理解</a><button aria-pressed="false" class="mark-complete" data-week="14" type="button">標記為已完成</button></div><section aria-label="Lecture slides" class="lecture-deck" id="lecture-slides"><div class="deck-top"><div><div class="eyebrow">課堂投影片 · 第 14 週</div><h2>一步一步學習。</h2></div><button class="deck-present" type="button">簡報模式</button></div><p class="deck-help">閱讀每段解說，停下來預測結果，然後繼續。選取簡報後，可用方向鍵操作。完整講義在下方。</p><div aria-label="簡報：使用左右方向鍵" class="slide-viewport" tabindex="0"><section class="lecture-slide" data-slide=""><div class="slide-stage">由例子開始</div><h3>完成文字與遵從要求</h3><div class="slide-prose"><p>pretrained language model 從 prediction 任務學習模式。「Complete this sentence with one transport word」這類要求，指定了一種特定行為方式。</p>
-<p>model 可能在 pretraining 已獲得部分有用行為，但 supervised example 可令期望的格式和 response 更一致。我們區分一般 prediction training 與之後的 adaptation。</p>
-<p>繼續用簡單任務。給定「I go to school by ___,」，一個期望 response 是 bus。給定「Name two possible completions,」，期望 response 可以是 bus 和 train。task instruction 改變了甚麼才算滿意的 response。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">由例子開始</div><h3>pretraining 從廣泛文字學習</h3><div class="slide-prose"><p>next-token pretraining 利用文字建立大量 shifted prediction target。data 和 objective 並不保證每個生成主張都正確。</p>
-<p>model 學習 parameter，以支持 training distribution 內的 prediction。它不是把每句話當作普通可搜尋的 row 儲存，雖然 memorization 確實可能發生。</p>
-<p>embedding table、attention projection、MLP weight 和 output head，都參與這個 parameterized 計算。前面 lecture 學過的完整路徑，在 training 後依然存在。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">建立對機制的理解</div><h3>supervised fine-tuning 提供期望 response</h3><div class="slide-prose"><p>一個 SFT example 配對 input 和 target output。單輪教學例子中，input 可以包含 instruction 和句子 prefix，target 則是期望的 completion。</p>
-<p>training 可能只對 assistant-response token 計算 loss，同時保留 prompt token 作 context。這是 loss masking，與 causal attention masking 不同。</p>
-<p>本週先建立概念。學過 evaluation 和 compute resource 後，week 24–26 才會建立 dataset、adapter 和受控制的 fine-tuning 實驗。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">建立對機制的理解</div><h3>preference 比較 candidate response</h3><div class="slide-prose"><p>一個 preference example 包含 prompt 和兩個可能 response，按明確 rubric 偏好其中一個。正確而簡潔的 completion，可以比無關答案更受偏好。</p>
-<p>RLHF 通常在 reinforcement-learning 程序使用由 preference 得到的 reward 資訊。DPO 則使用相對 reference model 的 direct preference objective。細節稍後再學；兩者都需要深思熟慮的 data 和 evaluation。</p>
-<p>preference 是對受評行為的 signal。只獎勵討好的措辭，可能偏好流暢卻錯誤的 response。rubric 與 algorithm 名稱同樣重要。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">建立對機制的理解</div><h3>作為中間計算的 reasoning</h3><div class="slide-prose"><p>考慮「A bus ticket costs 4 dollars. I buy three tickets. What is the total?」。可核實的結果是 12 dollars。response 可以展示簡潔計算 3×4=12。</p>
-<p>chain-of-thought prompting 用中間步驟或例子，幫助部分 model 處理部分任務。但生成 rationale 仍可伴隨錯誤 final answer，亦不保證揭示 model 真正內部的 causal process。</p>
-<p>reasoning-trained model 可能使用額外 inference 計算。我們應評估最終正確性和 resource use，而非按顯示出來的解釋長度判斷能力。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">建立對機制的理解</div><h3>公平的小型 reasoning 實驗</h3><div class="slide-prose"><p>準備有獨立答案的 arithmetic example。在適用情況下，用相同 model、task set 和 decoding setting，比較 direct response 與簡潔的 step-based prompt。</p>
-<p>計入所有生成 candidate 和 verification call。若某方法先 sample 五個答案才選一個，成本就包括全部五個。</p>
-<p>簡單 sentence completion 可能不需要額外 reasoning。arithmetic 可用 calculator 提供獨立核實結果。只有先理解底層 model，並釐清之後的應用任務，才會引入 executable tool。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">深入學習，檢查理解</div><h3>in-context learning 與 weight 改動</h3><div class="slide-prose"><p>在 prompt 提供 example，可以影響當前 output，而不改變 model weight。fine-tuning 則用 optimizer 改變 trainable parameter。</p>
-<p>假設 prompt 提供兩個只用一個字回答的 example，這是 contextual instruction 或 demonstration。gradient update 後儲存 adapter，則是另一種 intervention。</p>
-<p>日後診斷失敗需要更好 prompt、更好證據，還是學到的改動時，這個區分很重要。目前先辨認哪些資訊在 input，哪些在 parameter。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">深入學習，檢查理解</div><h3>實例練習與學習檢查</h3><div class="slide-prose"><p>為 sentence completion 寫兩個 SFT example，另寫一組 preference pair，讓 preferred output 遵從 one-word instruction。指出計 loss 所用的 prompt token 和 answer token。</p>
-<p>為 ticket 問題寫出正確答案，以及一段好看但錯誤的解釋。解釋為何只評 explanation 的流暢程度會失敗。</p>
-<p>當 pretraining、SFT、preference、in-context example 和 reasoning prompt 在你的解釋中有不同意義，就準備好了。semester two 會回到它們更深入的 objective 和實驗。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">深入學習，檢查理解</div><h3>response 可以遵從格式，卻仍然錯誤</h3><div class="slide-prose"><p>instruction 要求用一個字完成「I go to school by ___.」。target bus 同時教授格式和關聯。若每個 example 都不顧證據而堅持 bus，model 可能學到狹窄模式，在 context 說明講者步行時失敗。</p>
-<p>用對比例子：「The bus service is closed today. I go to school by ___.」。期望 completion 可能取決於額外資訊，而且仍有多個合理答案。假裝永遠只有唯一正確答案的 dataset，可能編入沒有根據的確定性。</p>
-<p>instruction-following evaluation 要分開評估有否遵從「one word」，以及內容是否符合提供的事實。reasoning 則要分開看 final amount 是否正確，以及計算看起來是否可信。這些區分會引導之後的 adaptation 實驗，避免將較低 loss 自動視為更好行為。</p></div></section></div><div class="deck-controls"><button class="slide-prev" type="button">← 上一頁</button><span aria-live="polite" class="slide-counter">1 / 9</span><button class="slide-next" type="button">下一頁 →</button></div><label class="slide-jump-label">前往 slide <select aria-label="跳至 slide" class="slide-jump"><option value="0">1</option><option value="1">2</option><option value="2">3</option><option value="3">4</option><option value="4">5</option><option value="5">6</option><option value="6">7</option><option value="7">8</option><option value="8">9</option></select></label><button aria-pressed="false" class="deck-all" type="button">顯示全部 slides</button><a class="reader-link" href="#full-notes">閱讀完整講義 ↓</a></section><article class="prose full-notes" id="full-notes"><div class="eyebrow">完整講義</div><h2>閱讀完整解說</h2><h3 id="completing-text-and-following-a-request">完成文字與遵從要求</h3>
-<p>pretrained language model 從 prediction 任務學習模式。「Complete this sentence with one transport word」這類要求，指定了一種特定行為方式。</p>
-<p>model 可能在 pretraining 已獲得部分有用行為，但 supervised example 可令期望的格式和 response 更一致。我們區分一般 prediction training 與之後的 adaptation。</p>
-<p>繼續用簡單任務。給定「I go to school by ___,」，一個期望 response 是 bus。給定「Name two possible completions,」，期望 response 可以是 bus 和 train。task instruction 改變了甚麼才算滿意的 response。</p>
-<h3 id="pretraining-learns-from-broad-text">pretraining 從廣泛文字學習</h3>
-<p>next-token pretraining 利用文字建立大量 shifted prediction target。data 和 objective 並不保證每個生成主張都正確。</p>
-<p>model 學習 parameter，以支持 training distribution 內的 prediction。它不是把每句話當作普通可搜尋的 row 儲存，雖然 memorization 確實可能發生。</p>
-<p>embedding table、attention projection、MLP weight 和 output head，都參與這個 parameterized 計算。前面 lecture 學過的完整路徑，在 training 後依然存在。</p>
-<h3 id="supervised-fine-tuning-supplies-desired-responses">supervised fine-tuning 提供期望 response</h3>
-<p>一個 SFT example 配對 input 和 target output。單輪教學例子中，input 可以包含 instruction 和句子 prefix，target 則是期望的 completion。</p>
-<p>training 可能只對 assistant-response token 計算 loss，同時保留 prompt token 作 context。這是 loss masking，與 causal attention masking 不同。</p>
-<p>本週先建立概念。學過 evaluation 和 compute resource 後，week 24–26 才會建立 dataset、adapter 和受控制的 fine-tuning 實驗。</p>
-<h3 id="preferences-compare-candidate-responses">preference 比較 candidate response</h3>
-<p>一個 preference example 包含 prompt 和兩個可能 response，按明確 rubric 偏好其中一個。正確而簡潔的 completion，可以比無關答案更受偏好。</p>
-<p>RLHF 通常在 reinforcement-learning 程序使用由 preference 得到的 reward 資訊。DPO 則使用相對 reference model 的 direct preference objective。細節稍後再學；兩者都需要深思熟慮的 data 和 evaluation。</p>
-<p>preference 是對受評行為的 signal。只獎勵討好的措辭，可能偏好流暢卻錯誤的 response。rubric 與 algorithm 名稱同樣重要。</p>
-<h3 id="reasoning-as-intermediate-computation">作為中間計算的 reasoning</h3>
-<p>考慮「A bus ticket costs 4 dollars. I buy three tickets. What is the total?」。可核實的結果是 12 dollars。response 可以展示簡潔計算 3×4=12。</p>
-<p>chain-of-thought prompting 用中間步驟或例子，幫助部分 model 處理部分任務。但生成 rationale 仍可伴隨錯誤 final answer，亦不保證揭示 model 真正內部的 causal process。</p>
-<p>reasoning-trained model 可能使用額外 inference 計算。我們應評估最終正確性和 resource use，而非按顯示出來的解釋長度判斷能力。</p>
-<h3 id="a-fair-small-reasoning-experiment">公平的小型 reasoning 實驗</h3>
-<p>準備有獨立答案的 arithmetic example。在適用情況下，用相同 model、task set 和 decoding setting，比較 direct response 與簡潔的 step-based prompt。</p>
-<p>計入所有生成 candidate 和 verification call。若某方法先 sample 五個答案才選一個，成本就包括全部五個。</p>
-<p>簡單 sentence completion 可能不需要額外 reasoning。arithmetic 可用 calculator 提供獨立核實結果。只有先理解底層 model，並釐清之後的應用任務，才會引入 executable tool。</p>
-<h3 id="in-context-learning-and-weight-changes">in-context learning 與 weight 改動</h3>
-<p>在 prompt 提供 example，可以影響當前 output，而不改變 model weight。fine-tuning 則用 optimizer 改變 trainable parameter。</p>
-<p>假設 prompt 提供兩個只用一個字回答的 example，這是 contextual instruction 或 demonstration。gradient update 後儲存 adapter，則是另一種 intervention。</p>
-<p>日後診斷失敗需要更好 prompt、更好證據，還是學到的改動時，這個區分很重要。目前先辨認哪些資訊在 input，哪些在 parameter。</p>
-<h3 id="worked-practice-and-a-readiness-check">實例練習與學習檢查</h3>
-<p>為 sentence completion 寫兩個 SFT example，另寫一組 preference pair，讓 preferred output 遵從 one-word instruction。指出計 loss 所用的 prompt token 和 answer token。</p>
-<p>為 ticket 問題寫出正確答案，以及一段好看但錯誤的解釋。解釋為何只評 explanation 的流暢程度會失敗。</p>
-<p>當 pretraining、SFT、preference、in-context example 和 reasoning prompt 在你的解釋中有不同意義，就準備好了。semester two 會回到它們更深入的 objective 和實驗。</p>
-<h3 id="a-response-can-follow-format-and-still-be-wrong">response 可以遵從格式，卻仍然錯誤</h3>
-<p>instruction 要求用一個字完成「I go to school by ___.」。target bus 同時教授格式和關聯。若每個 example 都不顧證據而堅持 bus，model 可能學到狹窄模式，在 context 說明講者步行時失敗。</p>
-<p>用對比例子：「The bus service is closed today. I go to school by ___.」。期望 completion 可能取決於額外資訊，而且仍有多個合理答案。假裝永遠只有唯一正確答案的 dataset，可能編入沒有根據的確定性。</p>
-<p>instruction-following evaluation 要分開評估有否遵從「one word」，以及內容是否符合提供的事實。reasoning 則要分開看 final amount 是否正確，以及計算看起來是否可信。這些區分會引導之後的 adaptation 實驗，避免將較低 loss 自動視為更好行為。</p></article><nav aria-label="前後 lecture" class="chapter-pagination"><a href="13.html"><small>上一週</small>Generation、decoding 與 KV cache</a><a href="15.html"><small>下一週</small>文字以外的 Generative AI</a></nav></div><footer class="footer"><span>Applied AI · 獨立自學課程</span><span>32 週 · 每週 10 小時</span><a href="../resources.html#about-this-course">關於課程及資料來源</a></footer></main><dialog aria-labelledby="search-title" class="search-dialog"><div class="dialog-head"><h2 id="search-title">尋找概念</h2><button aria-label="關閉搜尋" class="search-close" type="button">關閉</button></div><label class="sr-only" for="course-search">搜尋所有 lecture 和 tutorial</label><input autocomplete="off" id="course-search" placeholder="試試 attention、fine-tuning 或 harness……" type="search"/><p aria-live="polite" class="search-status">搜尋 lecture notes、tutorial、測驗及閱讀材料。</p><div class="search-results"></div></dialog><div aria-live="polite" class="toast" role="status"></div></body></html>
+<html lang="zh-HK">
+ <head>
+  <script src="../../assets/translations-zh-HK.js">
+  </script>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width,initial-scale=1" name="viewport"/>
+  <title>
+   從 pretraining 到 instruction following 和 reasoning · Applied AI
+  </title>
+  <meta content="Applied generative AI and LLM systems course material" name="description"/>
+  <meta content="#173c36" name="theme-color"/>
+  <link href="../../assets/favicon.svg" rel="icon" type="image/svg+xml"/>
+  <link href="../../assets/style.css" rel="stylesheet"/>
+  <link href="../../assets/slides.css" rel="stylesheet"/>
+  <script>
+   window.COURSE_BASE="../";
+  </script>
+  <script defer="" src="../../assets/site-config.js">
+  </script>
+  <script defer="" src="../assets/search-index.js">
+  </script>
+  <script defer="" src="../../assets/app.js">
+  </script>
+  <script defer="" src="../../assets/visuals.js">
+  </script>
+  <script defer="" src="../../assets/slides.js">
+  </script>
+  <script defer="" src="../../assets/beginner-visuals.js">
+  </script>
+  <script defer="True" src="../../assets/locale-patterns.js">
+  </script>
+  <script defer="True" src="../../assets/locale.js">
+  </script>
+  <link href="../../assets/bilingual.css" rel="stylesheet"/>
+  <link href="../../lectures/14.html" hreflang="en" rel="alternate"/>
+  <link href="../../assets/reader-v3.css" rel="stylesheet"/>
+  <script defer="True" src="../../assets/reader-v3.js">
+  </script>
+ </head>
+ <body data-page-kind="lecture" data-week="14">
+  <a class="skip-link" href="#main">
+   跳至內容
+  </a>
+  <header class="topbar">
+   <button aria-controls="course-sidebar" aria-expanded="false" class="menu-toggle" type="button">
+    選單
+   </button>
+   <a class="brand" href="../index.html">
+    <span aria-hidden="true" class="brand-mark">
+     a
+     <span>
+      i
+     </span>
+    </span>
+    <span>
+     APPLIED AI
+     <small>
+      從原理到實踐
+     </small>
+    </span>
+   </a>
+   <nav aria-label="主要導覽">
+    <a href="../index.html">
+     課程
+    </a>
+    <a href="../visuals.html">
+     互動圖解
+    </a>
+    <a href="../project.html">
+     專題
+    </a>
+    <a class="language-switch" href="../../lectures/14.html" hreflang="en" lang="en">
+     English
+    </a>
+   </nav>
+   <button class="search-open" type="button">
+    搜尋課程
+    <span aria-hidden="true">
+     /
+    </span>
+   </button>
+  </header>
+  <aside aria-label="課程章節" class="sidebar" id="course-sidebar">
+   <a class="side-home" href="../index.html">
+    課程概覽
+   </a>
+   <details class="semester-nav" open="">
+    <summary>
+     第一學期
+     <span>
+      第 1–16 週
+     </span>
+    </summary>
+    <ol start="1">
+     <li>
+      <a href="../lectures/01.html">
+       <span class="week-number">
+        01
+       </span>
+       <span>
+        Language model 究竟在學甚麼
+       </span>
+       <span class="week-tick" data-week-tick="1">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/02.html">
+       <span class="week-number">
+        02
+       </span>
+       <span>
+        從文字到 token 和數值 ID
+       </span>
+       <span class="week-tick" data-week-tick="2">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/03.html">
+       <span class="week-number">
+        03
+       </span>
+       <span>
+        Word vector 能表達甚麼
+       </span>
+       <span class="week-tick" data-week-tick="3">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/04.html">
+       <span class="week-number">
+        04
+       </span>
+       <span>
+        從 score 到 probability 和學習訊號
+       </span>
+       <span class="week-tick" data-week-tick="4">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/05.html">
+       <span class="week-number">
+        05
+       </span>
+       <span>
+        為甚麼語言需要 context 和次序
+       </span>
+       <span class="week-tick" data-week-tick="5">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/06.html">
+       <span class="week-number">
+        06
+       </span>
+       <span>
+        Attention 由 weighted mixture 開始
+       </span>
+       <span class="week-tick" data-week-tick="6">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/07.html">
+       <span class="week-number">
+        07
+       </span>
+       <span>
+        Query、key 和 value 從何而來
+       </span>
+       <span class="week-tick" data-week-tick="7">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/08.html">
+       <span class="week-number">
+        08
+       </span>
+       <span>
+        正確進行 attention scaling 和 masking
+       </span>
+       <span class="week-tick" data-week-tick="8">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/09.html">
+       <span class="week-number">
+        09
+       </span>
+       <span>
+        多個 attention head 與位置
+       </span>
+       <span class="week-tick" data-week-tick="9">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/10.html">
+       <span class="week-number">
+        10
+       </span>
+       <span>
+        逐步拆解 transformer block
+       </span>
+       <span class="week-tick" data-week-tick="10">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/11.html">
+       <span class="week-number">
+        11
+       </span>
+       <span>
+        Encoder、decoder 與完整 model architecture
+       </span>
+       <span class="week-tick" data-week-tick="11">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/12.html">
+       <span class="week-number">
+        12
+       </span>
+       <span>
+        訓練一個小型 transformer
+       </span>
+       <span class="week-tick" data-week-tick="12">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/13.html">
+       <span class="week-number">
+        13
+       </span>
+       <span>
+        Generation、decoding 與 KV cache
+       </span>
+       <span class="week-tick" data-week-tick="13">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a aria-current="page" href="../lectures/14.html">
+       <span class="week-number">
+        14
+       </span>
+       <span>
+        從 pretraining 到 instruction following 和 reasoning
+       </span>
+       <span class="week-tick" data-week-tick="14">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/15.html">
+       <span class="week-number">
+        15
+       </span>
+       <span>
+        文字以外的 Generative AI
+       </span>
+       <span class="week-tick" data-week-tick="15">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/16.html">
+       <span class="week-number">
+        16
+       </span>
+       <span>
+        完整 transformer 導覽與第一學期溫習
+       </span>
+       <span class="week-tick" data-week-tick="16">
+       </span>
+      </a>
+     </li>
+    </ol>
+   </details>
+   <details class="semester-nav">
+    <summary>
+     第二學期
+     <span>
+      第 17–32 週
+     </span>
+    </summary>
+    <ol start="17">
+     <li>
+      <a href="../lectures/17.html">
+       <span class="week-number">
+        17
+       </span>
+       <span>
+        從 word vector 到 semantic search
+       </span>
+       <span class="week-tick" data-week-tick="17">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/18.html">
+       <span class="week-number">
+        18
+       </span>
+       <span>
+        從一列 vector 建立 vector database
+       </span>
+       <span class="week-tick" data-week-tick="18">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/19.html">
+       <span class="week-number">
+        19
+       </span>
+       <span>
+        把 RAG 理解為開卷作答
+       </span>
+       <span class="week-tick" data-week-tick="19">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/20.html">
+       <span class="week-number">
+        20
+       </span>
+       <span>
+        在保持基本任務的前提下改善 RAG
+       </span>
+       <span class="week-tick" data-week-tick="20">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/21.html">
+       <span class="week-number">
+        21
+       </span>
+       <span>
+        評估 retrieval、答案與 uncertainty
+       </span>
+       <span class="week-tick" data-week-tick="21">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/22.html">
+       <span class="week-number">
+        22
+       </span>
+       <span>
+        CPU、GPU、memory 與 model 資源計算
+       </span>
+       <span class="week-tick" data-week-tick="22">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/23.html">
+       <span class="week-number">
+        23
+       </span>
+       <span>
+        CUDA kernel 與 profiling
+       </span>
+       <span class="week-tick" data-week-tick="23">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/24.html">
+       <span class="week-number">
+        24
+       </span>
+       <span>
+        Fine-tuning 由教學 dataset 開始
+       </span>
+       <span class="week-tick" data-week-tick="24">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/25.html">
+       <span class="week-number">
+        25
+       </span>
+       <span>
+        從小型 matrix 理解 LoRA 和 QLoRA
+       </span>
+       <span class="week-tick" data-week-tick="25">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/26.html">
+       <span class="week-number">
+        26
+       </span>
+       <span>
+        Fine-tuning 實驗、preference 與 distillation
+       </span>
+       <span class="week-tick" data-week-tick="26">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/27.html">
+       <span class="week-number">
+        27
+       </span>
+       <span>
+        Tool、function、workflow 與 agent
+       </span>
+       <span class="week-tick" data-week-tick="27">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/28.html">
+       <span class="week-number">
+        28
+       </span>
+       <span>
+        Harness、planning、memory 與有界執行
+       </span>
+       <span class="week-tick" data-week-tick="28">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/29.html">
+       <span class="week-number">
+        29
+       </span>
+       <span>
+        從 notebook 到 MLOps 和 inference serving
+       </span>
+       <span class="week-tick" data-week-tick="29">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/30.html">
+       <span class="week-number">
+        30
+       </span>
+       <span>
+        Monitoring、security、regression test 與 rollback
+       </span>
+       <span class="week-tick" data-week-tick="30">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/31.html">
+       <span class="week-number">
+        31
+       </span>
+       <span>
+        整合文件助手與進階延伸
+       </span>
+       <span class="week-tick" data-week-tick="31">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/32.html">
+       <span class="week-number">
+        32
+       </span>
+       <span>
+        溫習、答辯與持續學習計劃
+       </span>
+       <span class="week-tick" data-week-tick="32">
+       </span>
+      </a>
+     </li>
+    </ol>
+   </details>
+   <div class="side-links">
+    <a href="../visuals.html">
+     互動圖解實驗室
+     <span>
+      14 個互動課節
+     </span>
+    </a>
+    <a href="../project.html">
+     文件助手
+     <span>
+      你的 capstone project
+     </span>
+    </a>
+    <a href="../resources.html">
+     閱讀材料與環境設定
+    </a>
+   </div>
+   <div class="side-progress">
+    <div>
+     <span>
+      你的進度
+     </span>
+     <strong data-progress-count="">
+      0 / 32
+     </strong>
+    </div>
+    <progress aria-label="已完成 lecture" max="32" value="0">
+    </progress>
+    <small>
+     儲存在這個瀏覽器
+    </small>
+   </div>
+  </aside>
+  <main class="main" id="main">
+   <div class="content">
+    <div class="chapter-header">
+     <div class="eyebrow">
+      第一學期 / 第 14 週
+     </div>
+     <h1>
+      從 pretraining 到 instruction following 和 reasoning
+     </h1>
+    </div>
+    <div class="lesson-links">
+     <a href="../tutorials/14.html">
+      練習 14
+     </a>
+     <a href="../tests/14.html">
+      檢查你的理解
+     </a>
+     <button aria-pressed="false" class="mark-complete" data-week="14" type="button">
+      標記為已完成
+     </button>
+    </div>
+    <div aria-label="課堂檢視" class="lesson-mode" role="tablist">
+     <button aria-controls="full-notes" aria-selected="true" data-mode="read" id="mode-read" role="tab" type="button">
+      閱讀講義
+     </button>
+     <button aria-controls="lecture-slides" aria-selected="false" data-mode="slides" id="mode-slides" role="tab" type="button">
+      課堂 slides
+     </button>
+    </div>
+    <section aria-label="Lecture slides" class="lecture-deck" hidden="" id="lecture-slides" role="tabpanel">
+     <div class="deck-top">
+      <div>
+       <div class="eyebrow">
+        課堂投影片 · 第 14 週
+       </div>
+       <h2>
+        重點步驟與圖解
+       </h2>
+      </div>
+      <button class="deck-present" type="button">
+       簡報模式
+      </button>
+     </div>
+     <p class="deck-help">
+      用 slides 溫習機制；按「閱讀完整解說」可開啟完整講義及程式碼。
+     </p>
+     <div aria-label="簡報：使用左右方向鍵" class="slide-viewport" tabindex="0">
+      <section class="lecture-slide" data-slide="">
+       <div class="slide-stage">
+        第 14 週 · 課節 1
+       </div>
+       <h3>
+        完成文字與遵從要求
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          pretrained language model 從 prediction 任務學習模式。
+         </li>
+         <li>
+          model 可能在 pretraining 已獲得部分有用行為，但 supervised example 可令期望的格式和 response 更一致。
+         </li>
+         <li>
+          繼續用簡單任務。給定「I go to school by ___,」，一個期望 response 是 bus。給定「Name two possible completions,」，期望 response 可以是 bus 和 train。task instruction 改變了甚麼才算滿意的 response。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#completing-text-and-following-a-request">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 14 週 · 課節 2
+       </div>
+       <h3>
+        pretraining 從廣泛文字學習
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          next-token pretraining 利用文字建立大量 shifted prediction target。
+         </li>
+         <li>
+          model 學習 parameter，以支持 training distribution 內的 prediction。
+         </li>
+         <li>
+          embedding table、attention projection、MLP weight 和 output head，都參與這個 parameterized 計算。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#pretraining-learns-from-broad-text">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 14 週 · 課節 3
+       </div>
+       <h3>
+        supervised fine-tuning 提供期望 response
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          一個 SFT example 配對 input 和 target output。
+         </li>
+         <li>
+          training 可能只對 assistant-response token 計算 loss，同時保留 prompt token 作 context。
+         </li>
+         <li>
+          本週先建立概念。學過 evaluation 和 compute resource 後，week 24–26 才會建立 dataset、adapter 和受控制的 fine-tuning 實驗。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#supervised-fine-tuning-supplies-desired-responses">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 14 週 · 課節 4
+       </div>
+       <h3>
+        preference 比較 candidate response
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          一個 preference example 包含 prompt 和兩個可能 response，按明確 rubric 偏好其中一個。
+         </li>
+         <li>
+          RLHF 通常在 reinforcement-learning 程序使用由 preference 得到的 reward 資訊。
+         </li>
+         <li>
+          preference 是對受評行為的 signal。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#preferences-compare-candidate-responses">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 14 週 · 課節 5
+       </div>
+       <h3>
+        作為中間計算的 reasoning
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          考慮「A bus ticket costs 4 dollars.
+         </li>
+         <li>
+          chain-of-thought prompting 用中間步驟或例子，幫助部分 model 處理部分任務。
+         </li>
+         <li>
+          reasoning-trained model 可能使用額外 inference 計算。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#reasoning-as-intermediate-computation">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 14 週 · 課節 6
+       </div>
+       <h3>
+        Multi-step 答案可以在特定 boundary 出錯
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          使用這條問題：「A school buys 8 adult tickets at 6 dollars and 12 student tickets at 4 dollars.
+         </li>
+         <li>
+          比較直接作答，與要求 adult subtotal、合資格 student subtotal、discount 和 final total 的 prompt。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#a-multi-step-answer-can-fail-at-a-specific-boundary">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 14 週 · 課節 7
+       </div>
+       <h3>
+        Test-time compute 在 training 後增加運算
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          同一個固定 model，可以透過較長的 intermediate computation、抽樣多個 candidates、搜尋 alternatives，或使用 verifier，增加 inference work。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#test-time-compute-spends-work-after-training">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 14 週 · 課節 8
+       </div>
+       <h3>
+        PPO、GRPO、RLVR 和 constitutional feedback
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          在 reinforcement-learning post-training 中，language model 是為 response tokens 分配 probabilities 的 policy，而 reward 為抽樣得到的 response 評分。
+         </li>
+         <li>
+          GRPO 對同一 problem 抽樣一組 responses，再比較 group 內的 rewards。
+         </li>
+         <li>
+          RLVR 即 reinforcement learning with verifiable rewards。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#ppo-grpo-rlvr-and-constitutional-feedback">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 14 週 · 課節 9
+       </div>
+       <h3>
+        PPO、GRPO、RLVR 和 constitutional feedback · 續
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Constitutional methods 使用書面 principles 指導 critique、revision 或 preference judgments。
+         </li>
+         <li>
+          來源： Proximal Policy Optimization .
+         </li>
+         <li>
+          來源： DeepSeekMath: Group Relative Policy Optimization .
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#ppo-grpo-rlvr-and-constitutional-feedback">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 14 週 · 課節 10
+       </div>
+       <h3>
+        公平的小型 reasoning 實驗
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          準備有獨立答案的 arithmetic example。
+         </li>
+         <li>
+          計入所有生成 candidate 和 verification call。
+         </li>
+         <li>
+          簡單 sentence completion 可能不需要額外 reasoning。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#a-fair-small-reasoning-experiment">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 14 週 · 課節 11
+       </div>
+       <h3>
+        in-context learning 與 weight 改動
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          在 prompt 提供 example，可以影響當前 output，而不改變 model weight。
+         </li>
+         <li>
+          假設 prompt 提供兩個只用一個字回答的 example，這是 contextual instruction 或 demonstration。
+         </li>
+         <li>
+          日後診斷失敗需要更好 prompt、更好證據，還是學到的改動時，這個區分很重要。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#in-context-learning-and-weight-changes">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 14 週 · 課節 12
+       </div>
+       <h3>
+        實例練習與學習檢查
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          為 sentence completion 寫兩個 SFT example，另寫一組 preference pair，讓 preferred output 遵從 one-word instruction。
+         </li>
+         <li>
+          為 ticket 問題寫出正確答案，以及一段好看但錯誤的解釋。
+         </li>
+         <li>
+          當 pretraining、SFT、preference、in-context example 和 reasoning prompt 在你的解釋中有不同意義，就準備好了。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#worked-practice-and-a-readiness-check">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 14 週 · 課節 13
+       </div>
+       <h3>
+        response 可以遵從格式，卻仍然錯誤
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          instruction 要求用一個字完成「I go to school by ___.」。
+         </li>
+         <li>
+          用對比例子：「The bus service is closed today.
+         </li>
+         <li>
+          instruction-following evaluation 要分開評估有否遵從「one word」，以及內容是否符合提供的事實。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#a-response-can-follow-format-and-still-be-wrong">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+     </div>
+     <div class="deck-controls">
+      <button class="slide-prev" type="button">
+       ← 上一頁
+      </button>
+      <span aria-live="polite" class="slide-counter">
+       1 / 13
+      </span>
+      <button class="slide-next" type="button">
+       下一頁 →
+      </button>
+     </div>
+     <label class="slide-jump-label">
+      前往 slide
+      <select aria-label="跳至 slide" class="slide-jump">
+       <option value="0">
+        1. 完成文字與遵從要求
+       </option>
+       <option value="1">
+        2. pretraining 從廣泛文字學習
+       </option>
+       <option value="2">
+        3. supervised fine-tuning 提供期望 response
+       </option>
+       <option value="3">
+        4. preference 比較 candidate response
+       </option>
+       <option value="4">
+        5. 作為中間計算的 reasoning
+       </option>
+       <option value="5">
+        6. Multi-step 答案可以在特定 boundary 出錯
+       </option>
+       <option value="6">
+        7. Test-time compute 在 training 後增加運算
+       </option>
+       <option value="7">
+        8. PPO、GRPO、RLVR 和 constitutional feedback
+       </option>
+       <option value="8">
+        9. PPO、GRPO、RLVR 和 constitutional feedback · 續
+       </option>
+       <option value="9">
+        10. 公平的小型 reasoning 實驗
+       </option>
+       <option value="10">
+        11. in-context learning 與 weight 改動
+       </option>
+       <option value="11">
+        12. 實例練習與學習檢查
+       </option>
+       <option value="12">
+        13. response 可以遵從格式，卻仍然錯誤
+       </option>
+      </select>
+     </label>
+     <button aria-pressed="false" class="deck-all" type="button">
+      顯示全部 slides
+     </button>
+    </section>
+    <nav aria-label="本課內容" class="reader-toc">
+     <strong>
+      本課內容
+     </strong>
+     <ol>
+      <li>
+       <a href="#completing-text-and-following-a-request">
+        完成文字與遵從要求
+       </a>
+      </li>
+      <li>
+       <a href="#pretraining-learns-from-broad-text">
+        pretraining 從廣泛文字學習
+       </a>
+      </li>
+      <li>
+       <a href="#supervised-fine-tuning-supplies-desired-responses">
+        supervised fine-tuning 提供期望 response
+       </a>
+      </li>
+      <li>
+       <a href="#preferences-compare-candidate-responses">
+        preference 比較 candidate response
+       </a>
+      </li>
+      <li>
+       <a href="#reasoning-as-intermediate-computation">
+        作為中間計算的 reasoning
+       </a>
+      </li>
+      <li>
+       <a href="#a-multi-step-answer-can-fail-at-a-specific-boundary">
+        Multi-step 答案可以在特定 boundary 出錯
+       </a>
+      </li>
+      <li>
+       <a href="#test-time-compute-spends-work-after-training">
+        Test-time compute 在 training 後增加運算
+       </a>
+      </li>
+      <li>
+       <a href="#ppo-grpo-rlvr-and-constitutional-feedback">
+        PPO、GRPO、RLVR 和 constitutional feedback
+       </a>
+      </li>
+      <li>
+       <a href="#a-fair-small-reasoning-experiment">
+        公平的小型 reasoning 實驗
+       </a>
+      </li>
+      <li>
+       <a href="#in-context-learning-and-weight-changes">
+        in-context learning 與 weight 改動
+       </a>
+      </li>
+      <li>
+       <a href="#worked-practice-and-a-readiness-check">
+        實例練習與學習檢查
+       </a>
+      </li>
+      <li>
+       <a href="#a-response-can-follow-format-and-still-be-wrong">
+        response 可以遵從格式，卻仍然錯誤
+       </a>
+      </li>
+     </ol>
+    </nav>
+    <article class="prose full-notes" id="full-notes" role="tabpanel">
+     <div class="eyebrow">
+      完整講義
+     </div>
+     <h2>
+      閱讀完整解說
+     </h2>
+     <h3 id="completing-text-and-following-a-request">
+      完成文字與遵從要求
+     </h3>
+     <p>
+      pretrained language model 從 prediction 任務學習模式。「Complete this sentence with one transport word」這類要求，指定了一種特定行為方式。
+     </p>
+     <p>
+      model 可能在 pretraining 已獲得部分有用行為，但 supervised example 可令期望的格式和 response 更一致。我們區分一般 prediction training 與之後的 adaptation。
+     </p>
+     <p>
+      繼續用簡單任務。給定「I go to school by ___,」，一個期望 response 是 bus。給定「Name two possible completions,」，期望 response 可以是 bus 和 train。task instruction 改變了甚麼才算滿意的 response。
+     </p>
+     <h3 id="pretraining-learns-from-broad-text">
+      pretraining 從廣泛文字學習
+     </h3>
+     <p>
+      next-token pretraining 利用文字建立大量 shifted prediction target。data 和 objective 並不保證每個生成主張都正確。
+     </p>
+     <p>
+      model 學習 parameter，以支持 training distribution 內的 prediction。它不是把每句話當作普通可搜尋的 row 儲存，雖然 memorization 確實可能發生。
+     </p>
+     <p>
+      embedding table、attention projection、MLP weight 和 output head，都參與這個 parameterized 計算。前面 lecture 學過的完整路徑，在 training 後依然存在。
+     </p>
+     <h3 id="supervised-fine-tuning-supplies-desired-responses">
+      supervised fine-tuning 提供期望 response
+     </h3>
+     <p>
+      一個 SFT example 配對 input 和 target output。單輪教學例子中，input 可以包含 instruction 和句子 prefix，target 則是期望的 completion。
+     </p>
+     <p>
+      training 可能只對 assistant-response token 計算 loss，同時保留 prompt token 作 context。這是 loss masking，與 causal attention masking 不同。
+     </p>
+     <p>
+      本週先建立概念。學過 evaluation 和 compute resource 後，week 24–26 才會建立 dataset、adapter 和受控制的 fine-tuning 實驗。
+     </p>
+     <h3 id="preferences-compare-candidate-responses">
+      preference 比較 candidate response
+     </h3>
+     <p>
+      一個 preference example 包含 prompt 和兩個可能 response，按明確 rubric 偏好其中一個。正確而簡潔的 completion，可以比無關答案更受偏好。
+     </p>
+     <p>
+      RLHF 通常在 reinforcement-learning 程序使用由 preference 得到的 reward 資訊。DPO 則使用相對 reference model 的 direct preference objective。細節稍後再學；兩者都需要深思熟慮的 data 和 evaluation。
+     </p>
+     <p>
+      preference 是對受評行為的 signal。只獎勵討好的措辭，可能偏好流暢卻錯誤的 response。rubric 與 algorithm 名稱同樣重要。
+     </p>
+     <h3 id="reasoning-as-intermediate-computation">
+      作為中間計算的 reasoning
+     </h3>
+     <p>
+      考慮「A bus ticket costs 4 dollars. I buy three tickets. What is the total?」。可核實的結果是 12 dollars。response 可以展示簡潔計算 3×4=12。
+     </p>
+     <p>
+      chain-of-thought prompting 用中間步驟或例子，幫助部分 model 處理部分任務。但生成 rationale 仍可伴隨錯誤 final answer，亦不保證揭示 model 真正內部的 causal process。
+     </p>
+     <p>
+      reasoning-trained model 可能使用額外 inference 計算。我們應評估最終正確性和 resource use，而非按顯示出來的解釋長度判斷能力。
+     </p>
+     <h3 id="a-multi-step-answer-can-fail-at-a-specific-boundary">
+      Multi-step 答案可以在特定 boundary 出錯
+     </h3>
+     <p>
+      使用這條問題：「A school buys 8 adult tickets at 6 dollars and 12 student tickets at 4 dollars. A 25% discount applies only to the student tickets. What is the total?」Adult subtotal 是 8×6=48；student subtotal 是 12×4=48，discount 後是 36，正確 total 是 84。看似流暢的錯誤解法，可能把整張 96-dollar bill 都 discount，得到 72。失敗點是「only」的 scope，而非 multiplication。
+     </p>
+     <p>
+      比較直接作答，與要求 adult subtotal、合資格 student subtotal、discount 和 final total 的 prompt。記錄最終答案是否正確，以及 discount 有否套用到正確 group。在多條獨立核對答案的 problems 上完成相同比較前，不要聲稱該 prompt 有幫助。展示 steps 可以令讀者更容易檢查錯誤，但不代表這些 steps 忠實描述所有 internal computation。
+     </p>
+     <h3 id="test-time-compute-spends-work-after-training">
+      Test-time compute 在 training 後增加運算
+     </h3>
+     <p>
+      同一個固定 model，可以透過較長的 intermediate computation、抽樣多個 candidates、搜尋 alternatives，或使用 verifier，增加 inference work。對 ticket problem，可抽樣三個 candidates，檢查兩個 subtotals 和 discount scope。報告所有 generated tokens 和 verification calls，包括被拒絕的 candidates。增加 test-time compute 提供更多尋找或檢查 solution 的機會；selection rule 決定這些機會能否改善最終答案。
+     </p>
+     <h3 id="ppo-grpo-rlvr-and-constitutional-feedback">
+      PPO、GRPO、RLVR 和 constitutional feedback
+     </h3>
+     <p>
+      在 reinforcement-learning post-training 中，language model 是為 response tokens 分配 probabilities 的 policy，而 reward 為抽樣得到的 response 評分。PPO 比較新舊 policy probabilities，並在 training objective 中使用 clipping，抑制過大的 updates；常見 RLHF 設定亦會控制相對 reference model 的 drift。Value estimator 協助估計 response 比預期好多少。這是 parameter training，與要求固定 model 展示 steps 不同。
+     </p>
+     <p>
+      GRPO 對同一 problem 抽樣一組 responses，再比較 group 內的 rewards。典型形式會減去 group mean，再除以加上穩定項的 group standard deviation，形成 relative advantages；在該設定下可避免另一個 learned value model。若所有 candidates 都得到相同 reward，group 便幾乎或完全沒有 relative learning signal。不同實作的 normalization、clipping 和 reference-policy penalties 可以不同，因此應指出實際使用的 objective。
+     </p>
+     <p>
+      RLVR 即 reinforcement learning with verifiable rewards。Checker 可以核對 ticket total、執行 unit test，或驗證 mathematical result。這比「聽起來有說服力」更直接可檢查，但薄弱的 checker 仍可能獎勵 shortcuts。只檢查 final string 是否為「84」，並不能證明所有展示的 steps 都正確。
+     </p>
+     <p>
+      Constitutional methods 使用書面 principles 指導 critique、revision 或 preference judgments。例如按「claims 需要 evidence」的 principle，要求 model 批評並修改答案；AI feedback 亦可以協助建立 training preferences。Principles 和 reviewer 成為 learning process 的一部分，需要評估 bias 和 errors。Constitutional feedback、human preferences、verifiable rewards 和 SFT labels 是不同的 supervision sources，而一個 training recipe 可以把它們結合。
+     </p>
+     <p>
+      來源：
+      <a href="https://arxiv.org/abs/1707.06347">
+       Proximal Policy Optimization
+      </a>
+      .
+     </p>
+     <p>
+      來源：
+      <a href="https://arxiv.org/abs/2402.03300">
+       DeepSeekMath: Group Relative Policy Optimization
+      </a>
+      .
+     </p>
+     <p>
+      來源：
+      <a href="https://arxiv.org/abs/2212.08073">
+       Constitutional AI
+      </a>
+      .
+     </p>
+     <h3 id="a-fair-small-reasoning-experiment">
+      公平的小型 reasoning 實驗
+     </h3>
+     <p>
+      準備有獨立答案的 arithmetic example。在適用情況下，用相同 model、task set 和 decoding setting，比較 direct response 與簡潔的 step-based prompt。
+     </p>
+     <p>
+      計入所有生成 candidate 和 verification call。若某方法先 sample 五個答案才選一個，成本就包括全部五個。
+     </p>
+     <p>
+      簡單 sentence completion 可能不需要額外 reasoning。arithmetic 可用 calculator 提供獨立核實結果。只有先理解底層 model，並釐清之後的應用任務，才會引入 executable tool。
+     </p>
+     <h3 id="in-context-learning-and-weight-changes">
+      in-context learning 與 weight 改動
+     </h3>
+     <p>
+      在 prompt 提供 example，可以影響當前 output，而不改變 model weight。fine-tuning 則用 optimizer 改變 trainable parameter。
+     </p>
+     <p>
+      假設 prompt 提供兩個只用一個字回答的 example，這是 contextual instruction 或 demonstration。gradient update 後儲存 adapter，則是另一種 intervention。
+     </p>
+     <p>
+      日後診斷失敗需要更好 prompt、更好證據，還是學到的改動時，這個區分很重要。目前先辨認哪些資訊在 input，哪些在 parameter。
+     </p>
+     <h3 id="worked-practice-and-a-readiness-check">
+      實例練習與學習檢查
+     </h3>
+     <p>
+      為 sentence completion 寫兩個 SFT example，另寫一組 preference pair，讓 preferred output 遵從 one-word instruction。指出計 loss 所用的 prompt token 和 answer token。
+     </p>
+     <p>
+      為 ticket 問題寫出正確答案，以及一段好看但錯誤的解釋。解釋為何只評 explanation 的流暢程度會失敗。
+     </p>
+     <p>
+      當 pretraining、SFT、preference、in-context example 和 reasoning prompt 在你的解釋中有不同意義，就準備好了。semester two 會回到它們更深入的 objective 和實驗。
+     </p>
+     <h3 id="a-response-can-follow-format-and-still-be-wrong">
+      response 可以遵從格式，卻仍然錯誤
+     </h3>
+     <p>
+      instruction 要求用一個字完成「I go to school by ___.」。target bus 同時教授格式和關聯。若每個 example 都不顧證據而堅持 bus，model 可能學到狹窄模式，在 context 說明講者步行時失敗。
+     </p>
+     <p>
+      用對比例子：「The bus service is closed today. I go to school by ___.」。期望 completion 可能取決於額外資訊，而且仍有多個合理答案。假裝永遠只有唯一正確答案的 dataset，可能編入沒有根據的確定性。
+     </p>
+     <p>
+      instruction-following evaluation 要分開評估有否遵從「one word」，以及內容是否符合提供的事實。reasoning 則要分開看 final amount 是否正確，以及計算看起來是否可信。這些區分會引導之後的 adaptation 實驗，避免將較低 loss 自動視為更好行為。
+     </p>
+    </article>
+    <nav aria-label="前後 lecture" class="chapter-pagination">
+     <a href="13.html">
+      <small>
+       上一週
+      </small>
+      Generation、decoding 與 KV cache
+     </a>
+     <a href="15.html">
+      <small>
+       下一週
+      </small>
+      文字以外的 Generative AI
+     </a>
+    </nav>
+   </div>
+   <footer class="footer">
+    <span>
+     Applied AI · 獨立自學課程
+    </span>
+    <span>
+     32 週 · 每週 10 小時
+    </span>
+    <a href="../resources.html#about-this-course">
+     關於課程及資料來源
+    </a>
+   </footer>
+  </main>
+  <dialog aria-labelledby="search-title" class="search-dialog">
+   <div class="dialog-head">
+    <h2 id="search-title">
+     尋找概念
+    </h2>
+    <button aria-label="關閉搜尋" class="search-close" type="button">
+     關閉
+    </button>
+   </div>
+   <label class="sr-only" for="course-search">
+    搜尋所有 lecture 和 tutorial
+   </label>
+   <input autocomplete="off" id="course-search" placeholder="試試 attention、fine-tuning 或 harness……" type="search"/>
+   <p aria-live="polite" class="search-status">
+    搜尋 lecture notes、tutorial、測驗及閱讀材料。
+   </p>
+   <div class="search-results">
+   </div>
+  </dialog>
+  <div aria-live="polite" class="toast" role="status">
+  </div>
+ </body>
+</html>

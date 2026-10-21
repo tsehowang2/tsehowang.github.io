@@ -1,4 +1,3 @@
-# %%
 from pathlib import Path
 import sys,json,time,random,hashlib,math
 if hasattr(sys.stdout,'reconfigure'): sys.stdout.reconfigure(encoding='utf-8')
@@ -11,7 +10,7 @@ from coursekit.core import *
 random.seed(7)
 print('Course root:',COURSE)
 
-# %%
+
 tasks=json.loads((COURSE/'data/queries.json').read_text());index=LexicalIndex(load_docs())
 records=[]
 for t in tasks:
@@ -24,3 +23,13 @@ assert retrieval_metrics(['C','A','D'],['A','B'],3)=={'recall':.5,'hit':1,'rr':.
 print('Illustrative paired data, NOT model results:',paired_bootstrap([1,1,0,0,1,0],[1,1,1,0,1,0]))
 print('Fill manual fields; preserve failures and evaluate unsupported cases separately.')
 
+
+import math
+labels=[3,1,2]
+def dcg(values):return sum((2**rel-1)/math.log2(rank+2) for rank,rel in enumerate(values))
+ndcg=dcg(labels)/dcg(sorted(labels,reverse=True))
+assert 0<ndcg<=1
+b,c=1,9;n=b+c
+p_exact=min(1.,2*sum(math.comb(n,i) for i in range(min(b,c)+1))/2**n)
+assert math.isclose(p_exact,.021484375)
+print('nDCG using gain 2**rel-1:',ndcg,'Exact two-sided McNemar p:',p_exact)

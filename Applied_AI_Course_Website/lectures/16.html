@@ -1,55 +1,1063 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/><title>A complete transformer walkthrough and first semester review · Applied AI</title><meta content="Applied generative AI and LLM systems course material" name="description"/><meta content="#173c36" name="theme-color"/><link href="../assets/favicon.svg" rel="icon" type="image/svg+xml"/><link href="../assets/style.css" rel="stylesheet"/><link href="../assets/slides.css" rel="stylesheet"/><script>window.COURSE_BASE="../";</script><script defer="" src="../assets/site-config.js"></script><script defer="" src="../assets/search-index.js"></script><script defer="" src="../assets/app.js"></script><script defer="" src="../assets/visuals.js"></script><script defer="" src="../assets/slides.js"></script><script defer="" src="../assets/beginner-visuals.js"></script><link href="../zh-HK/lectures/16.html" hreflang="zh-HK" rel="alternate"/><link href="../assets/bilingual.css" rel="stylesheet"/></head><body data-page-kind="lecture" data-week="16"><a class="skip-link" href="#main">Skip to content</a><header class="topbar"><button aria-controls="course-sidebar" aria-expanded="false" class="menu-toggle" type="button">Menu</button><a class="brand" href="../index.html"><span aria-hidden="true" class="brand-mark">a<span>i</span></span><span>APPLIED AI<small>Principles into practice</small></span></a><nav aria-label="Main navigation"><a href="../index.html">The course</a><a href="../visuals.html">Visual lab</a><a href="../project.html">Project</a><a class="language-switch" href="../zh-HK/lectures/16.html" hreflang="zh-HK" lang="zh-HK">繁體中文</a></nav><button class="search-open" type="button">Search the course <span aria-hidden="true">/</span></button></header><aside aria-label="Course chapters" class="sidebar" id="course-sidebar"><a class="side-home" href="../index.html">Course overview</a><details class="semester-nav" open=""><summary>Semester 1<span>Weeks 1–16</span></summary><ol start="1"><li><a href="../lectures/01.html"><span class="week-number">01</span><span>What a language model is trying to learn</span><span class="week-tick" data-week-tick="1"></span></a></li><li><a href="../lectures/02.html"><span class="week-number">02</span><span>From text to tokens and numerical IDs</span><span class="week-tick" data-week-tick="2"></span></a></li><li><a href="../lectures/03.html"><span class="week-number">03</span><span>What word vectors can represent</span><span class="week-tick" data-week-tick="3"></span></a></li><li><a href="../lectures/04.html"><span class="week-number">04</span><span>From scores to probabilities and learning signals</span><span class="week-tick" data-week-tick="4"></span></a></li><li><a href="../lectures/05.html"><span class="week-number">05</span><span>Why language needs context and order</span><span class="week-tick" data-week-tick="5"></span></a></li><li><a href="../lectures/06.html"><span class="week-number">06</span><span>Attention begins as a weighted mixture</span><span class="week-tick" data-week-tick="6"></span></a></li><li><a href="../lectures/07.html"><span class="week-number">07</span><span>Where queries keys and values come from</span><span class="week-tick" data-week-tick="7"></span></a></li><li><a href="../lectures/08.html"><span class="week-number">08</span><span>Scaling and masking attention correctly</span><span class="week-tick" data-week-tick="8"></span></a></li><li><a href="../lectures/09.html"><span class="week-number">09</span><span>Multiple attention heads and position</span><span class="week-tick" data-week-tick="9"></span></a></li><li><a href="../lectures/10.html"><span class="week-number">10</span><span>The transformer block step by step</span><span class="week-tick" data-week-tick="10"></span></a></li><li><a href="../lectures/11.html"><span class="week-number">11</span><span>Encoders decoders and complete model architectures</span><span class="week-tick" data-week-tick="11"></span></a></li><li><a href="../lectures/12.html"><span class="week-number">12</span><span>Training a small transformer</span><span class="week-tick" data-week-tick="12"></span></a></li><li><a href="../lectures/13.html"><span class="week-number">13</span><span>Generation decoding and the KV cache</span><span class="week-tick" data-week-tick="13"></span></a></li><li><a href="../lectures/14.html"><span class="week-number">14</span><span>From pretraining to instruction following and reasoning</span><span class="week-tick" data-week-tick="14"></span></a></li><li><a href="../lectures/15.html"><span class="week-number">15</span><span>Generative AI beyond text</span><span class="week-tick" data-week-tick="15"></span></a></li><li><a aria-current="page" href="../lectures/16.html"><span class="week-number">16</span><span>A complete transformer walkthrough and first semester review</span><span class="week-tick" data-week-tick="16"></span></a></li></ol></details><details class="semester-nav"><summary>Semester 2<span>Weeks 17–32</span></summary><ol start="17"><li><a href="../lectures/17.html"><span class="week-number">17</span><span>From word vectors to semantic search</span><span class="week-tick" data-week-tick="17"></span></a></li><li><a href="../lectures/18.html"><span class="week-number">18</span><span>A vector database from a list of vectors</span><span class="week-tick" data-week-tick="18"></span></a></li><li><a href="../lectures/19.html"><span class="week-number">19</span><span>RAG as an open book question</span><span class="week-tick" data-week-tick="19"></span></a></li><li><a href="../lectures/20.html"><span class="week-number">20</span><span>Improving RAG without losing the basic task</span><span class="week-tick" data-week-tick="20"></span></a></li><li><a href="../lectures/21.html"><span class="week-number">21</span><span>Evaluating retrieval answers and uncertainty</span><span class="week-tick" data-week-tick="21"></span></a></li><li><a href="../lectures/22.html"><span class="week-number">22</span><span>CPU GPU memory and model resource accounting</span><span class="week-tick" data-week-tick="22"></span></a></li><li><a href="../lectures/23.html"><span class="week-number">23</span><span>CUDA kernels and profiling</span><span class="week-tick" data-week-tick="23"></span></a></li><li><a href="../lectures/24.html"><span class="week-number">24</span><span>Fine tuning starts with a teaching dataset</span><span class="week-tick" data-week-tick="24"></span></a></li><li><a href="../lectures/25.html"><span class="week-number">25</span><span>LoRA and QLoRA from a small matrix</span><span class="week-tick" data-week-tick="25"></span></a></li><li><a href="../lectures/26.html"><span class="week-number">26</span><span>Fine tuning experiments preferences and distillation</span><span class="week-tick" data-week-tick="26"></span></a></li><li><a href="../lectures/27.html"><span class="week-number">27</span><span>Tools functions workflows and agents</span><span class="week-tick" data-week-tick="27"></span></a></li><li><a href="../lectures/28.html"><span class="week-number">28</span><span>Harnesses planning memory and bounded execution</span><span class="week-tick" data-week-tick="28"></span></a></li><li><a href="../lectures/29.html"><span class="week-number">29</span><span>From a notebook to MLOps and inference serving</span><span class="week-tick" data-week-tick="29"></span></a></li><li><a href="../lectures/30.html"><span class="week-number">30</span><span>Monitoring security regression tests and rollback</span><span class="week-tick" data-week-tick="30"></span></a></li><li><a href="../lectures/31.html"><span class="week-number">31</span><span>Integrating the documentation assistant and advanced extensions</span><span class="week-tick" data-week-tick="31"></span></a></li><li><a href="../lectures/32.html"><span class="week-number">32</span><span>Review defense and a continuing learning plan</span><span class="week-tick" data-week-tick="32"></span></a></li></ol></details><div class="side-links"><a href="../visuals.html">Visual laboratory <span>14 interactive lessons</span></a><a href="../project.html">Documentation assistant <span>Your capstone project</span></a><a href="../resources.html">Readings and setup</a></div><div class="side-progress"><div><span>Your progress</span><strong data-progress-count="">0 / 32</strong></div><progress aria-label="Completed lectures" max="32" value="0"></progress><small>Saved in this browser</small></div></aside><main class="main" id="main"><div class="content"><div class="chapter-header"><div class="eyebrow">Semester 1 / Week 16</div><h1>A complete transformer walkthrough and first semester review</h1></div><div class="lesson-links"><a href="../tutorials/16.html">Tutorial 16</a><a href="../tests/16.html">Test your understanding</a><button aria-pressed="false" class="mark-complete" data-week="16" type="button">Mark as complete</button></div><section aria-label="Lecture slides" class="lecture-deck" id="lecture-slides"><div class="deck-top"><div><div class="eyebrow">Lecture slides · Week 16</div><h2>Learn one step at a time.</h2></div><button class="deck-present" type="button">Present</button></div><p class="deck-help">Read each explanation, pause to predict the result, then continue. Use the arrow keys while the presentation is focused. The complete lecture reader is below.</p><div aria-label="Presentation: use left and right arrow keys" class="slide-viewport" tabindex="0"><section class="lecture-slide" data-slide=""><div class="slide-stage">Start with an example</div><h3>The semester returns to one sentence</h3><div class="slide-prose"><p>We began with “I go to school by ___.” We can now trace a causal transformer that predicts a continuation. The goal of this lecture is to connect the components you have already studied, rather than introducing an application framework.</p>
-<p>Use a small vocabulary and a two-block teaching model. Keep token IDs, representation width, head count, and sequence length visible in your diagram.</p>
-<p>This model is intentionally small enough to inspect. The architecture shares important ideas with much larger systems, while its performance and resources remain very different.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Start with an example</div><h3>Stage one text becomes representations</h3><div class="slide-prose"><p>Tokenize the prefix into [I,go,to,school,by] and convert it to IDs. Select one vector per ID from the embedding table.</p>
-<p>Add the position vector for each location. With five tokens and width D=8, the representation matrix is [5,8].</p>
-<p>An ID does not itself encode order or semantic distance. The embedding lookup and position representation supply separate information that later transformations can use.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Build the mechanism</div><h3>Stage two each block mixes and transforms</h3><div class="slide-prose"><p>Normalize each row, form Q/K/V, split the appropriate head axes, calculate scaled pairwise scores, apply causal visibility, and softmax over keys. Multiply by values, merge heads, and project back to width 8.</p>
-<p>Add that sublayer output through the residual path. Normalize again, apply the position-wise MLP, and perform the second residual addition.</p>
-<p>Repeat for the next block. The output retains one contextual row per position. At no causal query may the computation use an unavailable future input.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Build the mechanism</div><h3>Stage three vocabulary predictions</h3><div class="slide-prose"><p>The final output head transforms each contextual row into V vocabulary logits. The last prefix position, by, supplies the logits used to choose the next token.</p>
-<p>Suppose bus=2, train=1, bicycle=0 and all other candidates are excluded for this small arithmetic example. Softmax gives approximately [0.665,0.245,0.090].</p>
-<p>A real vocabulary includes many other candidates, so the denominator would include their scores too. Restricting the arithmetic example must be stated; it is not the full output distribution of a real model.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Build the mechanism</div><h3>Stage four training and generation use the result differently</h3><div class="slide-prose"><p>During training on the complete sentence, the expected target bus supplies a cross-entropy loss. Its gradient changes the parameters through the computation you traced.</p>
-<p>During inference, there is no given bus target to backpropagate. A decoding rule selects a next token, appends it, updates or reuses cached states as appropriate, and continues until a stopping condition.</p>
-<p>This distinction explains why the same network can produce logits during both training and use, while the surrounding procedure differs.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Build the mechanism</div><h3>Diagnosing mistakes at the correct boundary</h3><div class="slide-prose"><p>If IDs decode to the wrong words, inspect the tokenizer/vocabulary pairing. If future perturbations change earlier outputs, inspect visibility. If output width differs from the vocabulary size, inspect the output head.</p>
-<p>If training loss falls but the held-out task remains weak, inspect data, capacity, optimization, and evaluation before concluding that the block is implemented incorrectly.</p>
-<p>A systematic debugging explanation names the boundary, a concrete observation, and a test that distinguishes possible causes. “The AI is confused” does not provide that information.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Go deeper and check understanding</div><h3>Reading the original architecture with preparation</h3><div class="slide-prose"><p>Open the original transformer paper's model diagram and attention equation. Identify which components you have implemented and which belong to the encoder-decoder translation architecture rather than our decoder-only exercise.</p>
-<p>Write tensor shapes beside one equation. Locate the residual connections and the MLP. Note that our pre-norm teaching block differs from the original architecture's normalization arrangement.</p>
-<p>This is a useful point to read a paper: you now have operations and examples with which to interpret the compact presentation.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Go deeper and check understanding</div><h3>First semester assessment and the next step</h3><div class="slide-prose"><p>Take the first semester exam. It asks about tokenization, probabilities, attention, masks, block shapes, architecture visibility, shifted training, and generation. It does not require a vector database, RAG service, or agent implementation.</p>
-<p>Complete the tiny-model experiment and keep an honest account of its limitations. Your first semester artifact is an explained and tested model mechanism, not a prematurely assembled application.</p>
-<p>Semester two will introduce search and external evidence using the representations and evaluation ideas you now understand. Before moving on, explain the complete school sentence trace aloud without skipping from token IDs directly to “the model answers.”</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Go deeper and check understanding</div><h3>A final shape ledger</h3><div class="slide-prose"><p>For B=2,T=5,D=8,H=2 and vocabulary size V=20, token IDs have [2,5], starting rows have [2,5,8], per-head queries have [2,2,5,4], and attention scores have [2,2,5,5]. Merged contextual output returns [2,5,8], and vocabulary logits have [2,5,20].</p>
-<p>The last input position of each sequence contributes a twenty-way next-token distribution during ordinary continuation. During training, all valid positions can contribute losses against shifted targets. In both cases, the causal constraint limits each query's visible keys.</p>
-<p>Explain each axis in words before writing a reshape. Then construct a small tensor with deliberately distinct numbers for batch, head, position, and feature indices. A mistaken transpose becomes visible. This small experiment turns a shape ledger into an implementation check rather than decorative notation.</p></div></section></div><div class="deck-controls"><button class="slide-prev" type="button">← Previous</button><span aria-live="polite" class="slide-counter">1 / 9</span><button class="slide-next" type="button">Next →</button></div><label class="slide-jump-label">Go to slide <select aria-label="Go to slide" class="slide-jump"><option value="0">1</option><option value="1">2</option><option value="2">3</option><option value="3">4</option><option value="4">5</option><option value="5">6</option><option value="6">7</option><option value="7">8</option><option value="8">9</option></select></label><button aria-pressed="false" class="deck-all" type="button">Show all slides</button><a class="reader-link" href="#full-notes">Read the complete lecture ↓</a></section><section aria-label="The transformer block" class="visual-lesson"><div class="eyebrow">Explore the mechanism</div><h2>The transformer block</h2><p class="visual-intro">Trace the residual stream through communication and feature processing.</p><div data-widget="block"><p>Enable JavaScript to use this illustration. The lecture notes below explain the same mechanism.</p></div></section><article class="prose full-notes" id="full-notes"><div class="eyebrow">Complete lecture reader</div><h2>Read the full explanation</h2><h3 id="the-semester-returns-to-one-sentence">The semester returns to one sentence</h3>
-<p>We began with “I go to school by ___.” We can now trace a causal transformer that predicts a continuation. The goal of this lecture is to connect the components you have already studied, rather than introducing an application framework.</p>
-<p>Use a small vocabulary and a two-block teaching model. Keep token IDs, representation width, head count, and sequence length visible in your diagram.</p>
-<p>This model is intentionally small enough to inspect. The architecture shares important ideas with much larger systems, while its performance and resources remain very different.</p>
-<h3 id="stage-one-text-becomes-representations">Stage one text becomes representations</h3>
-<p>Tokenize the prefix into [I,go,to,school,by] and convert it to IDs. Select one vector per ID from the embedding table.</p>
-<p>Add the position vector for each location. With five tokens and width D=8, the representation matrix is [5,8].</p>
-<p>An ID does not itself encode order or semantic distance. The embedding lookup and position representation supply separate information that later transformations can use.</p>
-<h3 id="stage-two-each-block-mixes-and-transforms">Stage two each block mixes and transforms</h3>
-<p>Normalize each row, form Q/K/V, split the appropriate head axes, calculate scaled pairwise scores, apply causal visibility, and softmax over keys. Multiply by values, merge heads, and project back to width 8.</p>
-<p>Add that sublayer output through the residual path. Normalize again, apply the position-wise MLP, and perform the second residual addition.</p>
-<p>Repeat for the next block. The output retains one contextual row per position. At no causal query may the computation use an unavailable future input.</p>
-<h3 id="stage-three-vocabulary-predictions">Stage three vocabulary predictions</h3>
-<p>The final output head transforms each contextual row into V vocabulary logits. The last prefix position, by, supplies the logits used to choose the next token.</p>
-<p>Suppose bus=2, train=1, bicycle=0 and all other candidates are excluded for this small arithmetic example. Softmax gives approximately [0.665,0.245,0.090].</p>
-<p>A real vocabulary includes many other candidates, so the denominator would include their scores too. Restricting the arithmetic example must be stated; it is not the full output distribution of a real model.</p>
-<h3 id="stage-four-training-and-generation-use-the-result-differently">Stage four training and generation use the result differently</h3>
-<p>During training on the complete sentence, the expected target bus supplies a cross-entropy loss. Its gradient changes the parameters through the computation you traced.</p>
-<p>During inference, there is no given bus target to backpropagate. A decoding rule selects a next token, appends it, updates or reuses cached states as appropriate, and continues until a stopping condition.</p>
-<p>This distinction explains why the same network can produce logits during both training and use, while the surrounding procedure differs.</p>
-<h3 id="diagnosing-mistakes-at-the-correct-boundary">Diagnosing mistakes at the correct boundary</h3>
-<p>If IDs decode to the wrong words, inspect the tokenizer/vocabulary pairing. If future perturbations change earlier outputs, inspect visibility. If output width differs from the vocabulary size, inspect the output head.</p>
-<p>If training loss falls but the held-out task remains weak, inspect data, capacity, optimization, and evaluation before concluding that the block is implemented incorrectly.</p>
-<p>A systematic debugging explanation names the boundary, a concrete observation, and a test that distinguishes possible causes. “The AI is confused” does not provide that information.</p>
-<h3 id="reading-the-original-architecture-with-preparation">Reading the original architecture with preparation</h3>
-<p>Open the original transformer paper's model diagram and attention equation. Identify which components you have implemented and which belong to the encoder-decoder translation architecture rather than our decoder-only exercise.</p>
-<p>Write tensor shapes beside one equation. Locate the residual connections and the MLP. Note that our pre-norm teaching block differs from the original architecture's normalization arrangement.</p>
-<p>This is a useful point to read a paper: you now have operations and examples with which to interpret the compact presentation.</p>
-<h3 id="first-semester-assessment-and-the-next-step">First semester assessment and the next step</h3>
-<p>Take the first semester exam. It asks about tokenization, probabilities, attention, masks, block shapes, architecture visibility, shifted training, and generation. It does not require a vector database, RAG service, or agent implementation.</p>
-<p>Complete the tiny-model experiment and keep an honest account of its limitations. Your first semester artifact is an explained and tested model mechanism, not a prematurely assembled application.</p>
-<p>Semester two will introduce search and external evidence using the representations and evaluation ideas you now understand. Before moving on, explain the complete school sentence trace aloud without skipping from token IDs directly to “the model answers.”</p>
-<h3 id="a-final-shape-ledger">A final shape ledger</h3>
-<p>For B=2,T=5,D=8,H=2 and vocabulary size V=20, token IDs have [2,5], starting rows have [2,5,8], per-head queries have [2,2,5,4], and attention scores have [2,2,5,5]. Merged contextual output returns [2,5,8], and vocabulary logits have [2,5,20].</p>
-<p>The last input position of each sequence contributes a twenty-way next-token distribution during ordinary continuation. During training, all valid positions can contribute losses against shifted targets. In both cases, the causal constraint limits each query's visible keys.</p>
-<p>Explain each axis in words before writing a reshape. Then construct a small tensor with deliberately distinct numbers for batch, head, position, and feature indices. A mistaken transpose becomes visible. This small experiment turns a shape ledger into an implementation check rather than decorative notation.</p></article><nav aria-label="Adjacent lectures" class="chapter-pagination"><a href="15.html"><small>Previous week</small>Generative AI beyond text</a><a href="17.html"><small>Next week</small>From word vectors to semantic search</a></nav></div><footer class="footer"><span>Applied AI · An independent self-study course</span><span>32 weeks · 10 hours per week</span><a href="../resources.html#about-this-course">About and sources</a></footer></main><dialog aria-labelledby="search-title" class="search-dialog"><div class="dialog-head"><h2 id="search-title">Find a concept</h2><button aria-label="Close search" class="search-close" type="button">Close</button></div><label class="sr-only" for="course-search">Search all lectures and tutorials</label><input autocomplete="off" id="course-search" placeholder="Try attention, fine-tuning, or harness…" type="search"/><p aria-live="polite" class="search-status">Search lecture notes, tutorials, tests and readings.</p><div class="search-results"></div></dialog><div aria-live="polite" class="toast" role="status"></div></body></html>
+<html lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width,initial-scale=1" name="viewport"/>
+  <title>
+   A complete transformer walkthrough and first semester review · Applied AI
+  </title>
+  <meta content="Applied generative AI and LLM systems course material" name="description"/>
+  <meta content="#173c36" name="theme-color"/>
+  <link href="../assets/favicon.svg" rel="icon" type="image/svg+xml"/>
+  <link href="../assets/style.css" rel="stylesheet"/>
+  <link href="../assets/slides.css" rel="stylesheet"/>
+  <script>
+   window.COURSE_BASE="../";
+  </script>
+  <script defer="" src="../assets/site-config.js">
+  </script>
+  <script defer="" src="../assets/search-index.js">
+  </script>
+  <script defer="" src="../assets/app.js">
+  </script>
+  <script defer="" src="../assets/visuals.js">
+  </script>
+  <script defer="" src="../assets/slides.js">
+  </script>
+  <script defer="" src="../assets/beginner-visuals.js">
+  </script>
+  <link href="../zh-HK/lectures/16.html" hreflang="zh-HK" rel="alternate"/>
+  <link href="../assets/bilingual.css" rel="stylesheet"/>
+  <link href="../assets/reader-v3.css" rel="stylesheet"/>
+  <script defer="True" src="../assets/reader-v3.js">
+  </script>
+ </head>
+ <body data-page-kind="lecture" data-week="16">
+  <a class="skip-link" href="#main">
+   Skip to content
+  </a>
+  <header class="topbar">
+   <button aria-controls="course-sidebar" aria-expanded="false" class="menu-toggle" type="button">
+    Menu
+   </button>
+   <a class="brand" href="../index.html">
+    <span aria-hidden="true" class="brand-mark">
+     a
+     <span>
+      i
+     </span>
+    </span>
+    <span>
+     APPLIED AI
+     <small>
+      Principles into practice
+     </small>
+    </span>
+   </a>
+   <nav aria-label="Main navigation">
+    <a href="../index.html">
+     The course
+    </a>
+    <a href="../visuals.html">
+     Visual lab
+    </a>
+    <a href="../project.html">
+     Project
+    </a>
+    <a class="language-switch" href="../zh-HK/lectures/16.html" hreflang="zh-HK" lang="zh-HK">
+     繁體中文
+    </a>
+   </nav>
+   <button class="search-open" type="button">
+    Search the course
+    <span aria-hidden="true">
+     /
+    </span>
+   </button>
+  </header>
+  <aside aria-label="Course chapters" class="sidebar" id="course-sidebar">
+   <a class="side-home" href="../index.html">
+    Course overview
+   </a>
+   <details class="semester-nav" open="">
+    <summary>
+     Semester 1
+     <span>
+      Weeks 1–16
+     </span>
+    </summary>
+    <ol start="1">
+     <li>
+      <a href="../lectures/01.html">
+       <span class="week-number">
+        01
+       </span>
+       <span>
+        What a language model is trying to learn
+       </span>
+       <span class="week-tick" data-week-tick="1">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/02.html">
+       <span class="week-number">
+        02
+       </span>
+       <span>
+        From text to tokens and numerical IDs
+       </span>
+       <span class="week-tick" data-week-tick="2">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/03.html">
+       <span class="week-number">
+        03
+       </span>
+       <span>
+        What word vectors can represent
+       </span>
+       <span class="week-tick" data-week-tick="3">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/04.html">
+       <span class="week-number">
+        04
+       </span>
+       <span>
+        From scores to probabilities and learning signals
+       </span>
+       <span class="week-tick" data-week-tick="4">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/05.html">
+       <span class="week-number">
+        05
+       </span>
+       <span>
+        Why language needs context and order
+       </span>
+       <span class="week-tick" data-week-tick="5">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/06.html">
+       <span class="week-number">
+        06
+       </span>
+       <span>
+        Attention begins as a weighted mixture
+       </span>
+       <span class="week-tick" data-week-tick="6">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/07.html">
+       <span class="week-number">
+        07
+       </span>
+       <span>
+        Where queries keys and values come from
+       </span>
+       <span class="week-tick" data-week-tick="7">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/08.html">
+       <span class="week-number">
+        08
+       </span>
+       <span>
+        Scaling and masking attention correctly
+       </span>
+       <span class="week-tick" data-week-tick="8">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/09.html">
+       <span class="week-number">
+        09
+       </span>
+       <span>
+        Multiple attention heads and position
+       </span>
+       <span class="week-tick" data-week-tick="9">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/10.html">
+       <span class="week-number">
+        10
+       </span>
+       <span>
+        The transformer block step by step
+       </span>
+       <span class="week-tick" data-week-tick="10">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/11.html">
+       <span class="week-number">
+        11
+       </span>
+       <span>
+        Encoders decoders and complete model architectures
+       </span>
+       <span class="week-tick" data-week-tick="11">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/12.html">
+       <span class="week-number">
+        12
+       </span>
+       <span>
+        Training a small transformer
+       </span>
+       <span class="week-tick" data-week-tick="12">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/13.html">
+       <span class="week-number">
+        13
+       </span>
+       <span>
+        Generation decoding and the KV cache
+       </span>
+       <span class="week-tick" data-week-tick="13">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/14.html">
+       <span class="week-number">
+        14
+       </span>
+       <span>
+        From pretraining to instruction following and reasoning
+       </span>
+       <span class="week-tick" data-week-tick="14">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/15.html">
+       <span class="week-number">
+        15
+       </span>
+       <span>
+        Generative AI beyond text
+       </span>
+       <span class="week-tick" data-week-tick="15">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a aria-current="page" href="../lectures/16.html">
+       <span class="week-number">
+        16
+       </span>
+       <span>
+        A complete transformer walkthrough and first semester review
+       </span>
+       <span class="week-tick" data-week-tick="16">
+       </span>
+      </a>
+     </li>
+    </ol>
+   </details>
+   <details class="semester-nav">
+    <summary>
+     Semester 2
+     <span>
+      Weeks 17–32
+     </span>
+    </summary>
+    <ol start="17">
+     <li>
+      <a href="../lectures/17.html">
+       <span class="week-number">
+        17
+       </span>
+       <span>
+        From word vectors to semantic search
+       </span>
+       <span class="week-tick" data-week-tick="17">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/18.html">
+       <span class="week-number">
+        18
+       </span>
+       <span>
+        A vector database from a list of vectors
+       </span>
+       <span class="week-tick" data-week-tick="18">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/19.html">
+       <span class="week-number">
+        19
+       </span>
+       <span>
+        RAG as an open book question
+       </span>
+       <span class="week-tick" data-week-tick="19">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/20.html">
+       <span class="week-number">
+        20
+       </span>
+       <span>
+        Improving RAG without losing the basic task
+       </span>
+       <span class="week-tick" data-week-tick="20">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/21.html">
+       <span class="week-number">
+        21
+       </span>
+       <span>
+        Evaluating retrieval answers and uncertainty
+       </span>
+       <span class="week-tick" data-week-tick="21">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/22.html">
+       <span class="week-number">
+        22
+       </span>
+       <span>
+        CPU GPU memory and model resource accounting
+       </span>
+       <span class="week-tick" data-week-tick="22">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/23.html">
+       <span class="week-number">
+        23
+       </span>
+       <span>
+        CUDA kernels and profiling
+       </span>
+       <span class="week-tick" data-week-tick="23">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/24.html">
+       <span class="week-number">
+        24
+       </span>
+       <span>
+        Fine tuning starts with a teaching dataset
+       </span>
+       <span class="week-tick" data-week-tick="24">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/25.html">
+       <span class="week-number">
+        25
+       </span>
+       <span>
+        LoRA and QLoRA from a small matrix
+       </span>
+       <span class="week-tick" data-week-tick="25">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/26.html">
+       <span class="week-number">
+        26
+       </span>
+       <span>
+        Fine tuning experiments preferences and distillation
+       </span>
+       <span class="week-tick" data-week-tick="26">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/27.html">
+       <span class="week-number">
+        27
+       </span>
+       <span>
+        Tools functions workflows and agents
+       </span>
+       <span class="week-tick" data-week-tick="27">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/28.html">
+       <span class="week-number">
+        28
+       </span>
+       <span>
+        Harnesses planning memory and bounded execution
+       </span>
+       <span class="week-tick" data-week-tick="28">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/29.html">
+       <span class="week-number">
+        29
+       </span>
+       <span>
+        From a notebook to MLOps and inference serving
+       </span>
+       <span class="week-tick" data-week-tick="29">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/30.html">
+       <span class="week-number">
+        30
+       </span>
+       <span>
+        Monitoring security regression tests and rollback
+       </span>
+       <span class="week-tick" data-week-tick="30">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/31.html">
+       <span class="week-number">
+        31
+       </span>
+       <span>
+        Integrating the documentation assistant and advanced extensions
+       </span>
+       <span class="week-tick" data-week-tick="31">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/32.html">
+       <span class="week-number">
+        32
+       </span>
+       <span>
+        Review defense and a continuing learning plan
+       </span>
+       <span class="week-tick" data-week-tick="32">
+       </span>
+      </a>
+     </li>
+    </ol>
+   </details>
+   <div class="side-links">
+    <a href="../visuals.html">
+     Visual laboratory
+     <span>
+      14 interactive lessons
+     </span>
+    </a>
+    <a href="../project.html">
+     Documentation assistant
+     <span>
+      Your capstone project
+     </span>
+    </a>
+    <a href="../resources.html">
+     Readings and setup
+    </a>
+   </div>
+   <div class="side-progress">
+    <div>
+     <span>
+      Your progress
+     </span>
+     <strong data-progress-count="">
+      0 / 32
+     </strong>
+    </div>
+    <progress aria-label="Completed lectures" max="32" value="0">
+    </progress>
+    <small>
+     Saved in this browser
+    </small>
+   </div>
+  </aside>
+  <main class="main" id="main">
+   <div class="content">
+    <div class="chapter-header">
+     <div class="eyebrow">
+      Semester 1 / Week 16
+     </div>
+     <h1>
+      A complete transformer walkthrough and first semester review
+     </h1>
+    </div>
+    <div class="lesson-links">
+     <a href="../tutorials/16.html">
+      Tutorial 16
+     </a>
+     <a href="../tests/16.html">
+      Test your understanding
+     </a>
+     <button aria-pressed="false" class="mark-complete" data-week="16" type="button">
+      Mark as complete
+     </button>
+    </div>
+    <div aria-label="Lesson view" class="lesson-mode" role="tablist">
+     <button aria-controls="full-notes" aria-selected="true" data-mode="read" id="mode-read" role="tab" type="button">
+      Read lesson
+     </button>
+     <button aria-controls="lecture-slides" aria-selected="false" data-mode="slides" id="mode-slides" role="tab" type="button">
+      Lesson slides
+     </button>
+    </div>
+    <section aria-label="Lecture slides" class="lecture-deck" hidden="" id="lecture-slides" role="tabpanel">
+     <div class="deck-top">
+      <div>
+       <div class="eyebrow">
+        Lecture slides · Week 16
+       </div>
+       <h2>
+        Key steps and worked visuals
+       </h2>
+      </div>
+      <button class="deck-present" type="button">
+       Present
+      </button>
+     </div>
+     <p class="deck-help">
+      Use these slides to review the mechanism. Open “Read the worked explanation” for the complete notes and code.
+     </p>
+     <div aria-label="Presentation: use left and right arrow keys" class="slide-viewport" tabindex="0">
+      <section class="lecture-slide" data-slide="">
+       <div class="slide-stage">
+        Week 16 · Section 1
+       </div>
+       <h3>
+        The semester returns to one sentence
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          We began with “I go to school by ___.” We can now trace a causal transformer that predicts a continuation.
+         </li>
+         <li>
+          Use a small vocabulary and a two-block teaching model.
+         </li>
+         <li>
+          This model is intentionally small enough to inspect.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#the-semester-returns-to-one-sentence">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 16 · Section 2
+       </div>
+       <h3>
+        Stage one text becomes representations
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Tokenize the prefix into [I,go,to,school,by] and convert it to IDs.
+         </li>
+         <li>
+          Add the position vector for each location.
+         </li>
+         <li>
+          An ID does not itself encode order or semantic distance.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#stage-one-text-becomes-representations">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 16 · Section 3
+       </div>
+       <h3>
+        Stage two each block mixes and transforms
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Normalize each row, form Q/K/V, split the appropriate head axes, calculate scaled pairwise scores, apply causal visibility, and softmax over keys.
+         </li>
+         <li>
+          Add that sublayer output through the residual path.
+         </li>
+         <li>
+          Repeat for the next block.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#stage-two-each-block-mixes-and-transforms">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 16 · Section 4
+       </div>
+       <h3>
+        Stage three vocabulary predictions
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          The final output head transforms each contextual row into V vocabulary logits.
+         </li>
+         <li>
+          Suppose bus=2, train=1, bicycle=0 and all other candidates are excluded for this small arithmetic example.
+         </li>
+         <li>
+          A real vocabulary includes many other candidates, so the denominator would include their scores too.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#stage-three-vocabulary-predictions">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 16 · Section 5
+       </div>
+       <h3>
+        Stage four training and generation use the result differently
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          During training on the complete sentence, the expected target bus supplies a cross-entropy loss.
+         </li>
+         <li>
+          During inference, there is no given bus target to backpropagate.
+         </li>
+         <li>
+          This distinction explains why the same network can produce logits during both training and use, while the surrounding procedure differs.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#stage-four-training-and-generation-use-the-result-differently">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 16 · Section 6
+       </div>
+       <h3>
+        Diagnosing mistakes at the correct boundary
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          If IDs decode to the wrong words, inspect the tokenizer/vocabulary pairing.
+         </li>
+         <li>
+          If training loss falls but the held-out task remains weak, inspect data, capacity, optimization, and evaluation before concluding that the block is implemented incorrectly.
+         </li>
+         <li>
+          A systematic debugging explanation names the boundary, a concrete observation, and a test that distinguishes possible causes.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#diagnosing-mistakes-at-the-correct-boundary">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 16 · Section 7
+       </div>
+       <h3>
+        Reading the original architecture with preparation
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Open the original transformer paper's model diagram and attention equation.
+         </li>
+         <li>
+          Write tensor shapes beside one equation.
+         </li>
+         <li>
+          This is a useful point to read a paper: you now have operations and examples with which to interpret the compact presentation.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#reading-the-original-architecture-with-preparation">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 16 · Section 8
+       </div>
+       <h3>
+        First semester assessment and the next step
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Take the first semester exam.
+         </li>
+         <li>
+          Complete the tiny-model experiment and keep an honest account of its limitations.
+         </li>
+         <li>
+          Semester two will introduce search and external evidence using the representations and evaluation ideas you now understand.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#first-semester-assessment-and-the-next-step">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 16 · Section 9
+       </div>
+       <h3>
+        A final shape ledger
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          For B=2,T=5,d_model=8,H=2 and vocabulary size V=20, token IDs have [2,5], starting rows have [2,5,8], per-head queries have [2,2,5,4], and attention scores have [2,2,5,5].
+         </li>
+         <li>
+          The last input position of each sequence contributes a twenty-way next-token distribution during ordinary continuation.
+         </li>
+         <li>
+          Explain each axis in words before writing a reshape.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#a-final-shape-ledger">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+     </div>
+     <div class="deck-controls">
+      <button class="slide-prev" type="button">
+       ← Previous
+      </button>
+      <span aria-live="polite" class="slide-counter">
+       1 / 9
+      </span>
+      <button class="slide-next" type="button">
+       Next →
+      </button>
+     </div>
+     <label class="slide-jump-label">
+      Go to slide
+      <select aria-label="Go to slide" class="slide-jump">
+       <option value="0">
+        1. The semester returns to one sentence
+       </option>
+       <option value="1">
+        2. Stage one text becomes representations
+       </option>
+       <option value="2">
+        3. Stage two each block mixes and transforms
+       </option>
+       <option value="3">
+        4. Stage three vocabulary predictions
+       </option>
+       <option value="4">
+        5. Stage four training and generation use the result differently
+       </option>
+       <option value="5">
+        6. Diagnosing mistakes at the correct boundary
+       </option>
+       <option value="6">
+        7. Reading the original architecture with preparation
+       </option>
+       <option value="7">
+        8. First semester assessment and the next step
+       </option>
+       <option value="8">
+        9. A final shape ledger
+       </option>
+      </select>
+     </label>
+     <button aria-pressed="false" class="deck-all" type="button">
+      Show all slides
+     </button>
+    </section>
+    <section aria-label="The transformer block" class="visual-lesson">
+     <div class="eyebrow">
+      Explore the mechanism
+     </div>
+     <h2>
+      The transformer block
+     </h2>
+     <p class="visual-intro">
+      Trace the residual stream through communication and feature processing.
+     </p>
+     <div data-widget="block">
+      <p>
+       Enable JavaScript to use this illustration. The lecture notes below explain the same mechanism.
+      </p>
+     </div>
+    </section>
+    <nav aria-label="In this lesson" class="reader-toc">
+     <strong>
+      In this lesson
+     </strong>
+     <ol>
+      <li>
+       <a href="#the-semester-returns-to-one-sentence">
+        The semester returns to one sentence
+       </a>
+      </li>
+      <li>
+       <a href="#stage-one-text-becomes-representations">
+        Stage one text becomes representations
+       </a>
+      </li>
+      <li>
+       <a href="#stage-two-each-block-mixes-and-transforms">
+        Stage two each block mixes and transforms
+       </a>
+      </li>
+      <li>
+       <a href="#stage-three-vocabulary-predictions">
+        Stage three vocabulary predictions
+       </a>
+      </li>
+      <li>
+       <a href="#stage-four-training-and-generation-use-the-result-differently">
+        Stage four training and generation use the result differently
+       </a>
+      </li>
+      <li>
+       <a href="#diagnosing-mistakes-at-the-correct-boundary">
+        Diagnosing mistakes at the correct boundary
+       </a>
+      </li>
+      <li>
+       <a href="#reading-the-original-architecture-with-preparation">
+        Reading the original architecture with preparation
+       </a>
+      </li>
+      <li>
+       <a href="#first-semester-assessment-and-the-next-step">
+        First semester assessment and the next step
+       </a>
+      </li>
+      <li>
+       <a href="#a-final-shape-ledger">
+        A final shape ledger
+       </a>
+      </li>
+     </ol>
+    </nav>
+    <article class="prose full-notes" id="full-notes" role="tabpanel">
+     <div class="eyebrow">
+      Complete lecture reader
+     </div>
+     <h2>
+      Read the full explanation
+     </h2>
+     <h3 id="the-semester-returns-to-one-sentence">
+      The semester returns to one sentence
+     </h3>
+     <p>
+      We began with “I go to school by ___.” We can now trace a causal transformer that predicts a continuation. The goal of this lecture is to connect the components you have already studied, rather than introducing an application framework.
+     </p>
+     <p>
+      Use a small vocabulary and a two-block teaching model. Keep token IDs, representation width, head count, and sequence length visible in your diagram.
+     </p>
+     <p>
+      This model is intentionally small enough to inspect. The architecture shares important ideas with much larger systems, while its performance and resources remain very different.
+     </p>
+     <h3 id="stage-one-text-becomes-representations">
+      Stage one text becomes representations
+     </h3>
+     <p>
+      Tokenize the prefix into [I,go,to,school,by] and convert it to IDs. Select one vector per ID from the embedding table.
+     </p>
+     <p>
+      Add the position vector for each location. With five tokens and width d_model=8, the representation matrix is [5,8].
+     </p>
+     <p>
+      An ID does not itself encode order or semantic distance. The embedding lookup and position representation supply separate information that later transformations can use.
+     </p>
+     <h3 id="stage-two-each-block-mixes-and-transforms">
+      Stage two each block mixes and transforms
+     </h3>
+     <p>
+      Normalize each row, form Q/K/V, split the appropriate head axes, calculate scaled pairwise scores, apply causal visibility, and softmax over keys. Multiply by values, merge heads, and project back to width 8.
+     </p>
+     <p>
+      Add that sublayer output through the residual path. Normalize again, apply the position-wise MLP, and perform the second residual addition.
+     </p>
+     <p>
+      Repeat for the next block. The output retains one contextual row per position. At no causal query may the computation use an unavailable future input.
+     </p>
+     <h3 id="stage-three-vocabulary-predictions">
+      Stage three vocabulary predictions
+     </h3>
+     <p>
+      The final output head transforms each contextual row into V vocabulary logits. The last prefix position, by, supplies the logits used to choose the next token.
+     </p>
+     <p>
+      Suppose bus=2, train=1, bicycle=0 and all other candidates are excluded for this small arithmetic example. Softmax gives approximately [0.665,0.245,0.090].
+     </p>
+     <p>
+      A real vocabulary includes many other candidates, so the denominator would include their scores too. Restricting the arithmetic example must be stated; it is not the full output distribution of a real model.
+     </p>
+     <h3 id="stage-four-training-and-generation-use-the-result-differently">
+      Stage four training and generation use the result differently
+     </h3>
+     <p>
+      During training on the complete sentence, the expected target bus supplies a cross-entropy loss. Its gradient changes the parameters through the computation you traced.
+     </p>
+     <p>
+      During inference, there is no given bus target to backpropagate. A decoding rule selects a next token, appends it, updates or reuses cached states as appropriate, and continues until a stopping condition.
+     </p>
+     <p>
+      This distinction explains why the same network can produce logits during both training and use, while the surrounding procedure differs.
+     </p>
+     <h3 id="diagnosing-mistakes-at-the-correct-boundary">
+      Diagnosing mistakes at the correct boundary
+     </h3>
+     <p>
+      If IDs decode to the wrong words, inspect the tokenizer/vocabulary pairing. If future perturbations change earlier outputs, inspect visibility. If output width differs from the vocabulary size, inspect the output head.
+     </p>
+     <p>
+      If training loss falls but the held-out task remains weak, inspect data, capacity, optimization, and evaluation before concluding that the block is implemented incorrectly.
+     </p>
+     <p>
+      A systematic debugging explanation names the boundary, a concrete observation, and a test that distinguishes possible causes. “The AI is confused” does not provide that information.
+     </p>
+     <h3 id="reading-the-original-architecture-with-preparation">
+      Reading the original architecture with preparation
+     </h3>
+     <p>
+      Open the original transformer paper's model diagram and attention equation. Identify which components you have implemented and which belong to the encoder-decoder translation architecture rather than our decoder-only exercise.
+     </p>
+     <p>
+      Write tensor shapes beside one equation. Locate the residual connections and the MLP. Note that our pre-norm teaching block differs from the original architecture's normalization arrangement.
+     </p>
+     <p>
+      This is a useful point to read a paper: you now have operations and examples with which to interpret the compact presentation.
+     </p>
+     <h3 id="first-semester-assessment-and-the-next-step">
+      First semester assessment and the next step
+     </h3>
+     <p>
+      Take the first semester exam. It asks about tokenization, probabilities, attention, masks, block shapes, architecture visibility, shifted training, and generation. It does not require a vector database, RAG service, or agent implementation.
+     </p>
+     <p>
+      Complete the tiny-model experiment and keep an honest account of its limitations. Your first semester artifact is an explained and tested model mechanism, not a prematurely assembled application.
+     </p>
+     <p>
+      Semester two will introduce search and external evidence using the representations and evaluation ideas you now understand. Before moving on, explain the complete school sentence trace aloud without skipping from token IDs directly to “the model answers.”
+     </p>
+     <h3 id="a-final-shape-ledger">
+      A final shape ledger
+     </h3>
+     <p>
+      For B=2,T=5,d_model=8,H=2 and vocabulary size V=20, token IDs have [2,5], starting rows have [2,5,8], per-head queries have [2,2,5,4], and attention scores have [2,2,5,5]. Merged contextual output returns [2,5,8], and vocabulary logits have [2,5,20].
+     </p>
+     <p>
+      The last input position of each sequence contributes a twenty-way next-token distribution during ordinary continuation. During training, all valid positions can contribute losses against shifted targets. In both cases, the causal constraint limits each query's visible keys.
+     </p>
+     <p>
+      Explain each axis in words before writing a reshape. Then construct a small tensor with deliberately distinct numbers for batch, head, position, and feature indices. A mistaken transpose becomes visible. This small experiment turns a shape ledger into an implementation check rather than decorative notation.
+     </p>
+    </article>
+    <nav aria-label="Adjacent lectures" class="chapter-pagination">
+     <a href="15.html">
+      <small>
+       Previous week
+      </small>
+      Generative AI beyond text
+     </a>
+     <a href="17.html">
+      <small>
+       Next week
+      </small>
+      From word vectors to semantic search
+     </a>
+    </nav>
+   </div>
+   <footer class="footer">
+    <span>
+     Applied AI · An independent self-study course
+    </span>
+    <span>
+     32 weeks · 10 hours per week
+    </span>
+    <a href="../resources.html#about-this-course">
+     About and sources
+    </a>
+   </footer>
+  </main>
+  <dialog aria-labelledby="search-title" class="search-dialog">
+   <div class="dialog-head">
+    <h2 id="search-title">
+     Find a concept
+    </h2>
+    <button aria-label="Close search" class="search-close" type="button">
+     Close
+    </button>
+   </div>
+   <label class="sr-only" for="course-search">
+    Search all lectures and tutorials
+   </label>
+   <input autocomplete="off" id="course-search" placeholder="Try attention, fine-tuning, or harness…" type="search"/>
+   <p aria-live="polite" class="search-status">
+    Search lecture notes, tutorials, tests and readings.
+   </p>
+   <div class="search-results">
+   </div>
+  </dialog>
+  <div aria-live="polite" class="toast" role="status">
+  </div>
+ </body>
+</html>

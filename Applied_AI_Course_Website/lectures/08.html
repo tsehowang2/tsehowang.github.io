@@ -1,67 +1,1135 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/><title>Scaling and masking attention correctly · Applied AI</title><meta content="Applied generative AI and LLM systems course material" name="description"/><meta content="#173c36" name="theme-color"/><link href="../assets/favicon.svg" rel="icon" type="image/svg+xml"/><link href="../assets/style.css" rel="stylesheet"/><link href="../assets/slides.css" rel="stylesheet"/><script>window.COURSE_BASE="../";</script><script defer="" src="../assets/site-config.js"></script><script defer="" src="../assets/search-index.js"></script><script defer="" src="../assets/app.js"></script><script defer="" src="../assets/visuals.js"></script><script defer="" src="../assets/slides.js"></script><script defer="" src="../assets/beginner-visuals.js"></script><link href="../zh-HK/lectures/08.html" hreflang="zh-HK" rel="alternate"/><link href="../assets/bilingual.css" rel="stylesheet"/></head><body data-page-kind="lecture" data-week="8"><a class="skip-link" href="#main">Skip to content</a><header class="topbar"><button aria-controls="course-sidebar" aria-expanded="false" class="menu-toggle" type="button">Menu</button><a class="brand" href="../index.html"><span aria-hidden="true" class="brand-mark">a<span>i</span></span><span>APPLIED AI<small>Principles into practice</small></span></a><nav aria-label="Main navigation"><a href="../index.html">The course</a><a href="../visuals.html">Visual lab</a><a href="../project.html">Project</a><a class="language-switch" href="../zh-HK/lectures/08.html" hreflang="zh-HK" lang="zh-HK">繁體中文</a></nav><button class="search-open" type="button">Search the course <span aria-hidden="true">/</span></button></header><aside aria-label="Course chapters" class="sidebar" id="course-sidebar"><a class="side-home" href="../index.html">Course overview</a><details class="semester-nav" open=""><summary>Semester 1<span>Weeks 1–16</span></summary><ol start="1"><li><a href="../lectures/01.html"><span class="week-number">01</span><span>What a language model is trying to learn</span><span class="week-tick" data-week-tick="1"></span></a></li><li><a href="../lectures/02.html"><span class="week-number">02</span><span>From text to tokens and numerical IDs</span><span class="week-tick" data-week-tick="2"></span></a></li><li><a href="../lectures/03.html"><span class="week-number">03</span><span>What word vectors can represent</span><span class="week-tick" data-week-tick="3"></span></a></li><li><a href="../lectures/04.html"><span class="week-number">04</span><span>From scores to probabilities and learning signals</span><span class="week-tick" data-week-tick="4"></span></a></li><li><a href="../lectures/05.html"><span class="week-number">05</span><span>Why language needs context and order</span><span class="week-tick" data-week-tick="5"></span></a></li><li><a href="../lectures/06.html"><span class="week-number">06</span><span>Attention begins as a weighted mixture</span><span class="week-tick" data-week-tick="6"></span></a></li><li><a href="../lectures/07.html"><span class="week-number">07</span><span>Where queries keys and values come from</span><span class="week-tick" data-week-tick="7"></span></a></li><li><a aria-current="page" href="../lectures/08.html"><span class="week-number">08</span><span>Scaling and masking attention correctly</span><span class="week-tick" data-week-tick="8"></span></a></li><li><a href="../lectures/09.html"><span class="week-number">09</span><span>Multiple attention heads and position</span><span class="week-tick" data-week-tick="9"></span></a></li><li><a href="../lectures/10.html"><span class="week-number">10</span><span>The transformer block step by step</span><span class="week-tick" data-week-tick="10"></span></a></li><li><a href="../lectures/11.html"><span class="week-number">11</span><span>Encoders decoders and complete model architectures</span><span class="week-tick" data-week-tick="11"></span></a></li><li><a href="../lectures/12.html"><span class="week-number">12</span><span>Training a small transformer</span><span class="week-tick" data-week-tick="12"></span></a></li><li><a href="../lectures/13.html"><span class="week-number">13</span><span>Generation decoding and the KV cache</span><span class="week-tick" data-week-tick="13"></span></a></li><li><a href="../lectures/14.html"><span class="week-number">14</span><span>From pretraining to instruction following and reasoning</span><span class="week-tick" data-week-tick="14"></span></a></li><li><a href="../lectures/15.html"><span class="week-number">15</span><span>Generative AI beyond text</span><span class="week-tick" data-week-tick="15"></span></a></li><li><a href="../lectures/16.html"><span class="week-number">16</span><span>A complete transformer walkthrough and first semester review</span><span class="week-tick" data-week-tick="16"></span></a></li></ol></details><details class="semester-nav"><summary>Semester 2<span>Weeks 17–32</span></summary><ol start="17"><li><a href="../lectures/17.html"><span class="week-number">17</span><span>From word vectors to semantic search</span><span class="week-tick" data-week-tick="17"></span></a></li><li><a href="../lectures/18.html"><span class="week-number">18</span><span>A vector database from a list of vectors</span><span class="week-tick" data-week-tick="18"></span></a></li><li><a href="../lectures/19.html"><span class="week-number">19</span><span>RAG as an open book question</span><span class="week-tick" data-week-tick="19"></span></a></li><li><a href="../lectures/20.html"><span class="week-number">20</span><span>Improving RAG without losing the basic task</span><span class="week-tick" data-week-tick="20"></span></a></li><li><a href="../lectures/21.html"><span class="week-number">21</span><span>Evaluating retrieval answers and uncertainty</span><span class="week-tick" data-week-tick="21"></span></a></li><li><a href="../lectures/22.html"><span class="week-number">22</span><span>CPU GPU memory and model resource accounting</span><span class="week-tick" data-week-tick="22"></span></a></li><li><a href="../lectures/23.html"><span class="week-number">23</span><span>CUDA kernels and profiling</span><span class="week-tick" data-week-tick="23"></span></a></li><li><a href="../lectures/24.html"><span class="week-number">24</span><span>Fine tuning starts with a teaching dataset</span><span class="week-tick" data-week-tick="24"></span></a></li><li><a href="../lectures/25.html"><span class="week-number">25</span><span>LoRA and QLoRA from a small matrix</span><span class="week-tick" data-week-tick="25"></span></a></li><li><a href="../lectures/26.html"><span class="week-number">26</span><span>Fine tuning experiments preferences and distillation</span><span class="week-tick" data-week-tick="26"></span></a></li><li><a href="../lectures/27.html"><span class="week-number">27</span><span>Tools functions workflows and agents</span><span class="week-tick" data-week-tick="27"></span></a></li><li><a href="../lectures/28.html"><span class="week-number">28</span><span>Harnesses planning memory and bounded execution</span><span class="week-tick" data-week-tick="28"></span></a></li><li><a href="../lectures/29.html"><span class="week-number">29</span><span>From a notebook to MLOps and inference serving</span><span class="week-tick" data-week-tick="29"></span></a></li><li><a href="../lectures/30.html"><span class="week-number">30</span><span>Monitoring security regression tests and rollback</span><span class="week-tick" data-week-tick="30"></span></a></li><li><a href="../lectures/31.html"><span class="week-number">31</span><span>Integrating the documentation assistant and advanced extensions</span><span class="week-tick" data-week-tick="31"></span></a></li><li><a href="../lectures/32.html"><span class="week-number">32</span><span>Review defense and a continuing learning plan</span><span class="week-tick" data-week-tick="32"></span></a></li></ol></details><div class="side-links"><a href="../visuals.html">Visual laboratory <span>14 interactive lessons</span></a><a href="../project.html">Documentation assistant <span>Your capstone project</span></a><a href="../resources.html">Readings and setup</a></div><div class="side-progress"><div><span>Your progress</span><strong data-progress-count="">0 / 32</strong></div><progress aria-label="Completed lectures" max="32" value="0"></progress><small>Saved in this browser</small></div></aside><main class="main" id="main"><div class="content"><div class="chapter-header"><div class="eyebrow">Semester 1 / Week 08</div><h1>Scaling and masking attention correctly</h1></div><div class="lesson-links"><a href="../tutorials/08.html">Tutorial 08</a><a href="../tests/08.html">Test your understanding</a><button aria-pressed="false" class="mark-complete" data-week="8" type="button">Mark as complete</button></div><section aria-label="Lecture slides" class="lecture-deck" id="lecture-slides"><div class="deck-top"><div><div class="eyebrow">Lecture slides · Week 08</div><h2>Learn one step at a time.</h2></div><button class="deck-present" type="button">Present</button></div><p class="deck-help">Read each explanation, pause to predict the result, then continue. Use the arrow keys while the presentation is focused. The complete lecture reader is below.</p><div aria-label="Presentation: use left and right arrow keys" class="slide-viewport" tabindex="0"><section class="lecture-slide" data-slide=""><div class="slide-stage">Start with an example</div><h3>A prediction must use only available information</h3><div class="slide-prose"><p>During training we have the complete sentence “I go to school by bus.” At the position after by, the model must predict bus using the prefix, even though the training tensor contains the answer farther to the right.</p>
-<p>A causal mask prevents a query position from attending to future positions. If indexing starts at zero, query i may use keys j≤i. The diagonal remains visible because the current input token is part of the prefix used to predict the next token.</p>
-<p>This is an information-access rule. It is separate from whether we include a position in the loss. A padding mask, causal mask, and loss mask serve different purposes.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Start with an example</div><h3>The compact attention equation</h3><div class="slide-prose"><p>The standard single-head expression is softmax(QKᵀ/√Dk + mask)V. Read it as a sequence of operations: compare queries with keys, scale scores, remove forbidden positions, normalize each query row, and mix values.</p>
-<p>For T positions, Q/K have shape [T,Dk], scores and weights have [T,T], and V has [T,Dv]. The output has [T,Dv].</p>
-<p>Do not memorize the expression as an indivisible symbol. If an implementation is wrong, inspect each intermediate tensor. Tiny inputs reveal errors much more clearly than a large model's final loss.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Build the mechanism</div><h3>A worked scaled example</h3><div class="slide-prose"><p>Take q=[1,0], keys [1,0] and [0,1], and values [2,0] and [0,4]. Here Dk=2, so scores are [1/√2,0], approximately [0.7071,0].</p>
-<p>Softmax gives approximately [0.6698,0.3302]. The mixed output is [1.3395,1.3210]. Both positions contribute.</p>
-<p>Now suppose the second key is a future position. Set its score to negative infinity before softmax. The weights become [1,0] and the output becomes [2,0]. Masking changes the normalization as well as removing the forbidden contribution.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Build the mechanism</div><h3>Why multiplying probabilities by zero is different</h3><div class="slide-prose"><p>Suppose you compute the unmasked weights [0.6698,0.3302] and then multiply the second weight by zero. You get [0.6698,0], whose sum is not one. The output becomes [1.3395,0], which differs from the correctly masked result.</p>
-<p>You could renormalize the surviving probabilities, but masking logits before softmax is the direct standard implementation. The important point is to understand what computation you intend.</p>
-<p>If every key in a row is forbidden, softmax has no valid normalization. Design padding and batching so each query being evaluated has an appropriate visible key, or handle invalid rows explicitly.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Build the mechanism</div><h3>Why divide by the square root</h3><div class="slide-prose"><p>Under a simplified assumption of independent, zero-mean, unit-variance query/key coordinates, the variance of their dot product grows with Dk. Large score magnitudes can make softmax very concentrated.</p>
-<p>Dividing by √Dk keeps the scale more controlled under that intuition. This does not guarantee that learned scores always have a particular distribution. It explains the motivation for the scaling term.</p>
-<p>Try vectors with many random coordinates and compare score spread before and after scaling. Inspect the statistics rather than asserting that a sharper attention map is better.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Build the mechanism</div><h3>Padding introduces another visibility condition</h3><div class="slide-prose"><p>A batch may contain sentences of different lengths. We can pad shorter ones to a common length, but those padding positions should not behave like meaningful source words.</p>
-<p>The allowed key positions must satisfy both the causal rule and the validity rule for the sequence. A future token is forbidden even if it is a real word. A padding token is not useful context merely because it lies to the left.</p>
-<p>Loss masking then determines which target predictions count toward the objective. A correctly masked attention computation can still have a wrong loss if it trains on padding labels.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Build the mechanism</div><h3>An invariant catches future leakage</h3><div class="slide-prose"><p>Fix the model parameters and disable randomness such as dropout. Run a sequence, then change only its last token. Earlier causal outputs must remain unchanged within a stated numerical tolerance.</p>
-<p>This property checks behavior rather than the visual appearance of a triangular matrix. Removing the mask should make the same property fail on a suitable example. That failure is evidence that the test can detect the intended bug.</p>
-<p>A lower training loss after removing the mask may simply indicate answer leakage. It does not demonstrate a better autoregressive model.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Build the mechanism</div><h3>Worked practice and a readiness check</h3><div class="slide-prose"><p>Draw a six-by-six causal visibility table for our sentence. For query school at index 3, list the visible input tokens I, go, to, school. Explain why by and bus are not available to that query.</p>
-<p>Then compute the first query's output in the two-position example with and without masking. State the normalization axis and verify each valid row's weights sum to one.</p>
-<p>You are ready to place attention inside larger structures when you can trace Q, K, V, scaling, masking, softmax, and value mixing independently. The next week adds several heads and explicit position information.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Optional deeper study</div><h3>A deeper pass after the worked introduction</h3><div class="slide-prose"><p>The following reference treatment is for a second pass. First explain the ordinary example above, then use the equations and implementation details below to make the explanation more precise.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Optional deeper study</div><h3>Further study 4 Intuition</h3><div class="slide-prose"><p>When reading “set timeout_ms before calling send,” the representation of “send” should incorporate useful earlier information. Attention lets every position form a weighted combination of available token representations. The weights depend on content and learned projections rather than a fixed window average.</p>
-<p>For a single batch element with <code>X</code> shaped <code>[T,d_model]</code>, compute <code>Q=XWq</code>, <code>K=XWk</code>, and <code>V=XWv</code>. If the head dimension is <code>d_head</code>, Q and K have shape <code>[T,d_head]</code>. Scores <code>QK^T/sqrt(d_head)</code> have shape <code>[T,T]</code>. Apply the mask, take softmax over keys for each query row, and multiply by V. The output shape is <code>[T,d_head]</code>.</p>
-<p>Why divide by the square root? Under a simplified independent unit-variance assumption, a dot product's variance grows with <code>d_head</code>. Scaling helps prevent logits from becoming so large that softmax saturates. The assumption is an intuition for the normalization, not a theorem about every learned layer.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Optional deeper study</div><h3>Further study 4 Masking is part of correctness</h3><div class="slide-prose"><p>A causal mask forbids position i from attending to positions j greater than i. Apply negative infinity to forbidden logits before softmax; multiplying probabilities by zero afterward without renormalizing does not implement the same operation. Padding masks are separate: a padded token should not become useful evidence. Test both dimensions and handle sequences with at least one valid key per query to avoid all-masked softmax rows.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Optional deeper study</div><h3>Further study 4 Worked example</h3><div class="slide-prose"><p>Take a query <code>(1,0)</code>, keys <code>(1,0)</code> and <code>(0,1)</code>, and values <code>(2,0)</code> and <code>(0,4)</code>. Scaled logits are approximately <code>(0.7071,0)</code>. Softmax gives <code>(0.6698,0.3302)</code>, so the mixed result is about <code>(1.3395,1.3208)</code>. If the second key is future context, causal masking changes the result to <code>(2,0)</code>. Verify these numbers in notebook 08.</p>
-<p>Multiple heads learn different projections, concatenate their outputs and project back into the residual stream. A head need not correspond to a simple human concept. Attention weights alone are not a complete explanation of why a model answered: values, residual connections and later layers also matter.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Optional deeper study</div><h3>Further study 4 Experiment</h3><div class="slide-prose"><p>Implement attention without an attention library. Change only the last input token and assert earlier outputs remain unchanged under the causal mask. Then remove the mask and observe the failing invariance. This test catches leakage even if training loss looks excellent. Estimate score-matrix storage for increasing T: the quadratic T dimension matters before you optimize anything.</p>
-<p><strong>Exit criterion:</strong> derive every tensor shape, reproduce the worked example, and explain why a mask bug creates misleading language-model performance. <strong>Reading:</strong> R04 attention equation and diagram. <strong>Tutorial:</strong> 08. <strong>Assessment:</strong> checkpoint A and weekly test.</p></div></section></div><div class="deck-controls"><button class="slide-prev" type="button">← Previous</button><span aria-live="polite" class="slide-counter">1 / 13</span><button class="slide-next" type="button">Next →</button></div><label class="slide-jump-label">Go to slide <select aria-label="Go to slide" class="slide-jump"><option value="0">1</option><option value="1">2</option><option value="2">3</option><option value="3">4</option><option value="4">5</option><option value="5">6</option><option value="6">7</option><option value="7">8</option><option value="8">9</option><option value="9">10</option><option value="10">11</option><option value="11">12</option><option value="12">13</option></select></label><button aria-pressed="false" class="deck-all" type="button">Show all slides</button><a class="reader-link" href="#full-notes">Read the complete lecture ↓</a></section><section aria-label="Inside scaled causal attention" class="visual-lesson"><div class="eyebrow">Explore the mechanism</div><h2>Inside scaled causal attention</h2><p class="visual-intro">Select a query and inspect scoring, scaling, the causal mask and value mixing.</p><div data-widget="attention"><p>Enable JavaScript to use this illustration. The lecture notes below explain the same mechanism.</p></div></section><article class="prose full-notes" id="full-notes"><div class="eyebrow">Complete lecture reader</div><h2>Read the full explanation</h2><h3 id="a-prediction-must-use-only-available-information">A prediction must use only available information</h3>
-<p>During training we have the complete sentence “I go to school by bus.” At the position after by, the model must predict bus using the prefix, even though the training tensor contains the answer farther to the right.</p>
-<p>A causal mask prevents a query position from attending to future positions. If indexing starts at zero, query i may use keys j≤i. The diagonal remains visible because the current input token is part of the prefix used to predict the next token.</p>
-<p>This is an information-access rule. It is separate from whether we include a position in the loss. A padding mask, causal mask, and loss mask serve different purposes.</p>
-<h3 id="the-compact-attention-equation">The compact attention equation</h3>
-<p>The standard single-head expression is softmax(QKᵀ/√Dk + mask)V. Read it as a sequence of operations: compare queries with keys, scale scores, remove forbidden positions, normalize each query row, and mix values.</p>
-<p>For T positions, Q/K have shape [T,Dk], scores and weights have [T,T], and V has [T,Dv]. The output has [T,Dv].</p>
-<p>Do not memorize the expression as an indivisible symbol. If an implementation is wrong, inspect each intermediate tensor. Tiny inputs reveal errors much more clearly than a large model's final loss.</p>
-<h3 id="a-worked-scaled-example">A worked scaled example</h3>
-<p>Take q=[1,0], keys [1,0] and [0,1], and values [2,0] and [0,4]. Here Dk=2, so scores are [1/√2,0], approximately [0.7071,0].</p>
-<p>Softmax gives approximately [0.6698,0.3302]. The mixed output is [1.3395,1.3210]. Both positions contribute.</p>
-<p>Now suppose the second key is a future position. Set its score to negative infinity before softmax. The weights become [1,0] and the output becomes [2,0]. Masking changes the normalization as well as removing the forbidden contribution.</p>
-<h3 id="why-multiplying-probabilities-by-zero-is-different">Why multiplying probabilities by zero is different</h3>
-<p>Suppose you compute the unmasked weights [0.6698,0.3302] and then multiply the second weight by zero. You get [0.6698,0], whose sum is not one. The output becomes [1.3395,0], which differs from the correctly masked result.</p>
-<p>You could renormalize the surviving probabilities, but masking logits before softmax is the direct standard implementation. The important point is to understand what computation you intend.</p>
-<p>If every key in a row is forbidden, softmax has no valid normalization. Design padding and batching so each query being evaluated has an appropriate visible key, or handle invalid rows explicitly.</p>
-<h3 id="why-divide-by-the-square-root">Why divide by the square root</h3>
-<p>Under a simplified assumption of independent, zero-mean, unit-variance query/key coordinates, the variance of their dot product grows with Dk. Large score magnitudes can make softmax very concentrated.</p>
-<p>Dividing by √Dk keeps the scale more controlled under that intuition. This does not guarantee that learned scores always have a particular distribution. It explains the motivation for the scaling term.</p>
-<p>Try vectors with many random coordinates and compare score spread before and after scaling. Inspect the statistics rather than asserting that a sharper attention map is better.</p>
-<h3 id="padding-introduces-another-visibility-condition">Padding introduces another visibility condition</h3>
-<p>A batch may contain sentences of different lengths. We can pad shorter ones to a common length, but those padding positions should not behave like meaningful source words.</p>
-<p>The allowed key positions must satisfy both the causal rule and the validity rule for the sequence. A future token is forbidden even if it is a real word. A padding token is not useful context merely because it lies to the left.</p>
-<p>Loss masking then determines which target predictions count toward the objective. A correctly masked attention computation can still have a wrong loss if it trains on padding labels.</p>
-<h3 id="an-invariant-catches-future-leakage">An invariant catches future leakage</h3>
-<p>Fix the model parameters and disable randomness such as dropout. Run a sequence, then change only its last token. Earlier causal outputs must remain unchanged within a stated numerical tolerance.</p>
-<p>This property checks behavior rather than the visual appearance of a triangular matrix. Removing the mask should make the same property fail on a suitable example. That failure is evidence that the test can detect the intended bug.</p>
-<p>A lower training loss after removing the mask may simply indicate answer leakage. It does not demonstrate a better autoregressive model.</p>
-<h3 id="worked-practice-and-a-readiness-check">Worked practice and a readiness check</h3>
-<p>Draw a six-by-six causal visibility table for our sentence. For query school at index 3, list the visible input tokens I, go, to, school. Explain why by and bus are not available to that query.</p>
-<p>Then compute the first query's output in the two-position example with and without masking. State the normalization axis and verify each valid row's weights sum to one.</p>
-<p>You are ready to place attention inside larger structures when you can trace Q, K, V, scaling, masking, softmax, and value mixing independently. The next week adds several heads and explicit position information.</p>
-<h3 id="a-deeper-pass-after-the-worked-introduction">A deeper pass after the worked introduction</h3>
-<p>The following reference treatment is for a second pass. First explain the ordinary example above, then use the equations and implementation details below to make the explanation more precise.</p>
-<h3 id="further-study-4-intuition">Further study 4 Intuition</h3>
-<p>When reading “set timeout_ms before calling send,” the representation of “send” should incorporate useful earlier information. Attention lets every position form a weighted combination of available token representations. The weights depend on content and learned projections rather than a fixed window average.</p>
-<p>For a single batch element with <code>X</code> shaped <code>[T,d_model]</code>, compute <code>Q=XWq</code>, <code>K=XWk</code>, and <code>V=XWv</code>. If the head dimension is <code>d_head</code>, Q and K have shape <code>[T,d_head]</code>. Scores <code>QK^T/sqrt(d_head)</code> have shape <code>[T,T]</code>. Apply the mask, take softmax over keys for each query row, and multiply by V. The output shape is <code>[T,d_head]</code>.</p>
-<p>Why divide by the square root? Under a simplified independent unit-variance assumption, a dot product's variance grows with <code>d_head</code>. Scaling helps prevent logits from becoming so large that softmax saturates. The assumption is an intuition for the normalization, not a theorem about every learned layer.</p>
-<h3 id="further-study-4-masking-is-part-of-correctness">Further study 4 Masking is part of correctness</h3>
-<p>A causal mask forbids position i from attending to positions j greater than i. Apply negative infinity to forbidden logits before softmax; multiplying probabilities by zero afterward without renormalizing does not implement the same operation. Padding masks are separate: a padded token should not become useful evidence. Test both dimensions and handle sequences with at least one valid key per query to avoid all-masked softmax rows.</p>
-<h3 id="further-study-4-worked-example">Further study 4 Worked example</h3>
-<p>Take a query <code>(1,0)</code>, keys <code>(1,0)</code> and <code>(0,1)</code>, and values <code>(2,0)</code> and <code>(0,4)</code>. Scaled logits are approximately <code>(0.7071,0)</code>. Softmax gives <code>(0.6698,0.3302)</code>, so the mixed result is about <code>(1.3395,1.3208)</code>. If the second key is future context, causal masking changes the result to <code>(2,0)</code>. Verify these numbers in notebook 08.</p>
-<p>Multiple heads learn different projections, concatenate their outputs and project back into the residual stream. A head need not correspond to a simple human concept. Attention weights alone are not a complete explanation of why a model answered: values, residual connections and later layers also matter.</p>
-<h3 id="further-study-4-experiment">Further study 4 Experiment</h3>
-<p>Implement attention without an attention library. Change only the last input token and assert earlier outputs remain unchanged under the causal mask. Then remove the mask and observe the failing invariance. This test catches leakage even if training loss looks excellent. Estimate score-matrix storage for increasing T: the quadratic T dimension matters before you optimize anything.</p>
-<p><strong>Exit criterion:</strong> derive every tensor shape, reproduce the worked example, and explain why a mask bug creates misleading language-model performance. <strong>Reading:</strong> R04 attention equation and diagram. <strong>Tutorial:</strong> 08. <strong>Assessment:</strong> checkpoint A and weekly test.</p></article><nav aria-label="Adjacent lectures" class="chapter-pagination"><a href="07.html"><small>Previous week</small>Where queries keys and values come from</a><a href="09.html"><small>Next week</small>Multiple attention heads and position</a></nav></div><footer class="footer"><span>Applied AI · An independent self-study course</span><span>32 weeks · 10 hours per week</span><a href="../resources.html#about-this-course">About and sources</a></footer></main><dialog aria-labelledby="search-title" class="search-dialog"><div class="dialog-head"><h2 id="search-title">Find a concept</h2><button aria-label="Close search" class="search-close" type="button">Close</button></div><label class="sr-only" for="course-search">Search all lectures and tutorials</label><input autocomplete="off" id="course-search" placeholder="Try attention, fine-tuning, or harness…" type="search"/><p aria-live="polite" class="search-status">Search lecture notes, tutorials, tests and readings.</p><div class="search-results"></div></dialog><div aria-live="polite" class="toast" role="status"></div></body></html>
+<html lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width,initial-scale=1" name="viewport"/>
+  <title>
+   Scaling and masking attention correctly · Applied AI
+  </title>
+  <meta content="Applied generative AI and LLM systems course material" name="description"/>
+  <meta content="#173c36" name="theme-color"/>
+  <link href="../assets/favicon.svg" rel="icon" type="image/svg+xml"/>
+  <link href="../assets/style.css" rel="stylesheet"/>
+  <link href="../assets/slides.css" rel="stylesheet"/>
+  <script>
+   window.COURSE_BASE="../";
+  </script>
+  <script defer="" src="../assets/site-config.js">
+  </script>
+  <script defer="" src="../assets/search-index.js">
+  </script>
+  <script defer="" src="../assets/app.js">
+  </script>
+  <script defer="" src="../assets/visuals.js">
+  </script>
+  <script defer="" src="../assets/slides.js">
+  </script>
+  <script defer="" src="../assets/beginner-visuals.js">
+  </script>
+  <link href="../zh-HK/lectures/08.html" hreflang="zh-HK" rel="alternate"/>
+  <link href="../assets/bilingual.css" rel="stylesheet"/>
+  <link href="../assets/reader-v3.css" rel="stylesheet"/>
+  <script defer="True" src="../assets/reader-v3.js">
+  </script>
+ </head>
+ <body data-page-kind="lecture" data-week="8">
+  <a class="skip-link" href="#main">
+   Skip to content
+  </a>
+  <header class="topbar">
+   <button aria-controls="course-sidebar" aria-expanded="false" class="menu-toggle" type="button">
+    Menu
+   </button>
+   <a class="brand" href="../index.html">
+    <span aria-hidden="true" class="brand-mark">
+     a
+     <span>
+      i
+     </span>
+    </span>
+    <span>
+     APPLIED AI
+     <small>
+      Principles into practice
+     </small>
+    </span>
+   </a>
+   <nav aria-label="Main navigation">
+    <a href="../index.html">
+     The course
+    </a>
+    <a href="../visuals.html">
+     Visual lab
+    </a>
+    <a href="../project.html">
+     Project
+    </a>
+    <a class="language-switch" href="../zh-HK/lectures/08.html" hreflang="zh-HK" lang="zh-HK">
+     繁體中文
+    </a>
+   </nav>
+   <button class="search-open" type="button">
+    Search the course
+    <span aria-hidden="true">
+     /
+    </span>
+   </button>
+  </header>
+  <aside aria-label="Course chapters" class="sidebar" id="course-sidebar">
+   <a class="side-home" href="../index.html">
+    Course overview
+   </a>
+   <details class="semester-nav" open="">
+    <summary>
+     Semester 1
+     <span>
+      Weeks 1–16
+     </span>
+    </summary>
+    <ol start="1">
+     <li>
+      <a href="../lectures/01.html">
+       <span class="week-number">
+        01
+       </span>
+       <span>
+        What a language model is trying to learn
+       </span>
+       <span class="week-tick" data-week-tick="1">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/02.html">
+       <span class="week-number">
+        02
+       </span>
+       <span>
+        From text to tokens and numerical IDs
+       </span>
+       <span class="week-tick" data-week-tick="2">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/03.html">
+       <span class="week-number">
+        03
+       </span>
+       <span>
+        What word vectors can represent
+       </span>
+       <span class="week-tick" data-week-tick="3">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/04.html">
+       <span class="week-number">
+        04
+       </span>
+       <span>
+        From scores to probabilities and learning signals
+       </span>
+       <span class="week-tick" data-week-tick="4">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/05.html">
+       <span class="week-number">
+        05
+       </span>
+       <span>
+        Why language needs context and order
+       </span>
+       <span class="week-tick" data-week-tick="5">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/06.html">
+       <span class="week-number">
+        06
+       </span>
+       <span>
+        Attention begins as a weighted mixture
+       </span>
+       <span class="week-tick" data-week-tick="6">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/07.html">
+       <span class="week-number">
+        07
+       </span>
+       <span>
+        Where queries keys and values come from
+       </span>
+       <span class="week-tick" data-week-tick="7">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a aria-current="page" href="../lectures/08.html">
+       <span class="week-number">
+        08
+       </span>
+       <span>
+        Scaling and masking attention correctly
+       </span>
+       <span class="week-tick" data-week-tick="8">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/09.html">
+       <span class="week-number">
+        09
+       </span>
+       <span>
+        Multiple attention heads and position
+       </span>
+       <span class="week-tick" data-week-tick="9">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/10.html">
+       <span class="week-number">
+        10
+       </span>
+       <span>
+        The transformer block step by step
+       </span>
+       <span class="week-tick" data-week-tick="10">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/11.html">
+       <span class="week-number">
+        11
+       </span>
+       <span>
+        Encoders decoders and complete model architectures
+       </span>
+       <span class="week-tick" data-week-tick="11">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/12.html">
+       <span class="week-number">
+        12
+       </span>
+       <span>
+        Training a small transformer
+       </span>
+       <span class="week-tick" data-week-tick="12">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/13.html">
+       <span class="week-number">
+        13
+       </span>
+       <span>
+        Generation decoding and the KV cache
+       </span>
+       <span class="week-tick" data-week-tick="13">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/14.html">
+       <span class="week-number">
+        14
+       </span>
+       <span>
+        From pretraining to instruction following and reasoning
+       </span>
+       <span class="week-tick" data-week-tick="14">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/15.html">
+       <span class="week-number">
+        15
+       </span>
+       <span>
+        Generative AI beyond text
+       </span>
+       <span class="week-tick" data-week-tick="15">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/16.html">
+       <span class="week-number">
+        16
+       </span>
+       <span>
+        A complete transformer walkthrough and first semester review
+       </span>
+       <span class="week-tick" data-week-tick="16">
+       </span>
+      </a>
+     </li>
+    </ol>
+   </details>
+   <details class="semester-nav">
+    <summary>
+     Semester 2
+     <span>
+      Weeks 17–32
+     </span>
+    </summary>
+    <ol start="17">
+     <li>
+      <a href="../lectures/17.html">
+       <span class="week-number">
+        17
+       </span>
+       <span>
+        From word vectors to semantic search
+       </span>
+       <span class="week-tick" data-week-tick="17">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/18.html">
+       <span class="week-number">
+        18
+       </span>
+       <span>
+        A vector database from a list of vectors
+       </span>
+       <span class="week-tick" data-week-tick="18">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/19.html">
+       <span class="week-number">
+        19
+       </span>
+       <span>
+        RAG as an open book question
+       </span>
+       <span class="week-tick" data-week-tick="19">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/20.html">
+       <span class="week-number">
+        20
+       </span>
+       <span>
+        Improving RAG without losing the basic task
+       </span>
+       <span class="week-tick" data-week-tick="20">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/21.html">
+       <span class="week-number">
+        21
+       </span>
+       <span>
+        Evaluating retrieval answers and uncertainty
+       </span>
+       <span class="week-tick" data-week-tick="21">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/22.html">
+       <span class="week-number">
+        22
+       </span>
+       <span>
+        CPU GPU memory and model resource accounting
+       </span>
+       <span class="week-tick" data-week-tick="22">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/23.html">
+       <span class="week-number">
+        23
+       </span>
+       <span>
+        CUDA kernels and profiling
+       </span>
+       <span class="week-tick" data-week-tick="23">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/24.html">
+       <span class="week-number">
+        24
+       </span>
+       <span>
+        Fine tuning starts with a teaching dataset
+       </span>
+       <span class="week-tick" data-week-tick="24">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/25.html">
+       <span class="week-number">
+        25
+       </span>
+       <span>
+        LoRA and QLoRA from a small matrix
+       </span>
+       <span class="week-tick" data-week-tick="25">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/26.html">
+       <span class="week-number">
+        26
+       </span>
+       <span>
+        Fine tuning experiments preferences and distillation
+       </span>
+       <span class="week-tick" data-week-tick="26">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/27.html">
+       <span class="week-number">
+        27
+       </span>
+       <span>
+        Tools functions workflows and agents
+       </span>
+       <span class="week-tick" data-week-tick="27">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/28.html">
+       <span class="week-number">
+        28
+       </span>
+       <span>
+        Harnesses planning memory and bounded execution
+       </span>
+       <span class="week-tick" data-week-tick="28">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/29.html">
+       <span class="week-number">
+        29
+       </span>
+       <span>
+        From a notebook to MLOps and inference serving
+       </span>
+       <span class="week-tick" data-week-tick="29">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/30.html">
+       <span class="week-number">
+        30
+       </span>
+       <span>
+        Monitoring security regression tests and rollback
+       </span>
+       <span class="week-tick" data-week-tick="30">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/31.html">
+       <span class="week-number">
+        31
+       </span>
+       <span>
+        Integrating the documentation assistant and advanced extensions
+       </span>
+       <span class="week-tick" data-week-tick="31">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/32.html">
+       <span class="week-number">
+        32
+       </span>
+       <span>
+        Review defense and a continuing learning plan
+       </span>
+       <span class="week-tick" data-week-tick="32">
+       </span>
+      </a>
+     </li>
+    </ol>
+   </details>
+   <div class="side-links">
+    <a href="../visuals.html">
+     Visual laboratory
+     <span>
+      14 interactive lessons
+     </span>
+    </a>
+    <a href="../project.html">
+     Documentation assistant
+     <span>
+      Your capstone project
+     </span>
+    </a>
+    <a href="../resources.html">
+     Readings and setup
+    </a>
+   </div>
+   <div class="side-progress">
+    <div>
+     <span>
+      Your progress
+     </span>
+     <strong data-progress-count="">
+      0 / 32
+     </strong>
+    </div>
+    <progress aria-label="Completed lectures" max="32" value="0">
+    </progress>
+    <small>
+     Saved in this browser
+    </small>
+   </div>
+  </aside>
+  <main class="main" id="main">
+   <div class="content">
+    <div class="chapter-header">
+     <div class="eyebrow">
+      Semester 1 / Week 08
+     </div>
+     <h1>
+      Scaling and masking attention correctly
+     </h1>
+    </div>
+    <div class="lesson-links">
+     <a href="../tutorials/08.html">
+      Tutorial 08
+     </a>
+     <a href="../tests/08.html">
+      Test your understanding
+     </a>
+     <button aria-pressed="false" class="mark-complete" data-week="8" type="button">
+      Mark as complete
+     </button>
+    </div>
+    <div aria-label="Lesson view" class="lesson-mode" role="tablist">
+     <button aria-controls="full-notes" aria-selected="true" data-mode="read" id="mode-read" role="tab" type="button">
+      Read lesson
+     </button>
+     <button aria-controls="lecture-slides" aria-selected="false" data-mode="slides" id="mode-slides" role="tab" type="button">
+      Lesson slides
+     </button>
+    </div>
+    <section aria-label="Lecture slides" class="lecture-deck" hidden="" id="lecture-slides" role="tabpanel">
+     <div class="deck-top">
+      <div>
+       <div class="eyebrow">
+        Lecture slides · Week 08
+       </div>
+       <h2>
+        Key steps and worked visuals
+       </h2>
+      </div>
+      <button class="deck-present" type="button">
+       Present
+      </button>
+     </div>
+     <p class="deck-help">
+      Use these slides to review the mechanism. Open “Read the worked explanation” for the complete notes and code.
+     </p>
+     <div aria-label="Presentation: use left and right arrow keys" class="slide-viewport" tabindex="0">
+      <section class="lecture-slide" data-slide="">
+       <div class="slide-stage">
+        Week 08 · Section 1
+       </div>
+       <h3>
+        A prediction must use only available information
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          During training we have the complete sentence “I go to school by bus.” At the position after by, the model must predict bus using the prefix, even though the training tensor contains the answer farther to the right.
+         </li>
+         <li>
+          A causal mask prevents a query position from attending to future positions.
+         </li>
+         <li>
+          This is an information-access rule.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#a-prediction-must-use-only-available-information">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 08 · Section 2
+       </div>
+       <h3>
+        The compact attention equation
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          The standard single-head expression is softmax(QKᵀ/√d_head + mask)V.
+         </li>
+         <li>
+          For T positions, Q/K have shape [T,d_head], scores and weights have [T,T], and V has [T,d_value].
+         </li>
+         <li>
+          Do not memorize the expression as an indivisible symbol.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#the-compact-attention-equation">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 08 · Section 3
+       </div>
+       <h3>
+        A worked scaled example
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Take q=[1,0], keys [1,0] and [0,1], and values [2,0] and [0,4].
+         </li>
+         <li>
+          Softmax gives approximately [0.6698,0.3302].
+         </li>
+         <li>
+          Now suppose the second key is a future position.
+         </li>
+        </ul>
+        <figure class="mechanism-figure">
+         <figcaption>
+          One attention row, in execution order
+         </figcaption>
+         <ol class="mechanism-flow">
+          <li>
+           <span class="mechanism-number">
+            01
+           </span>
+           <strong>
+            Compare
+           </strong>
+           <small>
+            QKᵀ / √d_head
+           </small>
+          </li>
+          <li>
+           <span class="mechanism-number">
+            02
+           </span>
+           <strong>
+            Restrict
+           </strong>
+           <small>
+            apply mask
+           </small>
+          </li>
+          <li>
+           <span class="mechanism-number">
+            03
+           </span>
+           <strong>
+            Normalize
+           </strong>
+           <small>
+            softmax over keys
+           </small>
+          </li>
+          <li>
+           <span class="mechanism-number">
+            04
+           </span>
+           <strong>
+            Mix
+           </strong>
+           <small>
+            weights × V
+           </small>
+          </li>
+         </ol>
+         <p>
+          Mask the scores before softmax. A hidden future key contributes zero weight.
+         </p>
+        </figure>
+        <a class="slide-section-link" href="#a-worked-scaled-example">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 08 · Section 4
+       </div>
+       <h3>
+        Why multiplying probabilities by zero is different
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Suppose you compute the unmasked weights [0.6698,0.3302] and then multiply the second weight by zero.
+         </li>
+         <li>
+          You could renormalize the surviving probabilities, but masking logits before softmax is the direct standard implementation.
+         </li>
+         <li>
+          If every key in a row is forbidden, softmax has no valid normalization.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#why-multiplying-probabilities-by-zero-is-different">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 08 · Section 5
+       </div>
+       <h3>
+        Why divide by the square root
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Under a simplified assumption of independent, zero-mean, unit-variance query/key coordinates, the variance of their dot product grows with d_head.
+         </li>
+         <li>
+          Dividing by √d_head keeps the scale more controlled under that intuition.
+         </li>
+         <li>
+          Try vectors with many random coordinates and compare score spread before and after scaling.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#why-divide-by-the-square-root">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 08 · Section 6
+       </div>
+       <h3>
+        Padding introduces another visibility condition
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          A batch may contain sentences of different lengths.
+         </li>
+         <li>
+          The allowed key positions must satisfy both the causal rule and the validity rule for the sequence.
+         </li>
+         <li>
+          Loss masking then determines which target predictions count toward the objective.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#padding-introduces-another-visibility-condition">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 08 · Section 7
+       </div>
+       <h3>
+        An invariant catches future leakage
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Fix the model parameters and disable randomness such as dropout.
+         </li>
+         <li>
+          This property checks behavior rather than the visual appearance of a triangular matrix.
+         </li>
+         <li>
+          A lower training loss after removing the mask may indicate answer leakage.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#an-invariant-catches-future-leakage">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 08 · Section 8
+       </div>
+       <h3>
+        Worked practice and a readiness check
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Draw a six-by-six causal visibility table for our sentence.
+         </li>
+         <li>
+          Then compute the first query's output in the two-position example with and without masking.
+         </li>
+         <li>
+          You are ready to place attention inside larger structures when you can trace Q, K, V, scaling, masking, softmax, and value mixing independently.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#worked-practice-and-a-readiness-check">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+     </div>
+     <div class="deck-controls">
+      <button class="slide-prev" type="button">
+       ← Previous
+      </button>
+      <span aria-live="polite" class="slide-counter">
+       1 / 8
+      </span>
+      <button class="slide-next" type="button">
+       Next →
+      </button>
+     </div>
+     <label class="slide-jump-label">
+      Go to slide
+      <select aria-label="Go to slide" class="slide-jump">
+       <option value="0">
+        1. A prediction must use only available information
+       </option>
+       <option value="1">
+        2. The compact attention equation
+       </option>
+       <option value="2">
+        3. A worked scaled example
+       </option>
+       <option value="3">
+        4. Why multiplying probabilities by zero is different
+       </option>
+       <option value="4">
+        5. Why divide by the square root
+       </option>
+       <option value="5">
+        6. Padding introduces another visibility condition
+       </option>
+       <option value="6">
+        7. An invariant catches future leakage
+       </option>
+       <option value="7">
+        8. Worked practice and a readiness check
+       </option>
+      </select>
+     </label>
+     <button aria-pressed="false" class="deck-all" type="button">
+      Show all slides
+     </button>
+    </section>
+    <section aria-label="Inside scaled causal attention" class="visual-lesson">
+     <div class="eyebrow">
+      Explore the mechanism
+     </div>
+     <h2>
+      Inside scaled causal attention
+     </h2>
+     <p class="visual-intro">
+      Select a query and inspect scoring, scaling, the causal mask and value mixing.
+     </p>
+     <div data-widget="attention">
+      <p>
+       Enable JavaScript to use this illustration. The lecture notes below explain the same mechanism.
+      </p>
+     </div>
+    </section>
+    <nav aria-label="In this lesson" class="reader-toc">
+     <strong>
+      In this lesson
+     </strong>
+     <ol>
+      <li>
+       <a href="#a-prediction-must-use-only-available-information">
+        A prediction must use only available information
+       </a>
+      </li>
+      <li>
+       <a href="#the-compact-attention-equation">
+        The compact attention equation
+       </a>
+      </li>
+      <li>
+       <a href="#a-worked-scaled-example">
+        A worked scaled example
+       </a>
+      </li>
+      <li>
+       <a href="#why-multiplying-probabilities-by-zero-is-different">
+        Why multiplying probabilities by zero is different
+       </a>
+      </li>
+      <li>
+       <a href="#why-divide-by-the-square-root">
+        Why divide by the square root
+       </a>
+      </li>
+      <li>
+       <a href="#padding-introduces-another-visibility-condition">
+        Padding introduces another visibility condition
+       </a>
+      </li>
+      <li>
+       <a href="#an-invariant-catches-future-leakage">
+        An invariant catches future leakage
+       </a>
+      </li>
+      <li>
+       <a href="#worked-practice-and-a-readiness-check">
+        Worked practice and a readiness check
+       </a>
+      </li>
+     </ol>
+    </nav>
+    <article class="prose full-notes" id="full-notes" role="tabpanel">
+     <div class="eyebrow">
+      Complete lecture reader
+     </div>
+     <h2>
+      Read the full explanation
+     </h2>
+     <aside class="notation-key">
+      <strong>
+       Notation in this lesson
+      </strong>
+      <p>
+       B: batch · T: tokens · d_model: model width · H: query heads · H_kv: key/value heads · d_head: query/key width per head · d_value: value width per head
+      </p>
+     </aside>
+     <h3 id="a-prediction-must-use-only-available-information">
+      A prediction must use only available information
+     </h3>
+     <p>
+      During training we have the complete sentence “I go to school by bus.” At the position after by, the model must predict bus using the prefix, even though the training tensor contains the answer farther to the right.
+     </p>
+     <p>
+      A causal mask prevents a query position from attending to future positions. If indexing starts at zero, query i may use keys j≤i. The diagonal remains visible because the current input token is part of the prefix used to predict the next token.
+     </p>
+     <p>
+      This is an information-access rule. It is separate from whether we include a position in the loss. A padding mask, causal mask, and loss mask serve different purposes.
+     </p>
+     <h3 id="the-compact-attention-equation">
+      The compact attention equation
+     </h3>
+     <p>
+      The standard single-head expression is softmax(QKᵀ/√d_head + mask)V. Read it as a sequence of operations: compare queries with keys, scale scores, remove forbidden positions, normalize each query row, and mix values.
+     </p>
+     <p>
+      For T positions, Q/K have shape [T,d_head], scores and weights have [T,T], and V has [T,d_value]. The output has [T,d_value].
+     </p>
+     <p>
+      Do not memorize the expression as an indivisible symbol. If an implementation is wrong, inspect each intermediate tensor. Tiny inputs reveal errors much more clearly than a large model's final loss.
+     </p>
+     <h3 id="a-worked-scaled-example">
+      A worked scaled example
+     </h3>
+     <figure class="mechanism-figure">
+      <figcaption>
+       One attention row, in execution order
+      </figcaption>
+      <ol class="mechanism-flow">
+       <li>
+        <span class="mechanism-number">
+         01
+        </span>
+        <strong>
+         Compare
+        </strong>
+        <small>
+         QKᵀ / √d_head
+        </small>
+       </li>
+       <li>
+        <span class="mechanism-number">
+         02
+        </span>
+        <strong>
+         Restrict
+        </strong>
+        <small>
+         apply mask
+        </small>
+       </li>
+       <li>
+        <span class="mechanism-number">
+         03
+        </span>
+        <strong>
+         Normalize
+        </strong>
+        <small>
+         softmax over keys
+        </small>
+       </li>
+       <li>
+        <span class="mechanism-number">
+         04
+        </span>
+        <strong>
+         Mix
+        </strong>
+        <small>
+         weights × V
+        </small>
+       </li>
+      </ol>
+      <p>
+       Mask the scores before softmax. A hidden future key contributes zero weight.
+      </p>
+     </figure>
+     <p>
+      Take q=[1,0], keys [1,0] and [0,1], and values [2,0] and [0,4]. Here d_head=2, so scores are [1/√2,0], approximately [0.7071,0].
+     </p>
+     <p>
+      Softmax gives approximately [0.6698,0.3302]. The mixed output is [1.3395,1.3210]. Both positions contribute.
+     </p>
+     <p>
+      Now suppose the second key is a future position. Set its score to negative infinity before softmax. The weights become [1,0] and the output becomes [2,0]. Masking changes the normalization as well as removing the forbidden contribution.
+     </p>
+     <h3 id="why-multiplying-probabilities-by-zero-is-different">
+      Why multiplying probabilities by zero is different
+     </h3>
+     <p>
+      Suppose you compute the unmasked weights [0.6698,0.3302] and then multiply the second weight by zero. You get [0.6698,0], whose sum is not one. The output becomes [1.3395,0], which differs from the correctly masked result.
+     </p>
+     <p>
+      You could renormalize the surviving probabilities, but masking logits before softmax is the direct standard implementation. The important point is to understand what computation you intend.
+     </p>
+     <p>
+      If every key in a row is forbidden, softmax has no valid normalization. Design padding and batching so each query being evaluated has an appropriate visible key, or handle invalid rows explicitly.
+     </p>
+     <h3 id="why-divide-by-the-square-root">
+      Why divide by the square root
+     </h3>
+     <p>
+      Under a simplified assumption of independent, zero-mean, unit-variance query/key coordinates, the variance of their dot product grows with d_head. Large score magnitudes can make softmax very concentrated.
+     </p>
+     <p>
+      Dividing by √d_head keeps the scale more controlled under that intuition. This does not guarantee that learned scores always have a particular distribution. It explains the motivation for the scaling term.
+     </p>
+     <p>
+      Try vectors with many random coordinates and compare score spread before and after scaling. Inspect the statistics rather than asserting that a sharper attention map is better.
+     </p>
+     <h3 id="padding-introduces-another-visibility-condition">
+      Padding introduces another visibility condition
+     </h3>
+     <p>
+      A batch may contain sentences of different lengths. We can pad shorter ones to a common length, but those padding positions should not behave like meaningful source words.
+     </p>
+     <p>
+      The allowed key positions must satisfy both the causal rule and the validity rule for the sequence. A future token is forbidden even if it is a real word. A padding token is not useful context merely because it lies to the left.
+     </p>
+     <p>
+      Loss masking then determines which target predictions count toward the objective. A correctly masked attention computation can still have a wrong loss if it trains on padding labels.
+     </p>
+     <h3 id="an-invariant-catches-future-leakage">
+      An invariant catches future leakage
+     </h3>
+     <p>
+      Fix the model parameters and disable randomness such as dropout. Run a sequence, then change only its last token. Earlier causal outputs must remain unchanged within a stated numerical tolerance.
+     </p>
+     <p>
+      This property checks behavior rather than the visual appearance of a triangular matrix. Removing the mask should make the same property fail on a suitable example. That failure is evidence that the test can detect the intended bug.
+     </p>
+     <p>
+      A lower training loss after removing the mask may indicate answer leakage. In tutorial 08, implement the attention calculation, run the invariance check, and then remove the mask to make the check fail. A [T,T] score matrix stores T² numbers per head; doubling T quadruples that storage before considering batching or multiple heads.
+     </p>
+     <h3 id="worked-practice-and-a-readiness-check">
+      Worked practice and a readiness check
+     </h3>
+     <p>
+      Draw a six-by-six causal visibility table for our sentence. For query school at index 3, list the visible input tokens I, go, to, school. Explain why by and bus are not available to that query.
+     </p>
+     <p>
+      Then compute the first query's output in the two-position example with and without masking. State the normalization axis and verify each valid row's weights sum to one.
+     </p>
+     <p>
+      You are ready to place attention inside larger structures when you can trace Q, K, V, scaling, masking, softmax, and value mixing independently. The next week adds several heads and explicit position information.
+     </p>
+    </article>
+    <nav aria-label="Adjacent lectures" class="chapter-pagination">
+     <a href="07.html">
+      <small>
+       Previous week
+      </small>
+      Where queries keys and values come from
+     </a>
+     <a href="09.html">
+      <small>
+       Next week
+      </small>
+      Multiple attention heads and position
+     </a>
+    </nav>
+   </div>
+   <footer class="footer">
+    <span>
+     Applied AI · An independent self-study course
+    </span>
+    <span>
+     32 weeks · 10 hours per week
+    </span>
+    <a href="../resources.html#about-this-course">
+     About and sources
+    </a>
+   </footer>
+  </main>
+  <dialog aria-labelledby="search-title" class="search-dialog">
+   <div class="dialog-head">
+    <h2 id="search-title">
+     Find a concept
+    </h2>
+    <button aria-label="Close search" class="search-close" type="button">
+     Close
+    </button>
+   </div>
+   <label class="sr-only" for="course-search">
+    Search all lectures and tutorials
+   </label>
+   <input autocomplete="off" id="course-search" placeholder="Try attention, fine-tuning, or harness…" type="search"/>
+   <p aria-live="polite" class="search-status">
+    Search lecture notes, tutorials, tests and readings.
+   </p>
+   <div class="search-results">
+   </div>
+  </dialog>
+  <div aria-live="polite" class="toast" role="status">
+  </div>
+ </body>
+</html>

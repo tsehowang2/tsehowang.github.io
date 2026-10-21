@@ -1,4 +1,3 @@
-# %%
 from pathlib import Path
 import sys,json,time,random,hashlib,math
 if hasattr(sys.stdout,'reconfigure'): sys.stdout.reconfigure(encoding='utf-8')
@@ -11,7 +10,7 @@ from coursekit.core import *
 random.seed(7)
 print('Course root:',COURSE)
 
-# %%
+
 manifest=make_manifest({'prompt_revision':'baseline-extractor-v1','tool_revision':'strict-tools-v1'})
 assert verify_manifest(manifest)
 (RUNS/'week29_manifest.json').write_text(json.dumps(manifest,indent=2))
@@ -19,7 +18,7 @@ bad=dict(manifest);bad['corpus_sha256']='changed'
 try: verify_manifest(bad)
 except ValueError as e: print('Rejected incompatible manifest:',e)
 
-# %%
+
 import subprocess,urllib.request,urllib.error
 process=subprocess.Popen([sys.executable,'-m','coursekit.server'],cwd=COURSE,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
 try:
@@ -45,3 +44,15 @@ try:
 finally:
     process.terminate();process.wait(timeout=5)
 
+
+requests={'A':3,'B':1};completed=[];trace=[]
+for step in range(1,4):
+    if step==2:requests['C']=2
+    active=list(requests)
+    for request in active:
+        requests[request]-=1
+        if requests[request]==0:completed.append(request)
+    trace.append((step,active,completed.copy()))
+    requests={key:value for key,value in requests.items() if value>0}
+assert trace[1][1]==['A','C'] and set(completed)=={'A','B','C'}
+print('Decode-step scheduling fixture:',trace)

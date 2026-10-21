@@ -1,56 +1,1053 @@
 <!DOCTYPE html>
-
-<html lang="zh-HK"><head><script src="../../assets/translations-zh-HK.js"></script><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/><title>為甚麼語言需要 context 和次序 · Applied AI</title><meta content="Applied generative AI and LLM systems course material" name="description"/><meta content="#173c36" name="theme-color"/><link href="../../assets/favicon.svg" rel="icon" type="image/svg+xml"/><link href="../../assets/style.css" rel="stylesheet"/><link href="../../assets/slides.css" rel="stylesheet"/><script>window.COURSE_BASE="../";</script><script defer="" src="../../assets/site-config.js"></script><script defer="" src="../assets/search-index.js"></script><script defer="" src="../../assets/app.js"></script><script defer="" src="../../assets/visuals.js"></script><script defer="" src="../../assets/slides.js"></script><script defer="" src="../../assets/beginner-visuals.js"></script><script defer="True" src="../../assets/locale-patterns.js"></script><script defer="True" src="../../assets/locale.js"></script><link href="../../assets/bilingual.css" rel="stylesheet"/><link href="../../lectures/05.html" hreflang="en" rel="alternate"/></head><body data-page-kind="lecture" data-week="5"><a class="skip-link" href="#main">跳至內容</a><header class="topbar"><button aria-controls="course-sidebar" aria-expanded="false" class="menu-toggle" type="button">選單</button><a class="brand" href="../index.html"><span aria-hidden="true" class="brand-mark">a<span>i</span></span><span>APPLIED AI<small>從原理到實踐</small></span></a><nav aria-label="主要導覽"><a href="../index.html">課程</a><a href="../visuals.html">互動圖解</a><a href="../project.html">專題</a><a class="language-switch" href="../../lectures/05.html" hreflang="en" lang="en">English</a></nav><button class="search-open" type="button">搜尋課程 <span aria-hidden="true">/</span></button></header><aside aria-label="課程章節" class="sidebar" id="course-sidebar"><a class="side-home" href="../index.html">課程概覽</a><details class="semester-nav" open=""><summary>第一學期<span>第 1–16 週</span></summary><ol start="1"><li><a href="../lectures/01.html"><span class="week-number">01</span><span>Language model 究竟在學甚麼</span><span class="week-tick" data-week-tick="1"></span></a></li><li><a href="../lectures/02.html"><span class="week-number">02</span><span>從文字到 token 和數值 ID</span><span class="week-tick" data-week-tick="2"></span></a></li><li><a href="../lectures/03.html"><span class="week-number">03</span><span>Word vector 能表達甚麼</span><span class="week-tick" data-week-tick="3"></span></a></li><li><a href="../lectures/04.html"><span class="week-number">04</span><span>從 score 到 probability 和學習訊號</span><span class="week-tick" data-week-tick="4"></span></a></li><li><a aria-current="page" href="../lectures/05.html"><span class="week-number">05</span><span>為甚麼語言需要 context 和次序</span><span class="week-tick" data-week-tick="5"></span></a></li><li><a href="../lectures/06.html"><span class="week-number">06</span><span>Attention 由 weighted mixture 開始</span><span class="week-tick" data-week-tick="6"></span></a></li><li><a href="../lectures/07.html"><span class="week-number">07</span><span>Query、key 和 value 從何而來</span><span class="week-tick" data-week-tick="7"></span></a></li><li><a href="../lectures/08.html"><span class="week-number">08</span><span>正確進行 attention scaling 和 masking</span><span class="week-tick" data-week-tick="8"></span></a></li><li><a href="../lectures/09.html"><span class="week-number">09</span><span>多個 attention head 與位置</span><span class="week-tick" data-week-tick="9"></span></a></li><li><a href="../lectures/10.html"><span class="week-number">10</span><span>逐步拆解 transformer block</span><span class="week-tick" data-week-tick="10"></span></a></li><li><a href="../lectures/11.html"><span class="week-number">11</span><span>Encoder、decoder 與完整 model architecture</span><span class="week-tick" data-week-tick="11"></span></a></li><li><a href="../lectures/12.html"><span class="week-number">12</span><span>訓練一個小型 transformer</span><span class="week-tick" data-week-tick="12"></span></a></li><li><a href="../lectures/13.html"><span class="week-number">13</span><span>Generation、decoding 與 KV cache</span><span class="week-tick" data-week-tick="13"></span></a></li><li><a href="../lectures/14.html"><span class="week-number">14</span><span>從 pretraining 到 instruction following 和 reasoning</span><span class="week-tick" data-week-tick="14"></span></a></li><li><a href="../lectures/15.html"><span class="week-number">15</span><span>文字以外的 Generative AI</span><span class="week-tick" data-week-tick="15"></span></a></li><li><a href="../lectures/16.html"><span class="week-number">16</span><span>完整 transformer 導覽與第一學期溫習</span><span class="week-tick" data-week-tick="16"></span></a></li></ol></details><details class="semester-nav"><summary>第二學期<span>第 17–32 週</span></summary><ol start="17"><li><a href="../lectures/17.html"><span class="week-number">17</span><span>從 word vector 到 semantic search</span><span class="week-tick" data-week-tick="17"></span></a></li><li><a href="../lectures/18.html"><span class="week-number">18</span><span>從一列 vector 建立 vector database</span><span class="week-tick" data-week-tick="18"></span></a></li><li><a href="../lectures/19.html"><span class="week-number">19</span><span>把 RAG 理解為開卷作答</span><span class="week-tick" data-week-tick="19"></span></a></li><li><a href="../lectures/20.html"><span class="week-number">20</span><span>在保持基本任務的前提下改善 RAG</span><span class="week-tick" data-week-tick="20"></span></a></li><li><a href="../lectures/21.html"><span class="week-number">21</span><span>評估 retrieval、答案與 uncertainty</span><span class="week-tick" data-week-tick="21"></span></a></li><li><a href="../lectures/22.html"><span class="week-number">22</span><span>CPU、GPU、memory 與 model 資源計算</span><span class="week-tick" data-week-tick="22"></span></a></li><li><a href="../lectures/23.html"><span class="week-number">23</span><span>CUDA kernel 與 profiling</span><span class="week-tick" data-week-tick="23"></span></a></li><li><a href="../lectures/24.html"><span class="week-number">24</span><span>Fine-tuning 由教學 dataset 開始</span><span class="week-tick" data-week-tick="24"></span></a></li><li><a href="../lectures/25.html"><span class="week-number">25</span><span>從小型 matrix 理解 LoRA 和 QLoRA</span><span class="week-tick" data-week-tick="25"></span></a></li><li><a href="../lectures/26.html"><span class="week-number">26</span><span>Fine-tuning 實驗、preference 與 distillation</span><span class="week-tick" data-week-tick="26"></span></a></li><li><a href="../lectures/27.html"><span class="week-number">27</span><span>Tool、function、workflow 與 agent</span><span class="week-tick" data-week-tick="27"></span></a></li><li><a href="../lectures/28.html"><span class="week-number">28</span><span>Harness、planning、memory 與有界執行</span><span class="week-tick" data-week-tick="28"></span></a></li><li><a href="../lectures/29.html"><span class="week-number">29</span><span>從 notebook 到 MLOps 和 inference serving</span><span class="week-tick" data-week-tick="29"></span></a></li><li><a href="../lectures/30.html"><span class="week-number">30</span><span>Monitoring、security、regression test 與 rollback</span><span class="week-tick" data-week-tick="30"></span></a></li><li><a href="../lectures/31.html"><span class="week-number">31</span><span>整合文件助手與進階延伸</span><span class="week-tick" data-week-tick="31"></span></a></li><li><a href="../lectures/32.html"><span class="week-number">32</span><span>溫習、答辯與持續學習計劃</span><span class="week-tick" data-week-tick="32"></span></a></li></ol></details><div class="side-links"><a href="../visuals.html">互動圖解實驗室 <span>14 個互動課節</span></a><a href="../project.html">文件助手 <span>你的 capstone project</span></a><a href="../resources.html">閱讀材料與環境設定</a></div><div class="side-progress"><div><span>你的進度</span><strong data-progress-count="">0 / 32</strong></div><progress aria-label="已完成 lecture" max="32" value="0"></progress><small>儲存在這個瀏覽器</small></div></aside><main class="main" id="main"><div class="content"><div class="chapter-header"><div class="eyebrow">第一學期 / 第 05 週</div><h1>為甚麼語言需要 context 和次序</h1></div><div class="lesson-links"><a href="../tutorials/05.html">練習 05</a><a href="../tests/05.html">檢查你的理解</a><button aria-pressed="false" class="mark-complete" data-week="5" type="button">標記為已完成</button></div><section aria-label="Lecture slides" class="lecture-deck" id="lecture-slides"><div class="deck-top"><div><div class="eyebrow">課堂投影片 · 第 05 週</div><h2>一步一步學習。</h2></div><button class="deck-present" type="button">簡報模式</button></div><p class="deck-help">閱讀每段解說，停下來預測結果，然後繼續。選取簡報後，可用方向鍵操作。完整講義在下方。</p><div aria-label="簡報：使用左右方向鍵" class="slide-viewport" tabindex="0"><section class="lecture-slide" data-slide=""><div class="slide-stage">由例子開始</div><h3>同一個字可以出現在不同情況</h3><div class="slide-prose"><p>讀「I go to school by bus」和「The bus is late because it broke down.」。Token bus 參與了不同關係。第二句中，it 指回 bus。若 model 獨立處理每個 token，就無法利用句子解決這個指代關係。</p>
-<p>字的順序也很重要。「The boy follows the bus」和「The bus follows the boy」包含相同單字，卻描述不同事件。只根據出現了哪些字建立 representation，會失去這個分別。</p>
-<p>我們現在需要一個機制，把起始 token vector 轉成依賴其他 position 的 representation。這就是 attention 要處理的問題。先看看較簡單的 context 提供方法。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">由例子開始</div><h3>固定 window 只看到句子的一部分</h3><div class="slide-prose"><p>Window model 可能只用最後兩個 token 預測下一個 token。對「I go to school by」，它只看到 school by。這可能有用，但較早的資訊一旦落在指定 window 以外，就會消失。</p>
-<p>擴大 window 會增加 context，但對某些簡單 architecture，也會改變 input size 和 parameter 數量。若句子的 dependency 距離更遠，仍可能超出 window。</p>
-<p>這並不是證明所有 fixed-window model 都表現差，而是指出一項結構選擇及其限制。在討論 benchmark 結果之前，我們想先了解 architecture 能使用哪些資訊。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">建立對機制的理解</div><h3>Recurrent model 會攜帶 state</h3><div class="slide-prose"><p>Recurrent neural network 每次處理一個 token。簡化的 recurrence 是 h_t=f(Wx_t+Uh_(t-1)+b)。新的 state 結合當前 token vector 和上一個 state。</p>
-<p>想像依次讀 I、go、to。讀到 to 之後的 state，可以攜帶這三個字的部分資訊。因為下一個 state 依賴前一個 state，sequence 自然有處理順序。</p>
-<p>這個 state 的 width 有限，必須在反覆更新中保留有用資訊。學習長距離 dependency 可能困難，而 training 也有跨時間的 sequential dependency。Gated recurrent architecture 能處理部分問題，但不會消除所有取捨。我們介紹它們是為了理解問題，並非聲稱 recurrence 無法做 language modeling。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">建立對機制的理解</div><h3>用簡單 state update 展示資訊流失</h3><div class="slide-prose"><p>考慮 scalar recurrence h_t=0.5h_(t-1)+x_t，由零開始。如果 input 值是 [1,0,0,0]，state 就是 [1,0.5,0.25,0.125]。第一個 input 的影響逐步減弱。</p>
-<p>這是刻意設計的算術例子，並不表示訓練好的 RNN 永遠使用 0.5 的衰減。它展示反覆 transformation 如何改變較早資訊的影響。</p>
-<p>如果任務要求經過很多步後仍準確記住第一個字，compressed state 就必須保留這項細節。Attention 會提供另一種 access pattern：把當前 representation 直接與可用 position 的 representation 比較。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">建立對機制的理解</div><h3>讀取 source，產生 target</h3><div class="slide-prose"><p>翻譯提供一個具體的 context 問題。「I go to school by bus」可以是 input sequence，而譯文則是另一個 output sequence。Encoder 讀取 source 並建立 representation；decoder 按 generation rule 產生 target。</p>
-<p>單一固定 vector 可以概括整個 source，但句子變長時，重要細節可能難以保留。Attention 可以讓每個 target position 查閱不同 source position。</p>
-<p>這個 source-target 例子引出 cross-attention。我們先研究的 self-attention，則比較同一 sequence 內的 position。分別在於 vector 從哪裏來，而不是方法是否在「思考自己」。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">建立對機制的理解</div><h3>當前 position 可以看到甚麼</h3><div class="slide-prose"><p>Next-token generation 中，從「I go to school by」作 prediction 時，在生成 bus 之前不能先讀到答案 bus。如果 training 計算意外讀取未來 token，它解決的問題便比 inference 任務容易。</p>
-<p>若 sentence encoder 用來表示已完整觀察的 input，讀取某個 position 左右兩邊的字可能合理。任務決定允許使用的資訊，並沒有通則要求所有 language model 使用同一 mask。</p>
-<p>我們會把 architecture 與 visibility 分開。Causal decoder 使用從左至右的 visibility pattern；encoder 通常對有效 input position 使用 bidirectional pattern。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">深入學習，檢查理解</div><h3>通往 attention 的橋樑</h3><div class="slide-prose"><p>假設你要填上句子最後一個字。你可能查閱不同的較早線索，而不只依靠一張壓縮筆記。Attention 把這個想法變成從資料學到的 value vector 數值 mixture。</p>
-<p>第 6 週的初步解釋，會使用我們手動選定、看得見的 weight。第 7 週展示 learned projection 如何產生 score。第 8 週再仔細加入 scaling 和 causal mask。</p>
-<p>這個次序讓我們在引入最終公式的所有 matrix 之前，先檢查 mixture。初學者應先能計算小型 attention 例子的 output，才去記它的簡潔 equation。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">深入學習，檢查理解</div><h3>實例練習與學習檢查</h3><div class="slide-prose"><p>對 recurrence h_t=0.5h_(t-1)+x_t，計算 [0,0,0,1] 的 state。把最終 state 與上一個例子比較。順序改變結果，因為較早 input 經歷更多 transformation。</p>
-<p>寫一個例子，展示 two-token window 如何失去有用 context。然後對兩個建議的 attention operation，分辨 translation decoder 正在查閱 source sequence，還是自己生成的 target prefix。</p>
-<p>當你認得 context、順序、recurrence、encoder、decoder、self-attention 和 cross-attention 這些概念，就準備好繼續。你暫時無須實作翻譯系統，也無須使用 orchestration framework。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">深入學習，檢查理解</div><h3>把 context access 畫成可測試的圖</h3><div class="slide-prose"><p>把「I go to school by bus」畫成六個方格。對 school 位置的 representation，畫線連到各 model 允許使用的資訊。Two-token window、recurrent state 和完整有效 input attention，提供不同路徑。</p>
-<p>若從 school 作 autoregressive prediction，就劃掉 by 和 bus，因為它們是未來 input position。若是完整句子的 encoder，這些字則可以保留。因此，同一句子在不同任務下，可以有不同而合理的計算。</p>
-<p>不要只用某個 model「讀得比較好」來解釋分別。圖中會指出實際 dependency。接着可以用 property test 改變不可用 token，確認在禁止存取的位置沒有影響。這把口頭規則變成可量度的 implementation 條件。</p></div></section></div><div class="deck-controls"><button class="slide-prev" type="button">← 上一頁</button><span aria-live="polite" class="slide-counter">1 / 9</span><button class="slide-next" type="button">下一頁 →</button></div><label class="slide-jump-label">前往 slide <select aria-label="跳至 slide" class="slide-jump"><option value="0">1</option><option value="1">2</option><option value="2">3</option><option value="3">4</option><option value="4">5</option><option value="5">6</option><option value="6">7</option><option value="7">8</option><option value="8">9</option></select></label><button aria-pressed="false" class="deck-all" type="button">顯示全部 slides</button><a class="reader-link" href="#full-notes">閱讀完整講義 ↓</a></section><article class="prose full-notes" id="full-notes"><div class="eyebrow">完整講義</div><h2>閱讀完整解說</h2><h3 id="the-same-word-can-appear-in-different-situations">同一個字可以出現在不同情況</h3>
-<p>讀「I go to school by bus」和「The bus is late because it broke down.」。Token bus 參與了不同關係。第二句中，it 指回 bus。若 model 獨立處理每個 token，就無法利用句子解決這個指代關係。</p>
-<p>字的順序也很重要。「The boy follows the bus」和「The bus follows the boy」包含相同單字，卻描述不同事件。只根據出現了哪些字建立 representation，會失去這個分別。</p>
-<p>我們現在需要一個機制，把起始 token vector 轉成依賴其他 position 的 representation。這就是 attention 要處理的問題。先看看較簡單的 context 提供方法。</p>
-<h3 id="a-fixed-window-sees-only-part-of-the-sentence">固定 window 只看到句子的一部分</h3>
-<p>Window model 可能只用最後兩個 token 預測下一個 token。對「I go to school by」，它只看到 school by。這可能有用，但較早的資訊一旦落在指定 window 以外，就會消失。</p>
-<p>擴大 window 會增加 context，但對某些簡單 architecture，也會改變 input size 和 parameter 數量。若句子的 dependency 距離更遠，仍可能超出 window。</p>
-<p>這並不是證明所有 fixed-window model 都表現差，而是指出一項結構選擇及其限制。在討論 benchmark 結果之前，我們想先了解 architecture 能使用哪些資訊。</p>
-<h3 id="a-recurrent-model-carries-a-state">Recurrent model 會攜帶 state</h3>
-<p>Recurrent neural network 每次處理一個 token。簡化的 recurrence 是 h_t=f(Wx_t+Uh_(t-1)+b)。新的 state 結合當前 token vector 和上一個 state。</p>
-<p>想像依次讀 I、go、to。讀到 to 之後的 state，可以攜帶這三個字的部分資訊。因為下一個 state 依賴前一個 state，sequence 自然有處理順序。</p>
-<p>這個 state 的 width 有限，必須在反覆更新中保留有用資訊。學習長距離 dependency 可能困難，而 training 也有跨時間的 sequential dependency。Gated recurrent architecture 能處理部分問題，但不會消除所有取捨。我們介紹它們是為了理解問題，並非聲稱 recurrence 無法做 language modeling。</p>
-<h3 id="a-simple-state-update-illustrates-information-loss">用簡單 state update 展示資訊流失</h3>
-<p>考慮 scalar recurrence h_t=0.5h_(t-1)+x_t，由零開始。如果 input 值是 [1,0,0,0]，state 就是 [1,0.5,0.25,0.125]。第一個 input 的影響逐步減弱。</p>
-<p>這是刻意設計的算術例子，並不表示訓練好的 RNN 永遠使用 0.5 的衰減。它展示反覆 transformation 如何改變較早資訊的影響。</p>
-<p>如果任務要求經過很多步後仍準確記住第一個字，compressed state 就必須保留這項細節。Attention 會提供另一種 access pattern：把當前 representation 直接與可用 position 的 representation 比較。</p>
-<h3 id="reading-a-source-and-producing-a-target">讀取 source，產生 target</h3>
-<p>翻譯提供一個具體的 context 問題。「I go to school by bus」可以是 input sequence，而譯文則是另一個 output sequence。Encoder 讀取 source 並建立 representation；decoder 按 generation rule 產生 target。</p>
-<p>單一固定 vector 可以概括整個 source，但句子變長時，重要細節可能難以保留。Attention 可以讓每個 target position 查閱不同 source position。</p>
-<p>這個 source-target 例子引出 cross-attention。我們先研究的 self-attention，則比較同一 sequence 內的 position。分別在於 vector 從哪裏來，而不是方法是否在「思考自己」。</p>
-<h3 id="what-the-current-position-is-allowed-to-see">當前 position 可以看到甚麼</h3>
-<p>Next-token generation 中，從「I go to school by」作 prediction 時，在生成 bus 之前不能先讀到答案 bus。如果 training 計算意外讀取未來 token，它解決的問題便比 inference 任務容易。</p>
-<p>若 sentence encoder 用來表示已完整觀察的 input，讀取某個 position 左右兩邊的字可能合理。任務決定允許使用的資訊，並沒有通則要求所有 language model 使用同一 mask。</p>
-<p>我們會把 architecture 與 visibility 分開。Causal decoder 使用從左至右的 visibility pattern；encoder 通常對有效 input position 使用 bidirectional pattern。</p>
-<h3 id="the-bridge-to-attention">通往 attention 的橋樑</h3>
-<p>假設你要填上句子最後一個字。你可能查閱不同的較早線索，而不只依靠一張壓縮筆記。Attention 把這個想法變成從資料學到的 value vector 數值 mixture。</p>
-<p>第 6 週的初步解釋，會使用我們手動選定、看得見的 weight。第 7 週展示 learned projection 如何產生 score。第 8 週再仔細加入 scaling 和 causal mask。</p>
-<p>這個次序讓我們在引入最終公式的所有 matrix 之前，先檢查 mixture。初學者應先能計算小型 attention 例子的 output，才去記它的簡潔 equation。</p>
-<h3 id="worked-practice-and-a-readiness-check">實例練習與學習檢查</h3>
-<p>對 recurrence h_t=0.5h_(t-1)+x_t，計算 [0,0,0,1] 的 state。把最終 state 與上一個例子比較。順序改變結果，因為較早 input 經歷更多 transformation。</p>
-<p>寫一個例子，展示 two-token window 如何失去有用 context。然後對兩個建議的 attention operation，分辨 translation decoder 正在查閱 source sequence，還是自己生成的 target prefix。</p>
-<p>當你認得 context、順序、recurrence、encoder、decoder、self-attention 和 cross-attention 這些概念，就準備好繼續。你暫時無須實作翻譯系統，也無須使用 orchestration framework。</p>
-<h3 id="context-access-as-a-diagram-you-can-test">把 context access 畫成可測試的圖</h3>
-<p>把「I go to school by bus」畫成六個方格。對 school 位置的 representation，畫線連到各 model 允許使用的資訊。Two-token window、recurrent state 和完整有效 input attention，提供不同路徑。</p>
-<p>若從 school 作 autoregressive prediction，就劃掉 by 和 bus，因為它們是未來 input position。若是完整句子的 encoder，這些字則可以保留。因此，同一句子在不同任務下，可以有不同而合理的計算。</p>
-<p>不要只用某個 model「讀得比較好」來解釋分別。圖中會指出實際 dependency。接着可以用 property test 改變不可用 token，確認在禁止存取的位置沒有影響。這把口頭規則變成可量度的 implementation 條件。</p></article><nav aria-label="前後 lecture" class="chapter-pagination"><a href="04.html"><small>上一週</small>從 score 到 probability 和學習訊號</a><a href="06.html"><small>下一週</small>Attention 由 weighted mixture 開始</a></nav></div><footer class="footer"><span>Applied AI · 獨立自學課程</span><span>32 週 · 每週 10 小時</span><a href="../resources.html#about-this-course">關於課程及資料來源</a></footer></main><dialog aria-labelledby="search-title" class="search-dialog"><div class="dialog-head"><h2 id="search-title">尋找概念</h2><button aria-label="關閉搜尋" class="search-close" type="button">關閉</button></div><label class="sr-only" for="course-search">搜尋所有 lecture 和 tutorial</label><input autocomplete="off" id="course-search" placeholder="試試 attention、fine-tuning 或 harness……" type="search"/><p aria-live="polite" class="search-status">搜尋 lecture notes、tutorial、測驗及閱讀材料。</p><div class="search-results"></div></dialog><div aria-live="polite" class="toast" role="status"></div></body></html>
+<html lang="zh-HK">
+ <head>
+  <script src="../../assets/translations-zh-HK.js">
+  </script>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width,initial-scale=1" name="viewport"/>
+  <title>
+   為甚麼語言需要 context 和次序 · Applied AI
+  </title>
+  <meta content="Applied generative AI and LLM systems course material" name="description"/>
+  <meta content="#173c36" name="theme-color"/>
+  <link href="../../assets/favicon.svg" rel="icon" type="image/svg+xml"/>
+  <link href="../../assets/style.css" rel="stylesheet"/>
+  <link href="../../assets/slides.css" rel="stylesheet"/>
+  <script>
+   window.COURSE_BASE="../";
+  </script>
+  <script defer="" src="../../assets/site-config.js">
+  </script>
+  <script defer="" src="../assets/search-index.js">
+  </script>
+  <script defer="" src="../../assets/app.js">
+  </script>
+  <script defer="" src="../../assets/visuals.js">
+  </script>
+  <script defer="" src="../../assets/slides.js">
+  </script>
+  <script defer="" src="../../assets/beginner-visuals.js">
+  </script>
+  <script defer="True" src="../../assets/locale-patterns.js">
+  </script>
+  <script defer="True" src="../../assets/locale.js">
+  </script>
+  <link href="../../assets/bilingual.css" rel="stylesheet"/>
+  <link href="../../lectures/05.html" hreflang="en" rel="alternate"/>
+  <link href="../../assets/reader-v3.css" rel="stylesheet"/>
+  <script defer="True" src="../../assets/reader-v3.js">
+  </script>
+ </head>
+ <body data-page-kind="lecture" data-week="5">
+  <a class="skip-link" href="#main">
+   跳至內容
+  </a>
+  <header class="topbar">
+   <button aria-controls="course-sidebar" aria-expanded="false" class="menu-toggle" type="button">
+    選單
+   </button>
+   <a class="brand" href="../index.html">
+    <span aria-hidden="true" class="brand-mark">
+     a
+     <span>
+      i
+     </span>
+    </span>
+    <span>
+     APPLIED AI
+     <small>
+      從原理到實踐
+     </small>
+    </span>
+   </a>
+   <nav aria-label="主要導覽">
+    <a href="../index.html">
+     課程
+    </a>
+    <a href="../visuals.html">
+     互動圖解
+    </a>
+    <a href="../project.html">
+     專題
+    </a>
+    <a class="language-switch" href="../../lectures/05.html" hreflang="en" lang="en">
+     English
+    </a>
+   </nav>
+   <button class="search-open" type="button">
+    搜尋課程
+    <span aria-hidden="true">
+     /
+    </span>
+   </button>
+  </header>
+  <aside aria-label="課程章節" class="sidebar" id="course-sidebar">
+   <a class="side-home" href="../index.html">
+    課程概覽
+   </a>
+   <details class="semester-nav" open="">
+    <summary>
+     第一學期
+     <span>
+      第 1–16 週
+     </span>
+    </summary>
+    <ol start="1">
+     <li>
+      <a href="../lectures/01.html">
+       <span class="week-number">
+        01
+       </span>
+       <span>
+        Language model 究竟在學甚麼
+       </span>
+       <span class="week-tick" data-week-tick="1">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/02.html">
+       <span class="week-number">
+        02
+       </span>
+       <span>
+        從文字到 token 和數值 ID
+       </span>
+       <span class="week-tick" data-week-tick="2">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/03.html">
+       <span class="week-number">
+        03
+       </span>
+       <span>
+        Word vector 能表達甚麼
+       </span>
+       <span class="week-tick" data-week-tick="3">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/04.html">
+       <span class="week-number">
+        04
+       </span>
+       <span>
+        從 score 到 probability 和學習訊號
+       </span>
+       <span class="week-tick" data-week-tick="4">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a aria-current="page" href="../lectures/05.html">
+       <span class="week-number">
+        05
+       </span>
+       <span>
+        為甚麼語言需要 context 和次序
+       </span>
+       <span class="week-tick" data-week-tick="5">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/06.html">
+       <span class="week-number">
+        06
+       </span>
+       <span>
+        Attention 由 weighted mixture 開始
+       </span>
+       <span class="week-tick" data-week-tick="6">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/07.html">
+       <span class="week-number">
+        07
+       </span>
+       <span>
+        Query、key 和 value 從何而來
+       </span>
+       <span class="week-tick" data-week-tick="7">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/08.html">
+       <span class="week-number">
+        08
+       </span>
+       <span>
+        正確進行 attention scaling 和 masking
+       </span>
+       <span class="week-tick" data-week-tick="8">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/09.html">
+       <span class="week-number">
+        09
+       </span>
+       <span>
+        多個 attention head 與位置
+       </span>
+       <span class="week-tick" data-week-tick="9">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/10.html">
+       <span class="week-number">
+        10
+       </span>
+       <span>
+        逐步拆解 transformer block
+       </span>
+       <span class="week-tick" data-week-tick="10">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/11.html">
+       <span class="week-number">
+        11
+       </span>
+       <span>
+        Encoder、decoder 與完整 model architecture
+       </span>
+       <span class="week-tick" data-week-tick="11">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/12.html">
+       <span class="week-number">
+        12
+       </span>
+       <span>
+        訓練一個小型 transformer
+       </span>
+       <span class="week-tick" data-week-tick="12">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/13.html">
+       <span class="week-number">
+        13
+       </span>
+       <span>
+        Generation、decoding 與 KV cache
+       </span>
+       <span class="week-tick" data-week-tick="13">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/14.html">
+       <span class="week-number">
+        14
+       </span>
+       <span>
+        從 pretraining 到 instruction following 和 reasoning
+       </span>
+       <span class="week-tick" data-week-tick="14">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/15.html">
+       <span class="week-number">
+        15
+       </span>
+       <span>
+        文字以外的 Generative AI
+       </span>
+       <span class="week-tick" data-week-tick="15">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/16.html">
+       <span class="week-number">
+        16
+       </span>
+       <span>
+        完整 transformer 導覽與第一學期溫習
+       </span>
+       <span class="week-tick" data-week-tick="16">
+       </span>
+      </a>
+     </li>
+    </ol>
+   </details>
+   <details class="semester-nav">
+    <summary>
+     第二學期
+     <span>
+      第 17–32 週
+     </span>
+    </summary>
+    <ol start="17">
+     <li>
+      <a href="../lectures/17.html">
+       <span class="week-number">
+        17
+       </span>
+       <span>
+        從 word vector 到 semantic search
+       </span>
+       <span class="week-tick" data-week-tick="17">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/18.html">
+       <span class="week-number">
+        18
+       </span>
+       <span>
+        從一列 vector 建立 vector database
+       </span>
+       <span class="week-tick" data-week-tick="18">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/19.html">
+       <span class="week-number">
+        19
+       </span>
+       <span>
+        把 RAG 理解為開卷作答
+       </span>
+       <span class="week-tick" data-week-tick="19">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/20.html">
+       <span class="week-number">
+        20
+       </span>
+       <span>
+        在保持基本任務的前提下改善 RAG
+       </span>
+       <span class="week-tick" data-week-tick="20">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/21.html">
+       <span class="week-number">
+        21
+       </span>
+       <span>
+        評估 retrieval、答案與 uncertainty
+       </span>
+       <span class="week-tick" data-week-tick="21">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/22.html">
+       <span class="week-number">
+        22
+       </span>
+       <span>
+        CPU、GPU、memory 與 model 資源計算
+       </span>
+       <span class="week-tick" data-week-tick="22">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/23.html">
+       <span class="week-number">
+        23
+       </span>
+       <span>
+        CUDA kernel 與 profiling
+       </span>
+       <span class="week-tick" data-week-tick="23">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/24.html">
+       <span class="week-number">
+        24
+       </span>
+       <span>
+        Fine-tuning 由教學 dataset 開始
+       </span>
+       <span class="week-tick" data-week-tick="24">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/25.html">
+       <span class="week-number">
+        25
+       </span>
+       <span>
+        從小型 matrix 理解 LoRA 和 QLoRA
+       </span>
+       <span class="week-tick" data-week-tick="25">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/26.html">
+       <span class="week-number">
+        26
+       </span>
+       <span>
+        Fine-tuning 實驗、preference 與 distillation
+       </span>
+       <span class="week-tick" data-week-tick="26">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/27.html">
+       <span class="week-number">
+        27
+       </span>
+       <span>
+        Tool、function、workflow 與 agent
+       </span>
+       <span class="week-tick" data-week-tick="27">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/28.html">
+       <span class="week-number">
+        28
+       </span>
+       <span>
+        Harness、planning、memory 與有界執行
+       </span>
+       <span class="week-tick" data-week-tick="28">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/29.html">
+       <span class="week-number">
+        29
+       </span>
+       <span>
+        從 notebook 到 MLOps 和 inference serving
+       </span>
+       <span class="week-tick" data-week-tick="29">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/30.html">
+       <span class="week-number">
+        30
+       </span>
+       <span>
+        Monitoring、security、regression test 與 rollback
+       </span>
+       <span class="week-tick" data-week-tick="30">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/31.html">
+       <span class="week-number">
+        31
+       </span>
+       <span>
+        整合文件助手與進階延伸
+       </span>
+       <span class="week-tick" data-week-tick="31">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/32.html">
+       <span class="week-number">
+        32
+       </span>
+       <span>
+        溫習、答辯與持續學習計劃
+       </span>
+       <span class="week-tick" data-week-tick="32">
+       </span>
+      </a>
+     </li>
+    </ol>
+   </details>
+   <div class="side-links">
+    <a href="../visuals.html">
+     互動圖解實驗室
+     <span>
+      14 個互動課節
+     </span>
+    </a>
+    <a href="../project.html">
+     文件助手
+     <span>
+      你的 capstone project
+     </span>
+    </a>
+    <a href="../resources.html">
+     閱讀材料與環境設定
+    </a>
+   </div>
+   <div class="side-progress">
+    <div>
+     <span>
+      你的進度
+     </span>
+     <strong data-progress-count="">
+      0 / 32
+     </strong>
+    </div>
+    <progress aria-label="已完成 lecture" max="32" value="0">
+    </progress>
+    <small>
+     儲存在這個瀏覽器
+    </small>
+   </div>
+  </aside>
+  <main class="main" id="main">
+   <div class="content">
+    <div class="chapter-header">
+     <div class="eyebrow">
+      第一學期 / 第 05 週
+     </div>
+     <h1>
+      為甚麼語言需要 context 和次序
+     </h1>
+    </div>
+    <div class="lesson-links">
+     <a href="../tutorials/05.html">
+      練習 05
+     </a>
+     <a href="../tests/05.html">
+      檢查你的理解
+     </a>
+     <button aria-pressed="false" class="mark-complete" data-week="5" type="button">
+      標記為已完成
+     </button>
+    </div>
+    <div aria-label="課堂檢視" class="lesson-mode" role="tablist">
+     <button aria-controls="full-notes" aria-selected="true" data-mode="read" id="mode-read" role="tab" type="button">
+      閱讀講義
+     </button>
+     <button aria-controls="lecture-slides" aria-selected="false" data-mode="slides" id="mode-slides" role="tab" type="button">
+      課堂 slides
+     </button>
+    </div>
+    <section aria-label="Lecture slides" class="lecture-deck" hidden="" id="lecture-slides" role="tabpanel">
+     <div class="deck-top">
+      <div>
+       <div class="eyebrow">
+        課堂投影片 · 第 05 週
+       </div>
+       <h2>
+        重點步驟與圖解
+       </h2>
+      </div>
+      <button class="deck-present" type="button">
+       簡報模式
+      </button>
+     </div>
+     <p class="deck-help">
+      用 slides 溫習機制；按「閱讀完整解說」可開啟完整講義及程式碼。
+     </p>
+     <div aria-label="簡報：使用左右方向鍵" class="slide-viewport" tabindex="0">
+      <section class="lecture-slide" data-slide="">
+       <div class="slide-stage">
+        第 05 週 · 課節 1
+       </div>
+       <h3>
+        同一個字可以出現在不同情況
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          讀「I go to school by bus」和「The bus is late because it broke down.」。
+         </li>
+         <li>
+          字的順序也很重要。「The boy follows the bus」和「The bus follows the boy」包含相同單字，卻描述不同事件。只根據出現了哪些字建立 representation，會失去這個分別。
+         </li>
+         <li>
+          我們現在需要一個機制，把起始 token vector 轉成依賴其他 position 的 representation。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#the-same-word-can-appear-in-different-situations">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 05 週 · 課節 2
+       </div>
+       <h3>
+        固定 window 只看到句子的一部分
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Window model 可能只用最後兩個 token 預測下一個 token。
+         </li>
+         <li>
+          擴大 window 會增加 context，但對某些簡單 architecture，也會改變 input size 和 parameter 數量。
+         </li>
+         <li>
+          這並不是證明所有 fixed-window model 都表現差，而是指出一項結構選擇及其限制。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#a-fixed-window-sees-only-part-of-the-sentence">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 05 週 · 課節 3
+       </div>
+       <h3>
+        Recurrent model 會攜帶 state
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Recurrent neural network 每次處理一個 token。
+         </li>
+         <li>
+          想像依次讀 I、go、to。讀到 to 之後的 state，可以攜帶這三個字的部分資訊。因為下一個 state 依賴前一個 state，sequence 自然有處理順序。
+         </li>
+         <li>
+          這個 state 的 width 有限，必須在反覆更新中保留有用資訊。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#a-recurrent-model-carries-a-state">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 05 週 · 課節 4
+       </div>
+       <h3>
+        用簡單 state update 展示資訊流失
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          考慮 scalar recurrence h_t=0.5h_(t-1)+x_t，由零開始。
+         </li>
+         <li>
+          這是刻意設計的算術例子，並不表示訓練好的 RNN 永遠使用 0.5 的衰減。
+         </li>
+         <li>
+          如果任務要求經過很多步後仍準確記住第一個字，compressed state 就必須保留這項細節。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#a-simple-state-update-illustrates-information-loss">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 05 週 · 課節 5
+       </div>
+       <h3>
+        讀取 source，產生 target
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          翻譯提供一個具體的 context 問題。「I go to school by bus」可以是 input sequence，而譯文則是另一個 output sequence。Encoder 讀取 source 並建立 representation；decoder 按 generation rule 產生 target。
+         </li>
+         <li>
+          單一固定 vector 可以概括整個 source，但句子變長時，重要細節可能難以保留。
+         </li>
+         <li>
+          這個 source-target 例子引出 cross-attention。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#reading-a-source-and-producing-a-target">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 05 週 · 課節 6
+       </div>
+       <h3>
+        當前 position 可以看到甚麼
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Next-token generation 中，從「I go to school by」作 prediction 時，在生成 bus 之前不能先讀到答案 bus。
+         </li>
+         <li>
+          若 sentence encoder 用來表示已完整觀察的 input，讀取某個 position 左右兩邊的字可能合理。
+         </li>
+         <li>
+          我們會把 architecture 與 visibility 分開。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#what-the-current-position-is-allowed-to-see">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 05 週 · 課節 7
+       </div>
+       <h3>
+        通往 attention 的橋樑
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          假設你要填上句子最後一個字。你可能查閱不同的較早線索，而不只依靠一張壓縮筆記。Attention 把這個想法變成從資料學到的 value vector 數值 mixture。
+         </li>
+         <li>
+          第 6 週的初步解釋，會使用我們手動選定、看得見的 weight。
+         </li>
+         <li>
+          這個次序讓我們在引入最終公式的所有 matrix 之前，先檢查 mixture。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#the-bridge-to-attention">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 05 週 · 課節 8
+       </div>
+       <h3>
+        實例練習與學習檢查
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          對 recurrence h_t=0.5h_(t-1)+x_t，計算 [0,0,0,1] 的 state。
+         </li>
+         <li>
+          寫一個例子，展示 two-token window 如何失去有用 context。
+         </li>
+         <li>
+          當你認得 context、順序、recurrence、encoder、decoder、self-attention 和 cross-attention 這些概念，就準備好繼續。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#worked-practice-and-a-readiness-check">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 05 週 · 課節 9
+       </div>
+       <h3>
+        把 context access 畫成可測試的圖
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          把「I go to school by bus」畫成六個方格。
+         </li>
+         <li>
+          若從 school 作 autoregressive prediction，就劃掉 by 和 bus，因為它們是未來 input position。
+         </li>
+         <li>
+          不要只用某個 model「讀得比較好」來解釋分別。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#context-access-as-a-diagram-you-can-test">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+     </div>
+     <div class="deck-controls">
+      <button class="slide-prev" type="button">
+       ← 上一頁
+      </button>
+      <span aria-live="polite" class="slide-counter">
+       1 / 9
+      </span>
+      <button class="slide-next" type="button">
+       下一頁 →
+      </button>
+     </div>
+     <label class="slide-jump-label">
+      前往 slide
+      <select aria-label="跳至 slide" class="slide-jump">
+       <option value="0">
+        1. 同一個字可以出現在不同情況
+       </option>
+       <option value="1">
+        2. 固定 window 只看到句子的一部分
+       </option>
+       <option value="2">
+        3. Recurrent model 會攜帶 state
+       </option>
+       <option value="3">
+        4. 用簡單 state update 展示資訊流失
+       </option>
+       <option value="4">
+        5. 讀取 source，產生 target
+       </option>
+       <option value="5">
+        6. 當前 position 可以看到甚麼
+       </option>
+       <option value="6">
+        7. 通往 attention 的橋樑
+       </option>
+       <option value="7">
+        8. 實例練習與學習檢查
+       </option>
+       <option value="8">
+        9. 把 context access 畫成可測試的圖
+       </option>
+      </select>
+     </label>
+     <button aria-pressed="false" class="deck-all" type="button">
+      顯示全部 slides
+     </button>
+    </section>
+    <nav aria-label="本課內容" class="reader-toc">
+     <strong>
+      本課內容
+     </strong>
+     <ol>
+      <li>
+       <a href="#the-same-word-can-appear-in-different-situations">
+        同一個字可以出現在不同情況
+       </a>
+      </li>
+      <li>
+       <a href="#a-fixed-window-sees-only-part-of-the-sentence">
+        固定 window 只看到句子的一部分
+       </a>
+      </li>
+      <li>
+       <a href="#a-recurrent-model-carries-a-state">
+        Recurrent model 會攜帶 state
+       </a>
+      </li>
+      <li>
+       <a href="#a-simple-state-update-illustrates-information-loss">
+        用簡單 state update 展示資訊流失
+       </a>
+      </li>
+      <li>
+       <a href="#reading-a-source-and-producing-a-target">
+        讀取 source，產生 target
+       </a>
+      </li>
+      <li>
+       <a href="#what-the-current-position-is-allowed-to-see">
+        當前 position 可以看到甚麼
+       </a>
+      </li>
+      <li>
+       <a href="#the-bridge-to-attention">
+        通往 attention 的橋樑
+       </a>
+      </li>
+      <li>
+       <a href="#worked-practice-and-a-readiness-check">
+        實例練習與學習檢查
+       </a>
+      </li>
+      <li>
+       <a href="#context-access-as-a-diagram-you-can-test">
+        把 context access 畫成可測試的圖
+       </a>
+      </li>
+     </ol>
+    </nav>
+    <article class="prose full-notes" id="full-notes" role="tabpanel">
+     <div class="eyebrow">
+      完整講義
+     </div>
+     <h2>
+      閱讀完整解說
+     </h2>
+     <h3 id="the-same-word-can-appear-in-different-situations">
+      同一個字可以出現在不同情況
+     </h3>
+     <p>
+      讀「I go to school by bus」和「The bus is late because it broke down.」。Token bus 參與了不同關係。第二句中，it 指回 bus。若 model 獨立處理每個 token，就無法利用句子解決這個指代關係。
+     </p>
+     <p>
+      字的順序也很重要。「The boy follows the bus」和「The bus follows the boy」包含相同單字，卻描述不同事件。只根據出現了哪些字建立 representation，會失去這個分別。
+     </p>
+     <p>
+      我們現在需要一個機制，把起始 token vector 轉成依賴其他 position 的 representation。這就是 attention 要處理的問題。先看看較簡單的 context 提供方法。
+     </p>
+     <h3 id="a-fixed-window-sees-only-part-of-the-sentence">
+      固定 window 只看到句子的一部分
+     </h3>
+     <p>
+      Window model 可能只用最後兩個 token 預測下一個 token。對「I go to school by」，它只看到 school by。這可能有用，但較早的資訊一旦落在指定 window 以外，就會消失。
+     </p>
+     <p>
+      擴大 window 會增加 context，但對某些簡單 architecture，也會改變 input size 和 parameter 數量。若句子的 dependency 距離更遠，仍可能超出 window。
+     </p>
+     <p>
+      這並不是證明所有 fixed-window model 都表現差，而是指出一項結構選擇及其限制。在討論 benchmark 結果之前，我們想先了解 architecture 能使用哪些資訊。
+     </p>
+     <h3 id="a-recurrent-model-carries-a-state">
+      Recurrent model 會攜帶 state
+     </h3>
+     <p>
+      Recurrent neural network 每次處理一個 token。簡化的 recurrence 是 h_t=f(Wx_t+Uh_(t-1)+b)。新的 state 結合當前 token vector 和上一個 state。
+     </p>
+     <p>
+      想像依次讀 I、go、to。讀到 to 之後的 state，可以攜帶這三個字的部分資訊。因為下一個 state 依賴前一個 state，sequence 自然有處理順序。
+     </p>
+     <p>
+      這個 state 的 width 有限，必須在反覆更新中保留有用資訊。學習長距離 dependency 可能困難，而 training 也有跨時間的 sequential dependency。Gated recurrent architecture 能處理部分問題，但不會消除所有取捨。我們介紹它們是為了理解問題，並非聲稱 recurrence 無法做 language modeling。
+     </p>
+     <h3 id="a-simple-state-update-illustrates-information-loss">
+      用簡單 state update 展示資訊流失
+     </h3>
+     <p>
+      考慮 scalar recurrence h_t=0.5h_(t-1)+x_t，由零開始。如果 input 值是 [1,0,0,0]，state 就是 [1,0.5,0.25,0.125]。第一個 input 的影響逐步減弱。
+     </p>
+     <p>
+      這是刻意設計的算術例子，並不表示訓練好的 RNN 永遠使用 0.5 的衰減。它展示反覆 transformation 如何改變較早資訊的影響。
+     </p>
+     <p>
+      如果任務要求經過很多步後仍準確記住第一個字，compressed state 就必須保留這項細節。Attention 會提供另一種 access pattern：把當前 representation 直接與可用 position 的 representation 比較。
+     </p>
+     <h3 id="reading-a-source-and-producing-a-target">
+      讀取 source，產生 target
+     </h3>
+     <p>
+      翻譯提供一個具體的 context 問題。「I go to school by bus」可以是 input sequence，而譯文則是另一個 output sequence。Encoder 讀取 source 並建立 representation；decoder 按 generation rule 產生 target。
+     </p>
+     <p>
+      單一固定 vector 可以概括整個 source，但句子變長時，重要細節可能難以保留。Attention 可以讓每個 target position 查閱不同 source position。
+     </p>
+     <p>
+      這個 source-target 例子引出 cross-attention。我們先研究的 self-attention，則比較同一 sequence 內的 position。分別在於 vector 從哪裏來，而不是方法是否在「思考自己」。
+     </p>
+     <h3 id="what-the-current-position-is-allowed-to-see">
+      當前 position 可以看到甚麼
+     </h3>
+     <p>
+      Next-token generation 中，從「I go to school by」作 prediction 時，在生成 bus 之前不能先讀到答案 bus。如果 training 計算意外讀取未來 token，它解決的問題便比 inference 任務容易。
+     </p>
+     <p>
+      若 sentence encoder 用來表示已完整觀察的 input，讀取某個 position 左右兩邊的字可能合理。任務決定允許使用的資訊，並沒有通則要求所有 language model 使用同一 mask。
+     </p>
+     <p>
+      我們會把 architecture 與 visibility 分開。Causal decoder 使用從左至右的 visibility pattern；encoder 通常對有效 input position 使用 bidirectional pattern。
+     </p>
+     <h3 id="the-bridge-to-attention">
+      通往 attention 的橋樑
+     </h3>
+     <p>
+      假設你要填上句子最後一個字。你可能查閱不同的較早線索，而不只依靠一張壓縮筆記。Attention 把這個想法變成從資料學到的 value vector 數值 mixture。
+     </p>
+     <p>
+      第 6 週的初步解釋，會使用我們手動選定、看得見的 weight。第 7 週展示 learned projection 如何產生 score。第 8 週再仔細加入 scaling 和 causal mask。
+     </p>
+     <p>
+      這個次序讓我們在引入最終公式的所有 matrix 之前，先檢查 mixture。初學者應先能計算小型 attention 例子的 output，才去記它的簡潔 equation。
+     </p>
+     <h3 id="worked-practice-and-a-readiness-check">
+      實例練習與學習檢查
+     </h3>
+     <p>
+      對 recurrence h_t=0.5h_(t-1)+x_t，計算 [0,0,0,1] 的 state。把最終 state 與上一個例子比較。順序改變結果，因為較早 input 經歷更多 transformation。
+     </p>
+     <p>
+      寫一個例子，展示 two-token window 如何失去有用 context。然後對兩個建議的 attention operation，分辨 translation decoder 正在查閱 source sequence，還是自己生成的 target prefix。
+     </p>
+     <p>
+      當你認得 context、順序、recurrence、encoder、decoder、self-attention 和 cross-attention 這些概念，就準備好繼續。你暫時無須實作翻譯系統，也無須使用 orchestration framework。
+     </p>
+     <h3 id="context-access-as-a-diagram-you-can-test">
+      把 context access 畫成可測試的圖
+     </h3>
+     <p>
+      把「I go to school by bus」畫成六個方格。對 school 位置的 representation，畫線連到各 model 允許使用的資訊。Two-token window、recurrent state 和完整有效 input attention，提供不同路徑。
+     </p>
+     <p>
+      若從 school 作 autoregressive prediction，就劃掉 by 和 bus，因為它們是未來 input position。若是完整句子的 encoder，這些字則可以保留。因此，同一句子在不同任務下，可以有不同而合理的計算。
+     </p>
+     <p>
+      不要只用某個 model「讀得比較好」來解釋分別。圖中會指出實際 dependency。接着可以用 property test 改變不可用 token，確認在禁止存取的位置沒有影響。這把口頭規則變成可量度的 implementation 條件。
+     </p>
+    </article>
+    <nav aria-label="前後 lecture" class="chapter-pagination">
+     <a href="04.html">
+      <small>
+       上一週
+      </small>
+      從 score 到 probability 和學習訊號
+     </a>
+     <a href="06.html">
+      <small>
+       下一週
+      </small>
+      Attention 由 weighted mixture 開始
+     </a>
+    </nav>
+   </div>
+   <footer class="footer">
+    <span>
+     Applied AI · 獨立自學課程
+    </span>
+    <span>
+     32 週 · 每週 10 小時
+    </span>
+    <a href="../resources.html#about-this-course">
+     關於課程及資料來源
+    </a>
+   </footer>
+  </main>
+  <dialog aria-labelledby="search-title" class="search-dialog">
+   <div class="dialog-head">
+    <h2 id="search-title">
+     尋找概念
+    </h2>
+    <button aria-label="關閉搜尋" class="search-close" type="button">
+     關閉
+    </button>
+   </div>
+   <label class="sr-only" for="course-search">
+    搜尋所有 lecture 和 tutorial
+   </label>
+   <input autocomplete="off" id="course-search" placeholder="試試 attention、fine-tuning 或 harness……" type="search"/>
+   <p aria-live="polite" class="search-status">
+    搜尋 lecture notes、tutorial、測驗及閱讀材料。
+   </p>
+   <div class="search-results">
+   </div>
+  </dialog>
+  <div aria-live="polite" class="toast" role="status">
+  </div>
+ </body>
+</html>

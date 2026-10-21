@@ -1,55 +1,1087 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/><title>Where queries keys and values come from · Applied AI</title><meta content="Applied generative AI and LLM systems course material" name="description"/><meta content="#173c36" name="theme-color"/><link href="../assets/favicon.svg" rel="icon" type="image/svg+xml"/><link href="../assets/style.css" rel="stylesheet"/><link href="../assets/slides.css" rel="stylesheet"/><script>window.COURSE_BASE="../";</script><script defer="" src="../assets/site-config.js"></script><script defer="" src="../assets/search-index.js"></script><script defer="" src="../assets/app.js"></script><script defer="" src="../assets/visuals.js"></script><script defer="" src="../assets/slides.js"></script><script defer="" src="../assets/beginner-visuals.js"></script><link href="../zh-HK/lectures/07.html" hreflang="zh-HK" rel="alternate"/><link href="../assets/bilingual.css" rel="stylesheet"/></head><body data-page-kind="lecture" data-week="7"><a class="skip-link" href="#main">Skip to content</a><header class="topbar"><button aria-controls="course-sidebar" aria-expanded="false" class="menu-toggle" type="button">Menu</button><a class="brand" href="../index.html"><span aria-hidden="true" class="brand-mark">a<span>i</span></span><span>APPLIED AI<small>Principles into practice</small></span></a><nav aria-label="Main navigation"><a href="../index.html">The course</a><a href="../visuals.html">Visual lab</a><a href="../project.html">Project</a><a class="language-switch" href="../zh-HK/lectures/07.html" hreflang="zh-HK" lang="zh-HK">繁體中文</a></nav><button class="search-open" type="button">Search the course <span aria-hidden="true">/</span></button></header><aside aria-label="Course chapters" class="sidebar" id="course-sidebar"><a class="side-home" href="../index.html">Course overview</a><details class="semester-nav" open=""><summary>Semester 1<span>Weeks 1–16</span></summary><ol start="1"><li><a href="../lectures/01.html"><span class="week-number">01</span><span>What a language model is trying to learn</span><span class="week-tick" data-week-tick="1"></span></a></li><li><a href="../lectures/02.html"><span class="week-number">02</span><span>From text to tokens and numerical IDs</span><span class="week-tick" data-week-tick="2"></span></a></li><li><a href="../lectures/03.html"><span class="week-number">03</span><span>What word vectors can represent</span><span class="week-tick" data-week-tick="3"></span></a></li><li><a href="../lectures/04.html"><span class="week-number">04</span><span>From scores to probabilities and learning signals</span><span class="week-tick" data-week-tick="4"></span></a></li><li><a href="../lectures/05.html"><span class="week-number">05</span><span>Why language needs context and order</span><span class="week-tick" data-week-tick="5"></span></a></li><li><a href="../lectures/06.html"><span class="week-number">06</span><span>Attention begins as a weighted mixture</span><span class="week-tick" data-week-tick="6"></span></a></li><li><a aria-current="page" href="../lectures/07.html"><span class="week-number">07</span><span>Where queries keys and values come from</span><span class="week-tick" data-week-tick="7"></span></a></li><li><a href="../lectures/08.html"><span class="week-number">08</span><span>Scaling and masking attention correctly</span><span class="week-tick" data-week-tick="8"></span></a></li><li><a href="../lectures/09.html"><span class="week-number">09</span><span>Multiple attention heads and position</span><span class="week-tick" data-week-tick="9"></span></a></li><li><a href="../lectures/10.html"><span class="week-number">10</span><span>The transformer block step by step</span><span class="week-tick" data-week-tick="10"></span></a></li><li><a href="../lectures/11.html"><span class="week-number">11</span><span>Encoders decoders and complete model architectures</span><span class="week-tick" data-week-tick="11"></span></a></li><li><a href="../lectures/12.html"><span class="week-number">12</span><span>Training a small transformer</span><span class="week-tick" data-week-tick="12"></span></a></li><li><a href="../lectures/13.html"><span class="week-number">13</span><span>Generation decoding and the KV cache</span><span class="week-tick" data-week-tick="13"></span></a></li><li><a href="../lectures/14.html"><span class="week-number">14</span><span>From pretraining to instruction following and reasoning</span><span class="week-tick" data-week-tick="14"></span></a></li><li><a href="../lectures/15.html"><span class="week-number">15</span><span>Generative AI beyond text</span><span class="week-tick" data-week-tick="15"></span></a></li><li><a href="../lectures/16.html"><span class="week-number">16</span><span>A complete transformer walkthrough and first semester review</span><span class="week-tick" data-week-tick="16"></span></a></li></ol></details><details class="semester-nav"><summary>Semester 2<span>Weeks 17–32</span></summary><ol start="17"><li><a href="../lectures/17.html"><span class="week-number">17</span><span>From word vectors to semantic search</span><span class="week-tick" data-week-tick="17"></span></a></li><li><a href="../lectures/18.html"><span class="week-number">18</span><span>A vector database from a list of vectors</span><span class="week-tick" data-week-tick="18"></span></a></li><li><a href="../lectures/19.html"><span class="week-number">19</span><span>RAG as an open book question</span><span class="week-tick" data-week-tick="19"></span></a></li><li><a href="../lectures/20.html"><span class="week-number">20</span><span>Improving RAG without losing the basic task</span><span class="week-tick" data-week-tick="20"></span></a></li><li><a href="../lectures/21.html"><span class="week-number">21</span><span>Evaluating retrieval answers and uncertainty</span><span class="week-tick" data-week-tick="21"></span></a></li><li><a href="../lectures/22.html"><span class="week-number">22</span><span>CPU GPU memory and model resource accounting</span><span class="week-tick" data-week-tick="22"></span></a></li><li><a href="../lectures/23.html"><span class="week-number">23</span><span>CUDA kernels and profiling</span><span class="week-tick" data-week-tick="23"></span></a></li><li><a href="../lectures/24.html"><span class="week-number">24</span><span>Fine tuning starts with a teaching dataset</span><span class="week-tick" data-week-tick="24"></span></a></li><li><a href="../lectures/25.html"><span class="week-number">25</span><span>LoRA and QLoRA from a small matrix</span><span class="week-tick" data-week-tick="25"></span></a></li><li><a href="../lectures/26.html"><span class="week-number">26</span><span>Fine tuning experiments preferences and distillation</span><span class="week-tick" data-week-tick="26"></span></a></li><li><a href="../lectures/27.html"><span class="week-number">27</span><span>Tools functions workflows and agents</span><span class="week-tick" data-week-tick="27"></span></a></li><li><a href="../lectures/28.html"><span class="week-number">28</span><span>Harnesses planning memory and bounded execution</span><span class="week-tick" data-week-tick="28"></span></a></li><li><a href="../lectures/29.html"><span class="week-number">29</span><span>From a notebook to MLOps and inference serving</span><span class="week-tick" data-week-tick="29"></span></a></li><li><a href="../lectures/30.html"><span class="week-number">30</span><span>Monitoring security regression tests and rollback</span><span class="week-tick" data-week-tick="30"></span></a></li><li><a href="../lectures/31.html"><span class="week-number">31</span><span>Integrating the documentation assistant and advanced extensions</span><span class="week-tick" data-week-tick="31"></span></a></li><li><a href="../lectures/32.html"><span class="week-number">32</span><span>Review defense and a continuing learning plan</span><span class="week-tick" data-week-tick="32"></span></a></li></ol></details><div class="side-links"><a href="../visuals.html">Visual laboratory <span>14 interactive lessons</span></a><a href="../project.html">Documentation assistant <span>Your capstone project</span></a><a href="../resources.html">Readings and setup</a></div><div class="side-progress"><div><span>Your progress</span><strong data-progress-count="">0 / 32</strong></div><progress aria-label="Completed lectures" max="32" value="0"></progress><small>Saved in this browser</small></div></aside><main class="main" id="main"><div class="content"><div class="chapter-header"><div class="eyebrow">Semester 1 / Week 07</div><h1>Where queries keys and values come from</h1></div><div class="lesson-links"><a href="../tutorials/07.html">Tutorial 07</a><a href="../tests/07.html">Test your understanding</a><button aria-pressed="false" class="mark-complete" data-week="7" type="button">Mark as complete</button></div><section aria-label="Lecture slides" class="lecture-deck" id="lecture-slides"><div class="deck-top"><div><div class="eyebrow">Lecture slides · Week 07</div><h2>Learn one step at a time.</h2></div><button class="deck-present" type="button">Present</button></div><p class="deck-help">Read each explanation, pause to predict the result, then continue. Use the arrow keys while the presentation is focused. The complete lecture reader is below.</p><div aria-label="Presentation: use left and right arrow keys" class="slide-viewport" tabindex="0"><section class="lecture-slide" data-slide=""><div class="slide-stage">Start with an example</div><h3>One token can have several computational roles</h3><div class="slide-prose"><p>Last week we chose attention weights by hand. A transformer needs to compute them from representations. Take the six rows for “I go to school by bus.” Each row begins as a token representation, with position information added later in our full model.</p>
-<p>For attention, learned linear transformations create a query vector, a key vector, and a value vector from each row. They are different views of the same starting representation, optimized for different roles in the computation.</p>
-<p>Query, key, and value are names for roles. They do not mean a human-written question, a word's dictionary definition, and a factual answer. Keeping the names separate from literal natural-language meanings makes the mechanism easier to reason about.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Start with an example</div><h3>Linear projection with visible numbers</h3><div class="slide-prose"><p>Let one input row be x=[1,2]. Let Wq be the identity matrix, Wk=[[1,0],[0,0.5]], and Wv=[[2,0],[0,1]]. Using row-vector notation, q=xWq=[1,2], k=xWk=[1,1], and v=xWv=[2,2].</p>
-<p>The input row is the same, but the projected vectors differ. In a trained model, these projection matrices are parameters changed by the loss. We chose simple matrices only to make every multiplication easy to inspect.</p>
-<p>Changing Wk changes how the position participates in comparisons. Changing Wv changes the information contributed after the weights have been computed. These effects can be studied separately.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Build the mechanism</div><h3>Applying projections to the whole sentence</h3><div class="slide-prose"><p>If X has shape [T,D], Wq has shape [D,Dk], and Wk has shape [D,Dk], then Q and K both have shape [T,Dk]. Wv can have shape [D,Dv], producing V with shape [T,Dv].</p>
-<p>The same projection matrix applies at every token position. We do not train one Wq for the first word and another for the sixth word in ordinary self-attention. Sharing parameters lets the operation work over different sequences.</p>
-<p>The number of positions T and the number of features D describe different things. Multiplying X by a projection changes feature coordinates; it does not by itself mix token positions.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Build the mechanism</div><h3>Comparing all query key pairs</h3><div class="slide-prose"><p>For one query q_i, dot it with every key k_j. Arranging the results for all i and j gives QKᵀ, a [T,T] score matrix.</p>
-<p>Suppose T=6. Entry [4,1] describes query position 4 compared with key position 1 under zero-based indexing. It is not a vocabulary score for word ID 1.</p>
-<p>This is the first operation in this attention block that explicitly compares positions with one another. The later weight-times-value multiplication then moves information across positions.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Build the mechanism</div><h3>A complete two-position example</h3><div class="slide-prose"><p>Let Q=[[1,0],[0,1]], K=[[1,0],[0,1]], and V=[[2,0],[0,4]]. The unscaled score matrix is the identity matrix. For the first query, scores [1,0] become softmax weights approximately [0.731,0.269].</p>
-<p>Its output is approximately [1.462,1.076]. The second query has the opposite score pattern and output approximately [0.538,2.924].</p>
-<p>Both outputs can include both values. The operation does not force each query to choose its matching position exclusively. In week 8, scaling by sqrt(Dk) will change these numbers, and masking may remove some contributions.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Build the mechanism</div><h3>Self attention and cross attention use different sources</h3><div class="slide-prose"><p>In self-attention, Q, K, and V derive from representations of the same sequence. In cross-attention, queries derive from one sequence while keys and values derive from another.</p>
-<p>For translation, target-side decoder representations can query source-side encoder representations. If the target has length U and the source has length T, the score matrix has shape [U,T], which need not be square.</p>
-<p>The rectangular case is a useful check that you understand the axes. Attention fundamentally relates query positions to key/value positions. It does not require their counts to match.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Go deeper and check understanding</div><h3>What training can change</h3><div class="slide-prose"><p>Gradients can change the input embeddings and each projection matrix. If a comparison repeatedly helps predict appropriate next tokens, training can reinforce the corresponding computation.</p>
-<p>The learned coordinates need not line up with a simple story about “the transport head” or “the school key.” Such interpretations require evidence. The small examples in these lectures explain valid computations, not the discovered internals of a pretrained model.</p>
-<p>We can still test the implementation precisely: projection shapes, row sums after softmax, output dimensions, and sensitivity to changing a key or a value.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Go deeper and check understanding</div><h3>Worked practice and a readiness check</h3><div class="slide-prose"><p>For X shaped [6,4] and Dk=2,Dv=3, write projection shapes [4,2],[4,2],[4,3], then Q/K/V shapes [6,2],[6,2],[6,3]. The score matrix is [6,6], and the output is [6,3].</p>
-<p>For cross-attention with four queries and seven key/value positions, write scores [4,7]. Explain why softmax still runs across the seven keys for each query.</p>
-<p>Before continuing, you should be able to say which operations change feature coordinates, which compare positions, and which mix value information. Scaling and masking will now refine this computation without changing that overall structure.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Go deeper and check understanding</div><h3>Changing a key versus changing a value</h3><div class="slide-prose"><p>Keep Q and K fixed in the two-position example, but replace the second value [0,4] with [0,8]. The attention weights stay the same because their computation did not use V. The second coordinate of each mixed output doubles.</p>
-<p>Now restore V and change a key instead. The dot-product scores change, so softmax can redistribute the mixture across both value vectors. This distinguishes the comparison role from the information role without requiring any interpretation of natural-language meaning.</p>
-<p>For a third experiment, change only one query row. That changes that row's comparisons while leaving other query rows' scores unchanged before later processing. These controlled perturbations are excellent small tests. They explain which tensor participates in which stage more clearly than memorizing the letters Q, K, and V.</p></div></section></div><div class="deck-controls"><button class="slide-prev" type="button">← Previous</button><span aria-live="polite" class="slide-counter">1 / 9</span><button class="slide-next" type="button">Next →</button></div><label class="slide-jump-label">Go to slide <select aria-label="Go to slide" class="slide-jump"><option value="0">1</option><option value="1">2</option><option value="2">3</option><option value="3">4</option><option value="4">5</option><option value="5">6</option><option value="6">7</option><option value="7">8</option><option value="8">9</option></select></label><button aria-pressed="false" class="deck-all" type="button">Show all slides</button><a class="reader-link" href="#full-notes">Read the complete lecture ↓</a></section><article class="prose full-notes" id="full-notes"><div class="eyebrow">Complete lecture reader</div><h2>Read the full explanation</h2><h3 id="one-token-can-have-several-computational-roles">One token can have several computational roles</h3>
-<p>Last week we chose attention weights by hand. A transformer needs to compute them from representations. Take the six rows for “I go to school by bus.” Each row begins as a token representation, with position information added later in our full model.</p>
-<p>For attention, learned linear transformations create a query vector, a key vector, and a value vector from each row. They are different views of the same starting representation, optimized for different roles in the computation.</p>
-<p>Query, key, and value are names for roles. They do not mean a human-written question, a word's dictionary definition, and a factual answer. Keeping the names separate from literal natural-language meanings makes the mechanism easier to reason about.</p>
-<h3 id="linear-projection-with-visible-numbers">Linear projection with visible numbers</h3>
-<p>Let one input row be x=[1,2]. Let Wq be the identity matrix, Wk=[[1,0],[0,0.5]], and Wv=[[2,0],[0,1]]. Using row-vector notation, q=xWq=[1,2], k=xWk=[1,1], and v=xWv=[2,2].</p>
-<p>The input row is the same, but the projected vectors differ. In a trained model, these projection matrices are parameters changed by the loss. We chose simple matrices only to make every multiplication easy to inspect.</p>
-<p>Changing Wk changes how the position participates in comparisons. Changing Wv changes the information contributed after the weights have been computed. These effects can be studied separately.</p>
-<h3 id="applying-projections-to-the-whole-sentence">Applying projections to the whole sentence</h3>
-<p>If X has shape [T,D], Wq has shape [D,Dk], and Wk has shape [D,Dk], then Q and K both have shape [T,Dk]. Wv can have shape [D,Dv], producing V with shape [T,Dv].</p>
-<p>The same projection matrix applies at every token position. We do not train one Wq for the first word and another for the sixth word in ordinary self-attention. Sharing parameters lets the operation work over different sequences.</p>
-<p>The number of positions T and the number of features D describe different things. Multiplying X by a projection changes feature coordinates; it does not by itself mix token positions.</p>
-<h3 id="comparing-all-query-key-pairs">Comparing all query key pairs</h3>
-<p>For one query q_i, dot it with every key k_j. Arranging the results for all i and j gives QKᵀ, a [T,T] score matrix.</p>
-<p>Suppose T=6. Entry [4,1] describes query position 4 compared with key position 1 under zero-based indexing. It is not a vocabulary score for word ID 1.</p>
-<p>This is the first operation in this attention block that explicitly compares positions with one another. The later weight-times-value multiplication then moves information across positions.</p>
-<h3 id="a-complete-two-position-example">A complete two-position example</h3>
-<p>Let Q=[[1,0],[0,1]], K=[[1,0],[0,1]], and V=[[2,0],[0,4]]. The unscaled score matrix is the identity matrix. For the first query, scores [1,0] become softmax weights approximately [0.731,0.269].</p>
-<p>Its output is approximately [1.462,1.076]. The second query has the opposite score pattern and output approximately [0.538,2.924].</p>
-<p>Both outputs can include both values. The operation does not force each query to choose its matching position exclusively. In week 8, scaling by sqrt(Dk) will change these numbers, and masking may remove some contributions.</p>
-<h3 id="self-attention-and-cross-attention-use-different-sources">Self attention and cross attention use different sources</h3>
-<p>In self-attention, Q, K, and V derive from representations of the same sequence. In cross-attention, queries derive from one sequence while keys and values derive from another.</p>
-<p>For translation, target-side decoder representations can query source-side encoder representations. If the target has length U and the source has length T, the score matrix has shape [U,T], which need not be square.</p>
-<p>The rectangular case is a useful check that you understand the axes. Attention fundamentally relates query positions to key/value positions. It does not require their counts to match.</p>
-<h3 id="what-training-can-change">What training can change</h3>
-<p>Gradients can change the input embeddings and each projection matrix. If a comparison repeatedly helps predict appropriate next tokens, training can reinforce the corresponding computation.</p>
-<p>The learned coordinates need not line up with a simple story about “the transport head” or “the school key.” Such interpretations require evidence. The small examples in these lectures explain valid computations, not the discovered internals of a pretrained model.</p>
-<p>We can still test the implementation precisely: projection shapes, row sums after softmax, output dimensions, and sensitivity to changing a key or a value.</p>
-<h3 id="worked-practice-and-a-readiness-check">Worked practice and a readiness check</h3>
-<p>For X shaped [6,4] and Dk=2,Dv=3, write projection shapes [4,2],[4,2],[4,3], then Q/K/V shapes [6,2],[6,2],[6,3]. The score matrix is [6,6], and the output is [6,3].</p>
-<p>For cross-attention with four queries and seven key/value positions, write scores [4,7]. Explain why softmax still runs across the seven keys for each query.</p>
-<p>Before continuing, you should be able to say which operations change feature coordinates, which compare positions, and which mix value information. Scaling and masking will now refine this computation without changing that overall structure.</p>
-<h3 id="changing-a-key-versus-changing-a-value">Changing a key versus changing a value</h3>
-<p>Keep Q and K fixed in the two-position example, but replace the second value [0,4] with [0,8]. The attention weights stay the same because their computation did not use V. The second coordinate of each mixed output doubles.</p>
-<p>Now restore V and change a key instead. The dot-product scores change, so softmax can redistribute the mixture across both value vectors. This distinguishes the comparison role from the information role without requiring any interpretation of natural-language meaning.</p>
-<p>For a third experiment, change only one query row. That changes that row's comparisons while leaving other query rows' scores unchanged before later processing. These controlled perturbations are excellent small tests. They explain which tensor participates in which stage more clearly than memorizing the letters Q, K, and V.</p></article><nav aria-label="Adjacent lectures" class="chapter-pagination"><a href="06.html"><small>Previous week</small>Attention begins as a weighted mixture</a><a href="08.html"><small>Next week</small>Scaling and masking attention correctly</a></nav></div><footer class="footer"><span>Applied AI · An independent self-study course</span><span>32 weeks · 10 hours per week</span><a href="../resources.html#about-this-course">About and sources</a></footer></main><dialog aria-labelledby="search-title" class="search-dialog"><div class="dialog-head"><h2 id="search-title">Find a concept</h2><button aria-label="Close search" class="search-close" type="button">Close</button></div><label class="sr-only" for="course-search">Search all lectures and tutorials</label><input autocomplete="off" id="course-search" placeholder="Try attention, fine-tuning, or harness…" type="search"/><p aria-live="polite" class="search-status">Search lecture notes, tutorials, tests and readings.</p><div class="search-results"></div></dialog><div aria-live="polite" class="toast" role="status"></div></body></html>
+<html lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width,initial-scale=1" name="viewport"/>
+  <title>
+   Where queries keys and values come from · Applied AI
+  </title>
+  <meta content="Applied generative AI and LLM systems course material" name="description"/>
+  <meta content="#173c36" name="theme-color"/>
+  <link href="../assets/favicon.svg" rel="icon" type="image/svg+xml"/>
+  <link href="../assets/style.css" rel="stylesheet"/>
+  <link href="../assets/slides.css" rel="stylesheet"/>
+  <script>
+   window.COURSE_BASE="../";
+  </script>
+  <script defer="" src="../assets/site-config.js">
+  </script>
+  <script defer="" src="../assets/search-index.js">
+  </script>
+  <script defer="" src="../assets/app.js">
+  </script>
+  <script defer="" src="../assets/visuals.js">
+  </script>
+  <script defer="" src="../assets/slides.js">
+  </script>
+  <script defer="" src="../assets/beginner-visuals.js">
+  </script>
+  <link href="../zh-HK/lectures/07.html" hreflang="zh-HK" rel="alternate"/>
+  <link href="../assets/bilingual.css" rel="stylesheet"/>
+  <link href="../assets/reader-v3.css" rel="stylesheet"/>
+  <script defer="True" src="../assets/reader-v3.js">
+  </script>
+ </head>
+ <body data-page-kind="lecture" data-week="7">
+  <a class="skip-link" href="#main">
+   Skip to content
+  </a>
+  <header class="topbar">
+   <button aria-controls="course-sidebar" aria-expanded="false" class="menu-toggle" type="button">
+    Menu
+   </button>
+   <a class="brand" href="../index.html">
+    <span aria-hidden="true" class="brand-mark">
+     a
+     <span>
+      i
+     </span>
+    </span>
+    <span>
+     APPLIED AI
+     <small>
+      Principles into practice
+     </small>
+    </span>
+   </a>
+   <nav aria-label="Main navigation">
+    <a href="../index.html">
+     The course
+    </a>
+    <a href="../visuals.html">
+     Visual lab
+    </a>
+    <a href="../project.html">
+     Project
+    </a>
+    <a class="language-switch" href="../zh-HK/lectures/07.html" hreflang="zh-HK" lang="zh-HK">
+     繁體中文
+    </a>
+   </nav>
+   <button class="search-open" type="button">
+    Search the course
+    <span aria-hidden="true">
+     /
+    </span>
+   </button>
+  </header>
+  <aside aria-label="Course chapters" class="sidebar" id="course-sidebar">
+   <a class="side-home" href="../index.html">
+    Course overview
+   </a>
+   <details class="semester-nav" open="">
+    <summary>
+     Semester 1
+     <span>
+      Weeks 1–16
+     </span>
+    </summary>
+    <ol start="1">
+     <li>
+      <a href="../lectures/01.html">
+       <span class="week-number">
+        01
+       </span>
+       <span>
+        What a language model is trying to learn
+       </span>
+       <span class="week-tick" data-week-tick="1">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/02.html">
+       <span class="week-number">
+        02
+       </span>
+       <span>
+        From text to tokens and numerical IDs
+       </span>
+       <span class="week-tick" data-week-tick="2">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/03.html">
+       <span class="week-number">
+        03
+       </span>
+       <span>
+        What word vectors can represent
+       </span>
+       <span class="week-tick" data-week-tick="3">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/04.html">
+       <span class="week-number">
+        04
+       </span>
+       <span>
+        From scores to probabilities and learning signals
+       </span>
+       <span class="week-tick" data-week-tick="4">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/05.html">
+       <span class="week-number">
+        05
+       </span>
+       <span>
+        Why language needs context and order
+       </span>
+       <span class="week-tick" data-week-tick="5">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/06.html">
+       <span class="week-number">
+        06
+       </span>
+       <span>
+        Attention begins as a weighted mixture
+       </span>
+       <span class="week-tick" data-week-tick="6">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a aria-current="page" href="../lectures/07.html">
+       <span class="week-number">
+        07
+       </span>
+       <span>
+        Where queries keys and values come from
+       </span>
+       <span class="week-tick" data-week-tick="7">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/08.html">
+       <span class="week-number">
+        08
+       </span>
+       <span>
+        Scaling and masking attention correctly
+       </span>
+       <span class="week-tick" data-week-tick="8">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/09.html">
+       <span class="week-number">
+        09
+       </span>
+       <span>
+        Multiple attention heads and position
+       </span>
+       <span class="week-tick" data-week-tick="9">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/10.html">
+       <span class="week-number">
+        10
+       </span>
+       <span>
+        The transformer block step by step
+       </span>
+       <span class="week-tick" data-week-tick="10">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/11.html">
+       <span class="week-number">
+        11
+       </span>
+       <span>
+        Encoders decoders and complete model architectures
+       </span>
+       <span class="week-tick" data-week-tick="11">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/12.html">
+       <span class="week-number">
+        12
+       </span>
+       <span>
+        Training a small transformer
+       </span>
+       <span class="week-tick" data-week-tick="12">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/13.html">
+       <span class="week-number">
+        13
+       </span>
+       <span>
+        Generation decoding and the KV cache
+       </span>
+       <span class="week-tick" data-week-tick="13">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/14.html">
+       <span class="week-number">
+        14
+       </span>
+       <span>
+        From pretraining to instruction following and reasoning
+       </span>
+       <span class="week-tick" data-week-tick="14">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/15.html">
+       <span class="week-number">
+        15
+       </span>
+       <span>
+        Generative AI beyond text
+       </span>
+       <span class="week-tick" data-week-tick="15">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/16.html">
+       <span class="week-number">
+        16
+       </span>
+       <span>
+        A complete transformer walkthrough and first semester review
+       </span>
+       <span class="week-tick" data-week-tick="16">
+       </span>
+      </a>
+     </li>
+    </ol>
+   </details>
+   <details class="semester-nav">
+    <summary>
+     Semester 2
+     <span>
+      Weeks 17–32
+     </span>
+    </summary>
+    <ol start="17">
+     <li>
+      <a href="../lectures/17.html">
+       <span class="week-number">
+        17
+       </span>
+       <span>
+        From word vectors to semantic search
+       </span>
+       <span class="week-tick" data-week-tick="17">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/18.html">
+       <span class="week-number">
+        18
+       </span>
+       <span>
+        A vector database from a list of vectors
+       </span>
+       <span class="week-tick" data-week-tick="18">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/19.html">
+       <span class="week-number">
+        19
+       </span>
+       <span>
+        RAG as an open book question
+       </span>
+       <span class="week-tick" data-week-tick="19">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/20.html">
+       <span class="week-number">
+        20
+       </span>
+       <span>
+        Improving RAG without losing the basic task
+       </span>
+       <span class="week-tick" data-week-tick="20">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/21.html">
+       <span class="week-number">
+        21
+       </span>
+       <span>
+        Evaluating retrieval answers and uncertainty
+       </span>
+       <span class="week-tick" data-week-tick="21">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/22.html">
+       <span class="week-number">
+        22
+       </span>
+       <span>
+        CPU GPU memory and model resource accounting
+       </span>
+       <span class="week-tick" data-week-tick="22">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/23.html">
+       <span class="week-number">
+        23
+       </span>
+       <span>
+        CUDA kernels and profiling
+       </span>
+       <span class="week-tick" data-week-tick="23">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/24.html">
+       <span class="week-number">
+        24
+       </span>
+       <span>
+        Fine tuning starts with a teaching dataset
+       </span>
+       <span class="week-tick" data-week-tick="24">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/25.html">
+       <span class="week-number">
+        25
+       </span>
+       <span>
+        LoRA and QLoRA from a small matrix
+       </span>
+       <span class="week-tick" data-week-tick="25">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/26.html">
+       <span class="week-number">
+        26
+       </span>
+       <span>
+        Fine tuning experiments preferences and distillation
+       </span>
+       <span class="week-tick" data-week-tick="26">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/27.html">
+       <span class="week-number">
+        27
+       </span>
+       <span>
+        Tools functions workflows and agents
+       </span>
+       <span class="week-tick" data-week-tick="27">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/28.html">
+       <span class="week-number">
+        28
+       </span>
+       <span>
+        Harnesses planning memory and bounded execution
+       </span>
+       <span class="week-tick" data-week-tick="28">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/29.html">
+       <span class="week-number">
+        29
+       </span>
+       <span>
+        From a notebook to MLOps and inference serving
+       </span>
+       <span class="week-tick" data-week-tick="29">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/30.html">
+       <span class="week-number">
+        30
+       </span>
+       <span>
+        Monitoring security regression tests and rollback
+       </span>
+       <span class="week-tick" data-week-tick="30">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/31.html">
+       <span class="week-number">
+        31
+       </span>
+       <span>
+        Integrating the documentation assistant and advanced extensions
+       </span>
+       <span class="week-tick" data-week-tick="31">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/32.html">
+       <span class="week-number">
+        32
+       </span>
+       <span>
+        Review defense and a continuing learning plan
+       </span>
+       <span class="week-tick" data-week-tick="32">
+       </span>
+      </a>
+     </li>
+    </ol>
+   </details>
+   <div class="side-links">
+    <a href="../visuals.html">
+     Visual laboratory
+     <span>
+      14 interactive lessons
+     </span>
+    </a>
+    <a href="../project.html">
+     Documentation assistant
+     <span>
+      Your capstone project
+     </span>
+    </a>
+    <a href="../resources.html">
+     Readings and setup
+    </a>
+   </div>
+   <div class="side-progress">
+    <div>
+     <span>
+      Your progress
+     </span>
+     <strong data-progress-count="">
+      0 / 32
+     </strong>
+    </div>
+    <progress aria-label="Completed lectures" max="32" value="0">
+    </progress>
+    <small>
+     Saved in this browser
+    </small>
+   </div>
+  </aside>
+  <main class="main" id="main">
+   <div class="content">
+    <div class="chapter-header">
+     <div class="eyebrow">
+      Semester 1 / Week 07
+     </div>
+     <h1>
+      Where queries keys and values come from
+     </h1>
+    </div>
+    <div class="lesson-links">
+     <a href="../tutorials/07.html">
+      Tutorial 07
+     </a>
+     <a href="../tests/07.html">
+      Test your understanding
+     </a>
+     <button aria-pressed="false" class="mark-complete" data-week="7" type="button">
+      Mark as complete
+     </button>
+    </div>
+    <div aria-label="Lesson view" class="lesson-mode" role="tablist">
+     <button aria-controls="full-notes" aria-selected="true" data-mode="read" id="mode-read" role="tab" type="button">
+      Read lesson
+     </button>
+     <button aria-controls="lecture-slides" aria-selected="false" data-mode="slides" id="mode-slides" role="tab" type="button">
+      Lesson slides
+     </button>
+    </div>
+    <section aria-label="Lecture slides" class="lecture-deck" hidden="" id="lecture-slides" role="tabpanel">
+     <div class="deck-top">
+      <div>
+       <div class="eyebrow">
+        Lecture slides · Week 07
+       </div>
+       <h2>
+        Key steps and worked visuals
+       </h2>
+      </div>
+      <button class="deck-present" type="button">
+       Present
+      </button>
+     </div>
+     <p class="deck-help">
+      Use these slides to review the mechanism. Open “Read the worked explanation” for the complete notes and code.
+     </p>
+     <div aria-label="Presentation: use left and right arrow keys" class="slide-viewport" tabindex="0">
+      <section class="lecture-slide" data-slide="">
+       <div class="slide-stage">
+        Week 07 · Section 1
+       </div>
+       <h3>
+        One token can have several computational roles
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Last week we chose attention weights by hand.
+         </li>
+         <li>
+          For attention, learned linear transformations create a query vector, a key vector, and a value vector from each row.
+         </li>
+         <li>
+          Query, key, and value are names for roles.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#one-token-can-have-several-computational-roles">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 07 · Section 2
+       </div>
+       <h3>
+        Linear projection with visible numbers
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Let one input row be x=[1,2].
+         </li>
+         <li>
+          The input row is the same, but the projected vectors differ.
+         </li>
+         <li>
+          Changing Wk changes how the position participates in comparisons.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#linear-projection-with-visible-numbers">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 07 · Section 3
+       </div>
+       <h3>
+        A shared notation for attention dimensions
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          We use d_model for the token-representation width, d_head for one query/key head width, and d_value for one value-vector width.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#a-shared-notation-for-attention-dimensions">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 07 · Section 4
+       </div>
+       <h3>
+        Applying projections to the whole sentence
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          If X has shape [T,d_model], Wq has shape [d_model,d_head], and Wk has shape [d_model,d_head], then Q and K both have shape [T,d_head].
+         </li>
+         <li>
+          The same projection matrix applies at every token position.
+         </li>
+         <li>
+          The number of positions T and the number of features d_model describe different things.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#applying-projections-to-the-whole-sentence">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 07 · Section 5
+       </div>
+       <h3>
+        Comparing all query key pairs
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          For one query q_i, dot it with every key k_j.
+         </li>
+         <li>
+          Suppose T=6. Entry [4,1] describes query position 4 compared with key position 1 under zero-based indexing. It is not a vocabulary score for word ID 1.
+         </li>
+         <li>
+          This is the first operation in this attention block that explicitly compares positions with one another.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#comparing-all-query-key-pairs">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 07 · Section 6
+       </div>
+       <h3>
+        A complete two-position example
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Let Q=[[1,0],[0,1]], K=[[1,0],[0,1]], and V=[[2,0],[0,4]].
+         </li>
+         <li>
+          Its output is approximately [1.462,1.076].
+         </li>
+         <li>
+          Both outputs can include both values.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#a-complete-two-position-example">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 07 · Section 7
+       </div>
+       <h3>
+        Self attention and cross attention use different sources
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          In self-attention, Q, K, and V derive from representations of the same sequence.
+         </li>
+         <li>
+          For translation, target-side decoder representations can query source-side encoder representations.
+         </li>
+         <li>
+          The rectangular case is a useful check that you understand the axes.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#self-attention-and-cross-attention-use-different-sources">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 07 · Section 8
+       </div>
+       <h3>
+        What training can change
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Gradients can change the input embeddings and each projection matrix.
+         </li>
+         <li>
+          The learned coordinates need not line up with a simple story about “the transport head” or “the school key.” Such interpretations require evidence.
+         </li>
+         <li>
+          We can still test the implementation precisely: projection shapes, row sums after softmax, output dimensions, and sensitivity to changing a key or a value.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#what-training-can-change">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 07 · Section 9
+       </div>
+       <h3>
+        Worked practice and a readiness check
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          For X shaped [6,4] and d_head=2,d_value=3, write projection shapes [4,2],[4,2],[4,3], then Q/K/V shapes [6,2],[6,2],[6,3].
+         </li>
+         <li>
+          For cross-attention with four queries and seven key/value positions, write scores [4,7].
+         </li>
+         <li>
+          Before continuing, you should be able to say which operations change feature coordinates, which compare positions, and which mix value information.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#worked-practice-and-a-readiness-check">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 07 · Section 10
+       </div>
+       <h3>
+        Changing a key versus changing a value
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Keep Q and K fixed in the two-position example, but replace the second value [0,4] with [0,8].
+         </li>
+         <li>
+          Now restore V and change a key instead.
+         </li>
+         <li>
+          For a third experiment, change only one query row.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#changing-a-key-versus-changing-a-value">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+     </div>
+     <div class="deck-controls">
+      <button class="slide-prev" type="button">
+       ← Previous
+      </button>
+      <span aria-live="polite" class="slide-counter">
+       1 / 10
+      </span>
+      <button class="slide-next" type="button">
+       Next →
+      </button>
+     </div>
+     <label class="slide-jump-label">
+      Go to slide
+      <select aria-label="Go to slide" class="slide-jump">
+       <option value="0">
+        1. One token can have several computational roles
+       </option>
+       <option value="1">
+        2. Linear projection with visible numbers
+       </option>
+       <option value="2">
+        3. A shared notation for attention dimensions
+       </option>
+       <option value="3">
+        4. Applying projections to the whole sentence
+       </option>
+       <option value="4">
+        5. Comparing all query key pairs
+       </option>
+       <option value="5">
+        6. A complete two-position example
+       </option>
+       <option value="6">
+        7. Self attention and cross attention use different sources
+       </option>
+       <option value="7">
+        8. What training can change
+       </option>
+       <option value="8">
+        9. Worked practice and a readiness check
+       </option>
+       <option value="9">
+        10. Changing a key versus changing a value
+       </option>
+      </select>
+     </label>
+     <button aria-pressed="false" class="deck-all" type="button">
+      Show all slides
+     </button>
+    </section>
+    <nav aria-label="In this lesson" class="reader-toc">
+     <strong>
+      In this lesson
+     </strong>
+     <ol>
+      <li>
+       <a href="#one-token-can-have-several-computational-roles">
+        One token can have several computational roles
+       </a>
+      </li>
+      <li>
+       <a href="#linear-projection-with-visible-numbers">
+        Linear projection with visible numbers
+       </a>
+      </li>
+      <li>
+       <a href="#a-shared-notation-for-attention-dimensions">
+        A shared notation for attention dimensions
+       </a>
+      </li>
+      <li>
+       <a href="#applying-projections-to-the-whole-sentence">
+        Applying projections to the whole sentence
+       </a>
+      </li>
+      <li>
+       <a href="#comparing-all-query-key-pairs">
+        Comparing all query key pairs
+       </a>
+      </li>
+      <li>
+       <a href="#a-complete-two-position-example">
+        A complete two-position example
+       </a>
+      </li>
+      <li>
+       <a href="#self-attention-and-cross-attention-use-different-sources">
+        Self attention and cross attention use different sources
+       </a>
+      </li>
+      <li>
+       <a href="#what-training-can-change">
+        What training can change
+       </a>
+      </li>
+      <li>
+       <a href="#worked-practice-and-a-readiness-check">
+        Worked practice and a readiness check
+       </a>
+      </li>
+      <li>
+       <a href="#changing-a-key-versus-changing-a-value">
+        Changing a key versus changing a value
+       </a>
+      </li>
+     </ol>
+    </nav>
+    <article class="prose full-notes" id="full-notes" role="tabpanel">
+     <div class="eyebrow">
+      Complete lecture reader
+     </div>
+     <h2>
+      Read the full explanation
+     </h2>
+     <aside class="notation-key">
+      <strong>
+       Notation in this lesson
+      </strong>
+      <p>
+       B: batch · T: tokens · d_model: model width · H: query heads · H_kv: key/value heads · d_head: query/key width per head · d_value: value width per head
+      </p>
+     </aside>
+     <h3 id="one-token-can-have-several-computational-roles">
+      One token can have several computational roles
+     </h3>
+     <p>
+      Last week we chose attention weights by hand. A transformer needs to compute them from representations. Take the six rows for “I go to school by bus.” Each row begins as a token representation, with position information added later in our full model.
+     </p>
+     <p>
+      For attention, learned linear transformations create a query vector, a key vector, and a value vector from each row. They are different views of the same starting representation, optimized for different roles in the computation.
+     </p>
+     <p>
+      Query, key, and value are names for roles. They do not mean a human-written question, a word's dictionary definition, and a factual answer. Keeping the names separate from literal natural-language meanings makes the mechanism easier to reason about.
+     </p>
+     <h3 id="linear-projection-with-visible-numbers">
+      Linear projection with visible numbers
+     </h3>
+     <p>
+      Let one input row be x=[1,2]. Let Wq be the identity matrix, Wk=[[1,0],[0,0.5]], and Wv=[[2,0],[0,1]]. Using row-vector notation, q=xWq=[1,2], k=xWk=[1,1], and v=xWv=[2,2].
+     </p>
+     <p>
+      The input row is the same, but the projected vectors differ. In a trained model, these projection matrices are parameters changed by the loss. We chose simple matrices only to make every multiplication easy to inspect.
+     </p>
+     <p>
+      Changing Wk changes how the position participates in comparisons. Changing Wv changes the information contributed after the weights have been computed. These effects can be studied separately.
+     </p>
+     <h3 id="a-shared-notation-for-attention-dimensions">
+      A shared notation for attention dimensions
+     </h3>
+     <p>
+      We use d_model for the token-representation width, d_head for one query/key head width, and d_value for one value-vector width. T counts positions, B counts batch examples, and H counts heads. In ordinary equal-width multi-head attention, d_head=d_value=d_model/H; the single-head shape exercise below deliberately allows a different value width. These symbols name dimensions, not different kinds of vectors.
+     </p>
+     <h3 id="applying-projections-to-the-whole-sentence">
+      Applying projections to the whole sentence
+     </h3>
+     <p>
+      If X has shape [T,d_model], Wq has shape [d_model,d_head], and Wk has shape [d_model,d_head], then Q and K both have shape [T,d_head]. Wv can have shape [d_model,d_value], producing V with shape [T,d_value].
+     </p>
+     <p>
+      The same projection matrix applies at every token position. We do not train one Wq for the first word and another for the sixth word in ordinary self-attention. Sharing parameters lets the operation work over different sequences.
+     </p>
+     <p>
+      The number of positions T and the number of features d_model describe different things. Multiplying X by a projection changes feature coordinates; it does not by itself mix token positions.
+     </p>
+     <h3 id="comparing-all-query-key-pairs">
+      Comparing all query key pairs
+     </h3>
+     <p>
+      For one query q_i, dot it with every key k_j. Arranging the results for all i and j gives QKᵀ, a [T,T] score matrix.
+     </p>
+     <p>
+      Suppose T=6. Entry [4,1] describes query position 4 compared with key position 1 under zero-based indexing. It is not a vocabulary score for word ID 1.
+     </p>
+     <p>
+      This is the first operation in this attention block that explicitly compares positions with one another. The later weight-times-value multiplication then moves information across positions.
+     </p>
+     <h3 id="a-complete-two-position-example">
+      A complete two-position example
+     </h3>
+     <p>
+      Let Q=[[1,0],[0,1]], K=[[1,0],[0,1]], and V=[[2,0],[0,4]]. The unscaled score matrix is the identity matrix. For the first query, scores [1,0] become softmax weights approximately [0.731,0.269].
+     </p>
+     <p>
+      Its output is approximately [1.462,1.076]. The second query has the opposite score pattern and output approximately [0.538,2.924].
+     </p>
+     <p>
+      Both outputs can include both values. The operation does not force each query to choose its matching position exclusively. In week 8, scaling by sqrt(d_head) will change these numbers, and masking may remove some contributions.
+     </p>
+     <h3 id="self-attention-and-cross-attention-use-different-sources">
+      Self attention and cross attention use different sources
+     </h3>
+     <p>
+      In self-attention, Q, K, and V derive from representations of the same sequence. In cross-attention, queries derive from one sequence while keys and values derive from another.
+     </p>
+     <p>
+      For translation, target-side decoder representations can query source-side encoder representations. If the target has length U and the source has length T, the score matrix has shape [U,T], which need not be square.
+     </p>
+     <p>
+      The rectangular case is a useful check that you understand the axes. Attention fundamentally relates query positions to key/value positions. It does not require their counts to match.
+     </p>
+     <h3 id="what-training-can-change">
+      What training can change
+     </h3>
+     <p>
+      Gradients can change the input embeddings and each projection matrix. If a comparison repeatedly helps predict appropriate next tokens, training can reinforce the corresponding computation.
+     </p>
+     <p>
+      The learned coordinates need not line up with a simple story about “the transport head” or “the school key.” Such interpretations require evidence. The small examples in these lectures explain valid computations, not the discovered internals of a pretrained model.
+     </p>
+     <p>
+      We can still test the implementation precisely: projection shapes, row sums after softmax, output dimensions, and sensitivity to changing a key or a value.
+     </p>
+     <h3 id="worked-practice-and-a-readiness-check">
+      Worked practice and a readiness check
+     </h3>
+     <p>
+      For X shaped [6,4] and d_head=2,d_value=3, write projection shapes [4,2],[4,2],[4,3], then Q/K/V shapes [6,2],[6,2],[6,3]. The score matrix is [6,6], and the output is [6,3].
+     </p>
+     <p>
+      For cross-attention with four queries and seven key/value positions, write scores [4,7]. Explain why softmax still runs across the seven keys for each query.
+     </p>
+     <p>
+      Before continuing, you should be able to say which operations change feature coordinates, which compare positions, and which mix value information. Scaling and masking will now refine this computation without changing that overall structure.
+     </p>
+     <h3 id="changing-a-key-versus-changing-a-value">
+      Changing a key versus changing a value
+     </h3>
+     <p>
+      Keep Q and K fixed in the two-position example, but replace the second value [0,4] with [0,8]. The attention weights stay the same because their computation did not use V. The second coordinate of each mixed output doubles.
+     </p>
+     <p>
+      Now restore V and change a key instead. The dot-product scores change, so softmax can redistribute the mixture across both value vectors. This distinguishes the comparison role from the information role without requiring any interpretation of natural-language meaning.
+     </p>
+     <p>
+      For a third experiment, change only one query row. That changes that row's comparisons while leaving other query rows' scores unchanged before later processing. These controlled perturbations are excellent small tests. They explain which tensor participates in which stage more clearly than memorizing the letters Q, K, and V.
+     </p>
+    </article>
+    <nav aria-label="Adjacent lectures" class="chapter-pagination">
+     <a href="06.html">
+      <small>
+       Previous week
+      </small>
+      Attention begins as a weighted mixture
+     </a>
+     <a href="08.html">
+      <small>
+       Next week
+      </small>
+      Scaling and masking attention correctly
+     </a>
+    </nav>
+   </div>
+   <footer class="footer">
+    <span>
+     Applied AI · An independent self-study course
+    </span>
+    <span>
+     32 weeks · 10 hours per week
+    </span>
+    <a href="../resources.html#about-this-course">
+     About and sources
+    </a>
+   </footer>
+  </main>
+  <dialog aria-labelledby="search-title" class="search-dialog">
+   <div class="dialog-head">
+    <h2 id="search-title">
+     Find a concept
+    </h2>
+    <button aria-label="Close search" class="search-close" type="button">
+     Close
+    </button>
+   </div>
+   <label class="sr-only" for="course-search">
+    Search all lectures and tutorials
+   </label>
+   <input autocomplete="off" id="course-search" placeholder="Try attention, fine-tuning, or harness…" type="search"/>
+   <p aria-live="polite" class="search-status">
+    Search lecture notes, tutorials, tests and readings.
+   </p>
+   <div class="search-results">
+   </div>
+  </dialog>
+  <div aria-live="polite" class="toast" role="status">
+  </div>
+ </body>
+</html>

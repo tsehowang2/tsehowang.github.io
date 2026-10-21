@@ -1,67 +1,1320 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/><title>Tools functions workflows and agents · Applied AI</title><meta content="Applied generative AI and LLM systems course material" name="description"/><meta content="#173c36" name="theme-color"/><link href="../assets/favicon.svg" rel="icon" type="image/svg+xml"/><link href="../assets/style.css" rel="stylesheet"/><link href="../assets/slides.css" rel="stylesheet"/><script>window.COURSE_BASE="../";</script><script defer="" src="../assets/site-config.js"></script><script defer="" src="../assets/search-index.js"></script><script defer="" src="../assets/app.js"></script><script defer="" src="../assets/visuals.js"></script><script defer="" src="../assets/slides.js"></script><script defer="" src="../assets/beginner-visuals.js"></script><link href="../zh-HK/lectures/27.html" hreflang="zh-HK" rel="alternate"/><link href="../assets/bilingual.css" rel="stylesheet"/></head><body data-page-kind="lecture" data-week="27"><a class="skip-link" href="#main">Skip to content</a><header class="topbar"><button aria-controls="course-sidebar" aria-expanded="false" class="menu-toggle" type="button">Menu</button><a class="brand" href="../index.html"><span aria-hidden="true" class="brand-mark">a<span>i</span></span><span>APPLIED AI<small>Principles into practice</small></span></a><nav aria-label="Main navigation"><a href="../index.html">The course</a><a href="../visuals.html">Visual lab</a><a href="../project.html">Project</a><a class="language-switch" href="../zh-HK/lectures/27.html" hreflang="zh-HK" lang="zh-HK">繁體中文</a></nav><button class="search-open" type="button">Search the course <span aria-hidden="true">/</span></button></header><aside aria-label="Course chapters" class="sidebar" id="course-sidebar"><a class="side-home" href="../index.html">Course overview</a><details class="semester-nav"><summary>Semester 1<span>Weeks 1–16</span></summary><ol start="1"><li><a href="../lectures/01.html"><span class="week-number">01</span><span>What a language model is trying to learn</span><span class="week-tick" data-week-tick="1"></span></a></li><li><a href="../lectures/02.html"><span class="week-number">02</span><span>From text to tokens and numerical IDs</span><span class="week-tick" data-week-tick="2"></span></a></li><li><a href="../lectures/03.html"><span class="week-number">03</span><span>What word vectors can represent</span><span class="week-tick" data-week-tick="3"></span></a></li><li><a href="../lectures/04.html"><span class="week-number">04</span><span>From scores to probabilities and learning signals</span><span class="week-tick" data-week-tick="4"></span></a></li><li><a href="../lectures/05.html"><span class="week-number">05</span><span>Why language needs context and order</span><span class="week-tick" data-week-tick="5"></span></a></li><li><a href="../lectures/06.html"><span class="week-number">06</span><span>Attention begins as a weighted mixture</span><span class="week-tick" data-week-tick="6"></span></a></li><li><a href="../lectures/07.html"><span class="week-number">07</span><span>Where queries keys and values come from</span><span class="week-tick" data-week-tick="7"></span></a></li><li><a href="../lectures/08.html"><span class="week-number">08</span><span>Scaling and masking attention correctly</span><span class="week-tick" data-week-tick="8"></span></a></li><li><a href="../lectures/09.html"><span class="week-number">09</span><span>Multiple attention heads and position</span><span class="week-tick" data-week-tick="9"></span></a></li><li><a href="../lectures/10.html"><span class="week-number">10</span><span>The transformer block step by step</span><span class="week-tick" data-week-tick="10"></span></a></li><li><a href="../lectures/11.html"><span class="week-number">11</span><span>Encoders decoders and complete model architectures</span><span class="week-tick" data-week-tick="11"></span></a></li><li><a href="../lectures/12.html"><span class="week-number">12</span><span>Training a small transformer</span><span class="week-tick" data-week-tick="12"></span></a></li><li><a href="../lectures/13.html"><span class="week-number">13</span><span>Generation decoding and the KV cache</span><span class="week-tick" data-week-tick="13"></span></a></li><li><a href="../lectures/14.html"><span class="week-number">14</span><span>From pretraining to instruction following and reasoning</span><span class="week-tick" data-week-tick="14"></span></a></li><li><a href="../lectures/15.html"><span class="week-number">15</span><span>Generative AI beyond text</span><span class="week-tick" data-week-tick="15"></span></a></li><li><a href="../lectures/16.html"><span class="week-number">16</span><span>A complete transformer walkthrough and first semester review</span><span class="week-tick" data-week-tick="16"></span></a></li></ol></details><details class="semester-nav" open=""><summary>Semester 2<span>Weeks 17–32</span></summary><ol start="17"><li><a href="../lectures/17.html"><span class="week-number">17</span><span>From word vectors to semantic search</span><span class="week-tick" data-week-tick="17"></span></a></li><li><a href="../lectures/18.html"><span class="week-number">18</span><span>A vector database from a list of vectors</span><span class="week-tick" data-week-tick="18"></span></a></li><li><a href="../lectures/19.html"><span class="week-number">19</span><span>RAG as an open book question</span><span class="week-tick" data-week-tick="19"></span></a></li><li><a href="../lectures/20.html"><span class="week-number">20</span><span>Improving RAG without losing the basic task</span><span class="week-tick" data-week-tick="20"></span></a></li><li><a href="../lectures/21.html"><span class="week-number">21</span><span>Evaluating retrieval answers and uncertainty</span><span class="week-tick" data-week-tick="21"></span></a></li><li><a href="../lectures/22.html"><span class="week-number">22</span><span>CPU GPU memory and model resource accounting</span><span class="week-tick" data-week-tick="22"></span></a></li><li><a href="../lectures/23.html"><span class="week-number">23</span><span>CUDA kernels and profiling</span><span class="week-tick" data-week-tick="23"></span></a></li><li><a href="../lectures/24.html"><span class="week-number">24</span><span>Fine tuning starts with a teaching dataset</span><span class="week-tick" data-week-tick="24"></span></a></li><li><a href="../lectures/25.html"><span class="week-number">25</span><span>LoRA and QLoRA from a small matrix</span><span class="week-tick" data-week-tick="25"></span></a></li><li><a href="../lectures/26.html"><span class="week-number">26</span><span>Fine tuning experiments preferences and distillation</span><span class="week-tick" data-week-tick="26"></span></a></li><li><a aria-current="page" href="../lectures/27.html"><span class="week-number">27</span><span>Tools functions workflows and agents</span><span class="week-tick" data-week-tick="27"></span></a></li><li><a href="../lectures/28.html"><span class="week-number">28</span><span>Harnesses planning memory and bounded execution</span><span class="week-tick" data-week-tick="28"></span></a></li><li><a href="../lectures/29.html"><span class="week-number">29</span><span>From a notebook to MLOps and inference serving</span><span class="week-tick" data-week-tick="29"></span></a></li><li><a href="../lectures/30.html"><span class="week-number">30</span><span>Monitoring security regression tests and rollback</span><span class="week-tick" data-week-tick="30"></span></a></li><li><a href="../lectures/31.html"><span class="week-number">31</span><span>Integrating the documentation assistant and advanced extensions</span><span class="week-tick" data-week-tick="31"></span></a></li><li><a href="../lectures/32.html"><span class="week-number">32</span><span>Review defense and a continuing learning plan</span><span class="week-tick" data-week-tick="32"></span></a></li></ol></details><div class="side-links"><a href="../visuals.html">Visual laboratory <span>14 interactive lessons</span></a><a href="../project.html">Documentation assistant <span>Your capstone project</span></a><a href="../resources.html">Readings and setup</a></div><div class="side-progress"><div><span>Your progress</span><strong data-progress-count="">0 / 32</strong></div><progress aria-label="Completed lectures" max="32" value="0"></progress><small>Saved in this browser</small></div></aside><main class="main" id="main"><div class="content"><div class="chapter-header"><div class="eyebrow">Semester 2 / Week 27</div><h1>Tools functions workflows and agents</h1></div><div class="lesson-links"><a href="../tutorials/27.html">Tutorial 27</a><a href="../tests/27.html">Test your understanding</a><button aria-pressed="false" class="mark-complete" data-week="27" type="button">Mark as complete</button></div><section aria-label="Lecture slides" class="lecture-deck" id="lecture-slides"><div class="deck-top"><div><div class="eyebrow">Lecture slides · Week 27</div><h2>Learn one step at a time.</h2></div><button class="deck-present" type="button">Present</button></div><p class="deck-help">Read each explanation, pause to predict the result, then continue. Use the arrow keys while the presentation is focused. The complete lecture reader is below.</p><div aria-label="Presentation: use left and right arrow keys" class="slide-viewport" tabindex="0"><section class="lecture-slide" data-slide=""><div class="slide-stage">Start with an example</div><h3>A calculator is a useful concrete capability</h3><div class="slide-prose"><p>A bus ticket costs 4 dollars and a child ticket costs 2 dollars. Two adult tickets and one child ticket cost 2×4+1×2=10 dollars. A deterministic calculator can check the arithmetic.</p>
-<p>The model can suggest an expression, but application code decides which operations are available and validates the arguments. A generated function name does not create permission to execute arbitrary code.</p>
-<p>Start with this narrow capability before discussing an agent framework. A tool is an interface to a specified operation with a contract.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Start with an example</div><h3>A tool call has a name arguments and a result</h3><div class="slide-prose"><p>A proposal might be name=calculate, arguments={expression:"2*4+1*2"}. The controller validates the shape and expression, runs the bounded arithmetic operation, and returns value=10.</p>
-<p>The observation is then available to form the response. The final answer should agree with the result and, if necessary, cite the source of the ticket prices.</p>
-<p>Code execution on the website is unnecessary for learning this control flow. The visual lesson simulates it, while the notebook runs the actual bounded reference implementation.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Build the mechanism</div><h3>Schemas make the boundary inspectable</h3><div class="slide-prose"><p>Define required keys, allowed types, ranges, and extra-field behavior. An integer timeout field should not accept true merely because Python treats bool as a subclass of int.</p>
-<p>A configuration validator can accept a well-formed invocation but return valid=false because the proposed timeout is out of range. That differs from rejecting a malformed call.</p>
-<p>Error categories help debugging: proposal parsing, schema failure, scope failure, execution failure, domain-invalid result, and final-answer error.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Build the mechanism</div><h3>A fixed workflow</h3><div class="slide-prose"><p>For a simple ticket task, a workflow can retrieve the current prices, calculate a total, and format a response in a predetermined order.</p>
-<p>The model may help extract a structured request, but the control path remains largely fixed. This can be easier to test and sufficient for the task.</p>
-<p>Do not add adaptive planning unless a task actually benefits from choosing the next action based on observations.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Build the mechanism</div><h3>An agent chooses actions adaptively</h3><div class="slide-prose"><p>For troubleshooting, the next step may depend on a result: inspect the requested version, retrieve a rule, validate a configuration, and investigate the first violation.</p>
-<p>An agent lets model outputs influence the next action. The surrounding controller still enforces tool contracts, scope, budgets, and termination.</p>
-<p>Calling something an agent does not establish reasoning quality, reliable execution, or broader authorization. Those require separate implementation and evaluation.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Build the mechanism</div><h3>Narrow execution versus arbitrary programs</h3><div class="slide-prose"><p>Our arithmetic tool parses a restricted expression tree. It permits a small operator set, rejects names/function calls, and caps size and numeric magnitude.</p>
-<p>It never passes the expression to Python eval. A general code runner would require much stronger isolation and resource controls than this tutorial implements.</p>
-<p>For future side effects, define authorization, idempotency, and retries carefully. Looking up a page and deploying a service have different consequences.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Build the mechanism</div><h3>Testing capability and behavior separately</h3><div class="slide-prose"><p>First test a deterministic planner through the controller. This checks validation and execution without depending on model output quality.</p>
-<p>Then connect a real model planner and preserve malformed proposals and wrong choices as results. Controller acceptance is not the same as task success.</p>
-<p>Compare with a fixed workflow under the same task set, available tools, and stated resource budget. An agent can remain an experimental branch if it adds no measured value.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Build the mechanism</div><h3>Worked practice and a readiness check</h3><div class="slide-prose"><p>Write the ticket tool contract, a valid call, an unknown-tool call, an extra-argument call, and a division-by-zero case. Predict the outcome of each before running it.</p>
-<p>Explain a task where a fixed workflow is enough and another where an observation changes the next needed action.</p>
-<p>You are ready when a model proposal, an authorized tool execution, an observation, and a final task result are distinct steps in your diagram.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Optional deeper study</div><h3>A deeper pass after the worked introduction</h3><div class="slide-prose"><p>The following reference treatment is for a second pass. First explain the ordinary example above, then use the equations and implementation details below to make the explanation more precise.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Optional deeper study</div><h3>Further study 21 Intuition</h3><div class="slide-prose"><p>A model can propose calling a calculator, looking up a document, or inspecting a configuration. It does not gain authority merely by naming a function. A tool interface specifies which operations exist, which arguments are valid, and how results are returned. Application code enforces those rules.</p>
-<p>Define a tool by name, input schema, output schema, authorization requirements, failure states and side effects. Separate read-only tools from actions that change external state. For this course, executable tools are a bounded arithmetic calculator and a fixed configuration validator. Neither exposes arbitrary Python evaluation, shell commands, network requests or file writes.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Optional deeper study</div><h3>Further study 21 Validation layers</h3><div class="slide-prose"><p>Parse the model response; validate its shape; check the tool name; validate argument keys/types/ranges; enforce authorization; execute with time/resource limits; normalize the observation; log the outcome. Never use <code>eval</code> on model-generated expressions. The bundled calculator parses an arithmetic AST, accepts a narrow operator set and caps length, tree size and numerical magnitude. These checks are instructional, not a general sandbox for arbitrary code.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Optional deeper study</div><h3>Further study 21 Worked contract</h3><div class="slide-prose"><p><code>validate_config</code> accepts exactly <code>timeout_ms</code> as an integer in a documented range and <code>retries</code> as an integer in a documented range. An input containing an extra <code>command</code> field is rejected. An integer field should not silently accept Python's boolean subtype. The observation returns <code>valid</code> plus explicit errors; it does not return an unstructured exception traceback to the model.</p>
-<p>Idempotency matters for side effects. Retrying a document lookup is usually harmless; retrying a deployment may create multiple releases. A real side-effecting tool needs an idempotency key, authorization and explicit retry semantics. We study these contracts without exposing deployment tools in the starter.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Optional deeper study</div><h3>Further study 21 Experiment</h3><div class="slide-prose"><p>notebook 27 exercises valid calls, unknown tools, missing arguments, oversized expressions, division by zero, extra fields and invalid value ranges. Predict whether each should be rejected before execution or reported as a tool failure. Build a small table of observable outcomes and expected traces.</p>
-<p>The documentation assistant's useful executable behavior is narrow: calculate a retry delay from retrieved rules or validate a proposed configuration against the selected version. Generic shell access would expand risk and evaluation scope far beyond the task. Add capabilities only when an actual user task requires them.</p>
-<p><strong>Exit criterion:</strong> draw the boundary between a model's proposed call and authorized execution, and implement validation outside the prompt. <strong>Reading:</strong> R11 actions/observations; R03 agent/context topic. <strong>Tutorial:</strong> 27.</p></div></section></div><div class="deck-controls"><button class="slide-prev" type="button">← Previous</button><span aria-live="polite" class="slide-counter">1 / 13</span><button class="slide-next" type="button">Next →</button></div><label class="slide-jump-label">Go to slide <select aria-label="Go to slide" class="slide-jump"><option value="0">1</option><option value="1">2</option><option value="2">3</option><option value="3">4</option><option value="4">5</option><option value="5">6</option><option value="6">7</option><option value="7">8</option><option value="8">9</option><option value="9">10</option><option value="10">11</option><option value="11">12</option><option value="12">13</option></select></label><button aria-pressed="false" class="deck-all" type="button">Show all slides</button><a class="reader-link" href="#full-notes">Read the complete lecture ↓</a></section><section aria-label="The agent and its controller" class="visual-lesson"><div class="eyebrow">Explore the mechanism</div><h2>The agent and its controller</h2><p class="visual-intro">Inspect typed proposals, validators, observations and bounded termination.</p><div data-widget="agent"><p>Enable JavaScript to use this illustration. The lecture notes below explain the same mechanism.</p></div></section><article class="prose full-notes" id="full-notes"><div class="eyebrow">Complete lecture reader</div><h2>Read the full explanation</h2><h3 id="a-calculator-is-a-useful-concrete-capability">A calculator is a useful concrete capability</h3>
-<p>A bus ticket costs 4 dollars and a child ticket costs 2 dollars. Two adult tickets and one child ticket cost 2×4+1×2=10 dollars. A deterministic calculator can check the arithmetic.</p>
-<p>The model can suggest an expression, but application code decides which operations are available and validates the arguments. A generated function name does not create permission to execute arbitrary code.</p>
-<p>Start with this narrow capability before discussing an agent framework. A tool is an interface to a specified operation with a contract.</p>
-<h3 id="a-tool-call-has-a-name-arguments-and-a-result">A tool call has a name arguments and a result</h3>
-<p>A proposal might be name=calculate, arguments={expression:"2*4+1*2"}. The controller validates the shape and expression, runs the bounded arithmetic operation, and returns value=10.</p>
-<p>The observation is then available to form the response. The final answer should agree with the result and, if necessary, cite the source of the ticket prices.</p>
-<p>Code execution on the website is unnecessary for learning this control flow. The visual lesson simulates it, while the notebook runs the actual bounded reference implementation.</p>
-<h3 id="schemas-make-the-boundary-inspectable">Schemas make the boundary inspectable</h3>
-<p>Define required keys, allowed types, ranges, and extra-field behavior. An integer timeout field should not accept true merely because Python treats bool as a subclass of int.</p>
-<p>A configuration validator can accept a well-formed invocation but return valid=false because the proposed timeout is out of range. That differs from rejecting a malformed call.</p>
-<p>Error categories help debugging: proposal parsing, schema failure, scope failure, execution failure, domain-invalid result, and final-answer error.</p>
-<h3 id="a-fixed-workflow">A fixed workflow</h3>
-<p>For a simple ticket task, a workflow can retrieve the current prices, calculate a total, and format a response in a predetermined order.</p>
-<p>The model may help extract a structured request, but the control path remains largely fixed. This can be easier to test and sufficient for the task.</p>
-<p>Do not add adaptive planning unless a task actually benefits from choosing the next action based on observations.</p>
-<h3 id="an-agent-chooses-actions-adaptively">An agent chooses actions adaptively</h3>
-<p>For troubleshooting, the next step may depend on a result: inspect the requested version, retrieve a rule, validate a configuration, and investigate the first violation.</p>
-<p>An agent lets model outputs influence the next action. The surrounding controller still enforces tool contracts, scope, budgets, and termination.</p>
-<p>Calling something an agent does not establish reasoning quality, reliable execution, or broader authorization. Those require separate implementation and evaluation.</p>
-<h3 id="narrow-execution-versus-arbitrary-programs">Narrow execution versus arbitrary programs</h3>
-<p>Our arithmetic tool parses a restricted expression tree. It permits a small operator set, rejects names/function calls, and caps size and numeric magnitude.</p>
-<p>It never passes the expression to Python eval. A general code runner would require much stronger isolation and resource controls than this tutorial implements.</p>
-<p>For future side effects, define authorization, idempotency, and retries carefully. Looking up a page and deploying a service have different consequences.</p>
-<h3 id="testing-capability-and-behavior-separately">Testing capability and behavior separately</h3>
-<p>First test a deterministic planner through the controller. This checks validation and execution without depending on model output quality.</p>
-<p>Then connect a real model planner and preserve malformed proposals and wrong choices as results. Controller acceptance is not the same as task success.</p>
-<p>Compare with a fixed workflow under the same task set, available tools, and stated resource budget. An agent can remain an experimental branch if it adds no measured value.</p>
-<h3 id="worked-practice-and-a-readiness-check">Worked practice and a readiness check</h3>
-<p>Write the ticket tool contract, a valid call, an unknown-tool call, an extra-argument call, and a division-by-zero case. Predict the outcome of each before running it.</p>
-<p>Explain a task where a fixed workflow is enough and another where an observation changes the next needed action.</p>
-<p>You are ready when a model proposal, an authorized tool execution, an observation, and a final task result are distinct steps in your diagram.</p>
-<h3 id="a-deeper-pass-after-the-worked-introduction">A deeper pass after the worked introduction</h3>
-<p>The following reference treatment is for a second pass. First explain the ordinary example above, then use the equations and implementation details below to make the explanation more precise.</p>
-<h3 id="further-study-21-intuition">Further study 21 Intuition</h3>
-<p>A model can propose calling a calculator, looking up a document, or inspecting a configuration. It does not gain authority merely by naming a function. A tool interface specifies which operations exist, which arguments are valid, and how results are returned. Application code enforces those rules.</p>
-<p>Define a tool by name, input schema, output schema, authorization requirements, failure states and side effects. Separate read-only tools from actions that change external state. For this course, executable tools are a bounded arithmetic calculator and a fixed configuration validator. Neither exposes arbitrary Python evaluation, shell commands, network requests or file writes.</p>
-<h3 id="further-study-21-validation-layers">Further study 21 Validation layers</h3>
-<p>Parse the model response; validate its shape; check the tool name; validate argument keys/types/ranges; enforce authorization; execute with time/resource limits; normalize the observation; log the outcome. Never use <code>eval</code> on model-generated expressions. The bundled calculator parses an arithmetic AST, accepts a narrow operator set and caps length, tree size and numerical magnitude. These checks are instructional, not a general sandbox for arbitrary code.</p>
-<h3 id="further-study-21-worked-contract">Further study 21 Worked contract</h3>
-<p><code>validate_config</code> accepts exactly <code>timeout_ms</code> as an integer in a documented range and <code>retries</code> as an integer in a documented range. An input containing an extra <code>command</code> field is rejected. An integer field should not silently accept Python's boolean subtype. The observation returns <code>valid</code> plus explicit errors; it does not return an unstructured exception traceback to the model.</p>
-<p>Idempotency matters for side effects. Retrying a document lookup is usually harmless; retrying a deployment may create multiple releases. A real side-effecting tool needs an idempotency key, authorization and explicit retry semantics. We study these contracts without exposing deployment tools in the starter.</p>
-<h3 id="further-study-21-experiment">Further study 21 Experiment</h3>
-<p>notebook 27 exercises valid calls, unknown tools, missing arguments, oversized expressions, division by zero, extra fields and invalid value ranges. Predict whether each should be rejected before execution or reported as a tool failure. Build a small table of observable outcomes and expected traces.</p>
-<p>The documentation assistant's useful executable behavior is narrow: calculate a retry delay from retrieved rules or validate a proposed configuration against the selected version. Generic shell access would expand risk and evaluation scope far beyond the task. Add capabilities only when an actual user task requires them.</p>
-<p><strong>Exit criterion:</strong> draw the boundary between a model's proposed call and authorized execution, and implement validation outside the prompt. <strong>Reading:</strong> R11 actions/observations; R03 agent/context topic. <strong>Tutorial:</strong> 27.</p></article><nav aria-label="Adjacent lectures" class="chapter-pagination"><a href="26.html"><small>Previous week</small>Fine tuning experiments preferences and distillation</a><a href="28.html"><small>Next week</small>Harnesses planning memory and bounded execution</a></nav></div><footer class="footer"><span>Applied AI · An independent self-study course</span><span>32 weeks · 10 hours per week</span><a href="../resources.html#about-this-course">About and sources</a></footer></main><dialog aria-labelledby="search-title" class="search-dialog"><div class="dialog-head"><h2 id="search-title">Find a concept</h2><button aria-label="Close search" class="search-close" type="button">Close</button></div><label class="sr-only" for="course-search">Search all lectures and tutorials</label><input autocomplete="off" id="course-search" placeholder="Try attention, fine-tuning, or harness…" type="search"/><p aria-live="polite" class="search-status">Search lecture notes, tutorials, tests and readings.</p><div class="search-results"></div></dialog><div aria-live="polite" class="toast" role="status"></div></body></html>
+<html lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width,initial-scale=1" name="viewport"/>
+  <title>
+   Tools functions workflows and agents · Applied AI
+  </title>
+  <meta content="Applied generative AI and LLM systems course material" name="description"/>
+  <meta content="#173c36" name="theme-color"/>
+  <link href="../assets/favicon.svg" rel="icon" type="image/svg+xml"/>
+  <link href="../assets/style.css" rel="stylesheet"/>
+  <link href="../assets/slides.css" rel="stylesheet"/>
+  <script>
+   window.COURSE_BASE="../";
+  </script>
+  <script defer="" src="../assets/site-config.js">
+  </script>
+  <script defer="" src="../assets/search-index.js">
+  </script>
+  <script defer="" src="../assets/app.js">
+  </script>
+  <script defer="" src="../assets/visuals.js">
+  </script>
+  <script defer="" src="../assets/slides.js">
+  </script>
+  <script defer="" src="../assets/beginner-visuals.js">
+  </script>
+  <link href="../zh-HK/lectures/27.html" hreflang="zh-HK" rel="alternate"/>
+  <link href="../assets/bilingual.css" rel="stylesheet"/>
+  <link href="../assets/reader-v3.css" rel="stylesheet"/>
+  <script defer="True" src="../assets/reader-v3.js">
+  </script>
+ </head>
+ <body data-page-kind="lecture" data-week="27">
+  <a class="skip-link" href="#main">
+   Skip to content
+  </a>
+  <header class="topbar">
+   <button aria-controls="course-sidebar" aria-expanded="false" class="menu-toggle" type="button">
+    Menu
+   </button>
+   <a class="brand" href="../index.html">
+    <span aria-hidden="true" class="brand-mark">
+     a
+     <span>
+      i
+     </span>
+    </span>
+    <span>
+     APPLIED AI
+     <small>
+      Principles into practice
+     </small>
+    </span>
+   </a>
+   <nav aria-label="Main navigation">
+    <a href="../index.html">
+     The course
+    </a>
+    <a href="../visuals.html">
+     Visual lab
+    </a>
+    <a href="../project.html">
+     Project
+    </a>
+    <a class="language-switch" href="../zh-HK/lectures/27.html" hreflang="zh-HK" lang="zh-HK">
+     繁體中文
+    </a>
+   </nav>
+   <button class="search-open" type="button">
+    Search the course
+    <span aria-hidden="true">
+     /
+    </span>
+   </button>
+  </header>
+  <aside aria-label="Course chapters" class="sidebar" id="course-sidebar">
+   <a class="side-home" href="../index.html">
+    Course overview
+   </a>
+   <details class="semester-nav">
+    <summary>
+     Semester 1
+     <span>
+      Weeks 1–16
+     </span>
+    </summary>
+    <ol start="1">
+     <li>
+      <a href="../lectures/01.html">
+       <span class="week-number">
+        01
+       </span>
+       <span>
+        What a language model is trying to learn
+       </span>
+       <span class="week-tick" data-week-tick="1">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/02.html">
+       <span class="week-number">
+        02
+       </span>
+       <span>
+        From text to tokens and numerical IDs
+       </span>
+       <span class="week-tick" data-week-tick="2">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/03.html">
+       <span class="week-number">
+        03
+       </span>
+       <span>
+        What word vectors can represent
+       </span>
+       <span class="week-tick" data-week-tick="3">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/04.html">
+       <span class="week-number">
+        04
+       </span>
+       <span>
+        From scores to probabilities and learning signals
+       </span>
+       <span class="week-tick" data-week-tick="4">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/05.html">
+       <span class="week-number">
+        05
+       </span>
+       <span>
+        Why language needs context and order
+       </span>
+       <span class="week-tick" data-week-tick="5">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/06.html">
+       <span class="week-number">
+        06
+       </span>
+       <span>
+        Attention begins as a weighted mixture
+       </span>
+       <span class="week-tick" data-week-tick="6">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/07.html">
+       <span class="week-number">
+        07
+       </span>
+       <span>
+        Where queries keys and values come from
+       </span>
+       <span class="week-tick" data-week-tick="7">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/08.html">
+       <span class="week-number">
+        08
+       </span>
+       <span>
+        Scaling and masking attention correctly
+       </span>
+       <span class="week-tick" data-week-tick="8">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/09.html">
+       <span class="week-number">
+        09
+       </span>
+       <span>
+        Multiple attention heads and position
+       </span>
+       <span class="week-tick" data-week-tick="9">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/10.html">
+       <span class="week-number">
+        10
+       </span>
+       <span>
+        The transformer block step by step
+       </span>
+       <span class="week-tick" data-week-tick="10">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/11.html">
+       <span class="week-number">
+        11
+       </span>
+       <span>
+        Encoders decoders and complete model architectures
+       </span>
+       <span class="week-tick" data-week-tick="11">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/12.html">
+       <span class="week-number">
+        12
+       </span>
+       <span>
+        Training a small transformer
+       </span>
+       <span class="week-tick" data-week-tick="12">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/13.html">
+       <span class="week-number">
+        13
+       </span>
+       <span>
+        Generation decoding and the KV cache
+       </span>
+       <span class="week-tick" data-week-tick="13">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/14.html">
+       <span class="week-number">
+        14
+       </span>
+       <span>
+        From pretraining to instruction following and reasoning
+       </span>
+       <span class="week-tick" data-week-tick="14">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/15.html">
+       <span class="week-number">
+        15
+       </span>
+       <span>
+        Generative AI beyond text
+       </span>
+       <span class="week-tick" data-week-tick="15">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/16.html">
+       <span class="week-number">
+        16
+       </span>
+       <span>
+        A complete transformer walkthrough and first semester review
+       </span>
+       <span class="week-tick" data-week-tick="16">
+       </span>
+      </a>
+     </li>
+    </ol>
+   </details>
+   <details class="semester-nav" open="">
+    <summary>
+     Semester 2
+     <span>
+      Weeks 17–32
+     </span>
+    </summary>
+    <ol start="17">
+     <li>
+      <a href="../lectures/17.html">
+       <span class="week-number">
+        17
+       </span>
+       <span>
+        From word vectors to semantic search
+       </span>
+       <span class="week-tick" data-week-tick="17">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/18.html">
+       <span class="week-number">
+        18
+       </span>
+       <span>
+        A vector database from a list of vectors
+       </span>
+       <span class="week-tick" data-week-tick="18">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/19.html">
+       <span class="week-number">
+        19
+       </span>
+       <span>
+        RAG as an open book question
+       </span>
+       <span class="week-tick" data-week-tick="19">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/20.html">
+       <span class="week-number">
+        20
+       </span>
+       <span>
+        Improving RAG without losing the basic task
+       </span>
+       <span class="week-tick" data-week-tick="20">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/21.html">
+       <span class="week-number">
+        21
+       </span>
+       <span>
+        Evaluating retrieval answers and uncertainty
+       </span>
+       <span class="week-tick" data-week-tick="21">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/22.html">
+       <span class="week-number">
+        22
+       </span>
+       <span>
+        CPU GPU memory and model resource accounting
+       </span>
+       <span class="week-tick" data-week-tick="22">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/23.html">
+       <span class="week-number">
+        23
+       </span>
+       <span>
+        CUDA kernels and profiling
+       </span>
+       <span class="week-tick" data-week-tick="23">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/24.html">
+       <span class="week-number">
+        24
+       </span>
+       <span>
+        Fine tuning starts with a teaching dataset
+       </span>
+       <span class="week-tick" data-week-tick="24">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/25.html">
+       <span class="week-number">
+        25
+       </span>
+       <span>
+        LoRA and QLoRA from a small matrix
+       </span>
+       <span class="week-tick" data-week-tick="25">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/26.html">
+       <span class="week-number">
+        26
+       </span>
+       <span>
+        Fine tuning experiments preferences and distillation
+       </span>
+       <span class="week-tick" data-week-tick="26">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a aria-current="page" href="../lectures/27.html">
+       <span class="week-number">
+        27
+       </span>
+       <span>
+        Tools functions workflows and agents
+       </span>
+       <span class="week-tick" data-week-tick="27">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/28.html">
+       <span class="week-number">
+        28
+       </span>
+       <span>
+        Harnesses planning memory and bounded execution
+       </span>
+       <span class="week-tick" data-week-tick="28">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/29.html">
+       <span class="week-number">
+        29
+       </span>
+       <span>
+        From a notebook to MLOps and inference serving
+       </span>
+       <span class="week-tick" data-week-tick="29">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/30.html">
+       <span class="week-number">
+        30
+       </span>
+       <span>
+        Monitoring security regression tests and rollback
+       </span>
+       <span class="week-tick" data-week-tick="30">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/31.html">
+       <span class="week-number">
+        31
+       </span>
+       <span>
+        Integrating the documentation assistant and advanced extensions
+       </span>
+       <span class="week-tick" data-week-tick="31">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/32.html">
+       <span class="week-number">
+        32
+       </span>
+       <span>
+        Review defense and a continuing learning plan
+       </span>
+       <span class="week-tick" data-week-tick="32">
+       </span>
+      </a>
+     </li>
+    </ol>
+   </details>
+   <div class="side-links">
+    <a href="../visuals.html">
+     Visual laboratory
+     <span>
+      14 interactive lessons
+     </span>
+    </a>
+    <a href="../project.html">
+     Documentation assistant
+     <span>
+      Your capstone project
+     </span>
+    </a>
+    <a href="../resources.html">
+     Readings and setup
+    </a>
+   </div>
+   <div class="side-progress">
+    <div>
+     <span>
+      Your progress
+     </span>
+     <strong data-progress-count="">
+      0 / 32
+     </strong>
+    </div>
+    <progress aria-label="Completed lectures" max="32" value="0">
+    </progress>
+    <small>
+     Saved in this browser
+    </small>
+   </div>
+  </aside>
+  <main class="main" id="main">
+   <div class="content">
+    <div class="chapter-header">
+     <div class="eyebrow">
+      Semester 2 / Week 27
+     </div>
+     <h1>
+      Tools functions workflows and agents
+     </h1>
+    </div>
+    <div class="lesson-links">
+     <a href="../tutorials/27.html">
+      Tutorial 27
+     </a>
+     <a href="../tests/27.html">
+      Test your understanding
+     </a>
+     <button aria-pressed="false" class="mark-complete" data-week="27" type="button">
+      Mark as complete
+     </button>
+    </div>
+    <div aria-label="Lesson view" class="lesson-mode" role="tablist">
+     <button aria-controls="full-notes" aria-selected="true" data-mode="read" id="mode-read" role="tab" type="button">
+      Read lesson
+     </button>
+     <button aria-controls="lecture-slides" aria-selected="false" data-mode="slides" id="mode-slides" role="tab" type="button">
+      Lesson slides
+     </button>
+    </div>
+    <section aria-label="Lecture slides" class="lecture-deck" hidden="" id="lecture-slides" role="tabpanel">
+     <div class="deck-top">
+      <div>
+       <div class="eyebrow">
+        Lecture slides · Week 27
+       </div>
+       <h2>
+        Key steps and worked visuals
+       </h2>
+      </div>
+      <button class="deck-present" type="button">
+       Present
+      </button>
+     </div>
+     <p class="deck-help">
+      Use these slides to review the mechanism. Open “Read the worked explanation” for the complete notes and code.
+     </p>
+     <div aria-label="Presentation: use left and right arrow keys" class="slide-viewport" tabindex="0">
+      <section class="lecture-slide" data-slide="">
+       <div class="slide-stage">
+        Week 27 · Section 1
+       </div>
+       <h3>
+        A calculator is a useful concrete capability
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          A bus ticket costs 4 dollars and a child ticket costs 2 dollars.
+         </li>
+         <li>
+          The model can suggest an expression, but application code decides which operations are available and validates the arguments.
+         </li>
+         <li>
+          Start with this narrow capability before discussing an agent framework.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#a-calculator-is-a-useful-concrete-capability">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 27 · Section 2
+       </div>
+       <h3>
+        A tool call has a name arguments and a result
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          A proposal might be name=calculate, arguments={expression:"2*4+1*2"}.
+         </li>
+         <li>
+          The observation is then available to form the response.
+         </li>
+         <li>
+          Code execution on the website is unnecessary for learning this control flow.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#a-tool-call-has-a-name-arguments-and-a-result">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 27 · Section 3
+       </div>
+       <h3>
+        Schemas make the boundary inspectable
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Define required keys, allowed types, ranges, and extra-field behavior.
+         </li>
+         <li>
+          A configuration validator can accept a well-formed invocation but return valid=false because the proposed timeout is out of range.
+         </li>
+         <li>
+          Error categories help debugging: proposal parsing, schema failure, scope failure, execution failure, domain-invalid result, and final-answer error.
+         </li>
+        </ul>
+        <figure class="mechanism-figure">
+         <figcaption>
+          The model proposes; application code executes
+         </figcaption>
+         <ol class="mechanism-flow">
+          <li>
+           <span class="mechanism-number">
+            01
+           </span>
+           <strong>
+            Proposal
+           </strong>
+           <small>
+            tool name + arguments
+           </small>
+          </li>
+          <li>
+           <span class="mechanism-number">
+            02
+           </span>
+           <strong>
+            Validate
+           </strong>
+           <small>
+            schema + scope + dependency
+           </small>
+          </li>
+          <li>
+           <span class="mechanism-number">
+            03
+           </span>
+           <strong>
+            Execute
+           </strong>
+           <small>
+            bounded tool call
+           </small>
+          </li>
+          <li>
+           <span class="mechanism-number">
+            04
+           </span>
+           <strong>
+            Observe
+           </strong>
+           <small>
+            record result or typed failure
+           </small>
+          </li>
+         </ol>
+         <p>
+          Parallel execution is appropriate only when calls are independent and permitted.
+         </p>
+        </figure>
+        <a class="slide-section-link" href="#schemas-make-the-boundary-inspectable">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 27 · Section 4
+       </div>
+       <h3>
+        A fixed workflow
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          For a simple ticket task, a workflow can retrieve the current prices, calculate a total, and format a response in a predetermined order.
+         </li>
+         <li>
+          The model may help extract a structured request, but the control path remains largely fixed.
+         </li>
+         <li>
+          Do not add adaptive planning unless a task actually benefits from choosing the next action based on observations.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#a-fixed-workflow">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 27 · Section 5
+       </div>
+       <h3>
+        An agent chooses actions adaptively
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          For troubleshooting, the next step may depend on a result: inspect the requested version, retrieve a rule, validate a configuration, and investigate the first violation.
+         </li>
+         <li>
+          An agent lets model outputs influence the next action.
+         </li>
+         <li>
+          Calling something an agent does not establish reasoning quality, reliable execution, or broader authorization.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#an-agent-chooses-actions-adaptively">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 27 · Section 6
+       </div>
+       <h3>
+        Narrow execution versus arbitrary programs
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Our arithmetic tool parses a restricted expression tree.
+         </li>
+         <li>
+          It never passes the expression to Python eval.
+         </li>
+         <li>
+          For future side effects, define authorization, idempotency, and retries carefully.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#narrow-execution-versus-arbitrary-programs">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 27 · Section 7
+       </div>
+       <h3>
+        Testing capability and behavior separately
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          First test a deterministic planner through the controller.
+         </li>
+         <li>
+          Then connect a real model planner and preserve malformed proposals and wrong choices as results.
+         </li>
+         <li>
+          Compare with a fixed workflow under the same task set, available tools, and stated resource budget.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#testing-capability-and-behavior-separately">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 27 · Section 8
+       </div>
+       <h3>
+        Native function calling and structured output
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Many model interfaces accept tool definitions and return a typed tool-call field instead of asking you to extract a function name from free text.
+         </li>
+         <li>
+          Parsing checks whether received text can become JSON.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#native-function-calling-and-structured-output">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 27 · Section 9
+       </div>
+       <h3>
+        Parallel calls need a dependency check
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Two independent reads, such as fetching the adult fare and child fare, can run in parallel.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#parallel-calls-need-a-dependency-check">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 27 · Section 10
+       </div>
+       <h3>
+        A concrete ReAct and environment trace
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          ReAct interleaves a decision about the next step, an action, and the returned observation.
+         </li>
+         <li>
+          A coding agent acts on a repository by inspecting files, proposing edits, and running tests.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#a-concrete-react-and-environment-trace">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 27 · Section 11
+       </div>
+       <h3>
+        Worked practice and a readiness check
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Write the ticket tool contract, a valid call, an unknown-tool call, an extra-argument call, and a division-by-zero case.
+         </li>
+         <li>
+          Explain a task where a fixed workflow is enough and another where an observation changes the next needed action.
+         </li>
+         <li>
+          You are ready when a model proposal, an authorized tool execution, an observation, and a final task result are distinct steps in your diagram.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#worked-practice-and-a-readiness-check">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+     </div>
+     <div class="deck-controls">
+      <button class="slide-prev" type="button">
+       ← Previous
+      </button>
+      <span aria-live="polite" class="slide-counter">
+       1 / 11
+      </span>
+      <button class="slide-next" type="button">
+       Next →
+      </button>
+     </div>
+     <label class="slide-jump-label">
+      Go to slide
+      <select aria-label="Go to slide" class="slide-jump">
+       <option value="0">
+        1. A calculator is a useful concrete capability
+       </option>
+       <option value="1">
+        2. A tool call has a name arguments and a result
+       </option>
+       <option value="2">
+        3. Schemas make the boundary inspectable
+       </option>
+       <option value="3">
+        4. A fixed workflow
+       </option>
+       <option value="4">
+        5. An agent chooses actions adaptively
+       </option>
+       <option value="5">
+        6. Narrow execution versus arbitrary programs
+       </option>
+       <option value="6">
+        7. Testing capability and behavior separately
+       </option>
+       <option value="7">
+        8. Native function calling and structured output
+       </option>
+       <option value="8">
+        9. Parallel calls need a dependency check
+       </option>
+       <option value="9">
+        10. A concrete ReAct and environment trace
+       </option>
+       <option value="10">
+        11. Worked practice and a readiness check
+       </option>
+      </select>
+     </label>
+     <button aria-pressed="false" class="deck-all" type="button">
+      Show all slides
+     </button>
+    </section>
+    <section aria-label="The agent and its controller" class="visual-lesson">
+     <div class="eyebrow">
+      Explore the mechanism
+     </div>
+     <h2>
+      The agent and its controller
+     </h2>
+     <p class="visual-intro">
+      Inspect typed proposals, validators, observations and bounded termination.
+     </p>
+     <div data-widget="agent">
+      <p>
+       Enable JavaScript to use this illustration. The lecture notes below explain the same mechanism.
+      </p>
+     </div>
+    </section>
+    <nav aria-label="In this lesson" class="reader-toc">
+     <strong>
+      In this lesson
+     </strong>
+     <ol>
+      <li>
+       <a href="#a-calculator-is-a-useful-concrete-capability">
+        A calculator is a useful concrete capability
+       </a>
+      </li>
+      <li>
+       <a href="#a-tool-call-has-a-name-arguments-and-a-result">
+        A tool call has a name arguments and a result
+       </a>
+      </li>
+      <li>
+       <a href="#schemas-make-the-boundary-inspectable">
+        Schemas make the boundary inspectable
+       </a>
+      </li>
+      <li>
+       <a href="#a-fixed-workflow">
+        A fixed workflow
+       </a>
+      </li>
+      <li>
+       <a href="#an-agent-chooses-actions-adaptively">
+        An agent chooses actions adaptively
+       </a>
+      </li>
+      <li>
+       <a href="#narrow-execution-versus-arbitrary-programs">
+        Narrow execution versus arbitrary programs
+       </a>
+      </li>
+      <li>
+       <a href="#testing-capability-and-behavior-separately">
+        Testing capability and behavior separately
+       </a>
+      </li>
+      <li>
+       <a href="#native-function-calling-and-structured-output">
+        Native function calling and structured output
+       </a>
+      </li>
+      <li>
+       <a href="#parallel-calls-need-a-dependency-check">
+        Parallel calls need a dependency check
+       </a>
+      </li>
+      <li>
+       <a href="#a-concrete-react-and-environment-trace">
+        A concrete ReAct and environment trace
+       </a>
+      </li>
+      <li>
+       <a href="#worked-practice-and-a-readiness-check">
+        Worked practice and a readiness check
+       </a>
+      </li>
+     </ol>
+    </nav>
+    <article class="prose full-notes" id="full-notes" role="tabpanel">
+     <div class="eyebrow">
+      Complete lecture reader
+     </div>
+     <h2>
+      Read the full explanation
+     </h2>
+     <h3 id="a-calculator-is-a-useful-concrete-capability">
+      A calculator is a useful concrete capability
+     </h3>
+     <p>
+      A bus ticket costs 4 dollars and a child ticket costs 2 dollars. Two adult tickets and one child ticket cost 2×4+1×2=10 dollars. A deterministic calculator can check the arithmetic.
+     </p>
+     <p>
+      The model can suggest an expression, but application code decides which operations are available and validates the arguments. A generated function name does not create permission to execute arbitrary code.
+     </p>
+     <p>
+      Start with this narrow capability before discussing an agent framework. A tool is an interface to a specified operation with a contract.
+     </p>
+     <h3 id="a-tool-call-has-a-name-arguments-and-a-result">
+      A tool call has a name arguments and a result
+     </h3>
+     <p>
+      A proposal might be name=calculate, arguments={expression:"2*4+1*2"}. The controller validates the shape and expression, runs the bounded arithmetic operation, and returns value=10.
+     </p>
+     <p>
+      The observation is then available to form the response. The final answer should agree with the result and, if necessary, cite the source of the ticket prices.
+     </p>
+     <p>
+      Code execution on the website is unnecessary for learning this control flow. The visual lesson simulates it, while the notebook runs the actual bounded reference implementation.
+     </p>
+     <h3 id="schemas-make-the-boundary-inspectable">
+      Schemas make the boundary inspectable
+     </h3>
+     <figure class="mechanism-figure">
+      <figcaption>
+       The model proposes; application code executes
+      </figcaption>
+      <ol class="mechanism-flow">
+       <li>
+        <span class="mechanism-number">
+         01
+        </span>
+        <strong>
+         Proposal
+        </strong>
+        <small>
+         tool name + arguments
+        </small>
+       </li>
+       <li>
+        <span class="mechanism-number">
+         02
+        </span>
+        <strong>
+         Validate
+        </strong>
+        <small>
+         schema + scope + dependency
+        </small>
+       </li>
+       <li>
+        <span class="mechanism-number">
+         03
+        </span>
+        <strong>
+         Execute
+        </strong>
+        <small>
+         bounded tool call
+        </small>
+       </li>
+       <li>
+        <span class="mechanism-number">
+         04
+        </span>
+        <strong>
+         Observe
+        </strong>
+        <small>
+         record result or typed failure
+        </small>
+       </li>
+      </ol>
+      <p>
+       Parallel execution is appropriate only when calls are independent and permitted.
+      </p>
+     </figure>
+     <p>
+      Define required keys, allowed types, ranges, and extra-field behavior. An integer timeout field should not accept true merely because Python treats bool as a subclass of int.
+     </p>
+     <p>
+      A configuration validator can accept a well-formed invocation but return valid=false because the proposed timeout is out of range. That differs from rejecting a malformed call.
+     </p>
+     <p>
+      Error categories help debugging: proposal parsing, schema failure, scope failure, execution failure, domain-invalid result, and final-answer error.
+     </p>
+     <h3 id="a-fixed-workflow">
+      A fixed workflow
+     </h3>
+     <p>
+      For a simple ticket task, a workflow can retrieve the current prices, calculate a total, and format a response in a predetermined order.
+     </p>
+     <p>
+      The model may help extract a structured request, but the control path remains largely fixed. This can be easier to test and sufficient for the task.
+     </p>
+     <p>
+      Do not add adaptive planning unless a task actually benefits from choosing the next action based on observations.
+     </p>
+     <h3 id="an-agent-chooses-actions-adaptively">
+      An agent chooses actions adaptively
+     </h3>
+     <p>
+      For troubleshooting, the next step may depend on a result: inspect the requested version, retrieve a rule, validate a configuration, and investigate the first violation.
+     </p>
+     <p>
+      An agent lets model outputs influence the next action. The surrounding controller still enforces tool contracts, scope, budgets, and termination.
+     </p>
+     <p>
+      Calling something an agent does not establish reasoning quality, reliable execution, or broader authorization. Those require separate implementation and evaluation.
+     </p>
+     <h3 id="narrow-execution-versus-arbitrary-programs">
+      Narrow execution versus arbitrary programs
+     </h3>
+     <p>
+      Our arithmetic tool parses a restricted expression tree. It permits a small operator set, rejects names/function calls, and caps size and numeric magnitude.
+     </p>
+     <p>
+      It never passes the expression to Python eval. A general code runner would require much stronger isolation and resource controls than this tutorial implements.
+     </p>
+     <p>
+      For future side effects, define authorization, idempotency, and retries carefully. Looking up a page and deploying a service have different consequences.
+     </p>
+     <h3 id="testing-capability-and-behavior-separately">
+      Testing capability and behavior separately
+     </h3>
+     <p>
+      First test a deterministic planner through the controller. This checks validation and execution without depending on model output quality.
+     </p>
+     <p>
+      Then connect a real model planner and preserve malformed proposals and wrong choices as results. Controller acceptance is not the same as task success.
+     </p>
+     <p>
+      Compare with a fixed workflow under the same task set, available tools, and stated resource budget. An agent can remain an experimental branch if it adds no measured value.
+     </p>
+     <h3 id="native-function-calling-and-structured-output">
+      Native function calling and structured output
+     </h3>
+     <p>
+      Many model interfaces accept tool definitions and return a typed tool-call field instead of asking you to extract a function name from free text. This is native function calling. The model still proposes a call; your application executes it. A call normally has a tool name, arguments, and an identifier used to attach its result to the correct request. Check the selected model and chat template because supported schemas and tool formats differ.
+     </p>
+     <p>
+      Parsing checks whether received text can become JSON. Schema validation checks keys, types, and ranges after it arrives. Constrained decoding instead restricts which next tokens may be generated so the output follows a supported grammar or schema. These are different stages. Valid JSON can still contain a wrong calculation or an unauthorized action, so semantic checks and permission checks remain application responsibilities.
+     </p>
+     <h3 id="parallel-calls-need-a-dependency-check">
+      Parallel calls need a dependency check
+     </h3>
+     <p>
+      Two independent reads, such as fetching the adult fare and child fare, can run in parallel. The calculation 2*adult_fare+child_fare must wait for both results. Give each call an ID, collect each result or error separately, and define what happens when only one succeeds. Calls that update the same booking or depend on earlier observations need an explicit order. A model proposing two calls does not prove that they are safe to run concurrently.
+     </p>
+     <h3 id="a-concrete-react-and-environment-trace">
+      A concrete ReAct and environment trace
+     </h3>
+     <p>
+      ReAct interleaves a decision about the next step, an action, and the returned observation. For our fare question, the observable trace is: retrieve prices → observe adult=4 and child=2 → call calculate with 2*4+1*2 → observe 10 → answer 10 dollars with the fare source. Record the chosen action and its reason briefly. A long private-looking rationale is not the success condition; the independently checked result is.
+     </p>
+     <p>
+      A coding agent acts on a repository by inspecting files, proposing edits, and running tests. A computer-use agent acts on a screen through observations, clicks, and typing. Both need an initial environment, allowed actions, and a check of final state. For a small coding exercise, give an isolated fare function a failing test, allow a patch, and check both the target test and unchanged behavior. This illustrates the issue-to-patch-and-tests evaluation used by SWE-bench without requiring a full benchmark run. For a screen task, verify the actual saved booking state rather than accepting the final message “done.”
+     </p>
+     <h3 id="worked-practice-and-a-readiness-check">
+      Worked practice and a readiness check
+     </h3>
+     <p>
+      Write the ticket tool contract, a valid call, an unknown-tool call, an extra-argument call, and a division-by-zero case. Predict the outcome of each before running it.
+     </p>
+     <p>
+      Explain a task where a fixed workflow is enough and another where an observation changes the next needed action.
+     </p>
+     <p>
+      You are ready when a model proposal, an authorized tool execution, an observation, and a final task result are distinct steps in your diagram.
+     </p>
+     <details class="reference-details" id="reference-details">
+      <summary>
+       Reference details and checks
+      </summary>
+      <h3 id="review-a-intuition">
+       Review A: Intuition
+      </h3>
+      <p>
+       A model can propose calling a calculator, looking up a document, or inspecting a configuration. It does not gain authority merely by naming a function. A tool interface specifies which operations exist, which arguments are valid, and how results are returned. Application code enforces those rules.
+      </p>
+      <p>
+       Define a tool by name, input schema, output schema, authorization requirements, failure states and side effects. Separate read-only tools from actions that change external state. For this course, executable tools are a bounded arithmetic calculator and a fixed configuration validator. Neither exposes arbitrary Python evaluation, shell commands, network requests or file writes.
+      </p>
+      <h3 id="review-a-validation-layers">
+       Review A: Validation layers
+      </h3>
+      <p>
+       Parse the model response; validate its shape; check the tool name; validate argument keys/types/ranges; enforce authorization; execute with time/resource limits; normalize the observation; log the outcome. Never use
+       <code>
+        eval
+       </code>
+       on model-generated expressions. The bundled calculator parses an arithmetic AST, accepts a narrow operator set and caps length, tree size and numerical magnitude. These checks are instructional, not a general sandbox for arbitrary code.
+      </p>
+      <h3 id="review-a-worked-contract">
+       Review A: Worked contract
+      </h3>
+      <p>
+       <code>
+        validate_config
+       </code>
+       accepts exactly
+       <code>
+        timeout_ms
+       </code>
+       as an integer in a documented range and
+       <code>
+        retries
+       </code>
+       as an integer in a documented range. An input containing an extra
+       <code>
+        command
+       </code>
+       field is rejected. An integer field should not silently accept Python's boolean subtype. The observation returns
+       <code>
+        valid
+       </code>
+       plus explicit errors; it does not return an unstructured exception traceback to the model.
+      </p>
+      <p>
+       Idempotency matters for side effects. Retrying a document lookup is usually harmless; retrying a deployment may create multiple releases. A real side-effecting tool needs an idempotency key, authorization and explicit retry semantics. We study these contracts without exposing deployment tools in the starter.
+      </p>
+      <h3 id="review-a-experiment">
+       Review A: Experiment
+      </h3>
+      <p>
+       <a href="../tutorials/27.html">
+        Tutorial 27: Tools functions workflows and agents
+       </a>
+       exercises valid calls, unknown tools, missing arguments, oversized expressions, division by zero, extra fields and invalid value ranges. Predict whether each should be rejected before execution or reported as a tool failure. Build a small table of observable outcomes and expected traces.
+      </p>
+      <p>
+       The documentation assistant's useful executable behavior is narrow: calculate a retry delay from retrieved rules or validate a proposed configuration against the selected version. Generic shell access would expand risk and evaluation scope far beyond the task. Add capabilities only when an actual user task requires them.
+      </p>
+      <p>
+       <strong>
+        Exit criterion:
+       </strong>
+       draw the boundary between a model's proposed call and authorized execution, and implement validation outside the prompt.
+       <strong>
+        Reading:
+       </strong>
+       <a class="inline-reading" href="../resources.html#reference-r11">
+        Yao et al. ReAct (R11)
+       </a>
+       actions/observations;
+       <a class="inline-reading" href="../resources.html#reference-r03">
+        Hung-yi Lee Introduction to GenAI and ML 2025 (R03)
+       </a>
+       agent/context topic.
+       <strong>
+        Tutorial:
+       </strong>
+       27.
+      </p>
+     </details>
+    </article>
+    <nav aria-label="Adjacent lectures" class="chapter-pagination">
+     <a href="26.html">
+      <small>
+       Previous week
+      </small>
+      Fine tuning experiments preferences and distillation
+     </a>
+     <a href="28.html">
+      <small>
+       Next week
+      </small>
+      Harnesses planning memory and bounded execution
+     </a>
+    </nav>
+   </div>
+   <footer class="footer">
+    <span>
+     Applied AI · An independent self-study course
+    </span>
+    <span>
+     32 weeks · 10 hours per week
+    </span>
+    <a href="../resources.html#about-this-course">
+     About and sources
+    </a>
+   </footer>
+  </main>
+  <dialog aria-labelledby="search-title" class="search-dialog">
+   <div class="dialog-head">
+    <h2 id="search-title">
+     Find a concept
+    </h2>
+    <button aria-label="Close search" class="search-close" type="button">
+     Close
+    </button>
+   </div>
+   <label class="sr-only" for="course-search">
+    Search all lectures and tutorials
+   </label>
+   <input autocomplete="off" id="course-search" placeholder="Try attention, fine-tuning, or harness…" type="search"/>
+   <p aria-live="polite" class="search-status">
+    Search lecture notes, tutorials, tests and readings.
+   </p>
+   <div class="search-results">
+   </div>
+  </dialog>
+  <div aria-live="polite" class="toast" role="status">
+  </div>
+ </body>
+</html>

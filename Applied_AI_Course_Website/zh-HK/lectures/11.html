@@ -1,56 +1,1215 @@
 <!DOCTYPE html>
-
-<html lang="zh-HK"><head><script src="../../assets/translations-zh-HK.js"></script><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/><title>Encoder、decoder 與完整 model architecture · Applied AI</title><meta content="Applied generative AI and LLM systems course material" name="description"/><meta content="#173c36" name="theme-color"/><link href="../../assets/favicon.svg" rel="icon" type="image/svg+xml"/><link href="../../assets/style.css" rel="stylesheet"/><link href="../../assets/slides.css" rel="stylesheet"/><script>window.COURSE_BASE="../";</script><script defer="" src="../../assets/site-config.js"></script><script defer="" src="../assets/search-index.js"></script><script defer="" src="../../assets/app.js"></script><script defer="" src="../../assets/visuals.js"></script><script defer="" src="../../assets/slides.js"></script><script defer="" src="../../assets/beginner-visuals.js"></script><script defer="True" src="../../assets/locale-patterns.js"></script><script defer="True" src="../../assets/locale.js"></script><link href="../../assets/bilingual.css" rel="stylesheet"/><link href="../../lectures/11.html" hreflang="en" rel="alternate"/></head><body data-page-kind="lecture" data-week="11"><a class="skip-link" href="#main">跳至內容</a><header class="topbar"><button aria-controls="course-sidebar" aria-expanded="false" class="menu-toggle" type="button">選單</button><a class="brand" href="../index.html"><span aria-hidden="true" class="brand-mark">a<span>i</span></span><span>APPLIED AI<small>從原理到實踐</small></span></a><nav aria-label="主要導覽"><a href="../index.html">課程</a><a href="../visuals.html">互動圖解</a><a href="../project.html">專題</a><a class="language-switch" href="../../lectures/11.html" hreflang="en" lang="en">English</a></nav><button class="search-open" type="button">搜尋課程 <span aria-hidden="true">/</span></button></header><aside aria-label="課程章節" class="sidebar" id="course-sidebar"><a class="side-home" href="../index.html">課程概覽</a><details class="semester-nav" open=""><summary>第一學期<span>第 1–16 週</span></summary><ol start="1"><li><a href="../lectures/01.html"><span class="week-number">01</span><span>Language model 究竟在學甚麼</span><span class="week-tick" data-week-tick="1"></span></a></li><li><a href="../lectures/02.html"><span class="week-number">02</span><span>從文字到 token 和數值 ID</span><span class="week-tick" data-week-tick="2"></span></a></li><li><a href="../lectures/03.html"><span class="week-number">03</span><span>Word vector 能表達甚麼</span><span class="week-tick" data-week-tick="3"></span></a></li><li><a href="../lectures/04.html"><span class="week-number">04</span><span>從 score 到 probability 和學習訊號</span><span class="week-tick" data-week-tick="4"></span></a></li><li><a href="../lectures/05.html"><span class="week-number">05</span><span>為甚麼語言需要 context 和次序</span><span class="week-tick" data-week-tick="5"></span></a></li><li><a href="../lectures/06.html"><span class="week-number">06</span><span>Attention 由 weighted mixture 開始</span><span class="week-tick" data-week-tick="6"></span></a></li><li><a href="../lectures/07.html"><span class="week-number">07</span><span>Query、key 和 value 從何而來</span><span class="week-tick" data-week-tick="7"></span></a></li><li><a href="../lectures/08.html"><span class="week-number">08</span><span>正確進行 attention scaling 和 masking</span><span class="week-tick" data-week-tick="8"></span></a></li><li><a href="../lectures/09.html"><span class="week-number">09</span><span>多個 attention head 與位置</span><span class="week-tick" data-week-tick="9"></span></a></li><li><a href="../lectures/10.html"><span class="week-number">10</span><span>逐步拆解 transformer block</span><span class="week-tick" data-week-tick="10"></span></a></li><li><a aria-current="page" href="../lectures/11.html"><span class="week-number">11</span><span>Encoder、decoder 與完整 model architecture</span><span class="week-tick" data-week-tick="11"></span></a></li><li><a href="../lectures/12.html"><span class="week-number">12</span><span>訓練一個小型 transformer</span><span class="week-tick" data-week-tick="12"></span></a></li><li><a href="../lectures/13.html"><span class="week-number">13</span><span>Generation、decoding 與 KV cache</span><span class="week-tick" data-week-tick="13"></span></a></li><li><a href="../lectures/14.html"><span class="week-number">14</span><span>從 pretraining 到 instruction following 和 reasoning</span><span class="week-tick" data-week-tick="14"></span></a></li><li><a href="../lectures/15.html"><span class="week-number">15</span><span>文字以外的 Generative AI</span><span class="week-tick" data-week-tick="15"></span></a></li><li><a href="../lectures/16.html"><span class="week-number">16</span><span>完整 transformer 導覽與第一學期溫習</span><span class="week-tick" data-week-tick="16"></span></a></li></ol></details><details class="semester-nav"><summary>第二學期<span>第 17–32 週</span></summary><ol start="17"><li><a href="../lectures/17.html"><span class="week-number">17</span><span>從 word vector 到 semantic search</span><span class="week-tick" data-week-tick="17"></span></a></li><li><a href="../lectures/18.html"><span class="week-number">18</span><span>從一列 vector 建立 vector database</span><span class="week-tick" data-week-tick="18"></span></a></li><li><a href="../lectures/19.html"><span class="week-number">19</span><span>把 RAG 理解為開卷作答</span><span class="week-tick" data-week-tick="19"></span></a></li><li><a href="../lectures/20.html"><span class="week-number">20</span><span>在保持基本任務的前提下改善 RAG</span><span class="week-tick" data-week-tick="20"></span></a></li><li><a href="../lectures/21.html"><span class="week-number">21</span><span>評估 retrieval、答案與 uncertainty</span><span class="week-tick" data-week-tick="21"></span></a></li><li><a href="../lectures/22.html"><span class="week-number">22</span><span>CPU、GPU、memory 與 model 資源計算</span><span class="week-tick" data-week-tick="22"></span></a></li><li><a href="../lectures/23.html"><span class="week-number">23</span><span>CUDA kernel 與 profiling</span><span class="week-tick" data-week-tick="23"></span></a></li><li><a href="../lectures/24.html"><span class="week-number">24</span><span>Fine-tuning 由教學 dataset 開始</span><span class="week-tick" data-week-tick="24"></span></a></li><li><a href="../lectures/25.html"><span class="week-number">25</span><span>從小型 matrix 理解 LoRA 和 QLoRA</span><span class="week-tick" data-week-tick="25"></span></a></li><li><a href="../lectures/26.html"><span class="week-number">26</span><span>Fine-tuning 實驗、preference 與 distillation</span><span class="week-tick" data-week-tick="26"></span></a></li><li><a href="../lectures/27.html"><span class="week-number">27</span><span>Tool、function、workflow 與 agent</span><span class="week-tick" data-week-tick="27"></span></a></li><li><a href="../lectures/28.html"><span class="week-number">28</span><span>Harness、planning、memory 與有界執行</span><span class="week-tick" data-week-tick="28"></span></a></li><li><a href="../lectures/29.html"><span class="week-number">29</span><span>從 notebook 到 MLOps 和 inference serving</span><span class="week-tick" data-week-tick="29"></span></a></li><li><a href="../lectures/30.html"><span class="week-number">30</span><span>Monitoring、security、regression test 與 rollback</span><span class="week-tick" data-week-tick="30"></span></a></li><li><a href="../lectures/31.html"><span class="week-number">31</span><span>整合文件助手與進階延伸</span><span class="week-tick" data-week-tick="31"></span></a></li><li><a href="../lectures/32.html"><span class="week-number">32</span><span>溫習、答辯與持續學習計劃</span><span class="week-tick" data-week-tick="32"></span></a></li></ol></details><div class="side-links"><a href="../visuals.html">互動圖解實驗室 <span>14 個互動課節</span></a><a href="../project.html">文件助手 <span>你的 capstone project</span></a><a href="../resources.html">閱讀材料與環境設定</a></div><div class="side-progress"><div><span>你的進度</span><strong data-progress-count="">0 / 32</strong></div><progress aria-label="已完成 lecture" max="32" value="0"></progress><small>儲存在這個瀏覽器</small></div></aside><main class="main" id="main"><div class="content"><div class="chapter-header"><div class="eyebrow">第一學期 / 第 11 週</div><h1>Encoder、decoder 與完整 model architecture</h1></div><div class="lesson-links"><a href="../tutorials/11.html">練習 11</a><a href="../tests/11.html">檢查你的理解</a><button aria-pressed="false" class="mark-complete" data-week="11" type="button">標記為已完成</button></div><section aria-label="Lecture slides" class="lecture-deck" id="lecture-slides"><div class="deck-top"><div><div class="eyebrow">課堂投影片 · 第 11 週</div><h2>一步一步學習。</h2></div><button class="deck-present" type="button">簡報模式</button></div><p class="deck-help">閱讀每段解說，停下來預測結果，然後繼續。選取簡報後，可用方向鍵操作。完整講義在下方。</p><div aria-label="簡報：使用左右方向鍵" class="slide-viewport" tabindex="0"><section class="lecture-slide" data-slide=""><div class="slide-stage">由例子開始</div><h3>block 成為特定任務設計的一部分</h3><div class="slide-prose"><p>transformer 是由相關 component 組成的一系列 architecture。encoder、causal decoder、encoder-decoder 的可見範圍和資訊流各有不同。</p>
-<p>用三個日常任務來看：表示完整句子「I go to school by bus.」；續寫 prefix「I go to school by.」；將完整 source sentence 翻譯成另一種語言。這些任務可用的 input 和所需 output 都不同。</p>
-<p>decoder 不只是指「把 ID 轉回 string 的東西」。在 model architecture 中，它是一種 neural sequence-processing 設計。tokenizer decoding 是另一個 operation。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">由例子開始</div><h3>encoder 讀取完整 input</h3><div class="slide-prose"><p>encoder 表示一個完整可見的句子時，有效 position 通常可以 attend 到前後其他有效 position。school 的 representation 可以使用右邊的 bus。</p>
-<p>這有助 token labeling 或比較完整 input 等任務。masked-language objective 可以隱藏某個 token，要求 model 用周圍可見的文字預測它。</p>
-<p>若在「I go to school by [MASK],」隱藏 bus，model input 便包含一種特殊的 masking 情況。這裏的 training objective 和 input 構造，與普通由左到右續寫不同。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">建立對機制的理解</div><h3>causal decoder 預測續寫內容</h3><div class="slide-prose"><p>decoder-only language model 對 input prefix 使用 causal self-attention。在 training 的某個 position，它可以讀取當前和較早的 input token，但不能讀取未來的 target token。</p>
-<p>對「I go to school by,」，最後的 representation 為下一個 token 產生 vocabulary logit。選定 bus 後，model 將它附加到序列，再繼續。</p>
-<p>許多熟悉的文字生成 LLM 都使用這種排列。architecture 解釋 next-token 計算；之後的 post-training 則塑造對話行為。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">建立對機制的理解</div><h3>encoder-decoder 連接兩個 sequence</h3><div class="slide-prose"><p>encoder-decoder system 先表示 source sequence。decoder 再一邊參考 target prefix 和 source representation，一邊產生 target sequence。</p>
-<p>decoder 的 self-attention 對 target prefix 採用 causal 方式。cross-attention 的 query 來自 decoder，key/value 來自 encoder output。source position 不需要遵從 target 由左到右的順序。</p>
-<p>若 source 有七個 token，而 target 暫時有四個 position，cross-attention score 的 shape 可以是 [4,7]。這個長方形 matrix，就是 week 7 提過的 shape 分別。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">建立對機制的理解</div><h3>用可見範圍表釐清分別</h3><div class="slide-prose"><p>對四個 token 的完整 input，encoder self-attention 可讓每個有效 query row 使用全部四個 key position。causal decoder 則讓 row 0 只見到 0，row 1 見到 0 和 1，如此類推。</p>
-<p>cross-attention 的可見範圍還取決於有效 source position 和任務限制。padding 仍須處理。「encoder 看見所有東西」只是指獲准使用的有效 input position，並不代表可以忽略其他限制。</p>
-<p>畫出這三種情況，不要只背 model 名稱清單。圖示說明某個 position 可用甚麼資訊，往往比知道一個宣傳標籤更有用。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">建立對機制的理解</div><h3>training 時的平行計算並不會移除 causality</h3><div class="slide-prose"><p>training 時，完整 target sequence 已作為資料提供。masked transformer 能平行計算很多 position 的 representation，因為 mask 限制了它們的 dependency。</p>
-<p>普通 autoregressive generation 中，下一個生成 token 會改變下一次的 prefix。所以各次 output-token 決策依次發生，即使每次 forward pass 內部使用平行數值計算。</p>
-<p>這區分了已知 sequence 內的平行計算，以及新生成 token 之間的依次 dependency。兩者可以同時成立。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">深入學習，檢查理解</div><h3>為學習練習選擇 architecture</h3><div class="slide-prose"><p>我們的 tiny model 是 causal decoder，包含 learned absolute position、兩個 block 和 vocabulary output head。這使整條路徑貼近起初的 sentence-completion 任務。</p>
-<p>我們並不是說只有這種 architecture 有用。選它是因為 label、mask 和 output selection 都能由頭到尾檢查。</p>
-<p>日後載入 pretrained model 時，先辨認 architecture 和 tokenizer，才套用教學 model 的假設。normalization、attention-head sharing、position 方法和 training objective 的不同，都可能改變重要細節。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">深入學習，檢查理解</div><h3>實例練習與學習檢查</h3><div class="slide-prose"><p>為每項任務辨認 model 排列和允許的 context：填補完整句子中隱藏的字、續寫未完成的句子，以及根據完整 source 產生翻譯。</p>
-<p>解釋 causal decoder 為何不能在 training 的 by position 使用答案 bus。再解釋完整 input 的 encoder，為何可以合理地使用 school 右方的詞。</p>
-<p>當你在解釋中，能以 encoder、decoder、self-attention、cross-attention、training parallelism 和 autoregressive generation 分別指向不同 operation 與限制，就準備好了。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">深入學習，檢查理解</div><h3>使用相同詞語的三個任務</h3><div class="slide-prose"><p>任務 A 提供完整句子，問哪個詞代表交通工具。完整 input 的 representation 可以使用某 position 兩邊的資訊。任務 B 提供「I go to school by」，要求續寫；它不能讀取尚未生成的答案。任務 C 提供 source sentence，要求 target-language sentence，因此需要建立兩個 sequence 之間的關係。</p>
-<p>為以上情況分別寫出 mask 和 tensor shape。若任務 C 有六個 source token 和八個 target position，cross-attention score 的 shape 是 [8,6]，causal target self-attention 則是 [8,8]。兩個 matrix 回答不同的資訊流問題。</p>
-<p>這個練習避免 architecture 名稱變成脫離內容的標籤。知道可用 input、output 任務和 attention source 後，你就能解釋為何某種排列合適，以及 leakage 會在哪裏發生。</p></div></section></div><div class="deck-controls"><button class="slide-prev" type="button">← 上一頁</button><span aria-live="polite" class="slide-counter">1 / 9</span><button class="slide-next" type="button">下一頁 →</button></div><label class="slide-jump-label">前往 slide <select aria-label="跳至 slide" class="slide-jump"><option value="0">1</option><option value="1">2</option><option value="2">3</option><option value="3">4</option><option value="4">5</option><option value="5">6</option><option value="6">7</option><option value="7">8</option><option value="8">9</option></select></label><button aria-pressed="false" class="deck-all" type="button">顯示全部 slides</button><a class="reader-link" href="#full-notes">閱讀完整講義 ↓</a></section><article class="prose full-notes" id="full-notes"><div class="eyebrow">完整講義</div><h2>閱讀完整解說</h2><h3 id="a-block-becomes-part-of-a-task-specific-arrangement">block 成為特定任務設計的一部分</h3>
-<p>transformer 是由相關 component 組成的一系列 architecture。encoder、causal decoder、encoder-decoder 的可見範圍和資訊流各有不同。</p>
-<p>用三個日常任務來看：表示完整句子「I go to school by bus.」；續寫 prefix「I go to school by.」；將完整 source sentence 翻譯成另一種語言。這些任務可用的 input 和所需 output 都不同。</p>
-<p>decoder 不只是指「把 ID 轉回 string 的東西」。在 model architecture 中，它是一種 neural sequence-processing 設計。tokenizer decoding 是另一個 operation。</p>
-<h3 id="an-encoder-reads-a-complete-input">encoder 讀取完整 input</h3>
-<p>encoder 表示一個完整可見的句子時，有效 position 通常可以 attend 到前後其他有效 position。school 的 representation 可以使用右邊的 bus。</p>
-<p>這有助 token labeling 或比較完整 input 等任務。masked-language objective 可以隱藏某個 token，要求 model 用周圍可見的文字預測它。</p>
-<p>若在「I go to school by [MASK],」隱藏 bus，model input 便包含一種特殊的 masking 情況。這裏的 training objective 和 input 構造，與普通由左到右續寫不同。</p>
-<h3 id="a-causal-decoder-predicts-continuations">causal decoder 預測續寫內容</h3>
-<p>decoder-only language model 對 input prefix 使用 causal self-attention。在 training 的某個 position，它可以讀取當前和較早的 input token，但不能讀取未來的 target token。</p>
-<p>對「I go to school by,」，最後的 representation 為下一個 token 產生 vocabulary logit。選定 bus 後，model 將它附加到序列，再繼續。</p>
-<p>許多熟悉的文字生成 LLM 都使用這種排列。architecture 解釋 next-token 計算；之後的 post-training 則塑造對話行為。</p>
-<h3 id="an-encoder-decoder-connects-two-sequences">encoder-decoder 連接兩個 sequence</h3>
-<p>encoder-decoder system 先表示 source sequence。decoder 再一邊參考 target prefix 和 source representation，一邊產生 target sequence。</p>
-<p>decoder 的 self-attention 對 target prefix 採用 causal 方式。cross-attention 的 query 來自 decoder，key/value 來自 encoder output。source position 不需要遵從 target 由左到右的順序。</p>
-<p>若 source 有七個 token，而 target 暫時有四個 position，cross-attention score 的 shape 可以是 [4,7]。這個長方形 matrix，就是 week 7 提過的 shape 分別。</p>
-<h3 id="a-visibility-table-clarifies-the-difference">用可見範圍表釐清分別</h3>
-<p>對四個 token 的完整 input，encoder self-attention 可讓每個有效 query row 使用全部四個 key position。causal decoder 則讓 row 0 只見到 0，row 1 見到 0 和 1，如此類推。</p>
-<p>cross-attention 的可見範圍還取決於有效 source position 和任務限制。padding 仍須處理。「encoder 看見所有東西」只是指獲准使用的有效 input position，並不代表可以忽略其他限制。</p>
-<p>畫出這三種情況，不要只背 model 名稱清單。圖示說明某個 position 可用甚麼資訊，往往比知道一個宣傳標籤更有用。</p>
-<h3 id="training-time-parallelism-does-not-remove-causality">training 時的平行計算並不會移除 causality</h3>
-<p>training 時，完整 target sequence 已作為資料提供。masked transformer 能平行計算很多 position 的 representation，因為 mask 限制了它們的 dependency。</p>
-<p>普通 autoregressive generation 中，下一個生成 token 會改變下一次的 prefix。所以各次 output-token 決策依次發生，即使每次 forward pass 內部使用平行數值計算。</p>
-<p>這區分了已知 sequence 內的平行計算，以及新生成 token 之間的依次 dependency。兩者可以同時成立。</p>
-<h3 id="choosing-the-architecture-for-the-learning-exercise">為學習練習選擇 architecture</h3>
-<p>我們的 tiny model 是 causal decoder，包含 learned absolute position、兩個 block 和 vocabulary output head。這使整條路徑貼近起初的 sentence-completion 任務。</p>
-<p>我們並不是說只有這種 architecture 有用。選它是因為 label、mask 和 output selection 都能由頭到尾檢查。</p>
-<p>日後載入 pretrained model 時，先辨認 architecture 和 tokenizer，才套用教學 model 的假設。normalization、attention-head sharing、position 方法和 training objective 的不同，都可能改變重要細節。</p>
-<h3 id="worked-practice-and-a-readiness-check">實例練習與學習檢查</h3>
-<p>為每項任務辨認 model 排列和允許的 context：填補完整句子中隱藏的字、續寫未完成的句子，以及根據完整 source 產生翻譯。</p>
-<p>解釋 causal decoder 為何不能在 training 的 by position 使用答案 bus。再解釋完整 input 的 encoder，為何可以合理地使用 school 右方的詞。</p>
-<p>當你在解釋中，能以 encoder、decoder、self-attention、cross-attention、training parallelism 和 autoregressive generation 分別指向不同 operation 與限制，就準備好了。</p>
-<h3 id="three-tasks-with-the-same-words">使用相同詞語的三個任務</h3>
-<p>任務 A 提供完整句子，問哪個詞代表交通工具。完整 input 的 representation 可以使用某 position 兩邊的資訊。任務 B 提供「I go to school by」，要求續寫；它不能讀取尚未生成的答案。任務 C 提供 source sentence，要求 target-language sentence，因此需要建立兩個 sequence 之間的關係。</p>
-<p>為以上情況分別寫出 mask 和 tensor shape。若任務 C 有六個 source token 和八個 target position，cross-attention score 的 shape 是 [8,6]，causal target self-attention 則是 [8,8]。兩個 matrix 回答不同的資訊流問題。</p>
-<p>這個練習避免 architecture 名稱變成脫離內容的標籤。知道可用 input、output 任務和 attention source 後，你就能解釋為何某種排列合適，以及 leakage 會在哪裏發生。</p></article><nav aria-label="前後 lecture" class="chapter-pagination"><a href="10.html"><small>上一週</small>逐步拆解 transformer block</a><a href="12.html"><small>下一週</small>訓練一個小型 transformer</a></nav></div><footer class="footer"><span>Applied AI · 獨立自學課程</span><span>32 週 · 每週 10 小時</span><a href="../resources.html#about-this-course">關於課程及資料來源</a></footer></main><dialog aria-labelledby="search-title" class="search-dialog"><div class="dialog-head"><h2 id="search-title">尋找概念</h2><button aria-label="關閉搜尋" class="search-close" type="button">關閉</button></div><label class="sr-only" for="course-search">搜尋所有 lecture 和 tutorial</label><input autocomplete="off" id="course-search" placeholder="試試 attention、fine-tuning 或 harness……" type="search"/><p aria-live="polite" class="search-status">搜尋 lecture notes、tutorial、測驗及閱讀材料。</p><div class="search-results"></div></dialog><div aria-live="polite" class="toast" role="status"></div></body></html>
+<html lang="zh-HK">
+ <head>
+  <script src="../../assets/translations-zh-HK.js">
+  </script>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width,initial-scale=1" name="viewport"/>
+  <title>
+   Encoder、decoder 與完整 model architecture · Applied AI
+  </title>
+  <meta content="Applied generative AI and LLM systems course material" name="description"/>
+  <meta content="#173c36" name="theme-color"/>
+  <link href="../../assets/favicon.svg" rel="icon" type="image/svg+xml"/>
+  <link href="../../assets/style.css" rel="stylesheet"/>
+  <link href="../../assets/slides.css" rel="stylesheet"/>
+  <script>
+   window.COURSE_BASE="../";
+  </script>
+  <script defer="" src="../../assets/site-config.js">
+  </script>
+  <script defer="" src="../assets/search-index.js">
+  </script>
+  <script defer="" src="../../assets/app.js">
+  </script>
+  <script defer="" src="../../assets/visuals.js">
+  </script>
+  <script defer="" src="../../assets/slides.js">
+  </script>
+  <script defer="" src="../../assets/beginner-visuals.js">
+  </script>
+  <script defer="True" src="../../assets/locale-patterns.js">
+  </script>
+  <script defer="True" src="../../assets/locale.js">
+  </script>
+  <link href="../../assets/bilingual.css" rel="stylesheet"/>
+  <link href="../../lectures/11.html" hreflang="en" rel="alternate"/>
+  <link href="../../assets/reader-v3.css" rel="stylesheet"/>
+  <script defer="True" src="../../assets/reader-v3.js">
+  </script>
+ </head>
+ <body data-page-kind="lecture" data-week="11">
+  <a class="skip-link" href="#main">
+   跳至內容
+  </a>
+  <header class="topbar">
+   <button aria-controls="course-sidebar" aria-expanded="false" class="menu-toggle" type="button">
+    選單
+   </button>
+   <a class="brand" href="../index.html">
+    <span aria-hidden="true" class="brand-mark">
+     a
+     <span>
+      i
+     </span>
+    </span>
+    <span>
+     APPLIED AI
+     <small>
+      從原理到實踐
+     </small>
+    </span>
+   </a>
+   <nav aria-label="主要導覽">
+    <a href="../index.html">
+     課程
+    </a>
+    <a href="../visuals.html">
+     互動圖解
+    </a>
+    <a href="../project.html">
+     專題
+    </a>
+    <a class="language-switch" href="../../lectures/11.html" hreflang="en" lang="en">
+     English
+    </a>
+   </nav>
+   <button class="search-open" type="button">
+    搜尋課程
+    <span aria-hidden="true">
+     /
+    </span>
+   </button>
+  </header>
+  <aside aria-label="課程章節" class="sidebar" id="course-sidebar">
+   <a class="side-home" href="../index.html">
+    課程概覽
+   </a>
+   <details class="semester-nav" open="">
+    <summary>
+     第一學期
+     <span>
+      第 1–16 週
+     </span>
+    </summary>
+    <ol start="1">
+     <li>
+      <a href="../lectures/01.html">
+       <span class="week-number">
+        01
+       </span>
+       <span>
+        Language model 究竟在學甚麼
+       </span>
+       <span class="week-tick" data-week-tick="1">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/02.html">
+       <span class="week-number">
+        02
+       </span>
+       <span>
+        從文字到 token 和數值 ID
+       </span>
+       <span class="week-tick" data-week-tick="2">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/03.html">
+       <span class="week-number">
+        03
+       </span>
+       <span>
+        Word vector 能表達甚麼
+       </span>
+       <span class="week-tick" data-week-tick="3">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/04.html">
+       <span class="week-number">
+        04
+       </span>
+       <span>
+        從 score 到 probability 和學習訊號
+       </span>
+       <span class="week-tick" data-week-tick="4">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/05.html">
+       <span class="week-number">
+        05
+       </span>
+       <span>
+        為甚麼語言需要 context 和次序
+       </span>
+       <span class="week-tick" data-week-tick="5">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/06.html">
+       <span class="week-number">
+        06
+       </span>
+       <span>
+        Attention 由 weighted mixture 開始
+       </span>
+       <span class="week-tick" data-week-tick="6">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/07.html">
+       <span class="week-number">
+        07
+       </span>
+       <span>
+        Query、key 和 value 從何而來
+       </span>
+       <span class="week-tick" data-week-tick="7">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/08.html">
+       <span class="week-number">
+        08
+       </span>
+       <span>
+        正確進行 attention scaling 和 masking
+       </span>
+       <span class="week-tick" data-week-tick="8">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/09.html">
+       <span class="week-number">
+        09
+       </span>
+       <span>
+        多個 attention head 與位置
+       </span>
+       <span class="week-tick" data-week-tick="9">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/10.html">
+       <span class="week-number">
+        10
+       </span>
+       <span>
+        逐步拆解 transformer block
+       </span>
+       <span class="week-tick" data-week-tick="10">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a aria-current="page" href="../lectures/11.html">
+       <span class="week-number">
+        11
+       </span>
+       <span>
+        Encoder、decoder 與完整 model architecture
+       </span>
+       <span class="week-tick" data-week-tick="11">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/12.html">
+       <span class="week-number">
+        12
+       </span>
+       <span>
+        訓練一個小型 transformer
+       </span>
+       <span class="week-tick" data-week-tick="12">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/13.html">
+       <span class="week-number">
+        13
+       </span>
+       <span>
+        Generation、decoding 與 KV cache
+       </span>
+       <span class="week-tick" data-week-tick="13">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/14.html">
+       <span class="week-number">
+        14
+       </span>
+       <span>
+        從 pretraining 到 instruction following 和 reasoning
+       </span>
+       <span class="week-tick" data-week-tick="14">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/15.html">
+       <span class="week-number">
+        15
+       </span>
+       <span>
+        文字以外的 Generative AI
+       </span>
+       <span class="week-tick" data-week-tick="15">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/16.html">
+       <span class="week-number">
+        16
+       </span>
+       <span>
+        完整 transformer 導覽與第一學期溫習
+       </span>
+       <span class="week-tick" data-week-tick="16">
+       </span>
+      </a>
+     </li>
+    </ol>
+   </details>
+   <details class="semester-nav">
+    <summary>
+     第二學期
+     <span>
+      第 17–32 週
+     </span>
+    </summary>
+    <ol start="17">
+     <li>
+      <a href="../lectures/17.html">
+       <span class="week-number">
+        17
+       </span>
+       <span>
+        從 word vector 到 semantic search
+       </span>
+       <span class="week-tick" data-week-tick="17">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/18.html">
+       <span class="week-number">
+        18
+       </span>
+       <span>
+        從一列 vector 建立 vector database
+       </span>
+       <span class="week-tick" data-week-tick="18">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/19.html">
+       <span class="week-number">
+        19
+       </span>
+       <span>
+        把 RAG 理解為開卷作答
+       </span>
+       <span class="week-tick" data-week-tick="19">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/20.html">
+       <span class="week-number">
+        20
+       </span>
+       <span>
+        在保持基本任務的前提下改善 RAG
+       </span>
+       <span class="week-tick" data-week-tick="20">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/21.html">
+       <span class="week-number">
+        21
+       </span>
+       <span>
+        評估 retrieval、答案與 uncertainty
+       </span>
+       <span class="week-tick" data-week-tick="21">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/22.html">
+       <span class="week-number">
+        22
+       </span>
+       <span>
+        CPU、GPU、memory 與 model 資源計算
+       </span>
+       <span class="week-tick" data-week-tick="22">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/23.html">
+       <span class="week-number">
+        23
+       </span>
+       <span>
+        CUDA kernel 與 profiling
+       </span>
+       <span class="week-tick" data-week-tick="23">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/24.html">
+       <span class="week-number">
+        24
+       </span>
+       <span>
+        Fine-tuning 由教學 dataset 開始
+       </span>
+       <span class="week-tick" data-week-tick="24">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/25.html">
+       <span class="week-number">
+        25
+       </span>
+       <span>
+        從小型 matrix 理解 LoRA 和 QLoRA
+       </span>
+       <span class="week-tick" data-week-tick="25">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/26.html">
+       <span class="week-number">
+        26
+       </span>
+       <span>
+        Fine-tuning 實驗、preference 與 distillation
+       </span>
+       <span class="week-tick" data-week-tick="26">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/27.html">
+       <span class="week-number">
+        27
+       </span>
+       <span>
+        Tool、function、workflow 與 agent
+       </span>
+       <span class="week-tick" data-week-tick="27">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/28.html">
+       <span class="week-number">
+        28
+       </span>
+       <span>
+        Harness、planning、memory 與有界執行
+       </span>
+       <span class="week-tick" data-week-tick="28">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/29.html">
+       <span class="week-number">
+        29
+       </span>
+       <span>
+        從 notebook 到 MLOps 和 inference serving
+       </span>
+       <span class="week-tick" data-week-tick="29">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/30.html">
+       <span class="week-number">
+        30
+       </span>
+       <span>
+        Monitoring、security、regression test 與 rollback
+       </span>
+       <span class="week-tick" data-week-tick="30">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/31.html">
+       <span class="week-number">
+        31
+       </span>
+       <span>
+        整合文件助手與進階延伸
+       </span>
+       <span class="week-tick" data-week-tick="31">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/32.html">
+       <span class="week-number">
+        32
+       </span>
+       <span>
+        溫習、答辯與持續學習計劃
+       </span>
+       <span class="week-tick" data-week-tick="32">
+       </span>
+      </a>
+     </li>
+    </ol>
+   </details>
+   <div class="side-links">
+    <a href="../visuals.html">
+     互動圖解實驗室
+     <span>
+      14 個互動課節
+     </span>
+    </a>
+    <a href="../project.html">
+     文件助手
+     <span>
+      你的 capstone project
+     </span>
+    </a>
+    <a href="../resources.html">
+     閱讀材料與環境設定
+    </a>
+   </div>
+   <div class="side-progress">
+    <div>
+     <span>
+      你的進度
+     </span>
+     <strong data-progress-count="">
+      0 / 32
+     </strong>
+    </div>
+    <progress aria-label="已完成 lecture" max="32" value="0">
+    </progress>
+    <small>
+     儲存在這個瀏覽器
+    </small>
+   </div>
+  </aside>
+  <main class="main" id="main">
+   <div class="content">
+    <div class="chapter-header">
+     <div class="eyebrow">
+      第一學期 / 第 11 週
+     </div>
+     <h1>
+      Encoder、decoder 與完整 model architecture
+     </h1>
+    </div>
+    <div class="lesson-links">
+     <a href="../tutorials/11.html">
+      練習 11
+     </a>
+     <a href="../tests/11.html">
+      檢查你的理解
+     </a>
+     <button aria-pressed="false" class="mark-complete" data-week="11" type="button">
+      標記為已完成
+     </button>
+    </div>
+    <div aria-label="課堂檢視" class="lesson-mode" role="tablist">
+     <button aria-controls="full-notes" aria-selected="true" data-mode="read" id="mode-read" role="tab" type="button">
+      閱讀講義
+     </button>
+     <button aria-controls="lecture-slides" aria-selected="false" data-mode="slides" id="mode-slides" role="tab" type="button">
+      課堂 slides
+     </button>
+    </div>
+    <section aria-label="Lecture slides" class="lecture-deck" hidden="" id="lecture-slides" role="tabpanel">
+     <div class="deck-top">
+      <div>
+       <div class="eyebrow">
+        課堂投影片 · 第 11 週
+       </div>
+       <h2>
+        重點步驟與圖解
+       </h2>
+      </div>
+      <button class="deck-present" type="button">
+       簡報模式
+      </button>
+     </div>
+     <p class="deck-help">
+      用 slides 溫習機制；按「閱讀完整解說」可開啟完整講義及程式碼。
+     </p>
+     <div aria-label="簡報：使用左右方向鍵" class="slide-viewport" tabindex="0">
+      <section class="lecture-slide" data-slide="">
+       <div class="slide-stage">
+        第 11 週 · 課節 1
+       </div>
+       <h3>
+        block 成為特定任務設計的一部分
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          transformer 是由相關 component 組成的一系列 architecture。
+         </li>
+         <li>
+          用三個日常任務來看：表示完整句子「I go to school by bus.」；續寫 prefix「I go to school by.」；將完整 source sentence 翻譯成另一種語言。
+         </li>
+         <li>
+          decoder 不只是指「把 ID 轉回 string 的東西」。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#a-block-becomes-part-of-a-task-specific-arrangement">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 11 週 · 課節 2
+       </div>
+       <h3>
+        encoder 讀取完整 input
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          encoder 表示一個完整可見的句子時，有效 position 通常可以 attend 到前後其他有效 position。
+         </li>
+         <li>
+          這有助 token labeling 或比較完整 input 等任務。
+         </li>
+         <li>
+          若在「I go to school by [MASK],」隱藏 bus，model input 便包含一種特殊的 masking 情況。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#an-encoder-reads-a-complete-input">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 11 週 · 課節 3
+       </div>
+       <h3>
+        causal decoder 預測續寫內容
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          decoder-only language model 對 input prefix 使用 causal self-attention。
+         </li>
+         <li>
+          對「I go to school by,」，最後的 representation 為下一個 token 產生 vocabulary logit。
+         </li>
+         <li>
+          許多熟悉的文字生成 LLM 都使用這種排列。architecture 解釋 next-token 計算；之後的 post-training 則塑造對話行為。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#a-causal-decoder-predicts-continuations">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 11 週 · 課節 4
+       </div>
+       <h3>
+        encoder-decoder 連接兩個 sequence
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          encoder-decoder system 先表示 source sequence。
+         </li>
+         <li>
+          decoder 的 self-attention 對 target prefix 採用 causal 方式。
+         </li>
+         <li>
+          若 source 有七個 token，而 target 暫時有四個 position，cross-attention score 的 shape 可以是 [4,7]。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#an-encoder-decoder-connects-two-sequences">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 11 週 · 課節 5
+       </div>
+       <h3>
+        用可見範圍表釐清分別
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          對四個 token 的完整 input，encoder self-attention 可讓每個有效 query row 使用全部四個 key position。
+         </li>
+         <li>
+          cross-attention 的可見範圍還取決於有效 source position 和任務限制。
+         </li>
+         <li>
+          畫出這三種情況，不要只背 model 名稱清單。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#a-visibility-table-clarifies-the-difference">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 11 週 · 課節 6
+       </div>
+       <h3>
+        training 時的平行計算並不會移除 causality
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          training 時，完整 target sequence 已作為資料提供。
+         </li>
+         <li>
+          普通 autoregressive generation 中，下一個生成 token 會改變下一次的 prefix。
+         </li>
+         <li>
+          這區分了已知 sequence 內的平行計算，以及新生成 token 之間的依次 dependency。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#training-time-parallelism-does-not-remove-causality">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 11 週 · 課節 7
+       </div>
+       <h3>
+        為學習練習選擇 architecture
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          我們的 tiny model 是 causal decoder，包含 learned absolute position、兩個 block 和 vocabulary output head。
+         </li>
+         <li>
+          我們並不是說只有這種 architecture 有用。
+         </li>
+         <li>
+          日後載入 pretrained model 時，先辨認 architecture 和 tokenizer，才套用教學 model 的假設。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#choosing-the-architecture-for-the-learning-exercise">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 11 週 · 課節 8
+       </div>
+       <h3>
+        Attention variants 保留不同數量的 state
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          想像八名學生對同一本 handbook 提問。MHA 讓每個 query head 有自己的 K/V projections；MQA 讓所有 query heads 共用一個 K/V head；GQA 則在 groups 內共享 K/V。在 H=8、head widths 相同的 layer 中，三者的 H_kv 分別可為 8、1 和 2，cached K/V element counts 因而成 8、1、2 的比例。共享可以減少 cache storage 和 bandwidth，但 model 亦要在 training 中學會運用共享結構。
+         </li>
+         <li>
+          Multi-head latent attention，簡稱 MLA，把 key/value information 壓縮成較低 dimension 的 latent state，再以 learned projections 取得 attention 所需資訊。
+         </li>
+         <li>
+          Sliding-window attention 只讓 position 查看最近一個 window，例如教學 sequence 中最後四個允許 tokens。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#attention-variants-keep-different-amounts-of-state">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 11 週 · 課節 9
+       </div>
+       <h3>
+        MoE 和 state-space models 改變不同部分
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Mixture-of-experts，簡稱 MoE，常把 dense MLP 換成多個 expert MLPs 和 learned router。
+         </li>
+         <li>
+          State-space sequence model 在讀取 sequence 時更新 compact recurrent state。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#moe-and-state-space-models-change-different-parts">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 11 週 · 課節 10
+       </div>
+       <h3>
+        Scaling laws 連結 model size、data 和 compute
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          假設 training operations 的 budget 固定。
+         </li>
+         <li>
+          來源： DeepSeek-V2: MLA and MoE .
+         </li>
+         <li>
+          來源： Mamba: selective state-space models .
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#scaling-laws-connect-model-size-data-and-compute">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 11 週 · 課節 11
+       </div>
+       <h3>
+        Scaling laws 連結 model size、data 和 compute · 續
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          來源： Training compute-optimal language models .
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#scaling-laws-connect-model-size-data-and-compute">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 11 週 · 課節 12
+       </div>
+       <h3>
+        實例練習與學習檢查
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          為每項任務辨認 model 排列和允許的 context：填補完整句子中隱藏的字、續寫未完成的句子，以及根據完整 source 產生翻譯。
+         </li>
+         <li>
+          解釋 causal decoder 為何不能在 training 的 by position 使用答案 bus。
+         </li>
+         <li>
+          當你在解釋中，能以 encoder、decoder、self-attention、cross-attention、training parallelism 和 autoregressive generation 分別指向不同 operation 與限制，就準備好了。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#worked-practice-and-a-readiness-check">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 11 週 · 課節 13
+       </div>
+       <h3>
+        使用相同詞語的三個任務
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          任務 A 提供完整句子，問哪個詞代表交通工具。完整 input 的 representation 可以使用某 position 兩邊的資訊。任務 B 提供「I go to school by」，要求續寫；它不能讀取尚未生成的答案。任務 C 提供 source sentence，要求 target-language sentence，因此需要建立兩個 sequence 之間的關係。
+         </li>
+         <li>
+          為以上情況分別寫出 mask 和 tensor shape。
+         </li>
+         <li>
+          這個練習避免 architecture 名稱變成脫離內容的標籤。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#three-tasks-with-the-same-words">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+     </div>
+     <div class="deck-controls">
+      <button class="slide-prev" type="button">
+       ← 上一頁
+      </button>
+      <span aria-live="polite" class="slide-counter">
+       1 / 13
+      </span>
+      <button class="slide-next" type="button">
+       下一頁 →
+      </button>
+     </div>
+     <label class="slide-jump-label">
+      前往 slide
+      <select aria-label="跳至 slide" class="slide-jump">
+       <option value="0">
+        1. block 成為特定任務設計的一部分
+       </option>
+       <option value="1">
+        2. encoder 讀取完整 input
+       </option>
+       <option value="2">
+        3. causal decoder 預測續寫內容
+       </option>
+       <option value="3">
+        4. encoder-decoder 連接兩個 sequence
+       </option>
+       <option value="4">
+        5. 用可見範圍表釐清分別
+       </option>
+       <option value="5">
+        6. training 時的平行計算並不會移除 causality
+       </option>
+       <option value="6">
+        7. 為學習練習選擇 architecture
+       </option>
+       <option value="7">
+        8. Attention variants 保留不同數量的 state
+       </option>
+       <option value="8">
+        9. MoE 和 state-space models 改變不同部分
+       </option>
+       <option value="9">
+        10. Scaling laws 連結 model size、data 和 compute
+       </option>
+       <option value="10">
+        11. Scaling laws 連結 model size、data 和 compute · 續
+       </option>
+       <option value="11">
+        12. 實例練習與學習檢查
+       </option>
+       <option value="12">
+        13. 使用相同詞語的三個任務
+       </option>
+      </select>
+     </label>
+     <button aria-pressed="false" class="deck-all" type="button">
+      顯示全部 slides
+     </button>
+    </section>
+    <nav aria-label="本課內容" class="reader-toc">
+     <strong>
+      本課內容
+     </strong>
+     <ol>
+      <li>
+       <a href="#a-block-becomes-part-of-a-task-specific-arrangement">
+        block 成為特定任務設計的一部分
+       </a>
+      </li>
+      <li>
+       <a href="#an-encoder-reads-a-complete-input">
+        encoder 讀取完整 input
+       </a>
+      </li>
+      <li>
+       <a href="#a-causal-decoder-predicts-continuations">
+        causal decoder 預測續寫內容
+       </a>
+      </li>
+      <li>
+       <a href="#an-encoder-decoder-connects-two-sequences">
+        encoder-decoder 連接兩個 sequence
+       </a>
+      </li>
+      <li>
+       <a href="#a-visibility-table-clarifies-the-difference">
+        用可見範圍表釐清分別
+       </a>
+      </li>
+      <li>
+       <a href="#training-time-parallelism-does-not-remove-causality">
+        training 時的平行計算並不會移除 causality
+       </a>
+      </li>
+      <li>
+       <a href="#choosing-the-architecture-for-the-learning-exercise">
+        為學習練習選擇 architecture
+       </a>
+      </li>
+      <li>
+       <a href="#attention-variants-keep-different-amounts-of-state">
+        Attention variants 保留不同數量的 state
+       </a>
+      </li>
+      <li>
+       <a href="#moe-and-state-space-models-change-different-parts">
+        MoE 和 state-space models 改變不同部分
+       </a>
+      </li>
+      <li>
+       <a href="#scaling-laws-connect-model-size-data-and-compute">
+        Scaling laws 連結 model size、data 和 compute
+       </a>
+      </li>
+      <li>
+       <a href="#worked-practice-and-a-readiness-check">
+        實例練習與學習檢查
+       </a>
+      </li>
+      <li>
+       <a href="#three-tasks-with-the-same-words">
+        使用相同詞語的三個任務
+       </a>
+      </li>
+     </ol>
+    </nav>
+    <article class="prose full-notes" id="full-notes" role="tabpanel">
+     <div class="eyebrow">
+      完整講義
+     </div>
+     <h2>
+      閱讀完整解說
+     </h2>
+     <h3 id="a-block-becomes-part-of-a-task-specific-arrangement">
+      block 成為特定任務設計的一部分
+     </h3>
+     <p>
+      transformer 是由相關 component 組成的一系列 architecture。encoder、causal decoder、encoder-decoder 的可見範圍和資訊流各有不同。
+     </p>
+     <p>
+      用三個日常任務來看：表示完整句子「I go to school by bus.」；續寫 prefix「I go to school by.」；將完整 source sentence 翻譯成另一種語言。這些任務可用的 input 和所需 output 都不同。
+     </p>
+     <p>
+      decoder 不只是指「把 ID 轉回 string 的東西」。在 model architecture 中，它是一種 neural sequence-processing 設計。tokenizer decoding 是另一個 operation。
+     </p>
+     <h3 id="an-encoder-reads-a-complete-input">
+      encoder 讀取完整 input
+     </h3>
+     <p>
+      encoder 表示一個完整可見的句子時，有效 position 通常可以 attend 到前後其他有效 position。school 的 representation 可以使用右邊的 bus。
+     </p>
+     <p>
+      這有助 token labeling 或比較完整 input 等任務。masked-language objective 可以隱藏某個 token，要求 model 用周圍可見的文字預測它。
+     </p>
+     <p>
+      若在「I go to school by [MASK],」隱藏 bus，model input 便包含一種特殊的 masking 情況。這裏的 training objective 和 input 構造，與普通由左到右續寫不同。
+     </p>
+     <h3 id="a-causal-decoder-predicts-continuations">
+      causal decoder 預測續寫內容
+     </h3>
+     <p>
+      decoder-only language model 對 input prefix 使用 causal self-attention。在 training 的某個 position，它可以讀取當前和較早的 input token，但不能讀取未來的 target token。
+     </p>
+     <p>
+      對「I go to school by,」，最後的 representation 為下一個 token 產生 vocabulary logit。選定 bus 後，model 將它附加到序列，再繼續。
+     </p>
+     <p>
+      許多熟悉的文字生成 LLM 都使用這種排列。architecture 解釋 next-token 計算；之後的 post-training 則塑造對話行為。
+     </p>
+     <h3 id="an-encoder-decoder-connects-two-sequences">
+      encoder-decoder 連接兩個 sequence
+     </h3>
+     <p>
+      encoder-decoder system 先表示 source sequence。decoder 再一邊參考 target prefix 和 source representation，一邊產生 target sequence。
+     </p>
+     <p>
+      decoder 的 self-attention 對 target prefix 採用 causal 方式。cross-attention 的 query 來自 decoder，key/value 來自 encoder output。source position 不需要遵從 target 由左到右的順序。
+     </p>
+     <p>
+      若 source 有七個 token，而 target 暫時有四個 position，cross-attention score 的 shape 可以是 [4,7]。這個長方形 matrix，就是 week 7 提過的 shape 分別。
+     </p>
+     <h3 id="a-visibility-table-clarifies-the-difference">
+      用可見範圍表釐清分別
+     </h3>
+     <p>
+      對四個 token 的完整 input，encoder self-attention 可讓每個有效 query row 使用全部四個 key position。causal decoder 則讓 row 0 只見到 0，row 1 見到 0 和 1，如此類推。
+     </p>
+     <p>
+      cross-attention 的可見範圍還取決於有效 source position 和任務限制。padding 仍須處理。「encoder 看見所有東西」只是指獲准使用的有效 input position，並不代表可以忽略其他限制。
+     </p>
+     <p>
+      畫出這三種情況，不要只背 model 名稱清單。圖示說明某個 position 可用甚麼資訊，往往比知道一個宣傳標籤更有用。
+     </p>
+     <h3 id="training-time-parallelism-does-not-remove-causality">
+      training 時的平行計算並不會移除 causality
+     </h3>
+     <p>
+      training 時，完整 target sequence 已作為資料提供。masked transformer 能平行計算很多 position 的 representation，因為 mask 限制了它們的 dependency。
+     </p>
+     <p>
+      普通 autoregressive generation 中，下一個生成 token 會改變下一次的 prefix。所以各次 output-token 決策依次發生，即使每次 forward pass 內部使用平行數值計算。
+     </p>
+     <p>
+      這區分了已知 sequence 內的平行計算，以及新生成 token 之間的依次 dependency。兩者可以同時成立。
+     </p>
+     <h3 id="choosing-the-architecture-for-the-learning-exercise">
+      為學習練習選擇 architecture
+     </h3>
+     <p>
+      我們的 tiny model 是 causal decoder，包含 learned absolute position、兩個 block 和 vocabulary output head。這使整條路徑貼近起初的 sentence-completion 任務。
+     </p>
+     <p>
+      我們並不是說只有這種 architecture 有用。選它是因為 label、mask 和 output selection 都能由頭到尾檢查。
+     </p>
+     <p>
+      日後載入 pretrained model 時，先辨認 architecture 和 tokenizer，才套用教學 model 的假設。normalization、attention-head sharing、position 方法和 training objective 的不同，都可能改變重要細節。
+     </p>
+     <h3 id="attention-variants-keep-different-amounts-of-state">
+      Attention variants 保留不同數量的 state
+     </h3>
+     <p>
+      想像八名學生對同一本 handbook 提問。MHA 讓每個 query head 有自己的 K/V projections；MQA 讓所有 query heads 共用一個 K/V head；GQA 則在 groups 內共享 K/V。在 H=8、head widths 相同的 layer 中，三者的 H_kv 分別可為 8、1 和 2，cached K/V element counts 因而成 8、1、2 的比例。共享可以減少 cache storage 和 bandwidth，但 model 亦要在 training 中學會運用共享結構。
+     </p>
+     <p>
+      Multi-head latent attention，簡稱 MLA，把 key/value information 壓縮成較低 dimension 的 latent state，再以 learned projections 取得 attention 所需資訊。它亦能減少 cached state，但 projection 和 position-encoding 設計較複雜。計算 MLA cache 時，應查看實作實際保留甚麼，而非直接套用一般 MHA formula。
+     </p>
+     <p>
+      Sliding-window attention 只讓 position 查看最近一個 window，例如教學 sequence 中最後四個允許 tokens。單一 layer 便不能直接讀到十個 positions 前的資料。Stacked layers、間中加入的 global-attention layers，或其他 memory mechanism，可以擴大資訊存取範圍。Long-context 方法亦包括 position-method 的調整和較長 sequences 的 training。Configured context limit 說明可接受的 input length；能否善用遠處 evidence，仍要以 task evaluation 判斷。
+     </p>
+     <h3 id="moe-and-state-space-models-change-different-parts">
+      MoE 和 state-space models 改變不同部分
+     </h3>
+     <p>
+      Mixture-of-experts，簡稱 MoE，常把 dense MLP 換成多個 expert MLPs 和 learned router。若有八個 experts，而每個 token 選兩個，model 仍需儲存全部八個，只是該 token 執行選中的 experts。因此 active parameter count 與 total parameter count 不同。Routing 亦帶來 load-balancing 和 communication 問題；不能因為每次只用兩個 experts，就以為整個 model 只需要兩個 experts 的 memory。
+     </p>
+     <p>
+      State-space sequence model 在讀取 sequence 時更新 compact recurrent state。可把它想成不斷更新的數值 notebook，而非保留每個過去 K/V row 供新 query 直接存取。Mamba 等 selective state-space models，會讓部分更新取決於 input。這帶來不同的 computation 和 memory behavior；精確找回很久以前的細節，與維持 compact state，是不同要求。Hybrid models 可以混合 attention 和 state-space layers。
+     </p>
+     <h3 id="scaling-laws-connect-model-size-data-and-compute">
+      Scaling laws 連結 model size、data 和 compute
+     </h3>
+     <p>
+      假設 training operations 的 budget 固定。若全用來增加 model size，就會減少可用來讀取 training tokens 的 operations；若用極小 model 讀大量 tokens，capacity 又可能不足。Scaling-law 研究以實驗擬合 validation loss、model size、training tokens 和 compute 之間的關係。Compute-optimal training 是在研究設定下平衡這些數量；training 最划算的選擇，未必是之後重複 serving 最便宜的 model。
+     </p>
+     <p>
+      來源：
+      <a href="https://arxiv.org/abs/2405.04434">
+       DeepSeek-V2: MLA and MoE
+      </a>
+      .
+     </p>
+     <p>
+      來源：
+      <a href="https://arxiv.org/abs/2312.00752">
+       Mamba: selective state-space models
+      </a>
+      .
+     </p>
+     <p>
+      來源：
+      <a href="https://arxiv.org/abs/2203.15556">
+       Training compute-optimal language models
+      </a>
+      .
+     </p>
+     <h3 id="worked-practice-and-a-readiness-check">
+      實例練習與學習檢查
+     </h3>
+     <p>
+      為每項任務辨認 model 排列和允許的 context：填補完整句子中隱藏的字、續寫未完成的句子，以及根據完整 source 產生翻譯。
+     </p>
+     <p>
+      解釋 causal decoder 為何不能在 training 的 by position 使用答案 bus。再解釋完整 input 的 encoder，為何可以合理地使用 school 右方的詞。
+     </p>
+     <p>
+      當你在解釋中，能以 encoder、decoder、self-attention、cross-attention、training parallelism 和 autoregressive generation 分別指向不同 operation 與限制，就準備好了。
+     </p>
+     <h3 id="three-tasks-with-the-same-words">
+      使用相同詞語的三個任務
+     </h3>
+     <p>
+      任務 A 提供完整句子，問哪個詞代表交通工具。完整 input 的 representation 可以使用某 position 兩邊的資訊。任務 B 提供「I go to school by」，要求續寫；它不能讀取尚未生成的答案。任務 C 提供 source sentence，要求 target-language sentence，因此需要建立兩個 sequence 之間的關係。
+     </p>
+     <p>
+      為以上情況分別寫出 mask 和 tensor shape。若任務 C 有六個 source token 和八個 target position，cross-attention score 的 shape 是 [8,6]，causal target self-attention 則是 [8,8]。兩個 matrix 回答不同的資訊流問題。
+     </p>
+     <p>
+      這個練習避免 architecture 名稱變成脫離內容的標籤。知道可用 input、output 任務和 attention source 後，你就能解釋為何某種排列合適，以及 leakage 會在哪裏發生。
+     </p>
+    </article>
+    <nav aria-label="前後 lecture" class="chapter-pagination">
+     <a href="10.html">
+      <small>
+       上一週
+      </small>
+      逐步拆解 transformer block
+     </a>
+     <a href="12.html">
+      <small>
+       下一週
+      </small>
+      訓練一個小型 transformer
+     </a>
+    </nav>
+   </div>
+   <footer class="footer">
+    <span>
+     Applied AI · 獨立自學課程
+    </span>
+    <span>
+     32 週 · 每週 10 小時
+    </span>
+    <a href="../resources.html#about-this-course">
+     關於課程及資料來源
+    </a>
+   </footer>
+  </main>
+  <dialog aria-labelledby="search-title" class="search-dialog">
+   <div class="dialog-head">
+    <h2 id="search-title">
+     尋找概念
+    </h2>
+    <button aria-label="關閉搜尋" class="search-close" type="button">
+     關閉
+    </button>
+   </div>
+   <label class="sr-only" for="course-search">
+    搜尋所有 lecture 和 tutorial
+   </label>
+   <input autocomplete="off" id="course-search" placeholder="試試 attention、fine-tuning 或 harness……" type="search"/>
+   <p aria-live="polite" class="search-status">
+    搜尋 lecture notes、tutorial、測驗及閱讀材料。
+   </p>
+   <div class="search-results">
+   </div>
+  </dialog>
+  <div aria-live="polite" class="toast" role="status">
+  </div>
+ </body>
+</html>

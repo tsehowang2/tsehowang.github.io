@@ -1,19 +1,652 @@
 <!DOCTYPE html>
-
-<html lang="zh-HK"><head><script src="../../assets/translations-zh-HK.js"></script><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/><title>第二學期考試 · Applied AI</title><meta content="Applied generative AI and LLM systems course material" name="description"/><meta content="#173c36" name="theme-color"/><link href="../../assets/favicon.svg" rel="icon" type="image/svg+xml"/><link href="../../assets/style.css" rel="stylesheet"/><link href="../../assets/slides.css" rel="stylesheet"/><script>window.COURSE_BASE="../";</script><script defer="" src="../../assets/site-config.js"></script><script defer="" src="../assets/search-index.js"></script><script defer="" src="../../assets/app.js"></script><script defer="" src="../../assets/visuals.js"></script><script defer="" src="../../assets/slides.js"></script><script defer="" src="../../assets/beginner-visuals.js"></script><script defer="True" src="../../assets/locale-patterns.js"></script><script defer="True" src="../../assets/locale.js"></script><link href="../../assets/bilingual.css" rel="stylesheet"/><link href="../../tests/semester-2.html" hreflang="en" rel="alternate"/></head><body data-page-kind="exam" data-week="32"><a class="skip-link" href="#main">跳至內容</a><header class="topbar"><button aria-controls="course-sidebar" aria-expanded="false" class="menu-toggle" type="button">選單</button><a class="brand" href="../index.html"><span aria-hidden="true" class="brand-mark">a<span>i</span></span><span>APPLIED AI<small>從原理到實踐</small></span></a><nav aria-label="主要導覽"><a href="../index.html">課程</a><a href="../visuals.html">互動圖解</a><a href="../project.html">專題</a><a class="language-switch" href="../../tests/semester-2.html" hreflang="en" lang="en">English</a></nav><button class="search-open" type="button">搜尋課程 <span aria-hidden="true">/</span></button></header><aside aria-label="課程章節" class="sidebar" id="course-sidebar"><a class="side-home" href="../index.html">課程概覽</a><details class="semester-nav"><summary>第一學期<span>第 1–16 週</span></summary><ol start="1"><li><a href="../lectures/01.html"><span class="week-number">01</span><span>Language model 究竟在學甚麼</span><span class="week-tick" data-week-tick="1"></span></a></li><li><a href="../lectures/02.html"><span class="week-number">02</span><span>從文字到 token 和數值 ID</span><span class="week-tick" data-week-tick="2"></span></a></li><li><a href="../lectures/03.html"><span class="week-number">03</span><span>Word vector 能表達甚麼</span><span class="week-tick" data-week-tick="3"></span></a></li><li><a href="../lectures/04.html"><span class="week-number">04</span><span>從 score 到 probability 和學習訊號</span><span class="week-tick" data-week-tick="4"></span></a></li><li><a href="../lectures/05.html"><span class="week-number">05</span><span>為甚麼語言需要 context 和次序</span><span class="week-tick" data-week-tick="5"></span></a></li><li><a href="../lectures/06.html"><span class="week-number">06</span><span>Attention 由 weighted mixture 開始</span><span class="week-tick" data-week-tick="6"></span></a></li><li><a href="../lectures/07.html"><span class="week-number">07</span><span>Query、key 和 value 從何而來</span><span class="week-tick" data-week-tick="7"></span></a></li><li><a href="../lectures/08.html"><span class="week-number">08</span><span>正確進行 attention scaling 和 masking</span><span class="week-tick" data-week-tick="8"></span></a></li><li><a href="../lectures/09.html"><span class="week-number">09</span><span>多個 attention head 與位置</span><span class="week-tick" data-week-tick="9"></span></a></li><li><a href="../lectures/10.html"><span class="week-number">10</span><span>逐步拆解 transformer block</span><span class="week-tick" data-week-tick="10"></span></a></li><li><a href="../lectures/11.html"><span class="week-number">11</span><span>Encoder、decoder 與完整 model architecture</span><span class="week-tick" data-week-tick="11"></span></a></li><li><a href="../lectures/12.html"><span class="week-number">12</span><span>訓練一個小型 transformer</span><span class="week-tick" data-week-tick="12"></span></a></li><li><a href="../lectures/13.html"><span class="week-number">13</span><span>Generation、decoding 與 KV cache</span><span class="week-tick" data-week-tick="13"></span></a></li><li><a href="../lectures/14.html"><span class="week-number">14</span><span>從 pretraining 到 instruction following 和 reasoning</span><span class="week-tick" data-week-tick="14"></span></a></li><li><a href="../lectures/15.html"><span class="week-number">15</span><span>文字以外的 Generative AI</span><span class="week-tick" data-week-tick="15"></span></a></li><li><a href="../lectures/16.html"><span class="week-number">16</span><span>完整 transformer 導覽與第一學期溫習</span><span class="week-tick" data-week-tick="16"></span></a></li></ol></details><details class="semester-nav" open=""><summary>第二學期<span>第 17–32 週</span></summary><ol start="17"><li><a href="../lectures/17.html"><span class="week-number">17</span><span>從 word vector 到 semantic search</span><span class="week-tick" data-week-tick="17"></span></a></li><li><a href="../lectures/18.html"><span class="week-number">18</span><span>從一列 vector 建立 vector database</span><span class="week-tick" data-week-tick="18"></span></a></li><li><a href="../lectures/19.html"><span class="week-number">19</span><span>把 RAG 理解為開卷作答</span><span class="week-tick" data-week-tick="19"></span></a></li><li><a href="../lectures/20.html"><span class="week-number">20</span><span>在保持基本任務的前提下改善 RAG</span><span class="week-tick" data-week-tick="20"></span></a></li><li><a href="../lectures/21.html"><span class="week-number">21</span><span>評估 retrieval、答案與 uncertainty</span><span class="week-tick" data-week-tick="21"></span></a></li><li><a href="../lectures/22.html"><span class="week-number">22</span><span>CPU、GPU、memory 與 model 資源計算</span><span class="week-tick" data-week-tick="22"></span></a></li><li><a href="../lectures/23.html"><span class="week-number">23</span><span>CUDA kernel 與 profiling</span><span class="week-tick" data-week-tick="23"></span></a></li><li><a href="../lectures/24.html"><span class="week-number">24</span><span>Fine-tuning 由教學 dataset 開始</span><span class="week-tick" data-week-tick="24"></span></a></li><li><a href="../lectures/25.html"><span class="week-number">25</span><span>從小型 matrix 理解 LoRA 和 QLoRA</span><span class="week-tick" data-week-tick="25"></span></a></li><li><a href="../lectures/26.html"><span class="week-number">26</span><span>Fine-tuning 實驗、preference 與 distillation</span><span class="week-tick" data-week-tick="26"></span></a></li><li><a href="../lectures/27.html"><span class="week-number">27</span><span>Tool、function、workflow 與 agent</span><span class="week-tick" data-week-tick="27"></span></a></li><li><a href="../lectures/28.html"><span class="week-number">28</span><span>Harness、planning、memory 與有界執行</span><span class="week-tick" data-week-tick="28"></span></a></li><li><a href="../lectures/29.html"><span class="week-number">29</span><span>從 notebook 到 MLOps 和 inference serving</span><span class="week-tick" data-week-tick="29"></span></a></li><li><a href="../lectures/30.html"><span class="week-number">30</span><span>Monitoring、security、regression test 與 rollback</span><span class="week-tick" data-week-tick="30"></span></a></li><li><a href="../lectures/31.html"><span class="week-number">31</span><span>整合文件助手與進階延伸</span><span class="week-tick" data-week-tick="31"></span></a></li><li><a aria-current="page" href="../lectures/32.html"><span class="week-number">32</span><span>溫習、答辯與持續學習計劃</span><span class="week-tick" data-week-tick="32"></span></a></li></ol></details><div class="side-links"><a href="../visuals.html">互動圖解實驗室 <span>14 個互動課節</span></a><a href="../project.html">文件助手 <span>你的 capstone project</span></a><a href="../resources.html">閱讀材料與環境設定</a></div><div class="side-progress"><div><span>你的進度</span><strong data-progress-count="">0 / 32</strong></div><progress aria-label="已完成 lecture" max="32" value="0"></progress><small>儲存在這個瀏覽器</small></div></aside><main class="main" id="main"><div class="content"><div class="chapter-header"><div class="eyebrow">第二學期／考試</div><h1>第二學期考試</h1><p class="deck">兩小時 · 100 分 · 不參考筆記或 LLM 作答。</p></div><article class="prose"><h3 id="question-1-adaptation-20-points">問題 1：adaptation，20 分</h3>
-<p>W shape [2048,4096]、LoRA rank 16，寫出 A／B shapes 及 parameter counts、dense count 及 adapter／dense ratio（8）。解釋 zero-update initialization（4）。比較 LoRA 與 QLoRA，不可假設 activations 為 four-bit（4）。列出 adapter reproduction 需保存的 dependencies（4）。</p>
-<h3 id="question-2-fine-tuning-study-15-points">問題 2：fine-tuning 研究，15 分</h3>
-<p>新 adapter 把 exact tool JSON 從 75% 提升至 95%，但 incorrect tool arguments 從 5% 增至 20%。設計 controlled evaluation 及 release decision（8），指出兩個可能 dataset 原因（4），解釋為何 training loss 無法單獨解答問題（3）。</p>
-<h3 id="question-3-agent-controller-20-points">問題 3：agent controller，20 分</h3>
-<p>寫有界限 model／tool loop 的 pseudocode，包括 typed proposals、schema checks、scope checks、observations 及 terminal statuses（12）。解釋 step cap 為何不同於 call timeout（4）。解釋如何處理虛構但看似有效的 citation，以及只查 ID 不能證明甚麼（4）。</p>
-<h3 id="question-4-mlops-and-security-20-points">問題 4：MLOps 及 security，20 分</h3>
-<p>更換 embedding model 後，developers 沿用舊 vectors，並在 answer-cache keys 遺漏 tenant scope。解釋兩項 failures（6），提出 manifest／index migration 及 cache controls（8），並定義 regression tests 及 rollback unit（6）。</p>
-<h3 id="question-5-performance-and-scaling-15-points">問題 5：performance 及 scaling，15 分</h3>
-<p>平均 arrival rate 是每秒 1.5 requests，平均在 system 停留 4 秒。估計平均 in-flight work 並列出假設（4）。區分 TTFT 與 end-to-end latency（3）。80% work 可 scalable、20% serial，計算理想四路 speedup（4）。解釋為何不能據此預測 production p95 或 communication cost（4）。</p>
-<h3 id="question-6-capstone-defense-10-points">問題 6：capstone 答辯，10 分</h3>
-<p>agent 比固定 workflow 更昂貴，adapter 沒有可靠改善，而 retriever 可量度地改善 paraphrase questions。選擇 default release，並用會展示的 evidence 支持選擇（6）。指出兩項限制及一個聚焦的下一步 experiment（4）。</p><details class="solution exam-solution"><summary>完成作答後，開啟完整評分指引</summary><p><strong>Q1（20）。</strong> A=[16,4096]、B=[2048,16]。adapter=16×(4096+2048)=98,304；dense=2048×4096=8,388,608；ratio=.01171875=1.171875%（8）。一個 random factor／一個 zero factor 使 initial delta 為零，同時容許 gradient flow；兩者同為零可能阻止最初 factor learning（4）。LoRA 在 frozen base 上訓練 factors；QLoRA 額外 quantize frozen base，並在需要時保留較高 precision compute／state（4）。base／tokenizer revision、adapter config／weights、target modules、environment、training data／config 及 eval metadata；列出四種不同 dependencies（4）。</p>
-<p><strong>Q2（15）。</strong> 固定 model／base／context／tasks／decoding／tool validator，另設 prompt control；逐個 task 評 valid JSON 及 semantic argument correctness、invalid／forbidden actions 及 budgets；即使 syntax 改善，incorrect actions 若違反 gate 仍拒絕（8）。dataset 可能獎勵格式有效但 arguments 錯誤、欠 negative／refusal cases、有 wrong-version labels，或 paraphrases leakage；診斷兩項原因（4）。loss 只是對 labels 的 fit，有偏差／錯誤 labels 也能被成功學會（3）。</p>
-<p><strong>Q3（20）。</strong> 初始化 scope／state／budgets；在有限 steps 內，用受控 context 呼叫 planner；parse 及 validate proposal；final branch 驗證 citations／contract 後終止；tool action 驗證 name／schema／authority／limits，以 per-call enforcement 執行，記錄 normalized result；捕捉 typed failures；明確標示 budget 耗盡。六項有意義 controls／branches，每項 2 分（12）。blocking call 可在 loop 檢查前超過 wall time，需要真正 client timeout／process enforcement（4）。拒絕未授權／未觀察過的 IDs；現有 ID 仍不能證明 semantic entailment（4）。</p>
-<p><strong>Q4（20）。</strong> 不相容 coordinate systems 使舊 vectors 不適用；cache 遺漏 tenant scope 可暴露受限答案（6）。manifest 記錄 model／index／source compatibility，重建 versioned index、benchmark／switch／rollback；scope-aware cache keys、permission enforcement 及 invalidation（8）。tests 刻意配錯 embedding manifest，並作 cross-tenant requests；rollback 應恢復一致的 prompt／model／adapter／index／tool／corpus config，而非只有 weights（6）。</p>
-<p><strong>Q5（15）。</strong> L=1.5×4=6，平均有六項在 system 內，假設 averages 穩定且 boundary 正確（4）。TTFT 直到第一個 output token；end-to-end 直到 response 完成，包括所有 application stages（3）。1/(.2+.8/4)=2.5 理想 speedup（4）。tail latency 依賴 variance／load／queueing，而 distributed work 有 communication／coordination；不能從這些 means 預測 p95（4）。</p>
-<p><strong>Q6（10）。</strong> 如 agent／adapter 沒有證實價值，應選符合條件的 retriever 配固定 workflow／base generator；保留 experimental branches 及 raw comparisons，報告 budget／quality／safety 及實際 negative results（6）。限制可包括 task-set size、small model capability、缺乏真正 users 或未測 high concurrency。下一步 experiment 必須用 control 及 metric 針對觀察到的 failure，例如在固定 context budget 下 rerank 未命中的 paraphrases（4）。</p></details></article></div><footer class="footer"><span>Applied AI · 獨立自學課程</span><span>32 週 · 每週 10 小時</span><a href="../resources.html#about-this-course">關於課程及資料來源</a></footer></main><dialog aria-labelledby="search-title" class="search-dialog"><div class="dialog-head"><h2 id="search-title">尋找概念</h2><button aria-label="關閉搜尋" class="search-close" type="button">關閉</button></div><label class="sr-only" for="course-search">搜尋所有 lecture 和 tutorial</label><input autocomplete="off" id="course-search" placeholder="試試 attention、fine-tuning 或 harness……" type="search"/><p aria-live="polite" class="search-status">搜尋 lecture notes、tutorial、測驗及閱讀材料。</p><div class="search-results"></div></dialog><div aria-live="polite" class="toast" role="status"></div></body></html>
+<html lang="zh-HK">
+ <head>
+  <script src="../../assets/translations-zh-HK.js">
+  </script>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width,initial-scale=1" name="viewport"/>
+  <title>
+   第二學期考試 · Applied AI
+  </title>
+  <meta content="Applied generative AI and LLM systems course material" name="description"/>
+  <meta content="#173c36" name="theme-color"/>
+  <link href="../../assets/favicon.svg" rel="icon" type="image/svg+xml"/>
+  <link href="../../assets/style.css" rel="stylesheet"/>
+  <link href="../../assets/slides.css" rel="stylesheet"/>
+  <script>
+   window.COURSE_BASE="../";
+  </script>
+  <script defer="" src="../../assets/site-config.js">
+  </script>
+  <script defer="" src="../assets/search-index.js">
+  </script>
+  <script defer="" src="../../assets/app.js">
+  </script>
+  <script defer="" src="../../assets/visuals.js">
+  </script>
+  <script defer="" src="../../assets/slides.js">
+  </script>
+  <script defer="" src="../../assets/beginner-visuals.js">
+  </script>
+  <script defer="True" src="../../assets/locale-patterns.js">
+  </script>
+  <script defer="True" src="../../assets/locale.js">
+  </script>
+  <link href="../../assets/bilingual.css" rel="stylesheet"/>
+  <link href="../../tests/semester-2.html" hreflang="en" rel="alternate"/>
+  <link href="../../assets/reader-v3.css" rel="stylesheet"/>
+  <script defer="True" src="../../assets/reader-v3.js">
+  </script>
+ </head>
+ <body data-page-kind="exam" data-week="32">
+  <a class="skip-link" href="#main">
+   跳至內容
+  </a>
+  <header class="topbar">
+   <button aria-controls="course-sidebar" aria-expanded="false" class="menu-toggle" type="button">
+    選單
+   </button>
+   <a class="brand" href="../index.html">
+    <span aria-hidden="true" class="brand-mark">
+     a
+     <span>
+      i
+     </span>
+    </span>
+    <span>
+     APPLIED AI
+     <small>
+      從原理到實踐
+     </small>
+    </span>
+   </a>
+   <nav aria-label="主要導覽">
+    <a href="../index.html">
+     課程
+    </a>
+    <a href="../visuals.html">
+     互動圖解
+    </a>
+    <a href="../project.html">
+     專題
+    </a>
+    <a class="language-switch" href="../../tests/semester-2.html" hreflang="en" lang="en">
+     English
+    </a>
+   </nav>
+   <button class="search-open" type="button">
+    搜尋課程
+    <span aria-hidden="true">
+     /
+    </span>
+   </button>
+  </header>
+  <aside aria-label="課程章節" class="sidebar" id="course-sidebar">
+   <a class="side-home" href="../index.html">
+    課程概覽
+   </a>
+   <details class="semester-nav">
+    <summary>
+     第一學期
+     <span>
+      第 1–16 週
+     </span>
+    </summary>
+    <ol start="1">
+     <li>
+      <a href="../lectures/01.html">
+       <span class="week-number">
+        01
+       </span>
+       <span>
+        Language model 究竟在學甚麼
+       </span>
+       <span class="week-tick" data-week-tick="1">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/02.html">
+       <span class="week-number">
+        02
+       </span>
+       <span>
+        從文字到 token 和數值 ID
+       </span>
+       <span class="week-tick" data-week-tick="2">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/03.html">
+       <span class="week-number">
+        03
+       </span>
+       <span>
+        Word vector 能表達甚麼
+       </span>
+       <span class="week-tick" data-week-tick="3">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/04.html">
+       <span class="week-number">
+        04
+       </span>
+       <span>
+        從 score 到 probability 和學習訊號
+       </span>
+       <span class="week-tick" data-week-tick="4">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/05.html">
+       <span class="week-number">
+        05
+       </span>
+       <span>
+        為甚麼語言需要 context 和次序
+       </span>
+       <span class="week-tick" data-week-tick="5">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/06.html">
+       <span class="week-number">
+        06
+       </span>
+       <span>
+        Attention 由 weighted mixture 開始
+       </span>
+       <span class="week-tick" data-week-tick="6">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/07.html">
+       <span class="week-number">
+        07
+       </span>
+       <span>
+        Query、key 和 value 從何而來
+       </span>
+       <span class="week-tick" data-week-tick="7">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/08.html">
+       <span class="week-number">
+        08
+       </span>
+       <span>
+        正確進行 attention scaling 和 masking
+       </span>
+       <span class="week-tick" data-week-tick="8">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/09.html">
+       <span class="week-number">
+        09
+       </span>
+       <span>
+        多個 attention head 與位置
+       </span>
+       <span class="week-tick" data-week-tick="9">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/10.html">
+       <span class="week-number">
+        10
+       </span>
+       <span>
+        逐步拆解 transformer block
+       </span>
+       <span class="week-tick" data-week-tick="10">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/11.html">
+       <span class="week-number">
+        11
+       </span>
+       <span>
+        Encoder、decoder 與完整 model architecture
+       </span>
+       <span class="week-tick" data-week-tick="11">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/12.html">
+       <span class="week-number">
+        12
+       </span>
+       <span>
+        訓練一個小型 transformer
+       </span>
+       <span class="week-tick" data-week-tick="12">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/13.html">
+       <span class="week-number">
+        13
+       </span>
+       <span>
+        Generation、decoding 與 KV cache
+       </span>
+       <span class="week-tick" data-week-tick="13">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/14.html">
+       <span class="week-number">
+        14
+       </span>
+       <span>
+        從 pretraining 到 instruction following 和 reasoning
+       </span>
+       <span class="week-tick" data-week-tick="14">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/15.html">
+       <span class="week-number">
+        15
+       </span>
+       <span>
+        文字以外的 Generative AI
+       </span>
+       <span class="week-tick" data-week-tick="15">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/16.html">
+       <span class="week-number">
+        16
+       </span>
+       <span>
+        完整 transformer 導覽與第一學期溫習
+       </span>
+       <span class="week-tick" data-week-tick="16">
+       </span>
+      </a>
+     </li>
+    </ol>
+   </details>
+   <details class="semester-nav" open="">
+    <summary>
+     第二學期
+     <span>
+      第 17–32 週
+     </span>
+    </summary>
+    <ol start="17">
+     <li>
+      <a href="../lectures/17.html">
+       <span class="week-number">
+        17
+       </span>
+       <span>
+        從 word vector 到 semantic search
+       </span>
+       <span class="week-tick" data-week-tick="17">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/18.html">
+       <span class="week-number">
+        18
+       </span>
+       <span>
+        從一列 vector 建立 vector database
+       </span>
+       <span class="week-tick" data-week-tick="18">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/19.html">
+       <span class="week-number">
+        19
+       </span>
+       <span>
+        把 RAG 理解為開卷作答
+       </span>
+       <span class="week-tick" data-week-tick="19">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/20.html">
+       <span class="week-number">
+        20
+       </span>
+       <span>
+        在保持基本任務的前提下改善 RAG
+       </span>
+       <span class="week-tick" data-week-tick="20">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/21.html">
+       <span class="week-number">
+        21
+       </span>
+       <span>
+        評估 retrieval、答案與 uncertainty
+       </span>
+       <span class="week-tick" data-week-tick="21">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/22.html">
+       <span class="week-number">
+        22
+       </span>
+       <span>
+        CPU、GPU、memory 與 model 資源計算
+       </span>
+       <span class="week-tick" data-week-tick="22">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/23.html">
+       <span class="week-number">
+        23
+       </span>
+       <span>
+        CUDA kernel 與 profiling
+       </span>
+       <span class="week-tick" data-week-tick="23">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/24.html">
+       <span class="week-number">
+        24
+       </span>
+       <span>
+        Fine-tuning 由教學 dataset 開始
+       </span>
+       <span class="week-tick" data-week-tick="24">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/25.html">
+       <span class="week-number">
+        25
+       </span>
+       <span>
+        從小型 matrix 理解 LoRA 和 QLoRA
+       </span>
+       <span class="week-tick" data-week-tick="25">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/26.html">
+       <span class="week-number">
+        26
+       </span>
+       <span>
+        Fine-tuning 實驗、preference 與 distillation
+       </span>
+       <span class="week-tick" data-week-tick="26">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/27.html">
+       <span class="week-number">
+        27
+       </span>
+       <span>
+        Tool、function、workflow 與 agent
+       </span>
+       <span class="week-tick" data-week-tick="27">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/28.html">
+       <span class="week-number">
+        28
+       </span>
+       <span>
+        Harness、planning、memory 與有界執行
+       </span>
+       <span class="week-tick" data-week-tick="28">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/29.html">
+       <span class="week-number">
+        29
+       </span>
+       <span>
+        從 notebook 到 MLOps 和 inference serving
+       </span>
+       <span class="week-tick" data-week-tick="29">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/30.html">
+       <span class="week-number">
+        30
+       </span>
+       <span>
+        Monitoring、security、regression test 與 rollback
+       </span>
+       <span class="week-tick" data-week-tick="30">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/31.html">
+       <span class="week-number">
+        31
+       </span>
+       <span>
+        整合文件助手與進階延伸
+       </span>
+       <span class="week-tick" data-week-tick="31">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a aria-current="page" href="../lectures/32.html">
+       <span class="week-number">
+        32
+       </span>
+       <span>
+        溫習、答辯與持續學習計劃
+       </span>
+       <span class="week-tick" data-week-tick="32">
+       </span>
+      </a>
+     </li>
+    </ol>
+   </details>
+   <div class="side-links">
+    <a href="../visuals.html">
+     互動圖解實驗室
+     <span>
+      14 個互動課節
+     </span>
+    </a>
+    <a href="../project.html">
+     文件助手
+     <span>
+      你的 capstone project
+     </span>
+    </a>
+    <a href="../resources.html">
+     閱讀材料與環境設定
+    </a>
+   </div>
+   <div class="side-progress">
+    <div>
+     <span>
+      你的進度
+     </span>
+     <strong data-progress-count="">
+      0 / 32
+     </strong>
+    </div>
+    <progress aria-label="已完成 lecture" max="32" value="0">
+    </progress>
+    <small>
+     儲存在這個瀏覽器
+    </small>
+   </div>
+  </aside>
+  <main class="main" id="main">
+   <div class="content">
+    <div class="chapter-header">
+     <div class="eyebrow">
+      第二學期／考試
+     </div>
+     <h1>
+      第二學期考試
+     </h1>
+     <p class="deck">
+      兩小時 · 100 分 · 不參考筆記或 LLM 作答。
+     </p>
+    </div>
+    <article class="prose">
+     <h3 id="question-1-adaptation-20-points">
+      問題 1：adaptation，20 分
+     </h3>
+     <p>
+      W shape [2048,4096]、LoRA rank 16，寫出 A／B shapes 及 parameter counts、dense count 及 adapter／dense ratio（8）。解釋 zero-update initialization（4）。比較 LoRA 與 QLoRA，不可假設 activations 為 four-bit（4）。列出 adapter reproduction 需保存的 dependencies（4）。
+     </p>
+     <h3 id="question-2-fine-tuning-study-15-points">
+      問題 2：fine-tuning 研究，15 分
+     </h3>
+     <p>
+      新 adapter 把 exact tool JSON 從 75% 提升至 95%，但 incorrect tool arguments 從 5% 增至 20%。設計 controlled evaluation 及 release decision（8），指出兩個可能 dataset 原因（4），解釋為何 training loss 無法單獨解答問題（3）。
+     </p>
+     <h3 id="question-3-agent-controller-20-points">
+      問題 3：agent controller，20 分
+     </h3>
+     <p>
+      寫有界限 model／tool loop 的 pseudocode，包括 typed proposals、schema checks、scope checks、observations 及 terminal statuses（12）。解釋 step cap 為何不同於 call timeout（4）。解釋如何處理虛構但看似有效的 citation，以及只查 ID 不能證明甚麼（4）。
+     </p>
+     <h3 id="question-4-mlops-and-security-20-points">
+      問題 4：MLOps 及 security，20 分
+     </h3>
+     <p>
+      更換 embedding model 後，developers 沿用舊 vectors，並在 answer-cache keys 遺漏 tenant scope。解釋兩項 failures（6），提出 manifest／index migration 及 cache controls（8），並定義 regression tests 及 rollback unit（6）。
+     </p>
+     <h3 id="question-5-performance-and-scaling-15-points">
+      問題 5：performance 及 scaling，15 分
+     </h3>
+     <p>
+      平均 arrival rate 是每秒 1.5 requests，平均在 system 停留 4 秒。估計平均 in-flight work 並列出假設（4）。區分 TTFT 與 end-to-end latency（3）。80% work 可 scalable、20% serial，計算理想四路 speedup（4）。解釋為何不能據此預測 production p95 或 communication cost（4）。
+     </p>
+     <h3 id="question-6-capstone-defense-10-points">
+      問題 6：capstone 答辯，10 分
+     </h3>
+     <p>
+      agent 比固定 workflow 更昂貴，adapter 沒有可靠改善，而 retriever 可量度地改善 paraphrase questions。選擇 default release，並用會展示的 evidence 支持選擇（6）。指出兩項限制及一個聚焦的下一步 experiment（4）。
+     </p>
+     <details class="solution exam-solution">
+      <summary>
+       完成作答後，開啟完整評分指引
+      </summary>
+      <p>
+       <strong>
+        Q1（20）。
+       </strong>
+       A=[16,4096]，B=[2048,16]。Adapter=16×(4096+2048)=98,304；dense=2048×4096=8,388,608；ratio=.01171875=1.171875% (8)。Random A 和 zero B 令初始 delta 為零。B 可先收到 gradient；B 改變後 A 才開始學習。兩者均為零會阻斷兩者首次 factor gradients (4)。LoRA 在 frozen base 上 training factors；QLoRA 再 quantize frozen base，按需要保留 higher-precision compute/state (4)。可重現 adapter 所需 dependencies 包括 base/tokenizer revision、adapter config/weights、target modules、environment、training data/config 和 eval metadata；列出四項不同 dependencies (4)。
+      </p>
+      <p>
+       <strong>
+        Q2（15）。
+       </strong>
+       固定 model／base／context／tasks／decoding／tool validator，另設 prompt control；逐個 task 評 valid JSON 及 semantic argument correctness、invalid／forbidden actions 及 budgets；即使 syntax 改善，incorrect actions 若違反 gate 仍拒絕（8）。dataset 可能獎勵格式有效但 arguments 錯誤、欠 negative／refusal cases、有 wrong-version labels，或 paraphrases leakage；診斷兩項原因（4）。loss 只是對 labels 的 fit，有偏差／錯誤 labels 也能被成功學會（3）。
+      </p>
+      <p>
+       <strong>
+        Q3（20）。
+       </strong>
+       初始化 scope／state／budgets；在有限 steps 內，用受控 context 呼叫 planner；parse 及 validate proposal；final branch 驗證 citations／contract 後終止；tool action 驗證 name／schema／authority／limits，以 per-call enforcement 執行，記錄 normalized result；捕捉 typed failures；明確標示 budget 耗盡。六項有意義 controls／branches，每項 2 分（12）。blocking call 可在 loop 檢查前超過 wall time，需要真正 client timeout／process enforcement（4）。拒絕未授權／未觀察過的 IDs；現有 ID 仍不能證明 semantic entailment（4）。
+      </p>
+      <p>
+       <strong>
+        Q4（20）。
+       </strong>
+       不相容 coordinate systems 使舊 vectors 不適用；cache 遺漏 tenant scope 可暴露受限答案（6）。manifest 記錄 model／index／source compatibility，重建 versioned index、benchmark／switch／rollback；scope-aware cache keys、permission enforcement 及 invalidation（8）。tests 刻意配錯 embedding manifest，並作 cross-tenant requests；rollback 應恢復一致的 prompt／model／adapter／index／tool／corpus config，而非只有 weights（6）。
+      </p>
+      <p>
+       <strong>
+        Q5（15）。
+       </strong>
+       L=1.5×4=6，平均有六項在 system 內，假設 averages 穩定且 boundary 正確（4）。TTFT 直到第一個 output token；end-to-end 直到 response 完成，包括所有 application stages（3）。1/(.2+.8/4)=2.5 理想 speedup（4）。tail latency 依賴 variance／load／queueing，而 distributed work 有 communication／coordination；不能從這些 means 預測 p95（4）。
+      </p>
+      <p>
+       <strong>
+        Q6（10）。
+       </strong>
+       如 agent／adapter 沒有證實價值，應選符合條件的 retriever 配固定 workflow／base generator；保留 experimental branches 及 raw comparisons，報告 budget／quality／safety 及實際 negative results（6）。限制可包括 task-set size、small model capability、缺乏真正 users 或未測 high concurrency。下一步 experiment 必須用 control 及 metric 針對觀察到的 failure，例如在固定 context budget 下 rerank 未命中的 paraphrases（4）。
+      </p>
+     </details>
+    </article>
+   </div>
+   <footer class="footer">
+    <span>
+     Applied AI · 獨立自學課程
+    </span>
+    <span>
+     32 週 · 每週 10 小時
+    </span>
+    <a href="../resources.html#about-this-course">
+     關於課程及資料來源
+    </a>
+   </footer>
+  </main>
+  <dialog aria-labelledby="search-title" class="search-dialog">
+   <div class="dialog-head">
+    <h2 id="search-title">
+     尋找概念
+    </h2>
+    <button aria-label="關閉搜尋" class="search-close" type="button">
+     關閉
+    </button>
+   </div>
+   <label class="sr-only" for="course-search">
+    搜尋所有 lecture 和 tutorial
+   </label>
+   <input autocomplete="off" id="course-search" placeholder="試試 attention、fine-tuning 或 harness……" type="search"/>
+   <p aria-live="polite" class="search-status">
+    搜尋 lecture notes、tutorial、測驗及閱讀材料。
+   </p>
+   <div class="search-results">
+   </div>
+  </dialog>
+  <div aria-live="polite" class="toast" role="status">
+  </div>
+ </body>
+</html>

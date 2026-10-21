@@ -1,67 +1,1197 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/><title>CUDA kernels and profiling · Applied AI</title><meta content="Applied generative AI and LLM systems course material" name="description"/><meta content="#173c36" name="theme-color"/><link href="../assets/favicon.svg" rel="icon" type="image/svg+xml"/><link href="../assets/style.css" rel="stylesheet"/><link href="../assets/slides.css" rel="stylesheet"/><script>window.COURSE_BASE="../";</script><script defer="" src="../assets/site-config.js"></script><script defer="" src="../assets/search-index.js"></script><script defer="" src="../assets/app.js"></script><script defer="" src="../assets/visuals.js"></script><script defer="" src="../assets/slides.js"></script><script defer="" src="../assets/beginner-visuals.js"></script><link href="../zh-HK/lectures/23.html" hreflang="zh-HK" rel="alternate"/><link href="../assets/bilingual.css" rel="stylesheet"/></head><body data-page-kind="lecture" data-week="23"><a class="skip-link" href="#main">Skip to content</a><header class="topbar"><button aria-controls="course-sidebar" aria-expanded="false" class="menu-toggle" type="button">Menu</button><a class="brand" href="../index.html"><span aria-hidden="true" class="brand-mark">a<span>i</span></span><span>APPLIED AI<small>Principles into practice</small></span></a><nav aria-label="Main navigation"><a href="../index.html">The course</a><a href="../visuals.html">Visual lab</a><a href="../project.html">Project</a><a class="language-switch" href="../zh-HK/lectures/23.html" hreflang="zh-HK" lang="zh-HK">繁體中文</a></nav><button class="search-open" type="button">Search the course <span aria-hidden="true">/</span></button></header><aside aria-label="Course chapters" class="sidebar" id="course-sidebar"><a class="side-home" href="../index.html">Course overview</a><details class="semester-nav"><summary>Semester 1<span>Weeks 1–16</span></summary><ol start="1"><li><a href="../lectures/01.html"><span class="week-number">01</span><span>What a language model is trying to learn</span><span class="week-tick" data-week-tick="1"></span></a></li><li><a href="../lectures/02.html"><span class="week-number">02</span><span>From text to tokens and numerical IDs</span><span class="week-tick" data-week-tick="2"></span></a></li><li><a href="../lectures/03.html"><span class="week-number">03</span><span>What word vectors can represent</span><span class="week-tick" data-week-tick="3"></span></a></li><li><a href="../lectures/04.html"><span class="week-number">04</span><span>From scores to probabilities and learning signals</span><span class="week-tick" data-week-tick="4"></span></a></li><li><a href="../lectures/05.html"><span class="week-number">05</span><span>Why language needs context and order</span><span class="week-tick" data-week-tick="5"></span></a></li><li><a href="../lectures/06.html"><span class="week-number">06</span><span>Attention begins as a weighted mixture</span><span class="week-tick" data-week-tick="6"></span></a></li><li><a href="../lectures/07.html"><span class="week-number">07</span><span>Where queries keys and values come from</span><span class="week-tick" data-week-tick="7"></span></a></li><li><a href="../lectures/08.html"><span class="week-number">08</span><span>Scaling and masking attention correctly</span><span class="week-tick" data-week-tick="8"></span></a></li><li><a href="../lectures/09.html"><span class="week-number">09</span><span>Multiple attention heads and position</span><span class="week-tick" data-week-tick="9"></span></a></li><li><a href="../lectures/10.html"><span class="week-number">10</span><span>The transformer block step by step</span><span class="week-tick" data-week-tick="10"></span></a></li><li><a href="../lectures/11.html"><span class="week-number">11</span><span>Encoders decoders and complete model architectures</span><span class="week-tick" data-week-tick="11"></span></a></li><li><a href="../lectures/12.html"><span class="week-number">12</span><span>Training a small transformer</span><span class="week-tick" data-week-tick="12"></span></a></li><li><a href="../lectures/13.html"><span class="week-number">13</span><span>Generation decoding and the KV cache</span><span class="week-tick" data-week-tick="13"></span></a></li><li><a href="../lectures/14.html"><span class="week-number">14</span><span>From pretraining to instruction following and reasoning</span><span class="week-tick" data-week-tick="14"></span></a></li><li><a href="../lectures/15.html"><span class="week-number">15</span><span>Generative AI beyond text</span><span class="week-tick" data-week-tick="15"></span></a></li><li><a href="../lectures/16.html"><span class="week-number">16</span><span>A complete transformer walkthrough and first semester review</span><span class="week-tick" data-week-tick="16"></span></a></li></ol></details><details class="semester-nav" open=""><summary>Semester 2<span>Weeks 17–32</span></summary><ol start="17"><li><a href="../lectures/17.html"><span class="week-number">17</span><span>From word vectors to semantic search</span><span class="week-tick" data-week-tick="17"></span></a></li><li><a href="../lectures/18.html"><span class="week-number">18</span><span>A vector database from a list of vectors</span><span class="week-tick" data-week-tick="18"></span></a></li><li><a href="../lectures/19.html"><span class="week-number">19</span><span>RAG as an open book question</span><span class="week-tick" data-week-tick="19"></span></a></li><li><a href="../lectures/20.html"><span class="week-number">20</span><span>Improving RAG without losing the basic task</span><span class="week-tick" data-week-tick="20"></span></a></li><li><a href="../lectures/21.html"><span class="week-number">21</span><span>Evaluating retrieval answers and uncertainty</span><span class="week-tick" data-week-tick="21"></span></a></li><li><a href="../lectures/22.html"><span class="week-number">22</span><span>CPU GPU memory and model resource accounting</span><span class="week-tick" data-week-tick="22"></span></a></li><li><a aria-current="page" href="../lectures/23.html"><span class="week-number">23</span><span>CUDA kernels and profiling</span><span class="week-tick" data-week-tick="23"></span></a></li><li><a href="../lectures/24.html"><span class="week-number">24</span><span>Fine tuning starts with a teaching dataset</span><span class="week-tick" data-week-tick="24"></span></a></li><li><a href="../lectures/25.html"><span class="week-number">25</span><span>LoRA and QLoRA from a small matrix</span><span class="week-tick" data-week-tick="25"></span></a></li><li><a href="../lectures/26.html"><span class="week-number">26</span><span>Fine tuning experiments preferences and distillation</span><span class="week-tick" data-week-tick="26"></span></a></li><li><a href="../lectures/27.html"><span class="week-number">27</span><span>Tools functions workflows and agents</span><span class="week-tick" data-week-tick="27"></span></a></li><li><a href="../lectures/28.html"><span class="week-number">28</span><span>Harnesses planning memory and bounded execution</span><span class="week-tick" data-week-tick="28"></span></a></li><li><a href="../lectures/29.html"><span class="week-number">29</span><span>From a notebook to MLOps and inference serving</span><span class="week-tick" data-week-tick="29"></span></a></li><li><a href="../lectures/30.html"><span class="week-number">30</span><span>Monitoring security regression tests and rollback</span><span class="week-tick" data-week-tick="30"></span></a></li><li><a href="../lectures/31.html"><span class="week-number">31</span><span>Integrating the documentation assistant and advanced extensions</span><span class="week-tick" data-week-tick="31"></span></a></li><li><a href="../lectures/32.html"><span class="week-number">32</span><span>Review defense and a continuing learning plan</span><span class="week-tick" data-week-tick="32"></span></a></li></ol></details><div class="side-links"><a href="../visuals.html">Visual laboratory <span>14 interactive lessons</span></a><a href="../project.html">Documentation assistant <span>Your capstone project</span></a><a href="../resources.html">Readings and setup</a></div><div class="side-progress"><div><span>Your progress</span><strong data-progress-count="">0 / 32</strong></div><progress aria-label="Completed lectures" max="32" value="0"></progress><small>Saved in this browser</small></div></aside><main class="main" id="main"><div class="content"><div class="chapter-header"><div class="eyebrow">Semester 2 / Week 23</div><h1>CUDA kernels and profiling</h1></div><div class="lesson-links"><a href="../tutorials/23.html">Tutorial 23</a><a href="../tests/23.html">Test your understanding</a><button aria-pressed="false" class="mark-complete" data-week="23" type="button">Mark as complete</button></div><section aria-label="Lecture slides" class="lecture-deck" id="lecture-slides"><div class="deck-top"><div><div class="eyebrow">Lecture slides · Week 23</div><h2>Learn one step at a time.</h2></div><button class="deck-present" type="button">Present</button></div><p class="deck-help">Read each explanation, pause to predict the result, then continue. Use the arrow keys while the presentation is focused. The complete lecture reader is below.</p><div aria-label="Presentation: use left and right arrow keys" class="slide-viewport" tabindex="0"><section class="lecture-slide" data-slide=""><div class="slide-stage">Start with an example</div><h3>One operation many independent elements</h3><div class="slide-prose"><p>Take two vectors of 257 numbers and add corresponding elements. A CPU loop is easy to understand: for each index i, compute c[i]=a[i]+b[i].</p>
-<p>A CUDA kernel can assign this elementwise work across threads on a GPU. The mathematical result stays the same. What changes is how the program assigns work, accesses memory, and measures execution.</p>
-<p>We begin with vector addition rather than a custom attention kernel because correctness and indexing should be transparent before optimization becomes complicated.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Start with an example</div><h3>Threads blocks and an index</h3><div class="slide-prose"><p>A one-dimensional kernel can compute i=blockIdx.x×blockDim.x+threadIdx.x. If a block has 256 threads, two blocks provide 512 thread indices for a length-257 vector.</p>
-<p>Threads with i≥257 must not access the arrays. The bounds check is part of correctness, not a disposable optimization detail.</p>
-<p>Blocks can execute independently. Do not assume an ordinary kernel has a general synchronization barrier across the whole grid.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Build the mechanism</div><h3>Host and device responsibilities</h3><div class="slide-prose"><p>The CPU host allocates or prepares inputs, manages device memory, transfers values where required, launches the kernel, and retrieves results.</p>
-<p>GPU device code performs the per-thread operation. A kernel launch does not mean every result is immediately available to the CPU; execution can be asynchronous.</p>
-<p>Follow the sequence in the provided CUDA C++ example and identify which statements belong to allocation, transfer, launch, synchronization, timing, and cleanup.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Build the mechanism</div><h3>Memory access and arithmetic intensity</h3><div class="slide-prose"><p>For float32 vector addition, two input reads and one output write move roughly twelve bytes per addition, ignoring caching and other effects. That is low arithmetic intensity.</p>
-<p>Adjacent threads reading adjacent elements can allow efficient memory transactions. Scattered accesses and repeated unnecessary transfers can hurt performance.</p>
-<p>Matrix multiplication can reuse values in tiles and reach a different balance between arithmetic and movement. Kernel optimization requires understanding that reuse and the device rather than assuming more threads always means faster work.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Build the mechanism</div><h3>Timing an asynchronous device</h3><div class="slide-prose"><p>Timing only a launch with a CPU clock may mostly measure dispatch. Use CUDA events or synchronization around the interval being measured.</p>
-<p>Warm up, repeat measurements, and report a median and spread. State whether transfers, allocation, compilation, and first-run effects are included.</p>
-<p>Kernel-only time and end-to-end application time answer different questions. Keep both when diagnosing whether an optimization matters to the actual workload.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Build the mechanism</div><h3>Amdahl reasoning for a practical optimization</h3><div class="slide-prose"><p>Suppose the full task takes 20 ms, including a 3 ms kernel. Making that kernel twice as fast reduces total time to 18.5 ms, a speedup of about 1.081.</p>
-<p>The arithmetic explains why a dramatic kernel speedup can yield a modest user-visible improvement. Optimize the components that dominate the measured task.</p>
-<p>A wrong result is not a speedup. Validate against a CPU reference with appropriate tolerances before reporting performance.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Build the mechanism</div><h3>Profiling the transformer operations</h3><div class="slide-prose"><p>Use a profiler to inspect operator times, shapes, memory, and CPU/GPU activity. Start with a short reproducible workload and save the trace.</p>
-<p>FlashAttention is an example of redesigning attention computation to reduce memory traffic while preserving its mathematical operation subject to numerical behavior. It is not a different language-model objective.</p>
-<p>Custom kernels and distributed training are deeper areas. Our required exercise establishes introductory CUDA indexing, correctness, synchronized measurement, and bottleneck diagnosis.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Build the mechanism</div><h3>Worked practice and a readiness check</h3><div class="slide-prose"><p>Run sizes 1,257, and a larger vector. Explain why the awkward size matters. Repeat with different block sizes while retaining bounds checks.</p>
-<p>Profile a matrix multiplication or short model pass. Separate transfer and execution costs, and identify one bottleneck supported by the trace.</p>
-<p>You are ready when your performance claim includes correct outputs, a timing boundary, device/software details, and a reproducible workload.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Optional deeper study</div><h3>A deeper pass after the worked introduction</h3><div class="slide-prose"><p>The following reference treatment is for a second pass. First explain the ordinary example above, then use the equations and implementation details below to make the explanation more precise.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Optional deeper study</div><h3>Further study 10 Intuition</h3><div class="slide-prose"><p>PyTorch operations eventually execute kernels. A CUDA kernel specifies work for many threads. Writing one small kernel makes launch overhead, indexing, memory access and synchronization concrete, even if most application work should continue using optimized libraries.</p>
-<p>For a one-dimensional array, thread index <code>i = blockIdx.x * blockDim.x + threadIdx.x</code>. A vector-add kernel computes <code>c[i]=a[i]+b[i]</code> when <code>i&lt;n</code>. The bounds check matters when n is not divisible by the block size. Blocks are scheduled independently; code must not assume a general grid-wide barrier inside an ordinary kernel.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Optional deeper study</div><h3>Further study 10 Memory and performance</h3><div class="slide-prose"><p>Adjacent threads reading adjacent elements often produce more efficient memory transactions than scattered accesses. Shared memory can reuse data within a block, but reuse must justify its loading and synchronization overhead. A barrier must be reached consistently by participating threads. Occupancy is one diagnostic, not an objective that guarantees maximum speed.</p>
-<p>Arithmetic intensity is approximate operations divided by bytes moved. Vector addition performs roughly one addition for two input reads and one output write: about 1/12 operations per byte for float32, ignoring caching. This is low intensity, so increasing theoretical arithmetic throughput may help little compared with memory bandwidth. A matrix multiplication can reuse tiles and attain much higher intensity.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Optional deeper study</div><h3>Further study 10 Timing worked example</h3><div class="slide-prose"><p>GPU work is asynchronous relative to the host. Timing a launch without synchronizing may mostly measure dispatch. Use CUDA events or synchronization around the defined measurement interval. Warm up first, repeat the operation, and report a median and spread. Include data transfers only if your stated question is end-to-end latency; separately report kernel-only time when studying the device operation.</p>
-<p>Suppose end-to-end time is 20 ms, of which 3 ms is the kernel. Making the kernel twice as fast yields 18.5 ms total, a speedup of only 1.081. This is Amdahl-style reasoning: optimize what dominates the real task.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Optional deeper study</div><h3>Further study 10 Experiment</h3><div class="slide-prose"><p>notebook 23 compiles the bundled vector-add example if <code>nvcc</code> and a GPU are present. Run n=1, n=257 and a large n to exercise indexing and overhead. Compare against a CPU reference with a numerical tolerance. Then profile a PyTorch matrix multiplication or a short transformer forward pass. Save the trace and explain one bottleneck. FlashAttention is a deeper example of redesigning memory traffic rather than changing the attention objective [R26].</p>
-<p><strong>Failure to recognize:</strong> comparing a cold first call with a warmed library call measures setup differences. A benchmark that produces wrong values is not a performance result. <strong>Reading:</strong> R17 indexing example, R19 profiling; optional R26. <strong>Tutorial:</strong> 23.</p></div></section></div><div class="deck-controls"><button class="slide-prev" type="button">← Previous</button><span aria-live="polite" class="slide-counter">1 / 13</span><button class="slide-next" type="button">Next →</button></div><label class="slide-jump-label">Go to slide <select aria-label="Go to slide" class="slide-jump"><option value="0">1</option><option value="1">2</option><option value="2">3</option><option value="3">4</option><option value="4">5</option><option value="5">6</option><option value="6">7</option><option value="7">8</option><option value="8">9</option><option value="9">10</option><option value="10">11</option><option value="11">12</option><option value="12">13</option></select></label><button aria-pressed="false" class="deck-all" type="button">Show all slides</button><a class="reader-link" href="#full-notes">Read the complete lecture ↓</a></section><article class="prose full-notes" id="full-notes"><div class="eyebrow">Complete lecture reader</div><h2>Read the full explanation</h2><h3 id="one-operation-many-independent-elements">One operation many independent elements</h3>
-<p>Take two vectors of 257 numbers and add corresponding elements. A CPU loop is easy to understand: for each index i, compute c[i]=a[i]+b[i].</p>
-<p>A CUDA kernel can assign this elementwise work across threads on a GPU. The mathematical result stays the same. What changes is how the program assigns work, accesses memory, and measures execution.</p>
-<p>We begin with vector addition rather than a custom attention kernel because correctness and indexing should be transparent before optimization becomes complicated.</p>
-<h3 id="threads-blocks-and-an-index">Threads blocks and an index</h3>
-<p>A one-dimensional kernel can compute i=blockIdx.x×blockDim.x+threadIdx.x. If a block has 256 threads, two blocks provide 512 thread indices for a length-257 vector.</p>
-<p>Threads with i≥257 must not access the arrays. The bounds check is part of correctness, not a disposable optimization detail.</p>
-<p>Blocks can execute independently. Do not assume an ordinary kernel has a general synchronization barrier across the whole grid.</p>
-<h3 id="host-and-device-responsibilities">Host and device responsibilities</h3>
-<p>The CPU host allocates or prepares inputs, manages device memory, transfers values where required, launches the kernel, and retrieves results.</p>
-<p>GPU device code performs the per-thread operation. A kernel launch does not mean every result is immediately available to the CPU; execution can be asynchronous.</p>
-<p>Follow the sequence in the provided CUDA C++ example and identify which statements belong to allocation, transfer, launch, synchronization, timing, and cleanup.</p>
-<h3 id="memory-access-and-arithmetic-intensity">Memory access and arithmetic intensity</h3>
-<p>For float32 vector addition, two input reads and one output write move roughly twelve bytes per addition, ignoring caching and other effects. That is low arithmetic intensity.</p>
-<p>Adjacent threads reading adjacent elements can allow efficient memory transactions. Scattered accesses and repeated unnecessary transfers can hurt performance.</p>
-<p>Matrix multiplication can reuse values in tiles and reach a different balance between arithmetic and movement. Kernel optimization requires understanding that reuse and the device rather than assuming more threads always means faster work.</p>
-<h3 id="timing-an-asynchronous-device">Timing an asynchronous device</h3>
-<p>Timing only a launch with a CPU clock may mostly measure dispatch. Use CUDA events or synchronization around the interval being measured.</p>
-<p>Warm up, repeat measurements, and report a median and spread. State whether transfers, allocation, compilation, and first-run effects are included.</p>
-<p>Kernel-only time and end-to-end application time answer different questions. Keep both when diagnosing whether an optimization matters to the actual workload.</p>
-<h3 id="amdahl-reasoning-for-a-practical-optimization">Amdahl reasoning for a practical optimization</h3>
-<p>Suppose the full task takes 20 ms, including a 3 ms kernel. Making that kernel twice as fast reduces total time to 18.5 ms, a speedup of about 1.081.</p>
-<p>The arithmetic explains why a dramatic kernel speedup can yield a modest user-visible improvement. Optimize the components that dominate the measured task.</p>
-<p>A wrong result is not a speedup. Validate against a CPU reference with appropriate tolerances before reporting performance.</p>
-<h3 id="profiling-the-transformer-operations">Profiling the transformer operations</h3>
-<p>Use a profiler to inspect operator times, shapes, memory, and CPU/GPU activity. Start with a short reproducible workload and save the trace.</p>
-<p>FlashAttention is an example of redesigning attention computation to reduce memory traffic while preserving its mathematical operation subject to numerical behavior. It is not a different language-model objective.</p>
-<p>Custom kernels and distributed training are deeper areas. Our required exercise establishes introductory CUDA indexing, correctness, synchronized measurement, and bottleneck diagnosis.</p>
-<h3 id="worked-practice-and-a-readiness-check">Worked practice and a readiness check</h3>
-<p>Run sizes 1,257, and a larger vector. Explain why the awkward size matters. Repeat with different block sizes while retaining bounds checks.</p>
-<p>Profile a matrix multiplication or short model pass. Separate transfer and execution costs, and identify one bottleneck supported by the trace.</p>
-<p>You are ready when your performance claim includes correct outputs, a timing boundary, device/software details, and a reproducible workload.</p>
-<h3 id="a-deeper-pass-after-the-worked-introduction">A deeper pass after the worked introduction</h3>
-<p>The following reference treatment is for a second pass. First explain the ordinary example above, then use the equations and implementation details below to make the explanation more precise.</p>
-<h3 id="further-study-10-intuition">Further study 10 Intuition</h3>
-<p>PyTorch operations eventually execute kernels. A CUDA kernel specifies work for many threads. Writing one small kernel makes launch overhead, indexing, memory access and synchronization concrete, even if most application work should continue using optimized libraries.</p>
-<p>For a one-dimensional array, thread index <code>i = blockIdx.x * blockDim.x + threadIdx.x</code>. A vector-add kernel computes <code>c[i]=a[i]+b[i]</code> when <code>i&lt;n</code>. The bounds check matters when n is not divisible by the block size. Blocks are scheduled independently; code must not assume a general grid-wide barrier inside an ordinary kernel.</p>
-<h3 id="further-study-10-memory-and-performance">Further study 10 Memory and performance</h3>
-<p>Adjacent threads reading adjacent elements often produce more efficient memory transactions than scattered accesses. Shared memory can reuse data within a block, but reuse must justify its loading and synchronization overhead. A barrier must be reached consistently by participating threads. Occupancy is one diagnostic, not an objective that guarantees maximum speed.</p>
-<p>Arithmetic intensity is approximate operations divided by bytes moved. Vector addition performs roughly one addition for two input reads and one output write: about 1/12 operations per byte for float32, ignoring caching. This is low intensity, so increasing theoretical arithmetic throughput may help little compared with memory bandwidth. A matrix multiplication can reuse tiles and attain much higher intensity.</p>
-<h3 id="further-study-10-timing-worked-example">Further study 10 Timing worked example</h3>
-<p>GPU work is asynchronous relative to the host. Timing a launch without synchronizing may mostly measure dispatch. Use CUDA events or synchronization around the defined measurement interval. Warm up first, repeat the operation, and report a median and spread. Include data transfers only if your stated question is end-to-end latency; separately report kernel-only time when studying the device operation.</p>
-<p>Suppose end-to-end time is 20 ms, of which 3 ms is the kernel. Making the kernel twice as fast yields 18.5 ms total, a speedup of only 1.081. This is Amdahl-style reasoning: optimize what dominates the real task.</p>
-<h3 id="further-study-10-experiment">Further study 10 Experiment</h3>
-<p>notebook 23 compiles the bundled vector-add example if <code>nvcc</code> and a GPU are present. Run n=1, n=257 and a large n to exercise indexing and overhead. Compare against a CPU reference with a numerical tolerance. Then profile a PyTorch matrix multiplication or a short transformer forward pass. Save the trace and explain one bottleneck. FlashAttention is a deeper example of redesigning memory traffic rather than changing the attention objective [R26].</p>
-<p><strong>Failure to recognize:</strong> comparing a cold first call with a warmed library call measures setup differences. A benchmark that produces wrong values is not a performance result. <strong>Reading:</strong> R17 indexing example, R19 profiling; optional R26. <strong>Tutorial:</strong> 23.</p></article><nav aria-label="Adjacent lectures" class="chapter-pagination"><a href="22.html"><small>Previous week</small>CPU GPU memory and model resource accounting</a><a href="24.html"><small>Next week</small>Fine tuning starts with a teaching dataset</a></nav></div><footer class="footer"><span>Applied AI · An independent self-study course</span><span>32 weeks · 10 hours per week</span><a href="../resources.html#about-this-course">About and sources</a></footer></main><dialog aria-labelledby="search-title" class="search-dialog"><div class="dialog-head"><h2 id="search-title">Find a concept</h2><button aria-label="Close search" class="search-close" type="button">Close</button></div><label class="sr-only" for="course-search">Search all lectures and tutorials</label><input autocomplete="off" id="course-search" placeholder="Try attention, fine-tuning, or harness…" type="search"/><p aria-live="polite" class="search-status">Search lecture notes, tutorials, tests and readings.</p><div class="search-results"></div></dialog><div aria-live="polite" class="toast" role="status"></div></body></html>
+<html lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width,initial-scale=1" name="viewport"/>
+  <title>
+   CUDA kernels and profiling · Applied AI
+  </title>
+  <meta content="Applied generative AI and LLM systems course material" name="description"/>
+  <meta content="#173c36" name="theme-color"/>
+  <link href="../assets/favicon.svg" rel="icon" type="image/svg+xml"/>
+  <link href="../assets/style.css" rel="stylesheet"/>
+  <link href="../assets/slides.css" rel="stylesheet"/>
+  <script>
+   window.COURSE_BASE="../";
+  </script>
+  <script defer="" src="../assets/site-config.js">
+  </script>
+  <script defer="" src="../assets/search-index.js">
+  </script>
+  <script defer="" src="../assets/app.js">
+  </script>
+  <script defer="" src="../assets/visuals.js">
+  </script>
+  <script defer="" src="../assets/slides.js">
+  </script>
+  <script defer="" src="../assets/beginner-visuals.js">
+  </script>
+  <link href="../zh-HK/lectures/23.html" hreflang="zh-HK" rel="alternate"/>
+  <link href="../assets/bilingual.css" rel="stylesheet"/>
+  <link href="../assets/reader-v3.css" rel="stylesheet"/>
+  <script defer="True" src="../assets/reader-v3.js">
+  </script>
+ </head>
+ <body data-page-kind="lecture" data-week="23">
+  <a class="skip-link" href="#main">
+   Skip to content
+  </a>
+  <header class="topbar">
+   <button aria-controls="course-sidebar" aria-expanded="false" class="menu-toggle" type="button">
+    Menu
+   </button>
+   <a class="brand" href="../index.html">
+    <span aria-hidden="true" class="brand-mark">
+     a
+     <span>
+      i
+     </span>
+    </span>
+    <span>
+     APPLIED AI
+     <small>
+      Principles into practice
+     </small>
+    </span>
+   </a>
+   <nav aria-label="Main navigation">
+    <a href="../index.html">
+     The course
+    </a>
+    <a href="../visuals.html">
+     Visual lab
+    </a>
+    <a href="../project.html">
+     Project
+    </a>
+    <a class="language-switch" href="../zh-HK/lectures/23.html" hreflang="zh-HK" lang="zh-HK">
+     繁體中文
+    </a>
+   </nav>
+   <button class="search-open" type="button">
+    Search the course
+    <span aria-hidden="true">
+     /
+    </span>
+   </button>
+  </header>
+  <aside aria-label="Course chapters" class="sidebar" id="course-sidebar">
+   <a class="side-home" href="../index.html">
+    Course overview
+   </a>
+   <details class="semester-nav">
+    <summary>
+     Semester 1
+     <span>
+      Weeks 1–16
+     </span>
+    </summary>
+    <ol start="1">
+     <li>
+      <a href="../lectures/01.html">
+       <span class="week-number">
+        01
+       </span>
+       <span>
+        What a language model is trying to learn
+       </span>
+       <span class="week-tick" data-week-tick="1">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/02.html">
+       <span class="week-number">
+        02
+       </span>
+       <span>
+        From text to tokens and numerical IDs
+       </span>
+       <span class="week-tick" data-week-tick="2">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/03.html">
+       <span class="week-number">
+        03
+       </span>
+       <span>
+        What word vectors can represent
+       </span>
+       <span class="week-tick" data-week-tick="3">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/04.html">
+       <span class="week-number">
+        04
+       </span>
+       <span>
+        From scores to probabilities and learning signals
+       </span>
+       <span class="week-tick" data-week-tick="4">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/05.html">
+       <span class="week-number">
+        05
+       </span>
+       <span>
+        Why language needs context and order
+       </span>
+       <span class="week-tick" data-week-tick="5">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/06.html">
+       <span class="week-number">
+        06
+       </span>
+       <span>
+        Attention begins as a weighted mixture
+       </span>
+       <span class="week-tick" data-week-tick="6">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/07.html">
+       <span class="week-number">
+        07
+       </span>
+       <span>
+        Where queries keys and values come from
+       </span>
+       <span class="week-tick" data-week-tick="7">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/08.html">
+       <span class="week-number">
+        08
+       </span>
+       <span>
+        Scaling and masking attention correctly
+       </span>
+       <span class="week-tick" data-week-tick="8">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/09.html">
+       <span class="week-number">
+        09
+       </span>
+       <span>
+        Multiple attention heads and position
+       </span>
+       <span class="week-tick" data-week-tick="9">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/10.html">
+       <span class="week-number">
+        10
+       </span>
+       <span>
+        The transformer block step by step
+       </span>
+       <span class="week-tick" data-week-tick="10">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/11.html">
+       <span class="week-number">
+        11
+       </span>
+       <span>
+        Encoders decoders and complete model architectures
+       </span>
+       <span class="week-tick" data-week-tick="11">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/12.html">
+       <span class="week-number">
+        12
+       </span>
+       <span>
+        Training a small transformer
+       </span>
+       <span class="week-tick" data-week-tick="12">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/13.html">
+       <span class="week-number">
+        13
+       </span>
+       <span>
+        Generation decoding and the KV cache
+       </span>
+       <span class="week-tick" data-week-tick="13">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/14.html">
+       <span class="week-number">
+        14
+       </span>
+       <span>
+        From pretraining to instruction following and reasoning
+       </span>
+       <span class="week-tick" data-week-tick="14">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/15.html">
+       <span class="week-number">
+        15
+       </span>
+       <span>
+        Generative AI beyond text
+       </span>
+       <span class="week-tick" data-week-tick="15">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/16.html">
+       <span class="week-number">
+        16
+       </span>
+       <span>
+        A complete transformer walkthrough and first semester review
+       </span>
+       <span class="week-tick" data-week-tick="16">
+       </span>
+      </a>
+     </li>
+    </ol>
+   </details>
+   <details class="semester-nav" open="">
+    <summary>
+     Semester 2
+     <span>
+      Weeks 17–32
+     </span>
+    </summary>
+    <ol start="17">
+     <li>
+      <a href="../lectures/17.html">
+       <span class="week-number">
+        17
+       </span>
+       <span>
+        From word vectors to semantic search
+       </span>
+       <span class="week-tick" data-week-tick="17">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/18.html">
+       <span class="week-number">
+        18
+       </span>
+       <span>
+        A vector database from a list of vectors
+       </span>
+       <span class="week-tick" data-week-tick="18">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/19.html">
+       <span class="week-number">
+        19
+       </span>
+       <span>
+        RAG as an open book question
+       </span>
+       <span class="week-tick" data-week-tick="19">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/20.html">
+       <span class="week-number">
+        20
+       </span>
+       <span>
+        Improving RAG without losing the basic task
+       </span>
+       <span class="week-tick" data-week-tick="20">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/21.html">
+       <span class="week-number">
+        21
+       </span>
+       <span>
+        Evaluating retrieval answers and uncertainty
+       </span>
+       <span class="week-tick" data-week-tick="21">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/22.html">
+       <span class="week-number">
+        22
+       </span>
+       <span>
+        CPU GPU memory and model resource accounting
+       </span>
+       <span class="week-tick" data-week-tick="22">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a aria-current="page" href="../lectures/23.html">
+       <span class="week-number">
+        23
+       </span>
+       <span>
+        CUDA kernels and profiling
+       </span>
+       <span class="week-tick" data-week-tick="23">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/24.html">
+       <span class="week-number">
+        24
+       </span>
+       <span>
+        Fine tuning starts with a teaching dataset
+       </span>
+       <span class="week-tick" data-week-tick="24">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/25.html">
+       <span class="week-number">
+        25
+       </span>
+       <span>
+        LoRA and QLoRA from a small matrix
+       </span>
+       <span class="week-tick" data-week-tick="25">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/26.html">
+       <span class="week-number">
+        26
+       </span>
+       <span>
+        Fine tuning experiments preferences and distillation
+       </span>
+       <span class="week-tick" data-week-tick="26">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/27.html">
+       <span class="week-number">
+        27
+       </span>
+       <span>
+        Tools functions workflows and agents
+       </span>
+       <span class="week-tick" data-week-tick="27">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/28.html">
+       <span class="week-number">
+        28
+       </span>
+       <span>
+        Harnesses planning memory and bounded execution
+       </span>
+       <span class="week-tick" data-week-tick="28">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/29.html">
+       <span class="week-number">
+        29
+       </span>
+       <span>
+        From a notebook to MLOps and inference serving
+       </span>
+       <span class="week-tick" data-week-tick="29">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/30.html">
+       <span class="week-number">
+        30
+       </span>
+       <span>
+        Monitoring security regression tests and rollback
+       </span>
+       <span class="week-tick" data-week-tick="30">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/31.html">
+       <span class="week-number">
+        31
+       </span>
+       <span>
+        Integrating the documentation assistant and advanced extensions
+       </span>
+       <span class="week-tick" data-week-tick="31">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/32.html">
+       <span class="week-number">
+        32
+       </span>
+       <span>
+        Review defense and a continuing learning plan
+       </span>
+       <span class="week-tick" data-week-tick="32">
+       </span>
+      </a>
+     </li>
+    </ol>
+   </details>
+   <div class="side-links">
+    <a href="../visuals.html">
+     Visual laboratory
+     <span>
+      14 interactive lessons
+     </span>
+    </a>
+    <a href="../project.html">
+     Documentation assistant
+     <span>
+      Your capstone project
+     </span>
+    </a>
+    <a href="../resources.html">
+     Readings and setup
+    </a>
+   </div>
+   <div class="side-progress">
+    <div>
+     <span>
+      Your progress
+     </span>
+     <strong data-progress-count="">
+      0 / 32
+     </strong>
+    </div>
+    <progress aria-label="Completed lectures" max="32" value="0">
+    </progress>
+    <small>
+     Saved in this browser
+    </small>
+   </div>
+  </aside>
+  <main class="main" id="main">
+   <div class="content">
+    <div class="chapter-header">
+     <div class="eyebrow">
+      Semester 2 / Week 23
+     </div>
+     <h1>
+      CUDA kernels and profiling
+     </h1>
+    </div>
+    <div class="lesson-links">
+     <a href="../tutorials/23.html">
+      Tutorial 23
+     </a>
+     <a href="../tests/23.html">
+      Test your understanding
+     </a>
+     <button aria-pressed="false" class="mark-complete" data-week="23" type="button">
+      Mark as complete
+     </button>
+    </div>
+    <div aria-label="Lesson view" class="lesson-mode" role="tablist">
+     <button aria-controls="full-notes" aria-selected="true" data-mode="read" id="mode-read" role="tab" type="button">
+      Read lesson
+     </button>
+     <button aria-controls="lecture-slides" aria-selected="false" data-mode="slides" id="mode-slides" role="tab" type="button">
+      Lesson slides
+     </button>
+    </div>
+    <section aria-label="Lecture slides" class="lecture-deck" hidden="" id="lecture-slides" role="tabpanel">
+     <div class="deck-top">
+      <div>
+       <div class="eyebrow">
+        Lecture slides · Week 23
+       </div>
+       <h2>
+        Key steps and worked visuals
+       </h2>
+      </div>
+      <button class="deck-present" type="button">
+       Present
+      </button>
+     </div>
+     <p class="deck-help">
+      Use these slides to review the mechanism. Open “Read the worked explanation” for the complete notes and code.
+     </p>
+     <div aria-label="Presentation: use left and right arrow keys" class="slide-viewport" tabindex="0">
+      <section class="lecture-slide" data-slide="">
+       <div class="slide-stage">
+        Week 23 · Section 1
+       </div>
+       <h3>
+        One operation many independent elements
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Take two vectors of 257 numbers and add corresponding elements.
+         </li>
+         <li>
+          A CUDA kernel can assign this elementwise work across threads on a GPU.
+         </li>
+         <li>
+          We begin with vector addition rather than a custom attention kernel because correctness and indexing should be transparent before optimization becomes complicated.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#one-operation-many-independent-elements">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 23 · Section 2
+       </div>
+       <h3>
+        Threads blocks and an index
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          A one-dimensional kernel can compute i=blockIdx.x×blockDim.x+threadIdx.x.
+         </li>
+         <li>
+          Threads with i≥257 must not access the arrays.
+         </li>
+         <li>
+          Blocks can execute independently.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#threads-blocks-and-an-index">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 23 · Section 3
+       </div>
+       <h3>
+        Host and device responsibilities
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          The CPU host allocates or prepares inputs, manages device memory, transfers values where required, launches the kernel, and retrieves results.
+         </li>
+         <li>
+          GPU device code performs the per-thread operation.
+         </li>
+         <li>
+          Follow the sequence in the provided CUDA C++ example and identify which statements belong to allocation, transfer, launch, synchronization, timing, and cleanup.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#host-and-device-responsibilities">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 23 · Section 4
+       </div>
+       <h3>
+        Memory access and arithmetic intensity
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          For float32 vector addition, two input reads and one output write move roughly twelve bytes per addition, ignoring caching and other effects.
+         </li>
+         <li>
+          Adjacent threads reading adjacent elements can allow efficient memory transactions.
+         </li>
+         <li>
+          Matrix multiplication can reuse values in tiles and reach a different balance between arithmetic and movement.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#memory-access-and-arithmetic-intensity">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 23 · Section 5
+       </div>
+       <h3>
+        Warps, coalesced access, and tensor cores
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          On NVIDIA CUDA GPUs, a warp contains 32 threads that execute in a SIMT group.
+         </li>
+         <li>
+          Tensor cores accelerate supported matrix multiply-accumulate operations with specific dtypes and layouts.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#warps-coalesced-access-and-tensor-cores">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 23 · Section 6
+       </div>
+       <h3>
+        An ordinary grid differs from a cooperative grid
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          An ordinary kernel cannot assume all blocks are resident together or use an arbitrary grid-wide barrier.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#an-ordinary-grid-differs-from-a-cooperative-grid">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 23 · Section 7
+       </div>
+       <h3>
+        Triton and torch.compile operate at different levels
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          A Triton kernel expresses blocks of tensor work in a Python-based GPU programming language.
+         </li>
+         <li>
+          torch.compile starts from a PyTorch function or model, captures supported computation, and asks a compiler backend to optimize it; a backend may generate fused Triton kernels.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#triton-and-torch-compile-operate-at-different-levels">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 23 · Section 8
+       </div>
+       <h3>
+        Timing an asynchronous device
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Timing only a launch with a CPU clock may mostly measure dispatch.
+         </li>
+         <li>
+          Warm up, repeat measurements, and report a median and spread.
+         </li>
+         <li>
+          Kernel-only time and end-to-end application time answer different questions.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#timing-an-asynchronous-device">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 23 · Section 9
+       </div>
+       <h3>
+        Amdahl reasoning for a practical optimization
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Suppose the full task takes 20 ms, including a 3 ms kernel.
+         </li>
+         <li>
+          The arithmetic explains why a dramatic kernel speedup can yield a modest user-visible improvement.
+         </li>
+         <li>
+          A wrong result is not a speedup.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#amdahl-reasoning-for-a-practical-optimization">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 23 · Section 10
+       </div>
+       <h3>
+        Profiling the transformer operations
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Use a profiler to inspect operator times, shapes, memory, and CPU/GPU activity.
+         </li>
+         <li>
+          FlashAttention is an example of redesigning attention computation to reduce memory traffic while preserving its mathematical operation subject to numerical behavior.
+         </li>
+         <li>
+          Custom kernels and distributed training are deeper areas.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#profiling-the-transformer-operations">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 23 · Section 11
+       </div>
+       <h3>
+        Worked practice and a readiness check
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Run vector lengths 1, 257, and a larger value.
+         </li>
+         <li>
+          Profile a matrix multiplication or short model pass.
+         </li>
+         <li>
+          You are ready when your performance claim includes correct outputs, a timing boundary, device/software details, and a reproducible workload.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#worked-practice-and-a-readiness-check">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+     </div>
+     <div class="deck-controls">
+      <button class="slide-prev" type="button">
+       ← Previous
+      </button>
+      <span aria-live="polite" class="slide-counter">
+       1 / 11
+      </span>
+      <button class="slide-next" type="button">
+       Next →
+      </button>
+     </div>
+     <label class="slide-jump-label">
+      Go to slide
+      <select aria-label="Go to slide" class="slide-jump">
+       <option value="0">
+        1. One operation many independent elements
+       </option>
+       <option value="1">
+        2. Threads blocks and an index
+       </option>
+       <option value="2">
+        3. Host and device responsibilities
+       </option>
+       <option value="3">
+        4. Memory access and arithmetic intensity
+       </option>
+       <option value="4">
+        5. Warps, coalesced access, and tensor cores
+       </option>
+       <option value="5">
+        6. An ordinary grid differs from a cooperative grid
+       </option>
+       <option value="6">
+        7. Triton and torch.compile operate at different levels
+       </option>
+       <option value="7">
+        8. Timing an asynchronous device
+       </option>
+       <option value="8">
+        9. Amdahl reasoning for a practical optimization
+       </option>
+       <option value="9">
+        10. Profiling the transformer operations
+       </option>
+       <option value="10">
+        11. Worked practice and a readiness check
+       </option>
+      </select>
+     </label>
+     <button aria-pressed="false" class="deck-all" type="button">
+      Show all slides
+     </button>
+    </section>
+    <nav aria-label="In this lesson" class="reader-toc">
+     <strong>
+      In this lesson
+     </strong>
+     <ol>
+      <li>
+       <a href="#one-operation-many-independent-elements">
+        One operation many independent elements
+       </a>
+      </li>
+      <li>
+       <a href="#threads-blocks-and-an-index">
+        Threads blocks and an index
+       </a>
+      </li>
+      <li>
+       <a href="#host-and-device-responsibilities">
+        Host and device responsibilities
+       </a>
+      </li>
+      <li>
+       <a href="#memory-access-and-arithmetic-intensity">
+        Memory access and arithmetic intensity
+       </a>
+      </li>
+      <li>
+       <a href="#warps-coalesced-access-and-tensor-cores">
+        Warps, coalesced access, and tensor cores
+       </a>
+      </li>
+      <li>
+       <a href="#an-ordinary-grid-differs-from-a-cooperative-grid">
+        An ordinary grid differs from a cooperative grid
+       </a>
+      </li>
+      <li>
+       <a href="#triton-and-torch-compile-operate-at-different-levels">
+        Triton and torch.compile operate at different levels
+       </a>
+      </li>
+      <li>
+       <a href="#timing-an-asynchronous-device">
+        Timing an asynchronous device
+       </a>
+      </li>
+      <li>
+       <a href="#amdahl-reasoning-for-a-practical-optimization">
+        Amdahl reasoning for a practical optimization
+       </a>
+      </li>
+      <li>
+       <a href="#profiling-the-transformer-operations">
+        Profiling the transformer operations
+       </a>
+      </li>
+      <li>
+       <a href="#worked-practice-and-a-readiness-check">
+        Worked practice and a readiness check
+       </a>
+      </li>
+     </ol>
+    </nav>
+    <article class="prose full-notes" id="full-notes" role="tabpanel">
+     <div class="eyebrow">
+      Complete lecture reader
+     </div>
+     <h2>
+      Read the full explanation
+     </h2>
+     <h3 id="one-operation-many-independent-elements">
+      One operation many independent elements
+     </h3>
+     <p>
+      Take two vectors of 257 numbers and add corresponding elements. A CPU loop is easy to understand: for each index i, compute c[i]=a[i]+b[i].
+     </p>
+     <p>
+      A CUDA kernel can assign this elementwise work across threads on a GPU. The mathematical result stays the same. What changes is how the program assigns work, accesses memory, and measures execution.
+     </p>
+     <p>
+      We begin with vector addition rather than a custom attention kernel because correctness and indexing should be transparent before optimization becomes complicated.
+     </p>
+     <h3 id="threads-blocks-and-an-index">
+      Threads blocks and an index
+     </h3>
+     <p>
+      A one-dimensional kernel can compute i=blockIdx.x×blockDim.x+threadIdx.x. If a block has 256 threads, two blocks provide 512 thread indices for a length-257 vector.
+     </p>
+     <p>
+      Threads with i≥257 must not access the arrays. The bounds check is part of correctness, not a disposable optimization detail.
+     </p>
+     <p>
+      Blocks can execute independently. Do not assume an ordinary kernel has a general synchronization barrier across the whole grid.
+     </p>
+     <h3 id="host-and-device-responsibilities">
+      Host and device responsibilities
+     </h3>
+     <p>
+      The CPU host allocates or prepares inputs, manages device memory, transfers values where required, launches the kernel, and retrieves results.
+     </p>
+     <p>
+      GPU device code performs the per-thread operation. A kernel launch does not mean every result is immediately available to the CPU; execution can be asynchronous.
+     </p>
+     <p>
+      Follow the sequence in the provided CUDA C++ example and identify which statements belong to allocation, transfer, launch, synchronization, timing, and cleanup.
+     </p>
+     <h3 id="memory-access-and-arithmetic-intensity">
+      Memory access and arithmetic intensity
+     </h3>
+     <p>
+      For float32 vector addition, two input reads and one output write move roughly twelve bytes per addition, ignoring caching and other effects. That is low arithmetic intensity.
+     </p>
+     <p>
+      Adjacent threads reading adjacent elements can allow efficient memory transactions. Scattered accesses and repeated unnecessary transfers can hurt performance.
+     </p>
+     <p>
+      Matrix multiplication can reuse values in tiles and reach a different balance between arithmetic and movement. Kernel optimization requires understanding that reuse and the device rather than assuming more threads always means faster work.
+     </p>
+     <h3 id="warps-coalesced-access-and-tensor-cores">
+      Warps, coalesced access, and tensor cores
+     </h3>
+     <p>
+      On NVIDIA CUDA GPUs, a warp contains 32 threads that execute in a SIMT group. If neighboring active lanes read neighboring float32 elements, their requests can be served with fewer memory transactions than widely scattered addresses. This is coalescing. For our vector addition, let lane i read a[i] and b[i] and write c[i]; a strided access such as a[32*i] often wastes more transferred bytes. Alignment, caching, and the actual access pattern still affect the result.
+     </p>
+     <p>
+      Tensor cores accelerate supported matrix multiply-accumulate operations with specific dtypes and layouts. They are not a faster replacement for every CUDA instruction: vector addition does not become a matrix multiplication simply by changing its dtype. Use a profiler to check the chosen kernel and numerical tolerance.
+     </p>
+     <h3 id="an-ordinary-grid-differs-from-a-cooperative-grid">
+      An ordinary grid differs from a cooperative grid
+     </h3>
+     <p>
+      An ordinary kernel cannot assume all blocks are resident together or use an arbitrary grid-wide barrier. Cooperative Groups provides grid synchronization for an appropriately launched cooperative kernel subject to device and launch constraints. Without those conditions, split globally ordered stages into separate launches or use an appropriate established algorithm. A block barrier only coordinates participating threads in that block; place it where those threads can reach it consistently.
+     </p>
+     <h3 id="triton-and-torch-compile-operate-at-different-levels">
+      Triton and torch.compile operate at different levels
+     </h3>
+     <p>
+      A Triton kernel expresses blocks of tensor work in a Python-based GPU programming language. Its vector-add tutorial creates a block of offsets, loads valid elements with a mask, adds them, and stores with the same boundary mask. The mask serves the same length-257 correctness purpose as the CUDA bounds check. This is Triton the kernel language, not NVIDIA Triton Inference Server.
+     </p>
+     <p>
+      torch.compile starts from a PyTorch function or model, captures supported computation, and asks a compiler backend to optimize it; a backend may generate fused Triton kernels. Compilation can remove Python overhead and intermediate memory traffic, while graph breaks and unsupported patterns can limit gains. Compare warmed eager and compiled runs, report compilation cost separately, and verify the same outputs before comparing time. This adds an optimization tool to the existing profiler workflow rather than requiring a new training framework.
+     </p>
+     <h3 id="timing-an-asynchronous-device">
+      Timing an asynchronous device
+     </h3>
+     <p>
+      Timing only a launch with a CPU clock may mostly measure dispatch. Use CUDA events or synchronization around the interval being measured.
+     </p>
+     <p>
+      Warm up, repeat measurements, and report a median and spread. State whether transfers, allocation, compilation, and first-run effects are included.
+     </p>
+     <p>
+      Kernel-only time and end-to-end application time answer different questions. Keep both when diagnosing whether an optimization matters to the actual workload.
+     </p>
+     <h3 id="amdahl-reasoning-for-a-practical-optimization">
+      Amdahl reasoning for a practical optimization
+     </h3>
+     <p>
+      Suppose the full task takes 20 ms, including a 3 ms kernel. Making that kernel twice as fast reduces total time to 18.5 ms, a speedup of about 1.081.
+     </p>
+     <p>
+      The arithmetic explains why a dramatic kernel speedup can yield a modest user-visible improvement. Optimize the components that dominate the measured task.
+     </p>
+     <p>
+      A wrong result is not a speedup. Validate against a CPU reference with appropriate tolerances before reporting performance.
+     </p>
+     <h3 id="profiling-the-transformer-operations">
+      Profiling the transformer operations
+     </h3>
+     <p>
+      Use a profiler to inspect operator times, shapes, memory, and CPU/GPU activity. Start with a short reproducible workload and save the trace.
+     </p>
+     <p>
+      FlashAttention is an example of redesigning attention computation to reduce memory traffic while preserving its mathematical operation subject to numerical behavior. It is not a different language-model objective.
+     </p>
+     <p>
+      Custom kernels and distributed training are deeper areas. Our required exercise establishes introductory CUDA indexing, correctness, synchronized measurement, and bottleneck diagnosis.
+     </p>
+     <h3 id="worked-practice-and-a-readiness-check">
+      Worked practice and a readiness check
+     </h3>
+     <p>
+      Run vector lengths 1, 257, and a larger value. Explain why the awkward length 257 matters. Repeat with different block sizes while retaining bounds checks.
+     </p>
+     <p>
+      Profile a matrix multiplication or short model pass. Separate transfer and execution costs, and identify one bottleneck supported by the trace.
+     </p>
+     <p>
+      You are ready when your performance claim includes correct outputs, a timing boundary, device/software details, and a reproducible workload.
+     </p>
+     <details class="reference-details" id="reference-details">
+      <summary>
+       Reference details and checks
+      </summary>
+      <h3 id="review-a-intuition">
+       Review A: Intuition
+      </h3>
+      <p>
+       PyTorch operations eventually execute kernels. A CUDA kernel specifies work for many threads. Writing one small kernel makes launch overhead, indexing, memory access and synchronization concrete, even if most application work should continue using optimized libraries.
+      </p>
+      <p>
+       For a one-dimensional array, thread index
+       <code>
+        i = blockIdx.x * blockDim.x + threadIdx.x
+       </code>
+       . A vector-add kernel computes
+       <code>
+        c[i]=a[i]+b[i]
+       </code>
+       when
+       <code>
+        i&lt;n
+       </code>
+       . The bounds check matters when n is not divisible by the block size. Blocks are scheduled independently; code must not assume a general grid-wide barrier inside an ordinary kernel.
+      </p>
+      <h3 id="review-a-memory-and-performance">
+       Review A: Memory and performance
+      </h3>
+      <p>
+       Adjacent threads reading adjacent elements often produce more efficient memory transactions than scattered accesses. Shared memory can reuse data within a block, but reuse must justify its loading and synchronization overhead. A barrier must be reached consistently by participating threads. Occupancy is one diagnostic, not an objective that guarantees maximum speed.
+      </p>
+      <p>
+       Arithmetic intensity is approximate operations divided by bytes moved. Vector addition performs roughly one addition for two input reads and one output write: about 1/12 operations per byte for float32, ignoring caching. This is low intensity, so increasing theoretical arithmetic throughput may help little compared with memory bandwidth. A matrix multiplication can reuse tiles and attain much higher intensity.
+      </p>
+      <h3 id="review-a-timing-worked-example">
+       Review A: Timing worked example
+      </h3>
+      <p>
+       GPU work is asynchronous relative to the host. Timing a launch without synchronizing may mostly measure dispatch. Use CUDA events or synchronization around the defined measurement interval. Warm up first, repeat the operation, and report a median and spread. Include data transfers only if your stated question is end-to-end latency; separately report kernel-only time when studying the device operation.
+      </p>
+      <p>
+       Suppose end-to-end time is 20 ms, of which 3 ms is the kernel. Making the kernel twice as fast yields 18.5 ms total, a speedup of only 1.081. This is Amdahl-style reasoning: optimize what dominates the real task.
+      </p>
+      <h3 id="review-a-experiment">
+       Review A: Experiment
+      </h3>
+      <p>
+       <a href="../tutorials/23.html">
+        Tutorial 23: Cuda kernels and profiling
+       </a>
+       compiles the bundled vector-add example if
+       <code>
+        nvcc
+       </code>
+       and a GPU are present. Run n=1, n=257 and a large n to exercise indexing and overhead. Compare against a CPU reference with a numerical tolerance. Then profile a PyTorch matrix multiplication or a short transformer forward pass. Save the trace and explain one bottleneck. FlashAttention is a deeper example of redesigning memory traffic rather than changing the attention objective [
+       <a class="inline-reading" href="../resources.html#reference-r26">
+        Dao et al. FlashAttention (R26)
+       </a>
+       ].
+      </p>
+      <p>
+       <strong>
+        Failure to recognize:
+       </strong>
+       comparing a cold first call with a warmed library call measures setup differences. A benchmark that produces wrong values is not a performance result.
+       <strong>
+        Reading:
+       </strong>
+       <a class="inline-reading" href="../resources.html#reference-r17">
+        NVIDIA CUDA introduction (R17)
+       </a>
+       indexing example,
+       <a class="inline-reading" href="../resources.html#reference-r19">
+        PyTorch profiler recipe (R19)
+       </a>
+       profiling; optional
+       <a class="inline-reading" href="../resources.html#reference-r26">
+        Dao et al. FlashAttention (R26)
+       </a>
+       .
+       <strong>
+        Tutorial:
+       </strong>
+       23.
+      </p>
+     </details>
+    </article>
+    <nav aria-label="Adjacent lectures" class="chapter-pagination">
+     <a href="22.html">
+      <small>
+       Previous week
+      </small>
+      CPU GPU memory and model resource accounting
+     </a>
+     <a href="24.html">
+      <small>
+       Next week
+      </small>
+      Fine tuning starts with a teaching dataset
+     </a>
+    </nav>
+   </div>
+   <footer class="footer">
+    <span>
+     Applied AI · An independent self-study course
+    </span>
+    <span>
+     32 weeks · 10 hours per week
+    </span>
+    <a href="../resources.html#about-this-course">
+     About and sources
+    </a>
+   </footer>
+  </main>
+  <dialog aria-labelledby="search-title" class="search-dialog">
+   <div class="dialog-head">
+    <h2 id="search-title">
+     Find a concept
+    </h2>
+    <button aria-label="Close search" class="search-close" type="button">
+     Close
+    </button>
+   </div>
+   <label class="sr-only" for="course-search">
+    Search all lectures and tutorials
+   </label>
+   <input autocomplete="off" id="course-search" placeholder="Try attention, fine-tuning, or harness…" type="search"/>
+   <p aria-live="polite" class="search-status">
+    Search lecture notes, tutorials, tests and readings.
+   </p>
+   <div class="search-results">
+   </div>
+  </dialog>
+  <div aria-live="polite" class="toast" role="status">
+  </div>
+ </body>
+</html>

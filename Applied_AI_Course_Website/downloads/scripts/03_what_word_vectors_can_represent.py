@@ -1,4 +1,3 @@
-# %%
 from pathlib import Path
 import sys,json,time,random,hashlib,math
 if hasattr(sys.stdout,'reconfigure'): sys.stdout.reconfigure(encoding='utf-8')
@@ -11,7 +10,7 @@ from coursekit.core import *
 random.seed(7)
 print('Course root:',COURSE)
 
-# %%
+
 import numpy as np
 vectors={'bus':np.array([1.,0.]),'train':np.array([.8,.6]),'banana':np.array([0.,1.])}
 q=vectors['bus']
@@ -22,3 +21,10 @@ v=5*vectors['train']
 assert np.isclose(q@v,4)
 assert np.isclose(q@v/(np.linalg.norm(q)*np.linalg.norm(v)),.8)
 
+
+import math
+q=[1.,0.];a=[.8,.6];b=[3.,4.]
+def dot(x,y):return sum(u*v for u,v in zip(x,y))
+def cosine(x,y):return dot(x,y)/math.sqrt(dot(x,x)*dot(y,y))
+assert dot(q,b)>dot(q,a) and cosine(q,a)>cosine(q,b)
+print('Dot a,b:',dot(q,a),dot(q,b),'Cosine a,b:',cosine(q,a),cosine(q,b))

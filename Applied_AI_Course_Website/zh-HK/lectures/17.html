@@ -1,68 +1,1533 @@
 <!DOCTYPE html>
-
-<html lang="zh-HK"><head><script src="../../assets/translations-zh-HK.js"></script><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/><title>從 word vector 到 semantic search · Applied AI</title><meta content="Applied generative AI and LLM systems course material" name="description"/><meta content="#173c36" name="theme-color"/><link href="../../assets/favicon.svg" rel="icon" type="image/svg+xml"/><link href="../../assets/style.css" rel="stylesheet"/><link href="../../assets/slides.css" rel="stylesheet"/><script>window.COURSE_BASE="../";</script><script defer="" src="../../assets/site-config.js"></script><script defer="" src="../assets/search-index.js"></script><script defer="" src="../../assets/app.js"></script><script defer="" src="../../assets/visuals.js"></script><script defer="" src="../../assets/slides.js"></script><script defer="" src="../../assets/beginner-visuals.js"></script><script defer="True" src="../../assets/locale-patterns.js"></script><script defer="True" src="../../assets/locale.js"></script><link href="../../assets/bilingual.css" rel="stylesheet"/><link href="../../lectures/17.html" hreflang="en" rel="alternate"/></head><body data-page-kind="lecture" data-week="17"><a class="skip-link" href="#main">跳至內容</a><header class="topbar"><button aria-controls="course-sidebar" aria-expanded="false" class="menu-toggle" type="button">選單</button><a class="brand" href="../index.html"><span aria-hidden="true" class="brand-mark">a<span>i</span></span><span>APPLIED AI<small>從原理到實踐</small></span></a><nav aria-label="主要導覽"><a href="../index.html">課程</a><a href="../visuals.html">互動圖解</a><a href="../project.html">專題</a><a class="language-switch" href="../../lectures/17.html" hreflang="en" lang="en">English</a></nav><button class="search-open" type="button">搜尋課程 <span aria-hidden="true">/</span></button></header><aside aria-label="課程章節" class="sidebar" id="course-sidebar"><a class="side-home" href="../index.html">課程概覽</a><details class="semester-nav"><summary>第一學期<span>第 1–16 週</span></summary><ol start="1"><li><a href="../lectures/01.html"><span class="week-number">01</span><span>Language model 究竟在學甚麼</span><span class="week-tick" data-week-tick="1"></span></a></li><li><a href="../lectures/02.html"><span class="week-number">02</span><span>從文字到 token 和數值 ID</span><span class="week-tick" data-week-tick="2"></span></a></li><li><a href="../lectures/03.html"><span class="week-number">03</span><span>Word vector 能表達甚麼</span><span class="week-tick" data-week-tick="3"></span></a></li><li><a href="../lectures/04.html"><span class="week-number">04</span><span>從 score 到 probability 和學習訊號</span><span class="week-tick" data-week-tick="4"></span></a></li><li><a href="../lectures/05.html"><span class="week-number">05</span><span>為甚麼語言需要 context 和次序</span><span class="week-tick" data-week-tick="5"></span></a></li><li><a href="../lectures/06.html"><span class="week-number">06</span><span>Attention 由 weighted mixture 開始</span><span class="week-tick" data-week-tick="6"></span></a></li><li><a href="../lectures/07.html"><span class="week-number">07</span><span>Query、key 和 value 從何而來</span><span class="week-tick" data-week-tick="7"></span></a></li><li><a href="../lectures/08.html"><span class="week-number">08</span><span>正確進行 attention scaling 和 masking</span><span class="week-tick" data-week-tick="8"></span></a></li><li><a href="../lectures/09.html"><span class="week-number">09</span><span>多個 attention head 與位置</span><span class="week-tick" data-week-tick="9"></span></a></li><li><a href="../lectures/10.html"><span class="week-number">10</span><span>逐步拆解 transformer block</span><span class="week-tick" data-week-tick="10"></span></a></li><li><a href="../lectures/11.html"><span class="week-number">11</span><span>Encoder、decoder 與完整 model architecture</span><span class="week-tick" data-week-tick="11"></span></a></li><li><a href="../lectures/12.html"><span class="week-number">12</span><span>訓練一個小型 transformer</span><span class="week-tick" data-week-tick="12"></span></a></li><li><a href="../lectures/13.html"><span class="week-number">13</span><span>Generation、decoding 與 KV cache</span><span class="week-tick" data-week-tick="13"></span></a></li><li><a href="../lectures/14.html"><span class="week-number">14</span><span>從 pretraining 到 instruction following 和 reasoning</span><span class="week-tick" data-week-tick="14"></span></a></li><li><a href="../lectures/15.html"><span class="week-number">15</span><span>文字以外的 Generative AI</span><span class="week-tick" data-week-tick="15"></span></a></li><li><a href="../lectures/16.html"><span class="week-number">16</span><span>完整 transformer 導覽與第一學期溫習</span><span class="week-tick" data-week-tick="16"></span></a></li></ol></details><details class="semester-nav" open=""><summary>第二學期<span>第 17–32 週</span></summary><ol start="17"><li><a aria-current="page" href="../lectures/17.html"><span class="week-number">17</span><span>從 word vector 到 semantic search</span><span class="week-tick" data-week-tick="17"></span></a></li><li><a href="../lectures/18.html"><span class="week-number">18</span><span>從一列 vector 建立 vector database</span><span class="week-tick" data-week-tick="18"></span></a></li><li><a href="../lectures/19.html"><span class="week-number">19</span><span>把 RAG 理解為開卷作答</span><span class="week-tick" data-week-tick="19"></span></a></li><li><a href="../lectures/20.html"><span class="week-number">20</span><span>在保持基本任務的前提下改善 RAG</span><span class="week-tick" data-week-tick="20"></span></a></li><li><a href="../lectures/21.html"><span class="week-number">21</span><span>評估 retrieval、答案與 uncertainty</span><span class="week-tick" data-week-tick="21"></span></a></li><li><a href="../lectures/22.html"><span class="week-number">22</span><span>CPU、GPU、memory 與 model 資源計算</span><span class="week-tick" data-week-tick="22"></span></a></li><li><a href="../lectures/23.html"><span class="week-number">23</span><span>CUDA kernel 與 profiling</span><span class="week-tick" data-week-tick="23"></span></a></li><li><a href="../lectures/24.html"><span class="week-number">24</span><span>Fine-tuning 由教學 dataset 開始</span><span class="week-tick" data-week-tick="24"></span></a></li><li><a href="../lectures/25.html"><span class="week-number">25</span><span>從小型 matrix 理解 LoRA 和 QLoRA</span><span class="week-tick" data-week-tick="25"></span></a></li><li><a href="../lectures/26.html"><span class="week-number">26</span><span>Fine-tuning 實驗、preference 與 distillation</span><span class="week-tick" data-week-tick="26"></span></a></li><li><a href="../lectures/27.html"><span class="week-number">27</span><span>Tool、function、workflow 與 agent</span><span class="week-tick" data-week-tick="27"></span></a></li><li><a href="../lectures/28.html"><span class="week-number">28</span><span>Harness、planning、memory 與有界執行</span><span class="week-tick" data-week-tick="28"></span></a></li><li><a href="../lectures/29.html"><span class="week-number">29</span><span>從 notebook 到 MLOps 和 inference serving</span><span class="week-tick" data-week-tick="29"></span></a></li><li><a href="../lectures/30.html"><span class="week-number">30</span><span>Monitoring、security、regression test 與 rollback</span><span class="week-tick" data-week-tick="30"></span></a></li><li><a href="../lectures/31.html"><span class="week-number">31</span><span>整合文件助手與進階延伸</span><span class="week-tick" data-week-tick="31"></span></a></li><li><a href="../lectures/32.html"><span class="week-number">32</span><span>溫習、答辯與持續學習計劃</span><span class="week-tick" data-week-tick="32"></span></a></li></ol></details><div class="side-links"><a href="../visuals.html">互動圖解實驗室 <span>14 個互動課節</span></a><a href="../project.html">文件助手 <span>你的 capstone project</span></a><a href="../resources.html">閱讀材料與環境設定</a></div><div class="side-progress"><div><span>你的進度</span><strong data-progress-count="">0 / 32</strong></div><progress aria-label="已完成 lecture" max="32" value="0"></progress><small>儲存在這個瀏覽器</small></div></aside><main class="main" id="main"><div class="content"><div class="chapter-header"><div class="eyebrow">第二學期 / 第 17 週</div><h1>從 word vector 到 semantic search</h1></div><div class="lesson-links"><a href="../tutorials/17.html">練習 17</a><a href="../tests/17.html">檢查你的理解</a><button aria-pressed="false" class="mark-complete" data-week="17" type="button">標記為已完成</button></div><section aria-label="Lecture slides" class="lecture-deck" id="lecture-slides"><div class="deck-top"><div><div class="eyebrow">課堂投影片 · 第 17 週</div><h2>一步一步學習。</h2></div><button class="deck-present" type="button">簡報模式</button></div><p class="deck-help">閱讀每段解說，停下來預測結果，然後繼續。選取簡報後，可用方向鍵操作。完整講義在下方。</p><div aria-label="簡報：使用左右方向鍵" class="slide-viewport" tabindex="0"><section class="lecture-slide" data-slide=""><div class="slide-stage">由例子開始</div><h3>一本簡單的學校手冊</h3><div class="slide-prose"><p>想像手冊有三段內容。H1 寫着 “School opens at 08:00.”，H2 寫着 “The school bus leaves at 07:30.”，H3 寫着 “A bus ticket costs 4 dollars.”。一名學生問：“When does school start?”</p>
-<p>Search 的任務，是為這條問題選出有用的段落。問題用了 start，H1 卻用了 opens。完全相同的字詞比對可以找到 school，但也可能找到關於 bus 的段落。好的 representation 應有助分辨真正有用的 evidence 和只是相關的文字。</p>
-<p>我們刻意先學 representation 和 transformer，才開始這個應用。現在，“embed the question” 指的是一種具體的數值運算，而不是未加解釋、像魔法一樣的 API。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">由例子開始</div><h3>先建立 lexical baseline</h3><div class="slide-prose"><p>Lexical retriever 比較字詞或 term。Inverted index 把一個 term 對應到包含它的段落。Term weighting 可以減低常見字詞的影響，並強調更有辨識力的 term。</p>
-<p>對於 school 何時開始這條問題，簡單的 overlap 方法可能同時給 H1 和 H2 分數。這種失敗不難理解：方法沒有學過 start 與 opens 的關係，也可能無法清楚分辨主要主題。</p>
-<p>BM25 是常用的 lexical scoring 方法系列，包含 term-frequency saturation 和 length normalization。我們會把它與 semantic 方法比較，而不會假設 neural vector 對所有 query 都更好。遇到精確的 API 名稱和 error code 時，準確的 lexical matching 往往很有幫助。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">建立對機制的理解</div><h3>Sentence embedding 為特定任務表示輸入</h3><div class="slide-prose"><p>Transformer encoder 可以產生帶有 context 的 token vector。Pooling 或其他 representation 程序會建立 passage 或 sentence vector。之後，training 會鼓勵這些 vector 形成適合目標比較任務的 geometry。</p>
-<p>為 retrieval 訓練的 embedding model，目標是讓相關的 question-passage pair 在選定的 similarity function 下取得好分數。隨意平均 token row 是另一種方法，有不同的限制。</p>
-<p>在 bi-encoder 中，question 和 passage 可以獨立 encode。Passage vector 只需儲存一次，之後可重複用於很多問題。這種重用解釋了為甚麼 dense retrieval 能擴展，而不必對每條 query 都重新與每個 passage 一起處理。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">建立對機制的理解</div><h3>一個小型數值排名例子</h3><div class="slide-prose"><p>使用人為設定、已 normalize 的 question q=[1,0]。假設手冊的 vector 是 H1=[0.9,0.436]、H2=[0.6,0.8]、H3=[0,1]；第一個 vector 經過四捨五入，因此視為近似值。它們與 q 的 dot product 約為 0.9、0.6、0。</p>
-<p>H1 排第一。這些座標是為了方便計算而設計，並非真實 embedding model 的量測輸出。給定 vector 後，排名運算是確定的；但 vector 是否表達了正確的 relevance，仍需要實驗驗證。</p>
-<p>在 tutorial 中，以真實 model embedding 取代人為座標。固定 question set 和 evidence label，讓實驗測試 representation 本身，而不是一個精心挑選的示範。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">建立對機制的理解</div><h3>Retrieval embedding 可以怎樣訓練</h3><div class="slide-prose"><p>Positive pair 由一條 question 和一段能支持答案的 passage 組成；negative pair 則不能支持答案。Contrastive objective 可以提高 positive score 相對於其他競爭分數的值。</p>
-<p>Hard negative 與問題相似，但答案不對。對 “When does school open?” 而言，bus 的 departure time 就是有用的干擾項。另一個例子，是描述不同年份 school opening time 的段落。</p>
-<p>如果被標為 negative 的 passage 其實提供有用 evidence，就出現 false negative。因此 dataset 的建立方式很重要。Embedding space 反映 objective 和 label，並不是客觀、通用的「意思量尺」。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">建立對機制的理解</div><h3>Relevance 需要 label 和明確定義</h3><div class="slide-prose"><p>對原本的問題，H1 是 relevant。對 “How much does the school bus cost and when does it leave?”，H2 和 H3 都是必需的。只有一段相關 passage，未必足以完成整個任務。</p>
-<p>Hit@k 問的是前 k 個結果中，是否至少有一段 relevant passage。Recall@k 問的是所有必需的 relevant passage 中，有多少比例被找出。我們會在第 21 週仔細計算兩者。</p>
-<p>對於 “What color is the headteacher's car?” 這類沒有支持資料的問題，這本小手冊沒有對應 passage。Retriever 仍可以回傳最近的 vector；但「最近」不代表「足夠」。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">建立對機制的理解</div><h3>逐步轉向 technical documentation</h3><div class="slide-prose"><p>當 passage 描述 API parameter 而非學校時間表時，結構一樣適用。精確名稱、version constraint 和 code block 會變得重要。容易理解的手冊例子先教機制，documentation corpus 再提供較難的情境。</p>
-<p>選定一個固定的 corpus revision，保留 passage ID 和 source provenance。Question label 要與 training 或 configuration tuning 分開。不要在看到新 retriever 擅長哪些問題之後，才挑選 evaluation question。</p>
-<p>下週會加入 persistence、metadata 和 approximate search。在操作 database 之前，你已經可以用一串 vector 理解和測試排名機制。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">建立對機制的理解</div><h3>實例練習與學習檢查</h3><div class="slide-prose"><p>為 “When does the bus leave and what does a ticket cost?” 標示必需的 evidence。解釋為甚麼只找出 H2 時，Hit@1=1，但 Recall@1=1/2。</p>
-<p>分別以 lexical search 和真正的 dense search，比較一條 paraphrase question 及一條 exact identifier question。儲存原始排名，並為每種方法記錄一個失敗例子。</p>
-<p>當你能分辨 token vector、sentence embedding、similarity scoring、relevance 和 retrieval quality，就已準備好繼續。很高的 similarity 數值，仍需要按任務解讀。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">選讀：深入學習</div><h3>完成引導例子後，再深入一層</h3><div class="slide-prose"><p>以下內容適合第二次閱讀。先解釋上面的日常例子，再用以下 equation 和實作細節，把解釋說得更精確。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">選讀：深入學習</div><h3>深入研習 11：直觀理解</h3><div class="slide-prose"><p>Retriever 必須把有用 evidence 排在前面，而不只是找出相關文字。精確的 API 名稱和 error code 較適合 lexical matching；改寫過的意圖可能較適合 semantic matching。先準備這兩類問題和簡單 baseline。選擇 scoring 方法，是因為它針對已觀察到的失敗，而不是因為名字有 “vector”。</p>
-<p>Inverted index 把 term 對應到符合的 document。TF-IDF 會提高「在 document 中常見、在 corpus 中罕見」的 term 的權重。BM25 再加入 term-frequency saturation 和 document-length normalization。Dense retrieval 把 query 和 passage encode 到共同的 vector space，再作比較。Lexical baseline 為 dense retrieval 提供重要對照，尤其適用於 technical symbol。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">選讀：深入學習</div><h3>深入研習 11：Relevance 與 metric</h3><div class="slide-prose"><p>設 G 為 relevant evidence ID 的集合，Rk 為首 k 個回傳 ID。Recall@k 為 <code>|G intersection Rk| / |G|</code>。只要有任何 relevant item，Hit@k 就是 1。Reciprocal rank 為 <code>1/r</code>，其中 r 是第一個 relevant 結果的排名；若沒有則為 0。當 relevant passage 不只一段時，Hit@k 和 Recall@k 回答的是不同問題。只要定義好 relevance label 和 normalization，NDCG 可以表示不同程度的 relevance 及位置折扣。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">選讀：深入學習</div><h3>深入研習 11：計算例子</h3><div class="slide-prose"><p>假設 G={A,B}，首三個結果是 C,A,D，則 Hit@3=1、Recall@3=1/2、reciprocal rank=1/2。報告如果把 Hit@3 稱為 “recall”，就會掩蓋缺少第二段 evidence 的問題。若比較任務需要兩個 version，缺少這段 evidence 可能令問題根本無法作答。</p>
-<p>對沒有 relevant evidence、無法回答的問題，一般 recall 的分母是 0。不要默默當作 perfect recall。應以 refusal、false-positive retrieval 或 unsupported-answer measure，另外評估這類問題。Starter 把它們的 retrieval metric 標為不適用。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">選讀：深入學習</div><h3>深入研習 11：實驗</h3><div class="slide-prose"><p>Notebook 18 比較內附 lexical retriever 和真正的 sentence-transformer embedding。固定 document chunk、question、version filtering 和 k。加入 exact identifier、paraphrase 和 wrong-version distractor。先儲存每條 query 的排名，再計算平均值；平均數可能掩蓋某一整類系統性失敗。</p>
-<p>分清 model failure 和 ingestion failure。檢查預期 passage 是否真的在 index 裏、truncation 有沒有刪去關鍵句，以及 metadata filter 是否排除了它。真正的 capstone 要標示足夠多類問題，避免單一例子主導某個 slice。小型 teaching fixture 用來協助檢查 software correctness，並不足以充當 research dataset。</p>
-<p><strong>完成標準：</strong> 手算 recall、hit rate 和 reciprocal rank，再用真實失敗例子解釋 dense 與 lexical 方法之間的取捨。 <strong>閱讀材料：</strong> R07 和 R25 的概念。 <strong>Tutorial：</strong> 17.</p></div></section></div><div class="deck-controls"><button class="slide-prev" type="button">← 上一頁</button><span aria-live="polite" class="slide-counter">1 / 13</span><button class="slide-next" type="button">下一頁 →</button></div><label class="slide-jump-label">前往 slide <select aria-label="跳至 slide" class="slide-jump"><option value="0">1</option><option value="1">2</option><option value="2">3</option><option value="3">4</option><option value="4">5</option><option value="5">6</option><option value="6">7</option><option value="7">8</option><option value="8">9</option><option value="9">10</option><option value="10">11</option><option value="11">12</option><option value="12">13</option></select></label><button aria-pressed="false" class="deck-all" type="button">顯示全部 slides</button><a class="reader-link" href="#full-notes">閱讀完整講義 ↓</a></section><section aria-label="Embedding geometry" class="visual-lesson"><div class="eyebrow">探索機制</div><h2>Embedding geometry</h2><p class="visual-intro">以精確算術比較 vector 方向與 magnitude。</p><div data-widget="geometry"><p>啟用 JavaScript 以使用此圖解。下方 lecture notes 會解釋同一機制。</p></div></section><article class="prose full-notes" id="full-notes"><div class="eyebrow">完整講義</div><h2>閱讀完整解說</h2><h3 id="a-simple-school-handbook">一本簡單的學校手冊</h3>
-<p>想像手冊有三段內容。H1 寫着 “School opens at 08:00.”，H2 寫着 “The school bus leaves at 07:30.”，H3 寫着 “A bus ticket costs 4 dollars.”。一名學生問：“When does school start?”</p>
-<p>Search 的任務，是為這條問題選出有用的段落。問題用了 start，H1 卻用了 opens。完全相同的字詞比對可以找到 school，但也可能找到關於 bus 的段落。好的 representation 應有助分辨真正有用的 evidence 和只是相關的文字。</p>
-<p>我們刻意先學 representation 和 transformer，才開始這個應用。現在，“embed the question” 指的是一種具體的數值運算，而不是未加解釋、像魔法一樣的 API。</p>
-<h3 id="a-lexical-baseline-first">先建立 lexical baseline</h3>
-<p>Lexical retriever 比較字詞或 term。Inverted index 把一個 term 對應到包含它的段落。Term weighting 可以減低常見字詞的影響，並強調更有辨識力的 term。</p>
-<p>對於 school 何時開始這條問題，簡單的 overlap 方法可能同時給 H1 和 H2 分數。這種失敗不難理解：方法沒有學過 start 與 opens 的關係，也可能無法清楚分辨主要主題。</p>
-<p>BM25 是常用的 lexical scoring 方法系列，包含 term-frequency saturation 和 length normalization。我們會把它與 semantic 方法比較，而不會假設 neural vector 對所有 query 都更好。遇到精確的 API 名稱和 error code 時，準確的 lexical matching 往往很有幫助。</p>
-<h3 id="a-sentence-embedding-represents-the-input-for-a-task">Sentence embedding 為特定任務表示輸入</h3>
-<p>Transformer encoder 可以產生帶有 context 的 token vector。Pooling 或其他 representation 程序會建立 passage 或 sentence vector。之後，training 會鼓勵這些 vector 形成適合目標比較任務的 geometry。</p>
-<p>為 retrieval 訓練的 embedding model，目標是讓相關的 question-passage pair 在選定的 similarity function 下取得好分數。隨意平均 token row 是另一種方法，有不同的限制。</p>
-<p>在 bi-encoder 中，question 和 passage 可以獨立 encode。Passage vector 只需儲存一次，之後可重複用於很多問題。這種重用解釋了為甚麼 dense retrieval 能擴展，而不必對每條 query 都重新與每個 passage 一起處理。</p>
-<h3 id="a-tiny-numerical-ranking">一個小型數值排名例子</h3>
-<p>使用人為設定、已 normalize 的 question q=[1,0]。假設手冊的 vector 是 H1=[0.9,0.436]、H2=[0.6,0.8]、H3=[0,1]；第一個 vector 經過四捨五入，因此視為近似值。它們與 q 的 dot product 約為 0.9、0.6、0。</p>
-<p>H1 排第一。這些座標是為了方便計算而設計，並非真實 embedding model 的量測輸出。給定 vector 後，排名運算是確定的；但 vector 是否表達了正確的 relevance，仍需要實驗驗證。</p>
-<p>在 tutorial 中，以真實 model embedding 取代人為座標。固定 question set 和 evidence label，讓實驗測試 representation 本身，而不是一個精心挑選的示範。</p>
-<h3 id="how-retrieval-embeddings-can-be-trained">Retrieval embedding 可以怎樣訓練</h3>
-<p>Positive pair 由一條 question 和一段能支持答案的 passage 組成；negative pair 則不能支持答案。Contrastive objective 可以提高 positive score 相對於其他競爭分數的值。</p>
-<p>Hard negative 與問題相似，但答案不對。對 “When does school open?” 而言，bus 的 departure time 就是有用的干擾項。另一個例子，是描述不同年份 school opening time 的段落。</p>
-<p>如果被標為 negative 的 passage 其實提供有用 evidence，就出現 false negative。因此 dataset 的建立方式很重要。Embedding space 反映 objective 和 label，並不是客觀、通用的「意思量尺」。</p>
-<h3 id="relevance-needs-labels-and-a-definition">Relevance 需要 label 和明確定義</h3>
-<p>對原本的問題，H1 是 relevant。對 “How much does the school bus cost and when does it leave?”，H2 和 H3 都是必需的。只有一段相關 passage，未必足以完成整個任務。</p>
-<p>Hit@k 問的是前 k 個結果中，是否至少有一段 relevant passage。Recall@k 問的是所有必需的 relevant passage 中，有多少比例被找出。我們會在第 21 週仔細計算兩者。</p>
-<p>對於 “What color is the headteacher's car?” 這類沒有支持資料的問題，這本小手冊沒有對應 passage。Retriever 仍可以回傳最近的 vector；但「最近」不代表「足夠」。</p>
-<h3 id="moving-toward-technical-documentation">逐步轉向 technical documentation</h3>
-<p>當 passage 描述 API parameter 而非學校時間表時，結構一樣適用。精確名稱、version constraint 和 code block 會變得重要。容易理解的手冊例子先教機制，documentation corpus 再提供較難的情境。</p>
-<p>選定一個固定的 corpus revision，保留 passage ID 和 source provenance。Question label 要與 training 或 configuration tuning 分開。不要在看到新 retriever 擅長哪些問題之後，才挑選 evaluation question。</p>
-<p>下週會加入 persistence、metadata 和 approximate search。在操作 database 之前，你已經可以用一串 vector 理解和測試排名機制。</p>
-<h3 id="worked-practice-and-a-readiness-check">實例練習與學習檢查</h3>
-<p>為 “When does the bus leave and what does a ticket cost?” 標示必需的 evidence。解釋為甚麼只找出 H2 時，Hit@1=1，但 Recall@1=1/2。</p>
-<p>分別以 lexical search 和真正的 dense search，比較一條 paraphrase question 及一條 exact identifier question。儲存原始排名，並為每種方法記錄一個失敗例子。</p>
-<p>當你能分辨 token vector、sentence embedding、similarity scoring、relevance 和 retrieval quality，就已準備好繼續。很高的 similarity 數值，仍需要按任務解讀。</p>
-<h3 id="a-deeper-pass-after-the-worked-introduction">完成引導例子後，再深入一層</h3>
-<p>以下內容適合第二次閱讀。先解釋上面的日常例子，再用以下 equation 和實作細節，把解釋說得更精確。</p>
-<h3 id="further-study-11-intuition">深入研習 11：直觀理解</h3>
-<p>Retriever 必須把有用 evidence 排在前面，而不只是找出相關文字。精確的 API 名稱和 error code 較適合 lexical matching；改寫過的意圖可能較適合 semantic matching。先準備這兩類問題和簡單 baseline。選擇 scoring 方法，是因為它針對已觀察到的失敗，而不是因為名字有 “vector”。</p>
-<p>Inverted index 把 term 對應到符合的 document。TF-IDF 會提高「在 document 中常見、在 corpus 中罕見」的 term 的權重。BM25 再加入 term-frequency saturation 和 document-length normalization。Dense retrieval 把 query 和 passage encode 到共同的 vector space，再作比較。Lexical baseline 為 dense retrieval 提供重要對照，尤其適用於 technical symbol。</p>
-<h3 id="further-study-11-relevance-and-metrics">深入研習 11：Relevance 與 metric</h3>
-<p>設 G 為 relevant evidence ID 的集合，Rk 為首 k 個回傳 ID。Recall@k 為 <code>|G intersection Rk| / |G|</code>。只要有任何 relevant item，Hit@k 就是 1。Reciprocal rank 為 <code>1/r</code>，其中 r 是第一個 relevant 結果的排名；若沒有則為 0。當 relevant passage 不只一段時，Hit@k 和 Recall@k 回答的是不同問題。只要定義好 relevance label 和 normalization，NDCG 可以表示不同程度的 relevance 及位置折扣。</p>
-<h3 id="further-study-11-worked-example">深入研習 11：計算例子</h3>
-<p>假設 G={A,B}，首三個結果是 C,A,D，則 Hit@3=1、Recall@3=1/2、reciprocal rank=1/2。報告如果把 Hit@3 稱為 “recall”，就會掩蓋缺少第二段 evidence 的問題。若比較任務需要兩個 version，缺少這段 evidence 可能令問題根本無法作答。</p>
-<p>對沒有 relevant evidence、無法回答的問題，一般 recall 的分母是 0。不要默默當作 perfect recall。應以 refusal、false-positive retrieval 或 unsupported-answer measure，另外評估這類問題。Starter 把它們的 retrieval metric 標為不適用。</p>
-<h3 id="further-study-11-experiment">深入研習 11：實驗</h3>
-<p>Notebook 18 比較內附 lexical retriever 和真正的 sentence-transformer embedding。固定 document chunk、question、version filtering 和 k。加入 exact identifier、paraphrase 和 wrong-version distractor。先儲存每條 query 的排名，再計算平均值；平均數可能掩蓋某一整類系統性失敗。</p>
-<p>分清 model failure 和 ingestion failure。檢查預期 passage 是否真的在 index 裏、truncation 有沒有刪去關鍵句，以及 metadata filter 是否排除了它。真正的 capstone 要標示足夠多類問題，避免單一例子主導某個 slice。小型 teaching fixture 用來協助檢查 software correctness，並不足以充當 research dataset。</p>
-<p><strong>完成標準：</strong> 手算 recall、hit rate 和 reciprocal rank，再用真實失敗例子解釋 dense 與 lexical 方法之間的取捨。 <strong>閱讀材料：</strong> R07 和 R25 的概念。 <strong>Tutorial：</strong> 17.</p></article><nav aria-label="前後 lecture" class="chapter-pagination"><a href="16.html"><small>上一週</small>完整 transformer 導覽與第一學期溫習</a><a href="18.html"><small>下一週</small>從一列 vector 建立 vector database</a></nav></div><footer class="footer"><span>Applied AI · 獨立自學課程</span><span>32 週 · 每週 10 小時</span><a href="../resources.html#about-this-course">關於課程及資料來源</a></footer></main><dialog aria-labelledby="search-title" class="search-dialog"><div class="dialog-head"><h2 id="search-title">尋找概念</h2><button aria-label="關閉搜尋" class="search-close" type="button">關閉</button></div><label class="sr-only" for="course-search">搜尋所有 lecture 和 tutorial</label><input autocomplete="off" id="course-search" placeholder="試試 attention、fine-tuning 或 harness……" type="search"/><p aria-live="polite" class="search-status">搜尋 lecture notes、tutorial、測驗及閱讀材料。</p><div class="search-results"></div></dialog><div aria-live="polite" class="toast" role="status"></div></body></html>
+<html lang="zh-HK">
+ <head>
+  <script src="../../assets/translations-zh-HK.js">
+  </script>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width,initial-scale=1" name="viewport"/>
+  <title>
+   從 word vector 到 semantic search · Applied AI
+  </title>
+  <meta content="Applied generative AI and LLM systems course material" name="description"/>
+  <meta content="#173c36" name="theme-color"/>
+  <link href="../../assets/favicon.svg" rel="icon" type="image/svg+xml"/>
+  <link href="../../assets/style.css" rel="stylesheet"/>
+  <link href="../../assets/slides.css" rel="stylesheet"/>
+  <script>
+   window.COURSE_BASE="../";
+  </script>
+  <script defer="" src="../../assets/site-config.js">
+  </script>
+  <script defer="" src="../assets/search-index.js">
+  </script>
+  <script defer="" src="../../assets/app.js">
+  </script>
+  <script defer="" src="../../assets/visuals.js">
+  </script>
+  <script defer="" src="../../assets/slides.js">
+  </script>
+  <script defer="" src="../../assets/beginner-visuals.js">
+  </script>
+  <script defer="True" src="../../assets/locale-patterns.js">
+  </script>
+  <script defer="True" src="../../assets/locale.js">
+  </script>
+  <link href="../../assets/bilingual.css" rel="stylesheet"/>
+  <link href="../../lectures/17.html" hreflang="en" rel="alternate"/>
+  <link href="../../assets/reader-v3.css" rel="stylesheet"/>
+  <script defer="True" src="../../assets/reader-v3.js">
+  </script>
+ </head>
+ <body data-page-kind="lecture" data-week="17">
+  <a class="skip-link" href="#main">
+   跳至內容
+  </a>
+  <header class="topbar">
+   <button aria-controls="course-sidebar" aria-expanded="false" class="menu-toggle" type="button">
+    選單
+   </button>
+   <a class="brand" href="../index.html">
+    <span aria-hidden="true" class="brand-mark">
+     a
+     <span>
+      i
+     </span>
+    </span>
+    <span>
+     APPLIED AI
+     <small>
+      從原理到實踐
+     </small>
+    </span>
+   </a>
+   <nav aria-label="主要導覽">
+    <a href="../index.html">
+     課程
+    </a>
+    <a href="../visuals.html">
+     互動圖解
+    </a>
+    <a href="../project.html">
+     專題
+    </a>
+    <a class="language-switch" href="../../lectures/17.html" hreflang="en" lang="en">
+     English
+    </a>
+   </nav>
+   <button class="search-open" type="button">
+    搜尋課程
+    <span aria-hidden="true">
+     /
+    </span>
+   </button>
+  </header>
+  <aside aria-label="課程章節" class="sidebar" id="course-sidebar">
+   <a class="side-home" href="../index.html">
+    課程概覽
+   </a>
+   <details class="semester-nav">
+    <summary>
+     第一學期
+     <span>
+      第 1–16 週
+     </span>
+    </summary>
+    <ol start="1">
+     <li>
+      <a href="../lectures/01.html">
+       <span class="week-number">
+        01
+       </span>
+       <span>
+        Language model 究竟在學甚麼
+       </span>
+       <span class="week-tick" data-week-tick="1">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/02.html">
+       <span class="week-number">
+        02
+       </span>
+       <span>
+        從文字到 token 和數值 ID
+       </span>
+       <span class="week-tick" data-week-tick="2">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/03.html">
+       <span class="week-number">
+        03
+       </span>
+       <span>
+        Word vector 能表達甚麼
+       </span>
+       <span class="week-tick" data-week-tick="3">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/04.html">
+       <span class="week-number">
+        04
+       </span>
+       <span>
+        從 score 到 probability 和學習訊號
+       </span>
+       <span class="week-tick" data-week-tick="4">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/05.html">
+       <span class="week-number">
+        05
+       </span>
+       <span>
+        為甚麼語言需要 context 和次序
+       </span>
+       <span class="week-tick" data-week-tick="5">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/06.html">
+       <span class="week-number">
+        06
+       </span>
+       <span>
+        Attention 由 weighted mixture 開始
+       </span>
+       <span class="week-tick" data-week-tick="6">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/07.html">
+       <span class="week-number">
+        07
+       </span>
+       <span>
+        Query、key 和 value 從何而來
+       </span>
+       <span class="week-tick" data-week-tick="7">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/08.html">
+       <span class="week-number">
+        08
+       </span>
+       <span>
+        正確進行 attention scaling 和 masking
+       </span>
+       <span class="week-tick" data-week-tick="8">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/09.html">
+       <span class="week-number">
+        09
+       </span>
+       <span>
+        多個 attention head 與位置
+       </span>
+       <span class="week-tick" data-week-tick="9">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/10.html">
+       <span class="week-number">
+        10
+       </span>
+       <span>
+        逐步拆解 transformer block
+       </span>
+       <span class="week-tick" data-week-tick="10">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/11.html">
+       <span class="week-number">
+        11
+       </span>
+       <span>
+        Encoder、decoder 與完整 model architecture
+       </span>
+       <span class="week-tick" data-week-tick="11">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/12.html">
+       <span class="week-number">
+        12
+       </span>
+       <span>
+        訓練一個小型 transformer
+       </span>
+       <span class="week-tick" data-week-tick="12">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/13.html">
+       <span class="week-number">
+        13
+       </span>
+       <span>
+        Generation、decoding 與 KV cache
+       </span>
+       <span class="week-tick" data-week-tick="13">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/14.html">
+       <span class="week-number">
+        14
+       </span>
+       <span>
+        從 pretraining 到 instruction following 和 reasoning
+       </span>
+       <span class="week-tick" data-week-tick="14">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/15.html">
+       <span class="week-number">
+        15
+       </span>
+       <span>
+        文字以外的 Generative AI
+       </span>
+       <span class="week-tick" data-week-tick="15">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/16.html">
+       <span class="week-number">
+        16
+       </span>
+       <span>
+        完整 transformer 導覽與第一學期溫習
+       </span>
+       <span class="week-tick" data-week-tick="16">
+       </span>
+      </a>
+     </li>
+    </ol>
+   </details>
+   <details class="semester-nav" open="">
+    <summary>
+     第二學期
+     <span>
+      第 17–32 週
+     </span>
+    </summary>
+    <ol start="17">
+     <li>
+      <a aria-current="page" href="../lectures/17.html">
+       <span class="week-number">
+        17
+       </span>
+       <span>
+        從 word vector 到 semantic search
+       </span>
+       <span class="week-tick" data-week-tick="17">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/18.html">
+       <span class="week-number">
+        18
+       </span>
+       <span>
+        從一列 vector 建立 vector database
+       </span>
+       <span class="week-tick" data-week-tick="18">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/19.html">
+       <span class="week-number">
+        19
+       </span>
+       <span>
+        把 RAG 理解為開卷作答
+       </span>
+       <span class="week-tick" data-week-tick="19">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/20.html">
+       <span class="week-number">
+        20
+       </span>
+       <span>
+        在保持基本任務的前提下改善 RAG
+       </span>
+       <span class="week-tick" data-week-tick="20">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/21.html">
+       <span class="week-number">
+        21
+       </span>
+       <span>
+        評估 retrieval、答案與 uncertainty
+       </span>
+       <span class="week-tick" data-week-tick="21">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/22.html">
+       <span class="week-number">
+        22
+       </span>
+       <span>
+        CPU、GPU、memory 與 model 資源計算
+       </span>
+       <span class="week-tick" data-week-tick="22">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/23.html">
+       <span class="week-number">
+        23
+       </span>
+       <span>
+        CUDA kernel 與 profiling
+       </span>
+       <span class="week-tick" data-week-tick="23">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/24.html">
+       <span class="week-number">
+        24
+       </span>
+       <span>
+        Fine-tuning 由教學 dataset 開始
+       </span>
+       <span class="week-tick" data-week-tick="24">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/25.html">
+       <span class="week-number">
+        25
+       </span>
+       <span>
+        從小型 matrix 理解 LoRA 和 QLoRA
+       </span>
+       <span class="week-tick" data-week-tick="25">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/26.html">
+       <span class="week-number">
+        26
+       </span>
+       <span>
+        Fine-tuning 實驗、preference 與 distillation
+       </span>
+       <span class="week-tick" data-week-tick="26">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/27.html">
+       <span class="week-number">
+        27
+       </span>
+       <span>
+        Tool、function、workflow 與 agent
+       </span>
+       <span class="week-tick" data-week-tick="27">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/28.html">
+       <span class="week-number">
+        28
+       </span>
+       <span>
+        Harness、planning、memory 與有界執行
+       </span>
+       <span class="week-tick" data-week-tick="28">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/29.html">
+       <span class="week-number">
+        29
+       </span>
+       <span>
+        從 notebook 到 MLOps 和 inference serving
+       </span>
+       <span class="week-tick" data-week-tick="29">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/30.html">
+       <span class="week-number">
+        30
+       </span>
+       <span>
+        Monitoring、security、regression test 與 rollback
+       </span>
+       <span class="week-tick" data-week-tick="30">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/31.html">
+       <span class="week-number">
+        31
+       </span>
+       <span>
+        整合文件助手與進階延伸
+       </span>
+       <span class="week-tick" data-week-tick="31">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/32.html">
+       <span class="week-number">
+        32
+       </span>
+       <span>
+        溫習、答辯與持續學習計劃
+       </span>
+       <span class="week-tick" data-week-tick="32">
+       </span>
+      </a>
+     </li>
+    </ol>
+   </details>
+   <div class="side-links">
+    <a href="../visuals.html">
+     互動圖解實驗室
+     <span>
+      14 個互動課節
+     </span>
+    </a>
+    <a href="../project.html">
+     文件助手
+     <span>
+      你的 capstone project
+     </span>
+    </a>
+    <a href="../resources.html">
+     閱讀材料與環境設定
+    </a>
+   </div>
+   <div class="side-progress">
+    <div>
+     <span>
+      你的進度
+     </span>
+     <strong data-progress-count="">
+      0 / 32
+     </strong>
+    </div>
+    <progress aria-label="已完成 lecture" max="32" value="0">
+    </progress>
+    <small>
+     儲存在這個瀏覽器
+    </small>
+   </div>
+  </aside>
+  <main class="main" id="main">
+   <div class="content">
+    <div class="chapter-header">
+     <div class="eyebrow">
+      第二學期 / 第 17 週
+     </div>
+     <h1>
+      從 word vector 到 semantic search
+     </h1>
+    </div>
+    <div class="lesson-links">
+     <a href="../tutorials/17.html">
+      練習 17
+     </a>
+     <a href="../tests/17.html">
+      檢查你的理解
+     </a>
+     <button aria-pressed="false" class="mark-complete" data-week="17" type="button">
+      標記為已完成
+     </button>
+    </div>
+    <div aria-label="課堂檢視" class="lesson-mode" role="tablist">
+     <button aria-controls="full-notes" aria-selected="true" data-mode="read" id="mode-read" role="tab" type="button">
+      閱讀講義
+     </button>
+     <button aria-controls="lecture-slides" aria-selected="false" data-mode="slides" id="mode-slides" role="tab" type="button">
+      課堂 slides
+     </button>
+    </div>
+    <section aria-label="Lecture slides" class="lecture-deck" hidden="" id="lecture-slides" role="tabpanel">
+     <div class="deck-top">
+      <div>
+       <div class="eyebrow">
+        課堂投影片 · 第 17 週
+       </div>
+       <h2>
+        重點步驟與圖解
+       </h2>
+      </div>
+      <button class="deck-present" type="button">
+       簡報模式
+      </button>
+     </div>
+     <p class="deck-help">
+      用 slides 溫習機制；按「閱讀完整解說」可開啟完整講義及程式碼。
+     </p>
+     <div aria-label="簡報：使用左右方向鍵" class="slide-viewport" tabindex="0">
+      <section class="lecture-slide" data-slide="">
+       <div class="slide-stage">
+        第 17 週 · 課節 1
+       </div>
+       <h3>
+        一本簡單的學校手冊
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          想像手冊有三段內容。H1 寫着 “School opens at 08:00.”，H2 寫着 “The school bus leaves at 07:30.”，H3 寫着 “A ticket for the school bus costs 4 dollars.”。一名學生問：“When does school start?”
+         </li>
+         <li>
+          Search 的任務，是為這條問題選出有用的段落。
+         </li>
+         <li>
+          我們刻意先學 representation 和 transformer，才開始這個應用。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#a-simple-school-handbook">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 17 週 · 課節 2
+       </div>
+       <h3>
+        先建立 lexical baseline
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Lexical retriever 比較字詞或 term。
+         </li>
+         <li>
+          對於 school 何時開始這條問題，簡單的 overlap 方法可能同時給 H1 和 H2 分數。
+         </li>
+         <li>
+          BM25 是常用的 lexical scoring 方法系列，包含 term-frequency saturation 和 length normalization。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#a-lexical-baseline-first">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 17 週 · 課節 3
+       </div>
+       <h3>
+        Sentence embedding 為特定任務表示輸入
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Transformer encoder 可以產生帶有 context 的 token vector。
+         </li>
+         <li>
+          為 retrieval 訓練的 embedding model，目標是讓相關的 question-passage pair 在選定的 similarity function 下取得好分數。
+         </li>
+         <li>
+          在 bi-encoder 中，question 和 passage 可以獨立 encode。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#a-sentence-embedding-represents-the-input-for-a-task">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 17 週 · 課節 4
+       </div>
+       <h3>
+        一個小型數值排名例子
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          使用設計出來的 unit question vector q=[1,0]。
+         </li>
+         <li>
+          H1 排第一。這些座標是為了方便計算而設計，並非真實 embedding model 的量測輸出。給定 vector 後，排名運算是確定的；但 vector 是否表達了正確的 relevance，仍需要實驗驗證。
+         </li>
+         <li>
+          在 tutorial 中，以真實 model embedding 取代人為座標。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#a-tiny-numerical-ranking">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 17 週 · 課節 5
+       </div>
+       <h3>
+        Retrieval embedding 可以怎樣訓練
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Positive pair 由一條 question 和一段能支持答案的 passage 組成；negative pair 則不能支持答案。
+         </li>
+         <li>
+          Hard negative 與問題相似，但答案不對。
+         </li>
+         <li>
+          如果被標為 negative 的 passage 其實提供有用 evidence，就出現 false negative。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#how-retrieval-embeddings-can-be-trained">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 17 週 · 課節 6
+       </div>
+       <h3>
+        三個問題的 contrastive training 例子
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          回到 school handbook。Q1 是「When does school start?」，Q2 是「When does the school bus leave?」，Q3 是「How much does a ticket for the school bus cost?」。相應的支持 passage 分別是 H1、H2 和 H3。我們先標示這些 positive pairs，然後才 training。在這個小例子中，其他 passages 並不能回答該問題。
+         </li>
+         <li>
+          bi-encoder 分別 encode 每個問題和 passage。
+         </li>
+         <li>
+          Q1 的 positive passage 是 H1。
+         </li>
+        </ul>
+        <figure class="mechanism-figure">
+         <figcaption>
+          Contrastive training 比較甚麼
+         </figcaption>
+         <ol class="mechanism-flow">
+          <li>
+           <span class="mechanism-number">
+            01
+           </span>
+           <strong>
+            Encode
+           </strong>
+           <small>
+            question and passages
+           </small>
+          </li>
+          <li>
+           <span class="mechanism-number">
+            02
+           </span>
+           <strong>
+            Score
+           </strong>
+           <small>
+            pairwise similarity matrix
+           </small>
+          </li>
+          <li>
+           <span class="mechanism-number">
+            03
+           </span>
+           <strong>
+            Scale
+           </strong>
+           <small>
+            similarity / temperature
+           </small>
+          </li>
+          <li>
+           <span class="mechanism-number">
+            04
+           </span>
+           <strong>
+            Learn
+           </strong>
+           <small>
+            positive-pair cross-entropy
+           </small>
+          </li>
+         </ol>
+         <p>
+          Candidate softmax 是 training 時的比較，並非 evidence 真實的 probability。
+         </p>
+        </figure>
+        <a class="slide-section-link" href="#a-contrastive-training-example-with-three-questions">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 17 週 · 課節 7
+       </div>
+       <h3>
+        三個問題的 contrastive training 例子 · 續
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Q1 的 loss 是 H1 probability 的 negative natural logarithm：−ln(0.66524)，約為 0.40761。
+         </li>
+         <li>
+          要看清學習方向，在 temperature 為 1 時，這個 row loss 對三個 scores 的 derivative 約為 [−0.33476,0.24473,0.09003]。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#a-contrastive-training-example-with-three-questions">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 17 週 · 課節 8
+       </div>
+       <h3>
+        Temperature 把 cosine similarity 連接到 training logits
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          之前的 [2,1,0] row 是 temperature 為 1 的教學例子。
+         </li>
+         <li>
+          假設 cosines 是 [0.8,0.6,0.2]，τ=0.05，則 logits 為 [16,12,4]。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#temperature-connects-cosine-similarity-to-training-logits">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 17 週 · 課節 9
+       </div>
+       <h3>
+        false negative 會改變 model 學到甚麼
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          現在把 H2 換成「Classes at this school begin at 08:00.」。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#a-false-negative-changes-what-the-model-is-taught">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 17 週 · 課節 10
+       </div>
+       <h3>
+        bi-encoder retrieval 與 cross-encoder reranking
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          bi-encoder 預先儲存 passage vectors，再用新問題與它們比較。
+         </li>
+         <li>
+          檢查理解：指出 table 每個 row 的 positive column；重算 Q1 的 softmax 和 loss；解釋為何另一段正確的 school-opening passage 不應自動成為 negative。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#bi-encoder-retrieval-and-cross-encoder-reranking">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 17 週 · 課節 11
+       </div>
+       <h3>
+        按 model 要求準備 query 和 passage
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          embedding checkpoint 亦包含 input recipe。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#prepare-the-query-and-passage-the-way-the-model-expects">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 17 週 · 課節 12
+       </div>
+       <h3>
+        一個 vector、多個 vectors，或 sparse term weights
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Matryoshka-trained embedding 把有用資訊放進 vector 的不同長度 prefixes。
+         </li>
+         <li>
+          ColBERT 保留 passage 的多個 contextual token vectors，而非全部 pooling 成一個 vector。
+         </li>
+         <li>
+          SPLADE 採用另一條路：neural encoder 產生 vocabulary terms 上的 sparse vector，並學習 term expansion。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#one-vector-several-vectors-or-sparse-term-weights">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 17 週 · 課節 13
+       </div>
+       <h3>
+        Relevance 需要 label 和明確定義
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          對原本的問題，H1 是 relevant。對 “How much does the school bus cost and when does it leave?”，H2 和 H3 都是必需的。只有一段相關 passage，未必足以完成整個任務。
+         </li>
+         <li>
+          Hit@k 問的是前 k 個結果中，是否至少有一段 relevant passage。
+         </li>
+         <li>
+          對於 “What color is the headteacher's car?” 這類沒有支持資料的問題，這本小手冊沒有對應 passage。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#relevance-needs-labels-and-a-definition">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 17 週 · 課節 14
+       </div>
+       <h3>
+        逐步轉向 technical documentation
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          當 passage 描述 API parameter 而非學校時間表時，結構一樣適用。
+         </li>
+         <li>
+          選定一個固定的 corpus revision，保留 passage ID 和 source provenance。
+         </li>
+         <li>
+          下週會加入 persistence、metadata 和 approximate search。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#moving-toward-technical-documentation">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 17 週 · 課節 15
+       </div>
+       <h3>
+        實例練習與學習檢查
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          為 “When does the bus leave and what does a ticket cost?” 標示必需的 evidence。
+         </li>
+         <li>
+          分別以 lexical search 和真正的 dense search，比較一條 paraphrase question 及一條 exact identifier question。
+         </li>
+         <li>
+          當你能分辨 token vector、sentence embedding、similarity scoring、relevance 和 retrieval quality，就已準備好繼續。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#worked-practice-and-a-readiness-check">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+     </div>
+     <div class="deck-controls">
+      <button class="slide-prev" type="button">
+       ← 上一頁
+      </button>
+      <span aria-live="polite" class="slide-counter">
+       1 / 15
+      </span>
+      <button class="slide-next" type="button">
+       下一頁 →
+      </button>
+     </div>
+     <label class="slide-jump-label">
+      前往 slide
+      <select aria-label="跳至 slide" class="slide-jump">
+       <option value="0">
+        1. 一本簡單的學校手冊
+       </option>
+       <option value="1">
+        2. 先建立 lexical baseline
+       </option>
+       <option value="2">
+        3. Sentence embedding 為特定任務表示輸入
+       </option>
+       <option value="3">
+        4. 一個小型數值排名例子
+       </option>
+       <option value="4">
+        5. Retrieval embedding 可以怎樣訓練
+       </option>
+       <option value="5">
+        6. 三個問題的 contrastive training 例子
+       </option>
+       <option value="6">
+        7. 三個問題的 contrastive training 例子 · 續
+       </option>
+       <option value="7">
+        8. Temperature 把 cosine similarity 連接到 training logits
+       </option>
+       <option value="8">
+        9. false negative 會改變 model 學到甚麼
+       </option>
+       <option value="9">
+        10. bi-encoder retrieval 與 cross-encoder reranking
+       </option>
+       <option value="10">
+        11. 按 model 要求準備 query 和 passage
+       </option>
+       <option value="11">
+        12. 一個 vector、多個 vectors，或 sparse term weights
+       </option>
+       <option value="12">
+        13. Relevance 需要 label 和明確定義
+       </option>
+       <option value="13">
+        14. 逐步轉向 technical documentation
+       </option>
+       <option value="14">
+        15. 實例練習與學習檢查
+       </option>
+      </select>
+     </label>
+     <button aria-pressed="false" class="deck-all" type="button">
+      顯示全部 slides
+     </button>
+    </section>
+    <section aria-label="Embedding geometry" class="visual-lesson">
+     <div class="eyebrow">
+      探索機制
+     </div>
+     <h2>
+      Embedding geometry
+     </h2>
+     <p class="visual-intro">
+      以精確算術比較 vector 方向與 magnitude。
+     </p>
+     <div data-widget="geometry">
+      <p>
+       啟用 JavaScript 以使用此圖解。下方 lecture notes 會解釋同一機制。
+      </p>
+     </div>
+    </section>
+    <nav aria-label="本課內容" class="reader-toc">
+     <strong>
+      本課內容
+     </strong>
+     <ol>
+      <li>
+       <a href="#a-simple-school-handbook">
+        一本簡單的學校手冊
+       </a>
+      </li>
+      <li>
+       <a href="#a-lexical-baseline-first">
+        先建立 lexical baseline
+       </a>
+      </li>
+      <li>
+       <a href="#a-sentence-embedding-represents-the-input-for-a-task">
+        Sentence embedding 為特定任務表示輸入
+       </a>
+      </li>
+      <li>
+       <a href="#a-tiny-numerical-ranking">
+        一個小型數值排名例子
+       </a>
+      </li>
+      <li>
+       <a href="#how-retrieval-embeddings-can-be-trained">
+        Retrieval embedding 可以怎樣訓練
+       </a>
+      </li>
+      <li>
+       <a href="#a-contrastive-training-example-with-three-questions">
+        三個問題的 contrastive training 例子
+       </a>
+      </li>
+      <li>
+       <a href="#temperature-connects-cosine-similarity-to-training-logits">
+        Temperature 把 cosine similarity 連接到 training logits
+       </a>
+      </li>
+      <li>
+       <a href="#a-false-negative-changes-what-the-model-is-taught">
+        false negative 會改變 model 學到甚麼
+       </a>
+      </li>
+      <li>
+       <a href="#bi-encoder-retrieval-and-cross-encoder-reranking">
+        bi-encoder retrieval 與 cross-encoder reranking
+       </a>
+      </li>
+      <li>
+       <a href="#prepare-the-query-and-passage-the-way-the-model-expects">
+        按 model 要求準備 query 和 passage
+       </a>
+      </li>
+      <li>
+       <a href="#one-vector-several-vectors-or-sparse-term-weights">
+        一個 vector、多個 vectors，或 sparse term weights
+       </a>
+      </li>
+      <li>
+       <a href="#relevance-needs-labels-and-a-definition">
+        Relevance 需要 label 和明確定義
+       </a>
+      </li>
+      <li>
+       <a href="#moving-toward-technical-documentation">
+        逐步轉向 technical documentation
+       </a>
+      </li>
+      <li>
+       <a href="#worked-practice-and-a-readiness-check">
+        實例練習與學習檢查
+       </a>
+      </li>
+     </ol>
+    </nav>
+    <article class="prose full-notes" id="full-notes" role="tabpanel">
+     <div class="eyebrow">
+      完整講義
+     </div>
+     <h2>
+      閱讀完整解說
+     </h2>
+     <h3 id="a-simple-school-handbook">
+      一本簡單的學校手冊
+     </h3>
+     <p>
+      想像手冊有三段內容。H1 寫着 “School opens at 08:00.”，H2 寫着 “The school bus leaves at 07:30.”，H3 寫着 “A ticket for the school bus costs 4 dollars.”。一名學生問：“When does school start?”
+     </p>
+     <p>
+      Search 的任務，是為這條問題選出有用的段落。問題用了 start，H1 卻用了 opens。完全相同的字詞比對可以找到 school，但也可能找到關於 bus 的段落。好的 representation 應有助分辨真正有用的 evidence 和只是相關的文字。
+     </p>
+     <p>
+      我們刻意先學 representation 和 transformer，才開始這個應用。現在，“embed the question” 指的是一種具體的數值運算，而不是未加解釋、像魔法一樣的 API。
+     </p>
+     <h3 id="a-lexical-baseline-first">
+      先建立 lexical baseline
+     </h3>
+     <p>
+      Lexical retriever 比較字詞或 term。Inverted index 把一個 term 對應到包含它的段落。Term weighting 可以減低常見字詞的影響，並強調更有辨識力的 term。
+     </p>
+     <p>
+      對於 school 何時開始這條問題，簡單的 overlap 方法可能同時給 H1 和 H2 分數。這種失敗不難理解：方法沒有學過 start 與 opens 的關係，也可能無法清楚分辨主要主題。
+     </p>
+     <p>
+      BM25 是常用的 lexical scoring 方法系列，包含 term-frequency saturation 和 length normalization。我們會把它與 semantic 方法比較，而不會假設 neural vector 對所有 query 都更好。遇到精確的 API 名稱和 error code 時，準確的 lexical matching 往往很有幫助。
+     </p>
+     <h3 id="a-sentence-embedding-represents-the-input-for-a-task">
+      Sentence embedding 為特定任務表示輸入
+     </h3>
+     <p>
+      Transformer encoder 可以產生帶有 context 的 token vector。Pooling 或其他 representation 程序會建立 passage 或 sentence vector。之後，training 會鼓勵這些 vector 形成適合目標比較任務的 geometry。
+     </p>
+     <p>
+      為 retrieval 訓練的 embedding model，目標是讓相關的 question-passage pair 在選定的 similarity function 下取得好分數。隨意平均 token row 是另一種方法，有不同的限制。
+     </p>
+     <p>
+      在 bi-encoder 中，question 和 passage 可以獨立 encode。Passage vector 只需儲存一次，之後可重複用於很多問題。這種重用解釋了為甚麼 dense retrieval 能擴展，而不必對每條 query 都重新與每個 passage 一起處理。
+     </p>
+     <h3 id="a-tiny-numerical-ranking">
+      一個小型數值排名例子
+     </h3>
+     <p>
+      使用設計出來的 unit question vector q=[1,0]。設 H1=[0.9,√0.19]、H2=[0.6,0.8]、H3=[0,1]。三個 passage vectors 的長度都等於一。它們與 q 的 dot product 分別正好是 0.9、0.6 和 0。H1 的第二個 coordinate 約為 0.43589。
+     </p>
+     <p>
+      H1 排第一。這些座標是為了方便計算而設計，並非真實 embedding model 的量測輸出。給定 vector 後，排名運算是確定的；但 vector 是否表達了正確的 relevance，仍需要實驗驗證。
+     </p>
+     <p>
+      在 tutorial 中，以真實 model embedding 取代人為座標。固定 question set 和 evidence label，讓實驗測試 representation 本身，而不是一個精心挑選的示範。
+     </p>
+     <h3 id="how-retrieval-embeddings-can-be-trained">
+      Retrieval embedding 可以怎樣訓練
+     </h3>
+     <p>
+      Positive pair 由一條 question 和一段能支持答案的 passage 組成；negative pair 則不能支持答案。Contrastive objective 可以提高 positive score 相對於其他競爭分數的值。
+     </p>
+     <p>
+      Hard negative 與問題相似，但答案不對。對 “When does school open?” 而言，bus 的 departure time 就是有用的干擾項。另一個例子，是描述不同年份 school opening time 的段落。
+     </p>
+     <p>
+      如果被標為 negative 的 passage 其實提供有用 evidence，就出現 false negative。因此 dataset 的建立方式很重要。Embedding space 反映 objective 和 label，並不是客觀、通用的「意思量尺」。
+     </p>
+     <h3 id="a-contrastive-training-example-with-three-questions">
+      三個問題的 contrastive training 例子
+     </h3>
+     <figure class="mechanism-figure">
+      <figcaption>
+       Contrastive training 比較甚麼
+      </figcaption>
+      <ol class="mechanism-flow">
+       <li>
+        <span class="mechanism-number">
+         01
+        </span>
+        <strong>
+         Encode
+        </strong>
+        <small>
+         question and passages
+        </small>
+       </li>
+       <li>
+        <span class="mechanism-number">
+         02
+        </span>
+        <strong>
+         Score
+        </strong>
+        <small>
+         pairwise similarity matrix
+        </small>
+       </li>
+       <li>
+        <span class="mechanism-number">
+         03
+        </span>
+        <strong>
+         Scale
+        </strong>
+        <small>
+         similarity / temperature
+        </small>
+       </li>
+       <li>
+        <span class="mechanism-number">
+         04
+        </span>
+        <strong>
+         Learn
+        </strong>
+        <small>
+         positive-pair cross-entropy
+        </small>
+       </li>
+      </ol>
+      <p>
+       Candidate softmax 是 training 時的比較，並非 evidence 真實的 probability。
+      </p>
+     </figure>
+     <p>
+      回到 school handbook。Q1 是「When does school start?」，Q2 是「When does the school bus leave?」，Q3 是「How much does a ticket for the school bus cost?」。相應的支持 passage 分別是 H1、H2 和 H3。我們先標示這些 positive pairs，然後才 training。在這個小例子中，其他 passages 並不能回答該問題。
+     </p>
+     <p>
+      bi-encoder 分別 encode 每個問題和 passage。下表使用設計出來的 training logits，視作已完成 similarity scaling，方便計算 objective。這些並非原始 cosine similarities：cosine 不可能等於 2。較大的 logit 會令配對相對其他 candidates 得到較高 probability。
+     </p>
+     <div class="table-wrap">
+      <table>
+       <thead>
+        <tr>
+         <th>
+          問題
+         </th>
+         <th>
+          H1
+         </th>
+         <th>
+          H2
+         </th>
+         <th>
+          H3
+         </th>
+        </tr>
+       </thead>
+       <tbody>
+        <tr>
+         <td>
+          Q1
+         </td>
+         <td>
+          2
+         </td>
+         <td>
+          1
+         </td>
+         <td>
+          0
+         </td>
+        </tr>
+        <tr>
+         <td>
+          Q2
+         </td>
+         <td>
+          0
+         </td>
+         <td>
+          2
+         </td>
+         <td>
+          1
+         </td>
+        </tr>
+        <tr>
+         <td>
+          Q3
+         </td>
+         <td>
+          1
+         </td>
+         <td>
+          0
+         </td>
+         <td>
+          2
+         </td>
+        </tr>
+       </tbody>
+      </table>
+     </div>
+     <p>
+      Q1 的 positive passage 是 H1。對 row [2,1,0] 使用第 4 週學過的 softmax。這次計算的 temperature 設為 1，normalize 後的 candidate probabilities 約為 [0.66524,0.24473,0.09003]。這些 probability 描述 training 時在三個 candidates 之間的選擇，並非 passage 真實或足夠的 calibrated probability。
+     </p>
+     <p>
+      Q1 的 loss 是 H1 probability 的 negative natural logarithm：−ln(0.66524)，約為 0.40761。Q2 和 Q3 的 score pattern 相同，只是 positive 位於不同 column，因此三個 rows 的 mean loss 亦約為 0.40761。我們希望 positive 相對其他 passages 得到較高 score，而非單純令所有 similarity scores 一起上升。
+     </p>
+     <p>
+      要看清學習方向，在 temperature 為 1 時，這個 row loss 對三個 scores 的 derivative 約為 [−0.33476,0.24473,0.09003]。因此，gradient descent 在目前位置會把 positive score 向上推，把其他 scores 向下推。真實 model 的 backpropagation 會沿著 score，經過 question 和 passage encoders，更新可訓練 parameters。我們並不是把這個小型 score table 當成 model 儲存。
+     </p>
+     <h3 id="temperature-connects-cosine-similarity-to-training-logits">
+      Temperature 把 cosine similarity 連接到 training logits
+     </h3>
+     <p>
+      之前的 [2,1,0] row 是 temperature 為 1 的教學例子。常見的 retrieval setup 會先 normalize embeddings、計算 cosine similarities，再除以 temperature τ：logits = cosine/τ；等同乘以 scale=1/τ。合適的 scale 由 model 和 objective 決定；training library 可以固定或學習它。
+     </p>
+     <p>
+      假設 cosines 是 [0.8,0.6,0.2]，τ=0.05，則 logits 為 [16,12,4]。Stable softmax 給 positive candidate 的 probability 約為 0.982008，positive loss 約為 0.018156。同樣的 cosines 在 τ=1 時，probability 約為 0.422379，loss 約為 0.861852。Temperature 會改變 distribution 的尖銳程度和 gradient scale，因此之前例子的 loss 約 0.41 並非通用的實際訓練目標。
+     </p>
+     <h3 id="a-false-negative-changes-what-the-model-is-taught">
+      false negative 會改變 model 學到甚麼
+     </h3>
+     <p>
+      現在把 H2 換成「Classes at this school begin at 08:00.」。對 Q1 而言，這亦是有用答案，並非 negative。若只把 H1 標為 positive，model 成功配對 H2 反而會被懲罰。假如 Q1 scores 從 [2,1,0] 變成 [2,2,0]，single-positive loss 會升至約 0.75862，儘管第二個支持 passage 的 score 已改善。問題在於 label 假設。把同一 batch 的其他項目當成 negatives 前，先檢查 duplicates 及多個有效答案的情況。
+     </p>
+     <h3 id="bi-encoder-retrieval-and-cross-encoder-reranking">
+      bi-encoder retrieval 與 cross-encoder reranking
+     </h3>
+     <p>
+      bi-encoder 預先儲存 passage vectors，再用新問題與它們比較。cross-encoder 則把問題和一個 candidate passage 一起讀入，產生 pair score。它能直接查看兩者的 token interactions，但每個選定 pair 都需要經過 model 處理。常見做法是先用 bi-encoder retrieve 少量 candidates，再用 cross-encoder rerank [
+      <a class="inline-reading" href="../resources.html#reference-r28">
+       Sentence Transformers retrieve and rerank (R28)
+      </a>
+      ]。若支持 passage 根本沒有進入 candidate set，reranker 亦無法把它找回來。
+     </p>
+     <p>
+      檢查理解：指出 table 每個 row 的 positive column；重算 Q1 的 softmax 和 loss；解釋為何另一段正確的 school-opening passage 不應自動成為 negative。這是一種常見的 contrastive setup [
+      <a class="inline-reading" href="../resources.html#reference-r27">
+       Sentence Transformers contrastive losses (R27)
+      </a>
+      ]，並非 training embedding model 的唯一方法。
+     </p>
+     <h3 id="prepare-the-query-and-passage-the-way-the-model-expects">
+      按 model 要求準備 query 和 passage
+     </h3>
+     <p>
+      embedding checkpoint 亦包含 input recipe。有些 retrieval models 以 prefix 區分輸入，例如「query: When does school start?」和「passage: School opens at 08:00.」。其他 models 可能使用 instruction template，或不需要 prefix。應依照該 model card 和 query/document encoding methods，包括 pooling、normalization、maximum length 和 truncation。對所有 models 隨意加入 prefix 並不會自動改善結果。
+     </p>
+     <h3 id="one-vector-several-vectors-or-sparse-term-weights">
+      一個 vector、多個 vectors，或 sparse term weights
+     </h3>
+     <p>
+      Matryoshka-trained embedding 把有用資訊放進 vector 的不同長度 prefixes。若 model 曾針對 64、128 和 256 dimensions training，你可選擇支援的 prefix 長度，按需要重新 normalize，再比較 quality/storage tradeoff。普通 embeddings 沒有這個特性；把任意 256-dimensional vector 切成首 64 個數值，可能丟失重要資訊。
+     </p>
+     <p>
+      ColBERT 保留 passage 的多個 contextual token vectors，而非全部 pooling 成一個 vector。其 late-interaction score 讓每個 query token 找出最高的 passage-token similarity，再把這些 maxima 加起來。對 query tokens「bus fare」，假設兩個 passages 的 maximum similarities 分別是 [0.9,0.2] 和 [0.7,0.8]，示範 scores 就是 1.1 和 1.5；第二段涵蓋兩個概念較好。Passage representations 可預先計算，但儲存多個 token vectors 通常需要更多 index 空間。
+     </p>
+     <p>
+      SPLADE 採用另一條路：neural encoder 產生 vocabulary terms 上的 sparse vector，並學習 term expansion。輸入「bus fare」的 query，即使沒有打出「ticket」，亦可能給該 term 權重。Inverted index 可以比較 nonzero term weights。這與 BM25 的人工設計 term weighting，以及 compact dense vector 都不同。各方法針對不同 matching 和 storage 要求，應以相同問題評估。
+     </p>
+     <h3 id="relevance-needs-labels-and-a-definition">
+      Relevance 需要 label 和明確定義
+     </h3>
+     <p>
+      對原本的問題，H1 是 relevant。對 “How much does the school bus cost and when does it leave?”，H2 和 H3 都是必需的。只有一段相關 passage，未必足以完成整個任務。
+     </p>
+     <p>
+      Hit@k 問的是前 k 個結果中，是否至少有一段 relevant passage。Recall@k 問的是所有必需的 relevant passage 中，有多少比例被找出。我們會在第 21 週仔細計算兩者。
+     </p>
+     <p>
+      對於 “What color is the headteacher's car?” 這類沒有支持資料的問題，這本小手冊沒有對應 passage。Retriever 仍可以回傳最近的 vector；但「最近」不代表「足夠」。
+     </p>
+     <h3 id="moving-toward-technical-documentation">
+      逐步轉向 technical documentation
+     </h3>
+     <p>
+      當 passage 描述 API parameter 而非學校時間表時，結構一樣適用。精確名稱、version constraint 和 code block 會變得重要。容易理解的手冊例子先教機制，documentation corpus 再提供較難的情境。
+     </p>
+     <p>
+      選定一個固定的 corpus revision，保留 passage ID 和 source provenance。Question label 要與 training 或 configuration tuning 分開。不要在看到新 retriever 擅長哪些問題之後，才挑選 evaluation question。
+     </p>
+     <p>
+      下週會加入 persistence、metadata 和 approximate search。在操作 database 之前，你已經可以用一串 vector 理解和測試排名機制。
+     </p>
+     <h3 id="worked-practice-and-a-readiness-check">
+      實例練習與學習檢查
+     </h3>
+     <p>
+      為 “When does the bus leave and what does a ticket cost?” 標示必需的 evidence。解釋為甚麼只找出 H2 時，Hit@1=1，但 Recall@1=1/2。
+     </p>
+     <p>
+      分別以 lexical search 和真正的 dense search，比較一條 paraphrase question 及一條 exact identifier question。儲存原始排名，並為每種方法記錄一個失敗例子。
+     </p>
+     <p>
+      當你能分辨 token vector、sentence embedding、similarity scoring、relevance 和 retrieval quality，就已準備好繼續。很高的 similarity 數值，仍需要按任務解讀。
+     </p>
+     <details class="reference-details" id="reference-details">
+      <summary>
+       參考細節與學習檢查
+      </summary>
+      <h3 id="review-a-intuition">
+       複習 A：直觀理解
+      </h3>
+      <p>
+       Retriever 必須把有用 evidence 排在前面，而不只是找出相關文字。精確的 API 名稱和 error code 較適合 lexical matching；改寫過的意圖可能較適合 semantic matching。先準備這兩類問題和簡單 baseline。選擇 scoring 方法，是因為它針對已觀察到的失敗，而不是因為名字有 “vector”。
+      </p>
+      <p>
+       Inverted index 把 term 對應到符合的 document。TF-IDF 會提高「在 document 中常見、在 corpus 中罕見」的 term 的權重。BM25 再加入 term-frequency saturation 和 document-length normalization。Dense retrieval 把 query 和 passage encode 到共同的 vector space，再作比較。Lexical baseline 為 dense retrieval 提供重要對照，尤其適用於 technical symbol。
+      </p>
+      <h3 id="review-a-relevance-and-metrics">
+       複習 A：Relevance 與 metric
+      </h3>
+      <p>
+       設 G 為 relevant evidence ID 的集合，Rk 為首 k 個回傳 ID。Recall@k 為
+       <code>
+        |G intersection Rk| / |G|
+       </code>
+       。只要有任何 relevant item，Hit@k 就是 1。Reciprocal rank 為
+       <code>
+        1/r
+       </code>
+       ，其中 r 是第一個 relevant 結果的排名；若沒有則為 0。當 relevant passage 不只一段時，Hit@k 和 Recall@k 回答的是不同問題。只要定義好 relevance label 和 normalization，NDCG 可以表示不同程度的 relevance 及位置折扣。
+      </p>
+      <h3 id="review-a-worked-example">
+       複習 A：計算例子
+      </h3>
+      <p>
+       假設 G={A,B}，首三個結果是 C,A,D，則 Hit@3=1、Recall@3=1/2、reciprocal rank=1/2。報告如果把 Hit@3 稱為 “recall”，就會掩蓋缺少第二段 evidence 的問題。若比較任務需要兩個 version，缺少這段 evidence 可能令問題根本無法作答。
+      </p>
+      <p>
+       對沒有 relevant evidence、無法回答的問題，一般 recall 的分母是 0。不要默默當作 perfect recall。應以 refusal、false-positive retrieval 或 unsupported-answer measure，另外評估這類問題。Starter 把它們的 retrieval metric 標為不適用。
+      </p>
+      <h3 id="review-a-experiment">
+       複習 A：實驗
+      </h3>
+      <p>
+       <a href="../tutorials/18.html">
+        Tutorial 18: 從一列 vector 建立 vector database
+       </a>
+       比較內附 lexical retriever 和真正的 sentence-transformer embedding。固定 document chunk、question、version filtering 和 k。加入 exact identifier、paraphrase 和 wrong-version distractor。先儲存每條 query 的排名，再計算平均值；平均數可能掩蓋某一整類系統性失敗。
+      </p>
+      <p>
+       分清 model failure 和 ingestion failure。檢查預期 passage 是否真的在 index 裏、truncation 有沒有刪去關鍵句，以及 metadata filter 是否排除了它。真正的 capstone 要標示足夠多類問題，避免單一例子主導某個 slice。小型 teaching fixture 用來協助檢查 software correctness，並不足以充當 research dataset。
+      </p>
+      <p>
+       <strong>
+        完成標準：
+       </strong>
+       手算 recall、hit rate 和 reciprocal rank，再用真實失敗例子解釋 dense 與 lexical 方法之間的取捨。
+       <strong>
+        閱讀材料：
+       </strong>
+       <a class="inline-reading" href="../resources.html#reference-r07">
+        Sentence Transformers semantic similarity (R07)
+       </a>
+       和
+       <a class="inline-reading" href="../resources.html#reference-r25">
+        Robertson and Zaragoza Probabilistic Relevance Framework (R25)
+       </a>
+       的概念。
+       <strong>
+        Tutorial：
+       </strong>
+       17.
+      </p>
+     </details>
+    </article>
+    <nav aria-label="前後 lecture" class="chapter-pagination">
+     <a href="16.html">
+      <small>
+       上一週
+      </small>
+      完整 transformer 導覽與第一學期溫習
+     </a>
+     <a href="18.html">
+      <small>
+       下一週
+      </small>
+      從一列 vector 建立 vector database
+     </a>
+    </nav>
+   </div>
+   <footer class="footer">
+    <span>
+     Applied AI · 獨立自學課程
+    </span>
+    <span>
+     32 週 · 每週 10 小時
+    </span>
+    <a href="../resources.html#about-this-course">
+     關於課程及資料來源
+    </a>
+   </footer>
+  </main>
+  <dialog aria-labelledby="search-title" class="search-dialog">
+   <div class="dialog-head">
+    <h2 id="search-title">
+     尋找概念
+    </h2>
+    <button aria-label="關閉搜尋" class="search-close" type="button">
+     關閉
+    </button>
+   </div>
+   <label class="sr-only" for="course-search">
+    搜尋所有 lecture 和 tutorial
+   </label>
+   <input autocomplete="off" id="course-search" placeholder="試試 attention、fine-tuning 或 harness……" type="search"/>
+   <p aria-live="polite" class="search-status">
+    搜尋 lecture notes、tutorial、測驗及閱讀材料。
+   </p>
+   <div class="search-results">
+   </div>
+  </dialog>
+  <div aria-live="polite" class="toast" role="status">
+  </div>
+ </body>
+</html>

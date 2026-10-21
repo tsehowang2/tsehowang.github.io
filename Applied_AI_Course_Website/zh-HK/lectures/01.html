@@ -1,42 +1,981 @@
 <!DOCTYPE html>
-
-<html lang="zh-HK"><head><script src="../../assets/translations-zh-HK.js"></script><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/><title>Language model 究竟在學甚麼 · Applied AI</title><meta content="Applied generative AI and LLM systems course material" name="description"/><meta content="#173c36" name="theme-color"/><link href="../../assets/favicon.svg" rel="icon" type="image/svg+xml"/><link href="../../assets/style.css" rel="stylesheet"/><link href="../../assets/slides.css" rel="stylesheet"/><script>window.COURSE_BASE="../";</script><script defer="" src="../../assets/site-config.js"></script><script defer="" src="../assets/search-index.js"></script><script defer="" src="../../assets/app.js"></script><script defer="" src="../../assets/visuals.js"></script><script defer="" src="../../assets/slides.js"></script><script defer="" src="../../assets/beginner-visuals.js"></script><script defer="True" src="../../assets/locale-patterns.js"></script><script defer="True" src="../../assets/locale.js"></script><link href="../../assets/bilingual.css" rel="stylesheet"/><link href="../../lectures/01.html" hreflang="en" rel="alternate"/></head><body data-page-kind="lecture" data-week="1"><a class="skip-link" href="#main">跳至內容</a><header class="topbar"><button aria-controls="course-sidebar" aria-expanded="false" class="menu-toggle" type="button">選單</button><a class="brand" href="../index.html"><span aria-hidden="true" class="brand-mark">a<span>i</span></span><span>APPLIED AI<small>從原理到實踐</small></span></a><nav aria-label="主要導覽"><a href="../index.html">課程</a><a href="../visuals.html">互動圖解</a><a href="../project.html">專題</a><a class="language-switch" href="../../lectures/01.html" hreflang="en" lang="en">English</a></nav><button class="search-open" type="button">搜尋課程 <span aria-hidden="true">/</span></button></header><aside aria-label="課程章節" class="sidebar" id="course-sidebar"><a class="side-home" href="../index.html">課程概覽</a><details class="semester-nav" open=""><summary>第一學期<span>第 1–16 週</span></summary><ol start="1"><li><a aria-current="page" href="../lectures/01.html"><span class="week-number">01</span><span>Language model 究竟在學甚麼</span><span class="week-tick" data-week-tick="1"></span></a></li><li><a href="../lectures/02.html"><span class="week-number">02</span><span>從文字到 token 和數值 ID</span><span class="week-tick" data-week-tick="2"></span></a></li><li><a href="../lectures/03.html"><span class="week-number">03</span><span>Word vector 能表達甚麼</span><span class="week-tick" data-week-tick="3"></span></a></li><li><a href="../lectures/04.html"><span class="week-number">04</span><span>從 score 到 probability 和學習訊號</span><span class="week-tick" data-week-tick="4"></span></a></li><li><a href="../lectures/05.html"><span class="week-number">05</span><span>為甚麼語言需要 context 和次序</span><span class="week-tick" data-week-tick="5"></span></a></li><li><a href="../lectures/06.html"><span class="week-number">06</span><span>Attention 由 weighted mixture 開始</span><span class="week-tick" data-week-tick="6"></span></a></li><li><a href="../lectures/07.html"><span class="week-number">07</span><span>Query、key 和 value 從何而來</span><span class="week-tick" data-week-tick="7"></span></a></li><li><a href="../lectures/08.html"><span class="week-number">08</span><span>正確進行 attention scaling 和 masking</span><span class="week-tick" data-week-tick="8"></span></a></li><li><a href="../lectures/09.html"><span class="week-number">09</span><span>多個 attention head 與位置</span><span class="week-tick" data-week-tick="9"></span></a></li><li><a href="../lectures/10.html"><span class="week-number">10</span><span>逐步拆解 transformer block</span><span class="week-tick" data-week-tick="10"></span></a></li><li><a href="../lectures/11.html"><span class="week-number">11</span><span>Encoder、decoder 與完整 model architecture</span><span class="week-tick" data-week-tick="11"></span></a></li><li><a href="../lectures/12.html"><span class="week-number">12</span><span>訓練一個小型 transformer</span><span class="week-tick" data-week-tick="12"></span></a></li><li><a href="../lectures/13.html"><span class="week-number">13</span><span>Generation、decoding 與 KV cache</span><span class="week-tick" data-week-tick="13"></span></a></li><li><a href="../lectures/14.html"><span class="week-number">14</span><span>從 pretraining 到 instruction following 和 reasoning</span><span class="week-tick" data-week-tick="14"></span></a></li><li><a href="../lectures/15.html"><span class="week-number">15</span><span>文字以外的 Generative AI</span><span class="week-tick" data-week-tick="15"></span></a></li><li><a href="../lectures/16.html"><span class="week-number">16</span><span>完整 transformer 導覽與第一學期溫習</span><span class="week-tick" data-week-tick="16"></span></a></li></ol></details><details class="semester-nav"><summary>第二學期<span>第 17–32 週</span></summary><ol start="17"><li><a href="../lectures/17.html"><span class="week-number">17</span><span>從 word vector 到 semantic search</span><span class="week-tick" data-week-tick="17"></span></a></li><li><a href="../lectures/18.html"><span class="week-number">18</span><span>從一列 vector 建立 vector database</span><span class="week-tick" data-week-tick="18"></span></a></li><li><a href="../lectures/19.html"><span class="week-number">19</span><span>把 RAG 理解為開卷作答</span><span class="week-tick" data-week-tick="19"></span></a></li><li><a href="../lectures/20.html"><span class="week-number">20</span><span>在保持基本任務的前提下改善 RAG</span><span class="week-tick" data-week-tick="20"></span></a></li><li><a href="../lectures/21.html"><span class="week-number">21</span><span>評估 retrieval、答案與 uncertainty</span><span class="week-tick" data-week-tick="21"></span></a></li><li><a href="../lectures/22.html"><span class="week-number">22</span><span>CPU、GPU、memory 與 model 資源計算</span><span class="week-tick" data-week-tick="22"></span></a></li><li><a href="../lectures/23.html"><span class="week-number">23</span><span>CUDA kernel 與 profiling</span><span class="week-tick" data-week-tick="23"></span></a></li><li><a href="../lectures/24.html"><span class="week-number">24</span><span>Fine-tuning 由教學 dataset 開始</span><span class="week-tick" data-week-tick="24"></span></a></li><li><a href="../lectures/25.html"><span class="week-number">25</span><span>從小型 matrix 理解 LoRA 和 QLoRA</span><span class="week-tick" data-week-tick="25"></span></a></li><li><a href="../lectures/26.html"><span class="week-number">26</span><span>Fine-tuning 實驗、preference 與 distillation</span><span class="week-tick" data-week-tick="26"></span></a></li><li><a href="../lectures/27.html"><span class="week-number">27</span><span>Tool、function、workflow 與 agent</span><span class="week-tick" data-week-tick="27"></span></a></li><li><a href="../lectures/28.html"><span class="week-number">28</span><span>Harness、planning、memory 與有界執行</span><span class="week-tick" data-week-tick="28"></span></a></li><li><a href="../lectures/29.html"><span class="week-number">29</span><span>從 notebook 到 MLOps 和 inference serving</span><span class="week-tick" data-week-tick="29"></span></a></li><li><a href="../lectures/30.html"><span class="week-number">30</span><span>Monitoring、security、regression test 與 rollback</span><span class="week-tick" data-week-tick="30"></span></a></li><li><a href="../lectures/31.html"><span class="week-number">31</span><span>整合文件助手與進階延伸</span><span class="week-tick" data-week-tick="31"></span></a></li><li><a href="../lectures/32.html"><span class="week-number">32</span><span>溫習、答辯與持續學習計劃</span><span class="week-tick" data-week-tick="32"></span></a></li></ol></details><div class="side-links"><a href="../visuals.html">互動圖解實驗室 <span>14 個互動課節</span></a><a href="../project.html">文件助手 <span>你的 capstone project</span></a><a href="../resources.html">閱讀材料與環境設定</a></div><div class="side-progress"><div><span>你的進度</span><strong data-progress-count="">0 / 32</strong></div><progress aria-label="已完成 lecture" max="32" value="0"></progress><small>儲存在這個瀏覽器</small></div></aside><main class="main" id="main"><div class="content"><div class="chapter-header"><div class="eyebrow">第一學期 / 第 01 週</div><h1>Language model 究竟在學甚麼</h1></div><div class="lesson-links"><a href="../tutorials/01.html">練習 01</a><a href="../tests/01.html">檢查你的理解</a><button aria-pressed="false" class="mark-complete" data-week="1" type="button">標記為已完成</button></div><section aria-label="Lecture slides" class="lecture-deck" id="lecture-slides"><div class="deck-top"><div><div class="eyebrow">課堂投影片 · 第 01 週</div><h2>一步一步學習。</h2></div><button class="deck-present" type="button">簡報模式</button></div><p class="deck-help">閱讀每段解說，停下來預測結果，然後繼續。選取簡報後，可用方向鍵操作。完整講義在下方。</p><div aria-label="簡報：使用左右方向鍵" class="slide-viewport" tabindex="0"><section class="lecture-slide" data-slide=""><div class="slide-stage">由例子開始</div><h3>一個普通句子，缺了一個字</h3><div class="slide-prose"><p>先看「I go to school by ___.」。在考慮 neural network 之前，先寫出三個可能的填空答案。Bus、train 和 bicycle 都合理。在某些奇怪的虛構故事中，把 Banana 放在「by」後面，文法上或許說得通；但對這個普通句子來說，這並不是常見的接續。這項任務是利用已有的文字，為接下來可能出現的文字分配不同的 probability。</p>
-<p>現在把 prompt 縮短為「I go to ___.」。School 仍然可能，但 work、sleep 和 the park 也變得合理。合理的下一個字會改變，是因為可用的 context 改變了。Context 指 prediction 所依據的文字。本課程前半部分的 context，就是普通句子的 prefix。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">由例子開始</div><h3>一個普通句子，缺了一個字 · 續</h3><div class="slide-prose"><p>model 不需要知道你實際如何上學，也可以給 bus 很高的 probability。它可能學到，人們經常用這種方式描述上學交通。這個分別很重要：一段很可能出現的接續，聽起來合理，但對某個人而言可能並非事實。Prediction 是起點；要如實回答問題，還需要額外的判斷，我們稍後才會研究。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">由例子開始</div><h3>一個可以逐項檢查的小型資料集</h3><div class="slide-prose"><p>想像有五個 training sentences：「I go to school by bus」出現三次、「I go to school by train」出現一次，「I go to school by bicycle」出現一次。在 prefix 完全是「I go to school by」的例子中，觀察到的下一個字比例為 3/5、1/5 和 1/5。因此，我們第一個 language model 可以預測 bus 的 probability 是 0.6，train 是 0.2，bicycle 是 0.2。</p>
-<p>這些數字描述的是這個小型資料集，並不代表現實世界的交通情況。資料集一改，估計值就會改。如果資料集中沒有關於 boats 的句子，這個 count-based model 對該 prefix 後面的 boat 就沒有直接證據。之後的 neural model 可以在相關 context 之間共享資訊，但它仍然是從我們提供的例子和 objective 學習。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">由例子開始</div><h3>一個可以逐項檢查的小型資料集 · 續</h3><div class="slide-prose"><p>我們已經找出 learning problem 的基本要素：例子、input、可能的 output、prediction，以及評價 prediction 的方法。我們會逐步加入數值 representation 和可訓練的 function，而不是一次過引入完整 transformer。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">建立對機制的理解</div><h3>從一次 prediction 到一個 sequence</h3><div class="slide-prose"><p>假設 model 選擇 bus。現在已有的文字是「I go to school by bus.」。要繼續，它會用這個更長的 prefix 再做一次 next-token prediction。它可能選擇句號。如果之後出現結束標記，generation 就停止。生成一段文字，就是重複這個操作很多次。</p>
-<p>這就是 autoregressive generation：每次新的 prediction 都依賴 sequence 中較早的元素。model 不需要在一次決定中選好整段文字。在 generation 過程中，一個錯誤會成為之後 prediction 的 prefix 一部分，這有助解釋為何接續內容會逐漸偏離。只要選過一次不太可能的字，就會改變 model 下一次看到的情況。</p>
-<p>暫時先把 token 想成單字。第 2 週會撤去這個簡化假設，仔細介紹 token ID、標點和 subword。初步解釋可以採用簡化假設，前提是清楚說明，並在之後修正。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">建立對機制的理解</div><h3>用熟悉的符號表示 conditional probability</h3><div class="slide-prose"><p>寫下 p(bus | I go to school by)。直線讀作「given」，意思是在已知該 prefix 的情況下，bus 的 probability 是多少。所有允許的 next token 的 probability 加起來等於一。language model 是一個 function，為每個 prefix 產生這樣的 distribution。</p>
-<p>整個 sequence 的 probability 可以寫成一連串 conditional probability 的乘積。例如，p(I, go, home) 等於 p(I) 乘 p(go | I)，再乘 p(home | I go)。這個 chain-rule decomposition 是 probability 的恆等關係；具體的 language model 會提供各項的估計值。</p>
-<p>如果這三個 probability 分別是 0.5、0.4 和 0.25，sequence probability 就是 0.05。較長的 sequence 會累積更多相乘項，因此比較不同長度句子的原始 probability 時，要特別小心。之後我們會在 prediction positions 上取 negative log probability 的平均值。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">建立對機制的理解</div><h3>Training 和使用 model 是兩回事</h3><div class="slide-prose"><p>Training 時，我們用例子調整 model。Inference 時，我們用已訓練好的 model 做 prediction。這個 count-based model 靠點算次數來「訓練」。neural language model 則改變數值 parameter，令 training examples 中合適的 next token 得到更高 probability。</p>
-<p>句子「I go to school by bus」可以提供多個 training situations：「I」預測 go；「I go」預測 to；「I go to」預測 school。我們不需要找人逐項標註，因為下一個 token 已經出現在文字中。這就是 next-token training 背後最基本的 self-supervised signal。</p>
-<p>不要把 training example 當成對 model 發出的指令。句子是資料，我們從中建立 prediction tasks。理解底層 prediction model 如何運作之後，才會介紹 instruction following。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">深入學習，檢查理解</div><h3>小型 model 也很適合幫助理解</h3><div class="slide-prose"><p>只有五句的資料集無法支援通用 assistant。它的價值是每個 probability 都能解釋。如果之後的程式給 bus 的 probability 是 0.2，而不是 0.6，我們可以檢查次數並找出錯誤。</p>
-<p>較大的 model 會引入學習得到的 vector 和 nonlinear function，但核心問題仍然相似：它收到甚麼 input？我們期望哪個 output？它分配了多少 probability？學習過程中改變了甚麼？當 equation 變得複雜時，記得回到這些問題。</p>
-<p>第一學期會逐步建立 transformer，作為表示及結合 context 的方法。等你熟悉 model 本身之後，才會進入 vector database、RAG、agent framework 和 deployment。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">深入學習，檢查理解</div><h3>實例練習與學習檢查</h3><div class="slide-prose"><p>再加入兩次「I go to school by train」。現在共有七個符合的例子：bus 三次、train 三次、bicycle 一次。Probability 變成 3/7、3/7 和 1/7。在這個 count model 中，Bus 和 train 並列。並列不代表任務出錯，只表示觀察到的資料無法區分兩者。</p>
-<p>解釋為何「I go to work by」可能需要另一個 distribution。然後解釋，簡單的 exact-prefix count model 無法在 school 和 work 之間共享哪些資訊。這個限制會引出學習 representation 的需要。</p>
-<p>繼續之前，你應該能分辨 example、prefix、next-token distribution、生成的 token、training 和 inference。你亦應該能解釋，為何高 probability 的句子未必是關於使用者的真實陳述。Tutorial 會在不用 neural-network library 的情況下，建立這個小型 count model。</p></div></section></div><div class="deck-controls"><button class="slide-prev" type="button">← 上一頁</button><span aria-live="polite" class="slide-counter">1 / 9</span><button class="slide-next" type="button">下一頁 →</button></div><label class="slide-jump-label">前往 slide <select aria-label="跳至 slide" class="slide-jump"><option value="0">1</option><option value="1">2</option><option value="2">3</option><option value="3">4</option><option value="4">5</option><option value="5">6</option><option value="6">7</option><option value="7">8</option><option value="8">9</option></select></label><button aria-pressed="false" class="deck-all" type="button">顯示全部 slides</button><a class="reader-link" href="#full-notes">閱讀完整講義 ↓</a></section><section aria-label="缺少一個字與極小 dataset" class="visual-lesson"><div class="eyebrow">探索機制</div><h2>缺少一個字與極小 dataset</h2><p class="visual-intro">改變觀察到的 bus 和 train 旅程次數。Count 會變成 conditional probability。</p><div data-widget="prediction"><p>啟用 JavaScript 以使用此圖解。下方 lecture notes 會解釋同一機制。</p></div></section><article class="prose full-notes" id="full-notes"><div class="eyebrow">完整講義</div><h2>閱讀完整解說</h2><h3 id="an-ordinary-sentence-with-one-missing-word">一個普通句子，缺了一個字</h3>
-<p>先看「I go to school by ___.」。在考慮 neural network 之前，先寫出三個可能的填空答案。Bus、train 和 bicycle 都合理。在某些奇怪的虛構故事中，把 Banana 放在「by」後面，文法上或許說得通；但對這個普通句子來說，這並不是常見的接續。這項任務是利用已有的文字，為接下來可能出現的文字分配不同的 probability。</p>
-<p>現在把 prompt 縮短為「I go to ___.」。School 仍然可能，但 work、sleep 和 the park 也變得合理。合理的下一個字會改變，是因為可用的 context 改變了。Context 指 prediction 所依據的文字。本課程前半部分的 context，就是普通句子的 prefix。</p>
-<p>model 不需要知道你實際如何上學，也可以給 bus 很高的 probability。它可能學到，人們經常用這種方式描述上學交通。這個分別很重要：一段很可能出現的接續，聽起來合理，但對某個人而言可能並非事實。Prediction 是起點；要如實回答問題，還需要額外的判斷，我們稍後才會研究。</p>
-<h3 id="a-tiny-collection-that-we-can-inspect">一個可以逐項檢查的小型資料集</h3>
-<p>想像有五個 training sentences：「I go to school by bus」出現三次、「I go to school by train」出現一次，「I go to school by bicycle」出現一次。在 prefix 完全是「I go to school by」的例子中，觀察到的下一個字比例為 3/5、1/5 和 1/5。因此，我們第一個 language model 可以預測 bus 的 probability 是 0.6，train 是 0.2，bicycle 是 0.2。</p>
-<p>這些數字描述的是這個小型資料集，並不代表現實世界的交通情況。資料集一改，估計值就會改。如果資料集中沒有關於 boats 的句子，這個 count-based model 對該 prefix 後面的 boat 就沒有直接證據。之後的 neural model 可以在相關 context 之間共享資訊，但它仍然是從我們提供的例子和 objective 學習。</p>
-<p>我們已經找出 learning problem 的基本要素：例子、input、可能的 output、prediction，以及評價 prediction 的方法。我們會逐步加入數值 representation 和可訓練的 function，而不是一次過引入完整 transformer。</p>
-<h3 id="a-prediction-becomes-a-sequence">從一次 prediction 到一個 sequence</h3>
-<p>假設 model 選擇 bus。現在已有的文字是「I go to school by bus.」。要繼續，它會用這個更長的 prefix 再做一次 next-token prediction。它可能選擇句號。如果之後出現結束標記，generation 就停止。生成一段文字，就是重複這個操作很多次。</p>
-<p>這就是 autoregressive generation：每次新的 prediction 都依賴 sequence 中較早的元素。model 不需要在一次決定中選好整段文字。在 generation 過程中，一個錯誤會成為之後 prediction 的 prefix 一部分，這有助解釋為何接續內容會逐漸偏離。只要選過一次不太可能的字，就會改變 model 下一次看到的情況。</p>
-<p>暫時先把 token 想成單字。第 2 週會撤去這個簡化假設，仔細介紹 token ID、標點和 subword。初步解釋可以採用簡化假設，前提是清楚說明，並在之後修正。</p>
-<h3 id="conditional-probability-in-familiar-notation">用熟悉的符號表示 conditional probability</h3>
-<p>寫下 p(bus | I go to school by)。直線讀作「given」，意思是在已知該 prefix 的情況下，bus 的 probability 是多少。所有允許的 next token 的 probability 加起來等於一。language model 是一個 function，為每個 prefix 產生這樣的 distribution。</p>
-<p>整個 sequence 的 probability 可以寫成一連串 conditional probability 的乘積。例如，p(I, go, home) 等於 p(I) 乘 p(go | I)，再乘 p(home | I go)。這個 chain-rule decomposition 是 probability 的恆等關係；具體的 language model 會提供各項的估計值。</p>
-<p>如果這三個 probability 分別是 0.5、0.4 和 0.25，sequence probability 就是 0.05。較長的 sequence 會累積更多相乘項，因此比較不同長度句子的原始 probability 時，要特別小心。之後我們會在 prediction positions 上取 negative log probability 的平均值。</p>
-<h3 id="training-and-using-a-model-are-different-activities">Training 和使用 model 是兩回事</h3>
-<p>Training 時，我們用例子調整 model。Inference 時，我們用已訓練好的 model 做 prediction。這個 count-based model 靠點算次數來「訓練」。neural language model 則改變數值 parameter，令 training examples 中合適的 next token 得到更高 probability。</p>
-<p>句子「I go to school by bus」可以提供多個 training situations：「I」預測 go；「I go」預測 to；「I go to」預測 school。我們不需要找人逐項標註，因為下一個 token 已經出現在文字中。這就是 next-token training 背後最基本的 self-supervised signal。</p>
-<p>不要把 training example 當成對 model 發出的指令。句子是資料，我們從中建立 prediction tasks。理解底層 prediction model 如何運作之後，才會介紹 instruction following。</p>
-<h3 id="a-small-model-can-be-useful-for-understanding">小型 model 也很適合幫助理解</h3>
-<p>只有五句的資料集無法支援通用 assistant。它的價值是每個 probability 都能解釋。如果之後的程式給 bus 的 probability 是 0.2，而不是 0.6，我們可以檢查次數並找出錯誤。</p>
-<p>較大的 model 會引入學習得到的 vector 和 nonlinear function，但核心問題仍然相似：它收到甚麼 input？我們期望哪個 output？它分配了多少 probability？學習過程中改變了甚麼？當 equation 變得複雜時，記得回到這些問題。</p>
-<p>第一學期會逐步建立 transformer，作為表示及結合 context 的方法。等你熟悉 model 本身之後，才會進入 vector database、RAG、agent framework 和 deployment。</p>
-<h3 id="worked-practice-and-a-readiness-check">實例練習與學習檢查</h3>
-<p>再加入兩次「I go to school by train」。現在共有七個符合的例子：bus 三次、train 三次、bicycle 一次。Probability 變成 3/7、3/7 和 1/7。在這個 count model 中，Bus 和 train 並列。並列不代表任務出錯，只表示觀察到的資料無法區分兩者。</p>
-<p>解釋為何「I go to work by」可能需要另一個 distribution。然後解釋，簡單的 exact-prefix count model 無法在 school 和 work 之間共享哪些資訊。這個限制會引出學習 representation 的需要。</p>
-<p>繼續之前，你應該能分辨 example、prefix、next-token distribution、生成的 token、training 和 inference。你亦應該能解釋，為何高 probability 的句子未必是關於使用者的真實陳述。Tutorial 會在不用 neural-network library 的情況下，建立這個小型 count model。</p></article><nav aria-label="前後 lecture" class="chapter-pagination"><a href="../index.html"><small>返回</small>課程概覽</a><a href="02.html"><small>下一週</small>從文字到 token 和數值 ID</a></nav></div><footer class="footer"><span>Applied AI · 獨立自學課程</span><span>32 週 · 每週 10 小時</span><a href="../resources.html#about-this-course">關於課程及資料來源</a></footer></main><dialog aria-labelledby="search-title" class="search-dialog"><div class="dialog-head"><h2 id="search-title">尋找概念</h2><button aria-label="關閉搜尋" class="search-close" type="button">關閉</button></div><label class="sr-only" for="course-search">搜尋所有 lecture 和 tutorial</label><input autocomplete="off" id="course-search" placeholder="試試 attention、fine-tuning 或 harness……" type="search"/><p aria-live="polite" class="search-status">搜尋 lecture notes、tutorial、測驗及閱讀材料。</p><div class="search-results"></div></dialog><div aria-live="polite" class="toast" role="status"></div></body></html>
+<html lang="zh-HK">
+ <head>
+  <script src="../../assets/translations-zh-HK.js">
+  </script>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width,initial-scale=1" name="viewport"/>
+  <title>
+   Language model 究竟在學甚麼 · Applied AI
+  </title>
+  <meta content="Applied generative AI and LLM systems course material" name="description"/>
+  <meta content="#173c36" name="theme-color"/>
+  <link href="../../assets/favicon.svg" rel="icon" type="image/svg+xml"/>
+  <link href="../../assets/style.css" rel="stylesheet"/>
+  <link href="../../assets/slides.css" rel="stylesheet"/>
+  <script>
+   window.COURSE_BASE="../";
+  </script>
+  <script defer="" src="../../assets/site-config.js">
+  </script>
+  <script defer="" src="../assets/search-index.js">
+  </script>
+  <script defer="" src="../../assets/app.js">
+  </script>
+  <script defer="" src="../../assets/visuals.js">
+  </script>
+  <script defer="" src="../../assets/slides.js">
+  </script>
+  <script defer="" src="../../assets/beginner-visuals.js">
+  </script>
+  <script defer="True" src="../../assets/locale-patterns.js">
+  </script>
+  <script defer="True" src="../../assets/locale.js">
+  </script>
+  <link href="../../assets/bilingual.css" rel="stylesheet"/>
+  <link href="../../lectures/01.html" hreflang="en" rel="alternate"/>
+  <link href="../../assets/reader-v3.css" rel="stylesheet"/>
+  <script defer="True" src="../../assets/reader-v3.js">
+  </script>
+ </head>
+ <body data-page-kind="lecture" data-week="1">
+  <a class="skip-link" href="#main">
+   跳至內容
+  </a>
+  <header class="topbar">
+   <button aria-controls="course-sidebar" aria-expanded="false" class="menu-toggle" type="button">
+    選單
+   </button>
+   <a class="brand" href="../index.html">
+    <span aria-hidden="true" class="brand-mark">
+     a
+     <span>
+      i
+     </span>
+    </span>
+    <span>
+     APPLIED AI
+     <small>
+      從原理到實踐
+     </small>
+    </span>
+   </a>
+   <nav aria-label="主要導覽">
+    <a href="../index.html">
+     課程
+    </a>
+    <a href="../visuals.html">
+     互動圖解
+    </a>
+    <a href="../project.html">
+     專題
+    </a>
+    <a class="language-switch" href="../../lectures/01.html" hreflang="en" lang="en">
+     English
+    </a>
+   </nav>
+   <button class="search-open" type="button">
+    搜尋課程
+    <span aria-hidden="true">
+     /
+    </span>
+   </button>
+  </header>
+  <aside aria-label="課程章節" class="sidebar" id="course-sidebar">
+   <a class="side-home" href="../index.html">
+    課程概覽
+   </a>
+   <details class="semester-nav" open="">
+    <summary>
+     第一學期
+     <span>
+      第 1–16 週
+     </span>
+    </summary>
+    <ol start="1">
+     <li>
+      <a aria-current="page" href="../lectures/01.html">
+       <span class="week-number">
+        01
+       </span>
+       <span>
+        Language model 究竟在學甚麼
+       </span>
+       <span class="week-tick" data-week-tick="1">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/02.html">
+       <span class="week-number">
+        02
+       </span>
+       <span>
+        從文字到 token 和數值 ID
+       </span>
+       <span class="week-tick" data-week-tick="2">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/03.html">
+       <span class="week-number">
+        03
+       </span>
+       <span>
+        Word vector 能表達甚麼
+       </span>
+       <span class="week-tick" data-week-tick="3">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/04.html">
+       <span class="week-number">
+        04
+       </span>
+       <span>
+        從 score 到 probability 和學習訊號
+       </span>
+       <span class="week-tick" data-week-tick="4">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/05.html">
+       <span class="week-number">
+        05
+       </span>
+       <span>
+        為甚麼語言需要 context 和次序
+       </span>
+       <span class="week-tick" data-week-tick="5">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/06.html">
+       <span class="week-number">
+        06
+       </span>
+       <span>
+        Attention 由 weighted mixture 開始
+       </span>
+       <span class="week-tick" data-week-tick="6">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/07.html">
+       <span class="week-number">
+        07
+       </span>
+       <span>
+        Query、key 和 value 從何而來
+       </span>
+       <span class="week-tick" data-week-tick="7">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/08.html">
+       <span class="week-number">
+        08
+       </span>
+       <span>
+        正確進行 attention scaling 和 masking
+       </span>
+       <span class="week-tick" data-week-tick="8">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/09.html">
+       <span class="week-number">
+        09
+       </span>
+       <span>
+        多個 attention head 與位置
+       </span>
+       <span class="week-tick" data-week-tick="9">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/10.html">
+       <span class="week-number">
+        10
+       </span>
+       <span>
+        逐步拆解 transformer block
+       </span>
+       <span class="week-tick" data-week-tick="10">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/11.html">
+       <span class="week-number">
+        11
+       </span>
+       <span>
+        Encoder、decoder 與完整 model architecture
+       </span>
+       <span class="week-tick" data-week-tick="11">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/12.html">
+       <span class="week-number">
+        12
+       </span>
+       <span>
+        訓練一個小型 transformer
+       </span>
+       <span class="week-tick" data-week-tick="12">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/13.html">
+       <span class="week-number">
+        13
+       </span>
+       <span>
+        Generation、decoding 與 KV cache
+       </span>
+       <span class="week-tick" data-week-tick="13">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/14.html">
+       <span class="week-number">
+        14
+       </span>
+       <span>
+        從 pretraining 到 instruction following 和 reasoning
+       </span>
+       <span class="week-tick" data-week-tick="14">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/15.html">
+       <span class="week-number">
+        15
+       </span>
+       <span>
+        文字以外的 Generative AI
+       </span>
+       <span class="week-tick" data-week-tick="15">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/16.html">
+       <span class="week-number">
+        16
+       </span>
+       <span>
+        完整 transformer 導覽與第一學期溫習
+       </span>
+       <span class="week-tick" data-week-tick="16">
+       </span>
+      </a>
+     </li>
+    </ol>
+   </details>
+   <details class="semester-nav">
+    <summary>
+     第二學期
+     <span>
+      第 17–32 週
+     </span>
+    </summary>
+    <ol start="17">
+     <li>
+      <a href="../lectures/17.html">
+       <span class="week-number">
+        17
+       </span>
+       <span>
+        從 word vector 到 semantic search
+       </span>
+       <span class="week-tick" data-week-tick="17">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/18.html">
+       <span class="week-number">
+        18
+       </span>
+       <span>
+        從一列 vector 建立 vector database
+       </span>
+       <span class="week-tick" data-week-tick="18">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/19.html">
+       <span class="week-number">
+        19
+       </span>
+       <span>
+        把 RAG 理解為開卷作答
+       </span>
+       <span class="week-tick" data-week-tick="19">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/20.html">
+       <span class="week-number">
+        20
+       </span>
+       <span>
+        在保持基本任務的前提下改善 RAG
+       </span>
+       <span class="week-tick" data-week-tick="20">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/21.html">
+       <span class="week-number">
+        21
+       </span>
+       <span>
+        評估 retrieval、答案與 uncertainty
+       </span>
+       <span class="week-tick" data-week-tick="21">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/22.html">
+       <span class="week-number">
+        22
+       </span>
+       <span>
+        CPU、GPU、memory 與 model 資源計算
+       </span>
+       <span class="week-tick" data-week-tick="22">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/23.html">
+       <span class="week-number">
+        23
+       </span>
+       <span>
+        CUDA kernel 與 profiling
+       </span>
+       <span class="week-tick" data-week-tick="23">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/24.html">
+       <span class="week-number">
+        24
+       </span>
+       <span>
+        Fine-tuning 由教學 dataset 開始
+       </span>
+       <span class="week-tick" data-week-tick="24">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/25.html">
+       <span class="week-number">
+        25
+       </span>
+       <span>
+        從小型 matrix 理解 LoRA 和 QLoRA
+       </span>
+       <span class="week-tick" data-week-tick="25">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/26.html">
+       <span class="week-number">
+        26
+       </span>
+       <span>
+        Fine-tuning 實驗、preference 與 distillation
+       </span>
+       <span class="week-tick" data-week-tick="26">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/27.html">
+       <span class="week-number">
+        27
+       </span>
+       <span>
+        Tool、function、workflow 與 agent
+       </span>
+       <span class="week-tick" data-week-tick="27">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/28.html">
+       <span class="week-number">
+        28
+       </span>
+       <span>
+        Harness、planning、memory 與有界執行
+       </span>
+       <span class="week-tick" data-week-tick="28">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/29.html">
+       <span class="week-number">
+        29
+       </span>
+       <span>
+        從 notebook 到 MLOps 和 inference serving
+       </span>
+       <span class="week-tick" data-week-tick="29">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/30.html">
+       <span class="week-number">
+        30
+       </span>
+       <span>
+        Monitoring、security、regression test 與 rollback
+       </span>
+       <span class="week-tick" data-week-tick="30">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/31.html">
+       <span class="week-number">
+        31
+       </span>
+       <span>
+        整合文件助手與進階延伸
+       </span>
+       <span class="week-tick" data-week-tick="31">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/32.html">
+       <span class="week-number">
+        32
+       </span>
+       <span>
+        溫習、答辯與持續學習計劃
+       </span>
+       <span class="week-tick" data-week-tick="32">
+       </span>
+      </a>
+     </li>
+    </ol>
+   </details>
+   <div class="side-links">
+    <a href="../visuals.html">
+     互動圖解實驗室
+     <span>
+      14 個互動課節
+     </span>
+    </a>
+    <a href="../project.html">
+     文件助手
+     <span>
+      你的 capstone project
+     </span>
+    </a>
+    <a href="../resources.html">
+     閱讀材料與環境設定
+    </a>
+   </div>
+   <div class="side-progress">
+    <div>
+     <span>
+      你的進度
+     </span>
+     <strong data-progress-count="">
+      0 / 32
+     </strong>
+    </div>
+    <progress aria-label="已完成 lecture" max="32" value="0">
+    </progress>
+    <small>
+     儲存在這個瀏覽器
+    </small>
+   </div>
+  </aside>
+  <main class="main" id="main">
+   <div class="content">
+    <div class="chapter-header">
+     <div class="eyebrow">
+      第一學期 / 第 01 週
+     </div>
+     <h1>
+      Language model 究竟在學甚麼
+     </h1>
+    </div>
+    <div class="lesson-links">
+     <a href="../tutorials/01.html">
+      練習 01
+     </a>
+     <a href="../tests/01.html">
+      檢查你的理解
+     </a>
+     <button aria-pressed="false" class="mark-complete" data-week="1" type="button">
+      標記為已完成
+     </button>
+    </div>
+    <div aria-label="課堂檢視" class="lesson-mode" role="tablist">
+     <button aria-controls="full-notes" aria-selected="true" data-mode="read" id="mode-read" role="tab" type="button">
+      閱讀講義
+     </button>
+     <button aria-controls="lecture-slides" aria-selected="false" data-mode="slides" id="mode-slides" role="tab" type="button">
+      課堂 slides
+     </button>
+    </div>
+    <section aria-label="Lecture slides" class="lecture-deck" hidden="" id="lecture-slides" role="tabpanel">
+     <div class="deck-top">
+      <div>
+       <div class="eyebrow">
+        課堂投影片 · 第 01 週
+       </div>
+       <h2>
+        重點步驟與圖解
+       </h2>
+      </div>
+      <button class="deck-present" type="button">
+       簡報模式
+      </button>
+     </div>
+     <p class="deck-help">
+      用 slides 溫習機制；按「閱讀完整解說」可開啟完整講義及程式碼。
+     </p>
+     <div aria-label="簡報：使用左右方向鍵" class="slide-viewport" tabindex="0">
+      <section class="lecture-slide" data-slide="">
+       <div class="slide-stage">
+        第 01 週 · 課節 1
+       </div>
+       <h3>
+        一個普通句子，缺了一個字
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          先看「I go to school by ___.」。
+         </li>
+         <li>
+          現在把 prompt 縮短為「I go to ___.」。
+         </li>
+         <li>
+          model 不需要知道你實際如何上學，也可以給 bus 很高的 probability。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#an-ordinary-sentence-with-one-missing-word">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 01 週 · 課節 2
+       </div>
+       <h3>
+        一個可以逐項檢查的小型資料集
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          想像有五個 training sentences：「I go to school by bus」出現三次、「I go to school by train」出現一次，「I go to school by bicycle」出現一次。
+         </li>
+         <li>
+          這些數字描述的是這個小型資料集，並不代表現實世界的交通情況。
+         </li>
+         <li>
+          我們已經找出 learning problem 的基本要素：例子、input、可能的 output、prediction，以及評價 prediction 的方法。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#a-tiny-collection-that-we-can-inspect">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 01 週 · 課節 3
+       </div>
+       <h3>
+        從一次 prediction 到一個 sequence
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          假設 model 選擇 bus。現在已有的文字是「I go to school by bus.」。要繼續，它會用這個更長的 prefix 再做一次 next-token prediction。它可能選擇句號。如果之後出現結束標記，generation 就停止。生成一段文字，就是重複這個操作很多次。
+         </li>
+         <li>
+          這就是 autoregressive generation：每次新的 prediction 都依賴 sequence 中較早的元素。
+         </li>
+         <li>
+          暫時先把 token 想成單字。第 2 週會撤去這個簡化假設，仔細介紹 token ID、標點和 subword。初步解釋可以採用簡化假設，前提是清楚說明，並在之後修正。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#a-prediction-becomes-a-sequence">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 01 週 · 課節 4
+       </div>
+       <h3>
+        用熟悉的符號表示 conditional probability
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          寫下 p(bus | I go to school by)。
+         </li>
+         <li>
+          整個 sequence 的 probability 可以寫成一連串 conditional probability 的乘積。
+         </li>
+         <li>
+          如果這三個 probability 分別是 0.5、0.4 和 0.25，sequence probability 就是 0.05。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#conditional-probability-in-familiar-notation">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 01 週 · 課節 5
+       </div>
+       <h3>
+        Training 和使用 model 是兩回事
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Training 時，我們用例子調整 model。
+         </li>
+         <li>
+          句子「I go to school by bus」可以提供多個 training situations：「I」預測 go；「I go」預測 to；「I go to」預測 school。
+         </li>
+         <li>
+          不要把 training example 當成對 model 發出的指令。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#training-and-using-a-model-are-different-activities">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 01 週 · 課節 6
+       </div>
+       <h3>
+        小型 model 也很適合幫助理解
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          只有五句的資料集無法支援通用 assistant。
+         </li>
+         <li>
+          較大的 model 會引入學習得到的 vector 和 nonlinear function，但核心問題仍然相似：它收到甚麼 input？
+         </li>
+         <li>
+          第一學期會逐步建立 transformer，作為表示及結合 context 的方法。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#a-small-model-can-be-useful-for-understanding">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 01 週 · 課節 7
+       </div>
+       <h3>
+        實例練習與學習檢查
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          再加入兩次「I go to school by train」。
+         </li>
+         <li>
+          解釋為何「I go to work by」可能需要另一個 distribution。
+         </li>
+         <li>
+          繼續之前，你應該能分辨 example、prefix、next-token distribution、生成的 token、training 和 inference。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#worked-practice-and-a-readiness-check">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+     </div>
+     <div class="deck-controls">
+      <button class="slide-prev" type="button">
+       ← 上一頁
+      </button>
+      <span aria-live="polite" class="slide-counter">
+       1 / 7
+      </span>
+      <button class="slide-next" type="button">
+       下一頁 →
+      </button>
+     </div>
+     <label class="slide-jump-label">
+      前往 slide
+      <select aria-label="跳至 slide" class="slide-jump">
+       <option value="0">
+        1. 一個普通句子，缺了一個字
+       </option>
+       <option value="1">
+        2. 一個可以逐項檢查的小型資料集
+       </option>
+       <option value="2">
+        3. 從一次 prediction 到一個 sequence
+       </option>
+       <option value="3">
+        4. 用熟悉的符號表示 conditional probability
+       </option>
+       <option value="4">
+        5. Training 和使用 model 是兩回事
+       </option>
+       <option value="5">
+        6. 小型 model 也很適合幫助理解
+       </option>
+       <option value="6">
+        7. 實例練習與學習檢查
+       </option>
+      </select>
+     </label>
+     <button aria-pressed="false" class="deck-all" type="button">
+      顯示全部 slides
+     </button>
+    </section>
+    <section aria-label="缺少一個字與極小 dataset" class="visual-lesson">
+     <div class="eyebrow">
+      探索機制
+     </div>
+     <h2>
+      缺少一個字與極小 dataset
+     </h2>
+     <p class="visual-intro">
+      改變觀察到的 bus 和 train 旅程次數。Count 會變成 conditional probability。
+     </p>
+     <div data-widget="prediction">
+      <p>
+       啟用 JavaScript 以使用此圖解。下方 lecture notes 會解釋同一機制。
+      </p>
+     </div>
+    </section>
+    <nav aria-label="本課內容" class="reader-toc">
+     <strong>
+      本課內容
+     </strong>
+     <ol>
+      <li>
+       <a href="#an-ordinary-sentence-with-one-missing-word">
+        一個普通句子，缺了一個字
+       </a>
+      </li>
+      <li>
+       <a href="#a-tiny-collection-that-we-can-inspect">
+        一個可以逐項檢查的小型資料集
+       </a>
+      </li>
+      <li>
+       <a href="#a-prediction-becomes-a-sequence">
+        從一次 prediction 到一個 sequence
+       </a>
+      </li>
+      <li>
+       <a href="#conditional-probability-in-familiar-notation">
+        用熟悉的符號表示 conditional probability
+       </a>
+      </li>
+      <li>
+       <a href="#training-and-using-a-model-are-different-activities">
+        Training 和使用 model 是兩回事
+       </a>
+      </li>
+      <li>
+       <a href="#a-small-model-can-be-useful-for-understanding">
+        小型 model 也很適合幫助理解
+       </a>
+      </li>
+      <li>
+       <a href="#worked-practice-and-a-readiness-check">
+        實例練習與學習檢查
+       </a>
+      </li>
+     </ol>
+    </nav>
+    <article class="prose full-notes" id="full-notes" role="tabpanel">
+     <div class="eyebrow">
+      完整講義
+     </div>
+     <h2>
+      閱讀完整解說
+     </h2>
+     <h3 id="an-ordinary-sentence-with-one-missing-word">
+      一個普通句子，缺了一個字
+     </h3>
+     <p>
+      先看「I go to school by ___.」。在考慮 neural network 之前，先寫出三個可能的填空答案。Bus、train 和 bicycle 都合理。在某些奇怪的虛構故事中，把 Banana 放在「by」後面，文法上或許說得通；但對這個普通句子來說，這並不是常見的接續。這項任務是利用已有的文字，為接下來可能出現的文字分配不同的 probability。
+     </p>
+     <p>
+      現在把 prompt 縮短為「I go to ___.」。School 仍然可能，但 work、sleep 和 the park 也變得合理。合理的下一個字會改變，是因為可用的 context 改變了。Context 指 prediction 所依據的文字。本課程前半部分的 context，就是普通句子的 prefix。
+     </p>
+     <p>
+      model 不需要知道你實際如何上學，也可以給 bus 很高的 probability。它可能學到，人們經常用這種方式描述上學交通。這個分別很重要：一段很可能出現的接續，聽起來合理，但對某個人而言可能並非事實。Prediction 是起點；要如實回答問題，還需要額外的判斷，我們稍後才會研究。
+     </p>
+     <h3 id="a-tiny-collection-that-we-can-inspect">
+      一個可以逐項檢查的小型資料集
+     </h3>
+     <p>
+      想像有五個 training sentences：「I go to school by bus」出現三次、「I go to school by train」出現一次，「I go to school by bicycle」出現一次。在 prefix 完全是「I go to school by」的例子中，觀察到的下一個字比例為 3/5、1/5 和 1/5。因此，我們第一個 language model 可以預測 bus 的 probability 是 0.6，train 是 0.2，bicycle 是 0.2。
+     </p>
+     <p>
+      這些數字描述的是這個小型資料集，並不代表現實世界的交通情況。資料集一改，估計值就會改。如果資料集中沒有關於 boats 的句子，這個 count-based model 對該 prefix 後面的 boat 就沒有直接證據。之後的 neural model 可以在相關 context 之間共享資訊，但它仍然是從我們提供的例子和 objective 學習。
+     </p>
+     <p>
+      我們已經找出 learning problem 的基本要素：例子、input、可能的 output、prediction，以及評價 prediction 的方法。我們會逐步加入數值 representation 和可訓練的 function，而不是一次過引入完整 transformer。
+     </p>
+     <h3 id="a-prediction-becomes-a-sequence">
+      從一次 prediction 到一個 sequence
+     </h3>
+     <p>
+      假設 model 選擇 bus。現在已有的文字是「I go to school by bus.」。要繼續，它會用這個更長的 prefix 再做一次 next-token prediction。它可能選擇句號。如果之後出現結束標記，generation 就停止。生成一段文字，就是重複這個操作很多次。
+     </p>
+     <p>
+      這就是 autoregressive generation：每次新的 prediction 都依賴 sequence 中較早的元素。model 不需要在一次決定中選好整段文字。在 generation 過程中，一個錯誤會成為之後 prediction 的 prefix 一部分，這有助解釋為何接續內容會逐漸偏離。只要選過一次不太可能的字，就會改變 model 下一次看到的情況。
+     </p>
+     <p>
+      暫時先把 token 想成單字。第 2 週會撤去這個簡化假設，仔細介紹 token ID、標點和 subword。初步解釋可以採用簡化假設，前提是清楚說明，並在之後修正。
+     </p>
+     <h3 id="conditional-probability-in-familiar-notation">
+      用熟悉的符號表示 conditional probability
+     </h3>
+     <p>
+      寫下 p(bus | I go to school by)。直線讀作「given」，意思是在已知該 prefix 的情況下，bus 的 probability 是多少。所有允許的 next token 的 probability 加起來等於一。language model 是一個 function，為每個 prefix 產生這樣的 distribution。
+     </p>
+     <p>
+      整個 sequence 的 probability 可以寫成一連串 conditional probability 的乘積。例如，p(I, go, home) 等於 p(I) 乘 p(go | I)，再乘 p(home | I go)。這個 chain-rule decomposition 是 probability 的恆等關係；具體的 language model 會提供各項的估計值。
+     </p>
+     <p>
+      如果這三個 probability 分別是 0.5、0.4 和 0.25，sequence probability 就是 0.05。較長的 sequence 會累積更多相乘項，因此比較不同長度句子的原始 probability 時，要特別小心。之後我們會在 prediction positions 上取 negative log probability 的平均值。
+     </p>
+     <h3 id="training-and-using-a-model-are-different-activities">
+      Training 和使用 model 是兩回事
+     </h3>
+     <p>
+      Training 時，我們用例子調整 model。Inference 時，我們用已訓練好的 model 做 prediction。這個 count-based model 靠點算次數來「訓練」。neural language model 則改變數值 parameter，令 training examples 中合適的 next token 得到更高 probability。
+     </p>
+     <p>
+      句子「I go to school by bus」可以提供多個 training situations：「I」預測 go；「I go」預測 to；「I go to」預測 school。我們不需要找人逐項標註，因為下一個 token 已經出現在文字中。這就是 next-token training 背後最基本的 self-supervised signal。
+     </p>
+     <p>
+      不要把 training example 當成對 model 發出的指令。句子是資料，我們從中建立 prediction tasks。理解底層 prediction model 如何運作之後，才會介紹 instruction following。
+     </p>
+     <h3 id="a-small-model-can-be-useful-for-understanding">
+      小型 model 也很適合幫助理解
+     </h3>
+     <p>
+      只有五句的資料集無法支援通用 assistant。它的價值是每個 probability 都能解釋。如果之後的程式給 bus 的 probability 是 0.2，而不是 0.6，我們可以檢查次數並找出錯誤。
+     </p>
+     <p>
+      較大的 model 會引入學習得到的 vector 和 nonlinear function，但核心問題仍然相似：它收到甚麼 input？我們期望哪個 output？它分配了多少 probability？學習過程中改變了甚麼？當 equation 變得複雜時，記得回到這些問題。
+     </p>
+     <p>
+      第一學期會逐步建立 transformer，作為表示及結合 context 的方法。等你熟悉 model 本身之後，才會進入 vector database、RAG、agent framework 和 deployment。
+     </p>
+     <h3 id="worked-practice-and-a-readiness-check">
+      實例練習與學習檢查
+     </h3>
+     <p>
+      再加入兩次「I go to school by train」。現在共有七個符合的例子：bus 三次、train 三次、bicycle 一次。Probability 變成 3/7、3/7 和 1/7。在這個 count model 中，Bus 和 train 並列。並列不代表任務出錯，只表示觀察到的資料無法區分兩者。
+     </p>
+     <p>
+      解釋為何「I go to work by」可能需要另一個 distribution。然後解釋，簡單的 exact-prefix count model 無法在 school 和 work 之間共享哪些資訊。這個限制會引出學習 representation 的需要。
+     </p>
+     <p>
+      繼續之前，你應該能分辨 example、prefix、next-token distribution、生成的 token、training 和 inference。你亦應該能解釋，為何高 probability 的句子未必是關於使用者的真實陳述。Tutorial 會在不用 neural-network library 的情況下，建立這個小型 count model。
+     </p>
+    </article>
+    <nav aria-label="前後 lecture" class="chapter-pagination">
+     <a href="../index.html">
+      <small>
+       返回
+      </small>
+      課程概覽
+     </a>
+     <a href="02.html">
+      <small>
+       下一週
+      </small>
+      從文字到 token 和數值 ID
+     </a>
+    </nav>
+   </div>
+   <footer class="footer">
+    <span>
+     Applied AI · 獨立自學課程
+    </span>
+    <span>
+     32 週 · 每週 10 小時
+    </span>
+    <a href="../resources.html#about-this-course">
+     關於課程及資料來源
+    </a>
+   </footer>
+  </main>
+  <dialog aria-labelledby="search-title" class="search-dialog">
+   <div class="dialog-head">
+    <h2 id="search-title">
+     尋找概念
+    </h2>
+    <button aria-label="關閉搜尋" class="search-close" type="button">
+     關閉
+    </button>
+   </div>
+   <label class="sr-only" for="course-search">
+    搜尋所有 lecture 和 tutorial
+   </label>
+   <input autocomplete="off" id="course-search" placeholder="試試 attention、fine-tuning 或 harness……" type="search"/>
+   <p aria-live="polite" class="search-status">
+    搜尋 lecture notes、tutorial、測驗及閱讀材料。
+   </p>
+   <div class="search-results">
+   </div>
+  </dialog>
+  <div aria-live="polite" class="toast" role="status">
+  </div>
+ </body>
+</html>

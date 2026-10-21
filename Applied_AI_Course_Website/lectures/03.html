@@ -1,55 +1,1335 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/><title>What word vectors can represent · Applied AI</title><meta content="Applied generative AI and LLM systems course material" name="description"/><meta content="#173c36" name="theme-color"/><link href="../assets/favicon.svg" rel="icon" type="image/svg+xml"/><link href="../assets/style.css" rel="stylesheet"/><link href="../assets/slides.css" rel="stylesheet"/><script>window.COURSE_BASE="../";</script><script defer="" src="../assets/site-config.js"></script><script defer="" src="../assets/search-index.js"></script><script defer="" src="../assets/app.js"></script><script defer="" src="../assets/visuals.js"></script><script defer="" src="../assets/slides.js"></script><script defer="" src="../assets/beginner-visuals.js"></script><link href="../zh-HK/lectures/03.html" hreflang="zh-HK" rel="alternate"/><link href="../assets/bilingual.css" rel="stylesheet"/></head><body data-page-kind="lecture" data-week="3"><a class="skip-link" href="#main">Skip to content</a><header class="topbar"><button aria-controls="course-sidebar" aria-expanded="false" class="menu-toggle" type="button">Menu</button><a class="brand" href="../index.html"><span aria-hidden="true" class="brand-mark">a<span>i</span></span><span>APPLIED AI<small>Principles into practice</small></span></a><nav aria-label="Main navigation"><a href="../index.html">The course</a><a href="../visuals.html">Visual lab</a><a href="../project.html">Project</a><a class="language-switch" href="../zh-HK/lectures/03.html" hreflang="zh-HK" lang="zh-HK">繁體中文</a></nav><button class="search-open" type="button">Search the course <span aria-hidden="true">/</span></button></header><aside aria-label="Course chapters" class="sidebar" id="course-sidebar"><a class="side-home" href="../index.html">Course overview</a><details class="semester-nav" open=""><summary>Semester 1<span>Weeks 1–16</span></summary><ol start="1"><li><a href="../lectures/01.html"><span class="week-number">01</span><span>What a language model is trying to learn</span><span class="week-tick" data-week-tick="1"></span></a></li><li><a href="../lectures/02.html"><span class="week-number">02</span><span>From text to tokens and numerical IDs</span><span class="week-tick" data-week-tick="2"></span></a></li><li><a aria-current="page" href="../lectures/03.html"><span class="week-number">03</span><span>What word vectors can represent</span><span class="week-tick" data-week-tick="3"></span></a></li><li><a href="../lectures/04.html"><span class="week-number">04</span><span>From scores to probabilities and learning signals</span><span class="week-tick" data-week-tick="4"></span></a></li><li><a href="../lectures/05.html"><span class="week-number">05</span><span>Why language needs context and order</span><span class="week-tick" data-week-tick="5"></span></a></li><li><a href="../lectures/06.html"><span class="week-number">06</span><span>Attention begins as a weighted mixture</span><span class="week-tick" data-week-tick="6"></span></a></li><li><a href="../lectures/07.html"><span class="week-number">07</span><span>Where queries keys and values come from</span><span class="week-tick" data-week-tick="7"></span></a></li><li><a href="../lectures/08.html"><span class="week-number">08</span><span>Scaling and masking attention correctly</span><span class="week-tick" data-week-tick="8"></span></a></li><li><a href="../lectures/09.html"><span class="week-number">09</span><span>Multiple attention heads and position</span><span class="week-tick" data-week-tick="9"></span></a></li><li><a href="../lectures/10.html"><span class="week-number">10</span><span>The transformer block step by step</span><span class="week-tick" data-week-tick="10"></span></a></li><li><a href="../lectures/11.html"><span class="week-number">11</span><span>Encoders decoders and complete model architectures</span><span class="week-tick" data-week-tick="11"></span></a></li><li><a href="../lectures/12.html"><span class="week-number">12</span><span>Training a small transformer</span><span class="week-tick" data-week-tick="12"></span></a></li><li><a href="../lectures/13.html"><span class="week-number">13</span><span>Generation decoding and the KV cache</span><span class="week-tick" data-week-tick="13"></span></a></li><li><a href="../lectures/14.html"><span class="week-number">14</span><span>From pretraining to instruction following and reasoning</span><span class="week-tick" data-week-tick="14"></span></a></li><li><a href="../lectures/15.html"><span class="week-number">15</span><span>Generative AI beyond text</span><span class="week-tick" data-week-tick="15"></span></a></li><li><a href="../lectures/16.html"><span class="week-number">16</span><span>A complete transformer walkthrough and first semester review</span><span class="week-tick" data-week-tick="16"></span></a></li></ol></details><details class="semester-nav"><summary>Semester 2<span>Weeks 17–32</span></summary><ol start="17"><li><a href="../lectures/17.html"><span class="week-number">17</span><span>From word vectors to semantic search</span><span class="week-tick" data-week-tick="17"></span></a></li><li><a href="../lectures/18.html"><span class="week-number">18</span><span>A vector database from a list of vectors</span><span class="week-tick" data-week-tick="18"></span></a></li><li><a href="../lectures/19.html"><span class="week-number">19</span><span>RAG as an open book question</span><span class="week-tick" data-week-tick="19"></span></a></li><li><a href="../lectures/20.html"><span class="week-number">20</span><span>Improving RAG without losing the basic task</span><span class="week-tick" data-week-tick="20"></span></a></li><li><a href="../lectures/21.html"><span class="week-number">21</span><span>Evaluating retrieval answers and uncertainty</span><span class="week-tick" data-week-tick="21"></span></a></li><li><a href="../lectures/22.html"><span class="week-number">22</span><span>CPU GPU memory and model resource accounting</span><span class="week-tick" data-week-tick="22"></span></a></li><li><a href="../lectures/23.html"><span class="week-number">23</span><span>CUDA kernels and profiling</span><span class="week-tick" data-week-tick="23"></span></a></li><li><a href="../lectures/24.html"><span class="week-number">24</span><span>Fine tuning starts with a teaching dataset</span><span class="week-tick" data-week-tick="24"></span></a></li><li><a href="../lectures/25.html"><span class="week-number">25</span><span>LoRA and QLoRA from a small matrix</span><span class="week-tick" data-week-tick="25"></span></a></li><li><a href="../lectures/26.html"><span class="week-number">26</span><span>Fine tuning experiments preferences and distillation</span><span class="week-tick" data-week-tick="26"></span></a></li><li><a href="../lectures/27.html"><span class="week-number">27</span><span>Tools functions workflows and agents</span><span class="week-tick" data-week-tick="27"></span></a></li><li><a href="../lectures/28.html"><span class="week-number">28</span><span>Harnesses planning memory and bounded execution</span><span class="week-tick" data-week-tick="28"></span></a></li><li><a href="../lectures/29.html"><span class="week-number">29</span><span>From a notebook to MLOps and inference serving</span><span class="week-tick" data-week-tick="29"></span></a></li><li><a href="../lectures/30.html"><span class="week-number">30</span><span>Monitoring security regression tests and rollback</span><span class="week-tick" data-week-tick="30"></span></a></li><li><a href="../lectures/31.html"><span class="week-number">31</span><span>Integrating the documentation assistant and advanced extensions</span><span class="week-tick" data-week-tick="31"></span></a></li><li><a href="../lectures/32.html"><span class="week-number">32</span><span>Review defense and a continuing learning plan</span><span class="week-tick" data-week-tick="32"></span></a></li></ol></details><div class="side-links"><a href="../visuals.html">Visual laboratory <span>14 interactive lessons</span></a><a href="../project.html">Documentation assistant <span>Your capstone project</span></a><a href="../resources.html">Readings and setup</a></div><div class="side-progress"><div><span>Your progress</span><strong data-progress-count="">0 / 32</strong></div><progress aria-label="Completed lectures" max="32" value="0"></progress><small>Saved in this browser</small></div></aside><main class="main" id="main"><div class="content"><div class="chapter-header"><div class="eyebrow">Semester 1 / Week 03</div><h1>What word vectors can represent</h1></div><div class="lesson-links"><a href="../tutorials/03.html">Tutorial 03</a><a href="../tests/03.html">Test your understanding</a><button aria-pressed="false" class="mark-complete" data-week="3" type="button">Mark as complete</button></div><section aria-label="Lecture slides" class="lecture-deck" id="lecture-slides"><div class="deck-top"><div><div class="eyebrow">Lecture slides · Week 03</div><h2>Learn one step at a time.</h2></div><button class="deck-present" type="button">Present</button></div><p class="deck-help">Read each explanation, pause to predict the result, then continue. Use the arrow keys while the presentation is focused. The complete lecture reader is below.</p><div aria-label="Presentation: use left and right arrow keys" class="slide-viewport" tabindex="0"><section class="lecture-slide" data-slide=""><div class="slide-stage">Start with an example</div><h3>Two words can be different labels but related inputs</h3><div class="slide-prose"><p>Our count model treated “I go to school by” and “I go to work by” as unrelated exact strings. A neural model can reuse numerical features across examples. If school and work occur in some similar travel contexts, their learned representations may share useful properties for predicting transportation words.</p>
-<p>This does not mean the two words have identical meaning. A representation is useful for a task when its coordinates help the model reduce that task's error. What the model learns depends on the data and objective.</p>
-<p>Start with an ordinary two-dimensional vector so we can draw it. A vector has a direction and a length. Those two properties affect common similarity calculations differently.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Start with an example</div><h3>A dot product is a weighted comparison</h3><div class="slide-prose"><p>For vectors q=[1,0] and a=[0.8,0.6], the dot product is 1×0.8+0×0.6=0.8. For b=[4,3], it is 4. The larger answer for b reflects both direction and magnitude.</p>
-<p>The dot product can be understood as how strongly two coordinate patterns align. Negative and positive coordinates can contribute in opposite directions. It is a numerical operation, not an automatic definition of semantic similarity.</p>
-<p>Later, attention will use dot products between learned query and key vectors. We study the operation now so that the attention equation will not introduce geometry and model architecture in the same step.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Build the mechanism</div><h3>Cosine compares direction</h3><div class="slide-prose"><p>The length of a is sqrt(0.8²+0.6²)=1. The length of b is sqrt(4²+3²)=5. Dividing the dot product by the product of lengths gives cosine similarity. Both vectors have cosine 0.8 with q.</p>
-<p>That makes sense geometrically: b is five times a, so they point in the same direction. Normalizing a nonzero vector to length one removes its magnitude. After normalization, their dot products with a unit q are equal.</p>
-<p>Neither score is universally correct. A model may use magnitude as part of its learned computation. For a particular retrieval task, direction-only scoring may be useful. Choose the operation that matches the training objective and the system you are studying.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Build the mechanism</div><h3>An embedding table learns through prediction errors</h3><div class="slide-prose"><p>Suppose a simple model sees the token school and predicts the next token. It selects the school row, transforms it, and produces scores over vocabulary entries. If the correct next token is by and the model gives it too little probability, training changes parameters through gradients.</p>
-<p>The embedding coordinates are among the parameters that can change. Repeated contexts create pressure for useful shared structure. We are not manually assigning school an “education coordinate.”</p>
-<p>Different random seeds can produce different coordinate values that support similar predictions. Rotating a representation space together with compatible downstream transformations can preserve relevant behavior. This is one reason to avoid interpreting individual coordinates as fixed human concepts.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Build the mechanism</div><h3>Starting vectors and contextual vectors</h3><div class="slide-prose"><p>The starting vector for bus comes from its vocabulary row. In “I go to school by bus” and “The bus broke down,” that lookup row can be the same. After context processing, the representation at bus can differ between the sentences.</p>
-<p>The context tells us whether we are discussing a travel choice or a breakdown. A contextual vector represents a token at a position under available context. Later, the causal mask will determine which other positions are available.</p>
-<p>Keep token embeddings, contextual token representations, and whole-sentence embeddings distinct. A vector chosen from a lookup table is not automatically a good summary of an entire paragraph.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Build the mechanism</div><h3>A simple sentence representation and its limitations</h3><div class="slide-prose"><p>One easy way to represent a sentence is to average its token vectors. This combines information but loses much of the ordering. “The dog chased the boy” and “The boy chased the dog” contain the same word inventory under a simple tokenizer, so an order-insensitive average can be identical.</p>
-<p>That limitation motivates context and position processing. Averaging can still be a useful baseline, but knowing its failure mode prevents us from mistaking convenience for a complete language model.</p>
-<p>In week 17, we will return to sentence embeddings trained for search. That application requires an objective and evaluation of its own. For now, the goal is understanding how numerical representations can share information.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Go deeper and check understanding</div><h3>A small numerical experiment</h3><div class="slide-prose"><p>Move q from [1,0] toward [0,1]. At [0,1], its dot products with a and b become 0.6 and 3, while their cosines remain equal at 0.6. Normalizing the passage vectors changes the raw dot-product comparison.</p>
-<p>Now try q=[-1,0]. The dot products become -0.8 and -4. Similarity conventions matter when scores can be negative. A maximum score still means “largest under this operation,” not “true with this probability.”</p>
-<p>Use the geometry illustration to inspect both magnitude and direction. Explain the calculations before relying on the picture's colors.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Go deeper and check understanding</div><h3>Worked practice and a readiness check</h3><div class="slide-prose"><p>Calculate the norm of [3,4], normalize it, and compute its cosine with [1,0]. The answers are 5, [0.6,0.8], and 0.6. Then compare [6,8] and explain what changes and what remains the same.</p>
-<p>Explain why changing the embedding table without adjusting the rest of a trained model can change behavior. Explain why two separately trained 384-dimensional models do not necessarily use compatible coordinates.</p>
-<p>You should now be able to follow an embedding lookup, a dot product, normalization, and the difference between an initial and contextual representation. These are the numerical building blocks we need before attention.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Go deeper and check understanding</div><h3>A second representation example</h3><div class="slide-prose"><p>Suppose a toy vocabulary has school=[1,0], work=[0.8,0.2], and bus=[0,1]. A mean representation for “school bus” is [0.5,0.5], while “work bus” gives [0.4,0.6]. Their similarity partly reflects a shared bus component. These coordinates are deliberately chosen; an actual model would need training and evaluation.</p>
-<p>Now reverse “school bus” to “bus school.” The mean stays the same because addition is commutative. This gives an exact counterexample to the claim that averaging always preserves language meaning. We do not need a large benchmark to establish this particular invariance.</p>
-<p>The next question is constructive: how could the model distinguish the orders? Position information can change the starting rows, and contextual processing can combine them differently. This connects the limitation of a simple vector average directly to the architecture we are building.</p></div></section></div><div class="deck-controls"><button class="slide-prev" type="button">← Previous</button><span aria-live="polite" class="slide-counter">1 / 9</span><button class="slide-next" type="button">Next →</button></div><label class="slide-jump-label">Go to slide <select aria-label="Go to slide" class="slide-jump"><option value="0">1</option><option value="1">2</option><option value="2">3</option><option value="3">4</option><option value="4">5</option><option value="5">6</option><option value="6">7</option><option value="7">8</option><option value="8">9</option></select></label><button aria-pressed="false" class="deck-all" type="button">Show all slides</button><a class="reader-link" href="#full-notes">Read the complete lecture ↓</a></section><section aria-label="Embedding geometry" class="visual-lesson"><div class="eyebrow">Explore the mechanism</div><h2>Embedding geometry</h2><p class="visual-intro">Compare vector direction and magnitude using exact arithmetic.</p><div data-widget="geometry"><p>Enable JavaScript to use this illustration. The lecture notes below explain the same mechanism.</p></div></section><article class="prose full-notes" id="full-notes"><div class="eyebrow">Complete lecture reader</div><h2>Read the full explanation</h2><h3 id="two-words-can-be-different-labels-but-related-inputs">Two words can be different labels but related inputs</h3>
-<p>Our count model treated “I go to school by” and “I go to work by” as unrelated exact strings. A neural model can reuse numerical features across examples. If school and work occur in some similar travel contexts, their learned representations may share useful properties for predicting transportation words.</p>
-<p>This does not mean the two words have identical meaning. A representation is useful for a task when its coordinates help the model reduce that task's error. What the model learns depends on the data and objective.</p>
-<p>Start with an ordinary two-dimensional vector so we can draw it. A vector has a direction and a length. Those two properties affect common similarity calculations differently.</p>
-<h3 id="a-dot-product-is-a-weighted-comparison">A dot product is a weighted comparison</h3>
-<p>For vectors q=[1,0] and a=[0.8,0.6], the dot product is 1×0.8+0×0.6=0.8. For b=[4,3], it is 4. The larger answer for b reflects both direction and magnitude.</p>
-<p>The dot product can be understood as how strongly two coordinate patterns align. Negative and positive coordinates can contribute in opposite directions. It is a numerical operation, not an automatic definition of semantic similarity.</p>
-<p>Later, attention will use dot products between learned query and key vectors. We study the operation now so that the attention equation will not introduce geometry and model architecture in the same step.</p>
-<h3 id="cosine-compares-direction">Cosine compares direction</h3>
-<p>The length of a is sqrt(0.8²+0.6²)=1. The length of b is sqrt(4²+3²)=5. Dividing the dot product by the product of lengths gives cosine similarity. Both vectors have cosine 0.8 with q.</p>
-<p>That makes sense geometrically: b is five times a, so they point in the same direction. Normalizing a nonzero vector to length one removes its magnitude. After normalization, their dot products with a unit q are equal.</p>
-<p>Neither score is universally correct. A model may use magnitude as part of its learned computation. For a particular retrieval task, direction-only scoring may be useful. Choose the operation that matches the training objective and the system you are studying.</p>
-<h3 id="an-embedding-table-learns-through-prediction-errors">An embedding table learns through prediction errors</h3>
-<p>Suppose a simple model sees the token school and predicts the next token. It selects the school row, transforms it, and produces scores over vocabulary entries. If the correct next token is by and the model gives it too little probability, training changes parameters through gradients.</p>
-<p>The embedding coordinates are among the parameters that can change. Repeated contexts create pressure for useful shared structure. We are not manually assigning school an “education coordinate.”</p>
-<p>Different random seeds can produce different coordinate values that support similar predictions. Rotating a representation space together with compatible downstream transformations can preserve relevant behavior. This is one reason to avoid interpreting individual coordinates as fixed human concepts.</p>
-<h3 id="starting-vectors-and-contextual-vectors">Starting vectors and contextual vectors</h3>
-<p>The starting vector for bus comes from its vocabulary row. In “I go to school by bus” and “The bus broke down,” that lookup row can be the same. After context processing, the representation at bus can differ between the sentences.</p>
-<p>The context tells us whether we are discussing a travel choice or a breakdown. A contextual vector represents a token at a position under available context. Later, the causal mask will determine which other positions are available.</p>
-<p>Keep token embeddings, contextual token representations, and whole-sentence embeddings distinct. A vector chosen from a lookup table is not automatically a good summary of an entire paragraph.</p>
-<h3 id="a-simple-sentence-representation-and-its-limitations">A simple sentence representation and its limitations</h3>
-<p>One easy way to represent a sentence is to average its token vectors. This combines information but loses much of the ordering. “The dog chased the boy” and “The boy chased the dog” contain the same word inventory under a simple tokenizer, so an order-insensitive average can be identical.</p>
-<p>That limitation motivates context and position processing. Averaging can still be a useful baseline, but knowing its failure mode prevents us from mistaking convenience for a complete language model.</p>
-<p>In week 17, we will return to sentence embeddings trained for search. That application requires an objective and evaluation of its own. For now, the goal is understanding how numerical representations can share information.</p>
-<h3 id="a-small-numerical-experiment">A small numerical experiment</h3>
-<p>Move q from [1,0] toward [0,1]. At [0,1], its dot products with a and b become 0.6 and 3, while their cosines remain equal at 0.6. Normalizing the passage vectors changes the raw dot-product comparison.</p>
-<p>Now try q=[-1,0]. The dot products become -0.8 and -4. Similarity conventions matter when scores can be negative. A maximum score still means “largest under this operation,” not “true with this probability.”</p>
-<p>Use the geometry illustration to inspect both magnitude and direction. Explain the calculations before relying on the picture's colors.</p>
-<h3 id="worked-practice-and-a-readiness-check">Worked practice and a readiness check</h3>
-<p>Calculate the norm of [3,4], normalize it, and compute its cosine with [1,0]. The answers are 5, [0.6,0.8], and 0.6. Then compare [6,8] and explain what changes and what remains the same.</p>
-<p>Explain why changing the embedding table without adjusting the rest of a trained model can change behavior. Explain why two separately trained 384-dimensional models do not necessarily use compatible coordinates.</p>
-<p>You should now be able to follow an embedding lookup, a dot product, normalization, and the difference between an initial and contextual representation. These are the numerical building blocks we need before attention.</p>
-<h3 id="a-second-representation-example">A second representation example</h3>
-<p>Suppose a toy vocabulary has school=[1,0], work=[0.8,0.2], and bus=[0,1]. A mean representation for “school bus” is [0.5,0.5], while “work bus” gives [0.4,0.6]. Their similarity partly reflects a shared bus component. These coordinates are deliberately chosen; an actual model would need training and evaluation.</p>
-<p>Now reverse “school bus” to “bus school.” The mean stays the same because addition is commutative. This gives an exact counterexample to the claim that averaging always preserves language meaning. We do not need a large benchmark to establish this particular invariance.</p>
-<p>The next question is constructive: how could the model distinguish the orders? Position information can change the starting rows, and contextual processing can combine them differently. This connects the limitation of a simple vector average directly to the architecture we are building.</p></article><nav aria-label="Adjacent lectures" class="chapter-pagination"><a href="02.html"><small>Previous week</small>From text to tokens and numerical IDs</a><a href="04.html"><small>Next week</small>From scores to probabilities and learning signals</a></nav></div><footer class="footer"><span>Applied AI · An independent self-study course</span><span>32 weeks · 10 hours per week</span><a href="../resources.html#about-this-course">About and sources</a></footer></main><dialog aria-labelledby="search-title" class="search-dialog"><div class="dialog-head"><h2 id="search-title">Find a concept</h2><button aria-label="Close search" class="search-close" type="button">Close</button></div><label class="sr-only" for="course-search">Search all lectures and tutorials</label><input autocomplete="off" id="course-search" placeholder="Try attention, fine-tuning, or harness…" type="search"/><p aria-live="polite" class="search-status">Search lecture notes, tutorials, tests and readings.</p><div class="search-results"></div></dialog><div aria-live="polite" class="toast" role="status"></div></body></html>
+<html lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width,initial-scale=1" name="viewport"/>
+  <title>
+   What word vectors can represent · Applied AI
+  </title>
+  <meta content="Applied generative AI and LLM systems course material" name="description"/>
+  <meta content="#173c36" name="theme-color"/>
+  <link href="../assets/favicon.svg" rel="icon" type="image/svg+xml"/>
+  <link href="../assets/style.css" rel="stylesheet"/>
+  <link href="../assets/slides.css" rel="stylesheet"/>
+  <script>
+   window.COURSE_BASE="../";
+  </script>
+  <script defer="" src="../assets/site-config.js">
+  </script>
+  <script defer="" src="../assets/search-index.js">
+  </script>
+  <script defer="" src="../assets/app.js">
+  </script>
+  <script defer="" src="../assets/visuals.js">
+  </script>
+  <script defer="" src="../assets/slides.js">
+  </script>
+  <script defer="" src="../assets/beginner-visuals.js">
+  </script>
+  <link href="../zh-HK/lectures/03.html" hreflang="zh-HK" rel="alternate"/>
+  <link href="../assets/bilingual.css" rel="stylesheet"/>
+  <link href="../assets/reader-v3.css" rel="stylesheet"/>
+  <script defer="True" src="../assets/reader-v3.js">
+  </script>
+ </head>
+ <body data-page-kind="lecture" data-week="3">
+  <a class="skip-link" href="#main">
+   Skip to content
+  </a>
+  <header class="topbar">
+   <button aria-controls="course-sidebar" aria-expanded="false" class="menu-toggle" type="button">
+    Menu
+   </button>
+   <a class="brand" href="../index.html">
+    <span aria-hidden="true" class="brand-mark">
+     a
+     <span>
+      i
+     </span>
+    </span>
+    <span>
+     APPLIED AI
+     <small>
+      Principles into practice
+     </small>
+    </span>
+   </a>
+   <nav aria-label="Main navigation">
+    <a href="../index.html">
+     The course
+    </a>
+    <a href="../visuals.html">
+     Visual lab
+    </a>
+    <a href="../project.html">
+     Project
+    </a>
+    <a class="language-switch" href="../zh-HK/lectures/03.html" hreflang="zh-HK" lang="zh-HK">
+     繁體中文
+    </a>
+   </nav>
+   <button class="search-open" type="button">
+    Search the course
+    <span aria-hidden="true">
+     /
+    </span>
+   </button>
+  </header>
+  <aside aria-label="Course chapters" class="sidebar" id="course-sidebar">
+   <a class="side-home" href="../index.html">
+    Course overview
+   </a>
+   <details class="semester-nav" open="">
+    <summary>
+     Semester 1
+     <span>
+      Weeks 1–16
+     </span>
+    </summary>
+    <ol start="1">
+     <li>
+      <a href="../lectures/01.html">
+       <span class="week-number">
+        01
+       </span>
+       <span>
+        What a language model is trying to learn
+       </span>
+       <span class="week-tick" data-week-tick="1">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/02.html">
+       <span class="week-number">
+        02
+       </span>
+       <span>
+        From text to tokens and numerical IDs
+       </span>
+       <span class="week-tick" data-week-tick="2">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a aria-current="page" href="../lectures/03.html">
+       <span class="week-number">
+        03
+       </span>
+       <span>
+        What word vectors can represent
+       </span>
+       <span class="week-tick" data-week-tick="3">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/04.html">
+       <span class="week-number">
+        04
+       </span>
+       <span>
+        From scores to probabilities and learning signals
+       </span>
+       <span class="week-tick" data-week-tick="4">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/05.html">
+       <span class="week-number">
+        05
+       </span>
+       <span>
+        Why language needs context and order
+       </span>
+       <span class="week-tick" data-week-tick="5">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/06.html">
+       <span class="week-number">
+        06
+       </span>
+       <span>
+        Attention begins as a weighted mixture
+       </span>
+       <span class="week-tick" data-week-tick="6">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/07.html">
+       <span class="week-number">
+        07
+       </span>
+       <span>
+        Where queries keys and values come from
+       </span>
+       <span class="week-tick" data-week-tick="7">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/08.html">
+       <span class="week-number">
+        08
+       </span>
+       <span>
+        Scaling and masking attention correctly
+       </span>
+       <span class="week-tick" data-week-tick="8">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/09.html">
+       <span class="week-number">
+        09
+       </span>
+       <span>
+        Multiple attention heads and position
+       </span>
+       <span class="week-tick" data-week-tick="9">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/10.html">
+       <span class="week-number">
+        10
+       </span>
+       <span>
+        The transformer block step by step
+       </span>
+       <span class="week-tick" data-week-tick="10">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/11.html">
+       <span class="week-number">
+        11
+       </span>
+       <span>
+        Encoders decoders and complete model architectures
+       </span>
+       <span class="week-tick" data-week-tick="11">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/12.html">
+       <span class="week-number">
+        12
+       </span>
+       <span>
+        Training a small transformer
+       </span>
+       <span class="week-tick" data-week-tick="12">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/13.html">
+       <span class="week-number">
+        13
+       </span>
+       <span>
+        Generation decoding and the KV cache
+       </span>
+       <span class="week-tick" data-week-tick="13">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/14.html">
+       <span class="week-number">
+        14
+       </span>
+       <span>
+        From pretraining to instruction following and reasoning
+       </span>
+       <span class="week-tick" data-week-tick="14">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/15.html">
+       <span class="week-number">
+        15
+       </span>
+       <span>
+        Generative AI beyond text
+       </span>
+       <span class="week-tick" data-week-tick="15">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/16.html">
+       <span class="week-number">
+        16
+       </span>
+       <span>
+        A complete transformer walkthrough and first semester review
+       </span>
+       <span class="week-tick" data-week-tick="16">
+       </span>
+      </a>
+     </li>
+    </ol>
+   </details>
+   <details class="semester-nav">
+    <summary>
+     Semester 2
+     <span>
+      Weeks 17–32
+     </span>
+    </summary>
+    <ol start="17">
+     <li>
+      <a href="../lectures/17.html">
+       <span class="week-number">
+        17
+       </span>
+       <span>
+        From word vectors to semantic search
+       </span>
+       <span class="week-tick" data-week-tick="17">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/18.html">
+       <span class="week-number">
+        18
+       </span>
+       <span>
+        A vector database from a list of vectors
+       </span>
+       <span class="week-tick" data-week-tick="18">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/19.html">
+       <span class="week-number">
+        19
+       </span>
+       <span>
+        RAG as an open book question
+       </span>
+       <span class="week-tick" data-week-tick="19">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/20.html">
+       <span class="week-number">
+        20
+       </span>
+       <span>
+        Improving RAG without losing the basic task
+       </span>
+       <span class="week-tick" data-week-tick="20">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/21.html">
+       <span class="week-number">
+        21
+       </span>
+       <span>
+        Evaluating retrieval answers and uncertainty
+       </span>
+       <span class="week-tick" data-week-tick="21">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/22.html">
+       <span class="week-number">
+        22
+       </span>
+       <span>
+        CPU GPU memory and model resource accounting
+       </span>
+       <span class="week-tick" data-week-tick="22">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/23.html">
+       <span class="week-number">
+        23
+       </span>
+       <span>
+        CUDA kernels and profiling
+       </span>
+       <span class="week-tick" data-week-tick="23">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/24.html">
+       <span class="week-number">
+        24
+       </span>
+       <span>
+        Fine tuning starts with a teaching dataset
+       </span>
+       <span class="week-tick" data-week-tick="24">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/25.html">
+       <span class="week-number">
+        25
+       </span>
+       <span>
+        LoRA and QLoRA from a small matrix
+       </span>
+       <span class="week-tick" data-week-tick="25">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/26.html">
+       <span class="week-number">
+        26
+       </span>
+       <span>
+        Fine tuning experiments preferences and distillation
+       </span>
+       <span class="week-tick" data-week-tick="26">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/27.html">
+       <span class="week-number">
+        27
+       </span>
+       <span>
+        Tools functions workflows and agents
+       </span>
+       <span class="week-tick" data-week-tick="27">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/28.html">
+       <span class="week-number">
+        28
+       </span>
+       <span>
+        Harnesses planning memory and bounded execution
+       </span>
+       <span class="week-tick" data-week-tick="28">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/29.html">
+       <span class="week-number">
+        29
+       </span>
+       <span>
+        From a notebook to MLOps and inference serving
+       </span>
+       <span class="week-tick" data-week-tick="29">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/30.html">
+       <span class="week-number">
+        30
+       </span>
+       <span>
+        Monitoring security regression tests and rollback
+       </span>
+       <span class="week-tick" data-week-tick="30">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/31.html">
+       <span class="week-number">
+        31
+       </span>
+       <span>
+        Integrating the documentation assistant and advanced extensions
+       </span>
+       <span class="week-tick" data-week-tick="31">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/32.html">
+       <span class="week-number">
+        32
+       </span>
+       <span>
+        Review defense and a continuing learning plan
+       </span>
+       <span class="week-tick" data-week-tick="32">
+       </span>
+      </a>
+     </li>
+    </ol>
+   </details>
+   <div class="side-links">
+    <a href="../visuals.html">
+     Visual laboratory
+     <span>
+      14 interactive lessons
+     </span>
+    </a>
+    <a href="../project.html">
+     Documentation assistant
+     <span>
+      Your capstone project
+     </span>
+    </a>
+    <a href="../resources.html">
+     Readings and setup
+    </a>
+   </div>
+   <div class="side-progress">
+    <div>
+     <span>
+      Your progress
+     </span>
+     <strong data-progress-count="">
+      0 / 32
+     </strong>
+    </div>
+    <progress aria-label="Completed lectures" max="32" value="0">
+    </progress>
+    <small>
+     Saved in this browser
+    </small>
+   </div>
+  </aside>
+  <main class="main" id="main">
+   <div class="content">
+    <div class="chapter-header">
+     <div class="eyebrow">
+      Semester 1 / Week 03
+     </div>
+     <h1>
+      What word vectors can represent
+     </h1>
+    </div>
+    <div class="lesson-links">
+     <a href="../tutorials/03.html">
+      Tutorial 03
+     </a>
+     <a href="../tests/03.html">
+      Test your understanding
+     </a>
+     <button aria-pressed="false" class="mark-complete" data-week="3" type="button">
+      Mark as complete
+     </button>
+    </div>
+    <div aria-label="Lesson view" class="lesson-mode" role="tablist">
+     <button aria-controls="full-notes" aria-selected="true" data-mode="read" id="mode-read" role="tab" type="button">
+      Read lesson
+     </button>
+     <button aria-controls="lecture-slides" aria-selected="false" data-mode="slides" id="mode-slides" role="tab" type="button">
+      Lesson slides
+     </button>
+    </div>
+    <section aria-label="Lecture slides" class="lecture-deck" hidden="" id="lecture-slides" role="tabpanel">
+     <div class="deck-top">
+      <div>
+       <div class="eyebrow">
+        Lecture slides · Week 03
+       </div>
+       <h2>
+        Key steps and worked visuals
+       </h2>
+      </div>
+      <button class="deck-present" type="button">
+       Present
+      </button>
+     </div>
+     <p class="deck-help">
+      Use these slides to review the mechanism. Open “Read the worked explanation” for the complete notes and code.
+     </p>
+     <div aria-label="Presentation: use left and right arrow keys" class="slide-viewport" tabindex="0">
+      <section class="lecture-slide" data-slide="">
+       <div class="slide-stage">
+        Week 03 · Section 1
+       </div>
+       <h3>
+        Two words can be different labels but related inputs
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Our count model treated “I go to school by” and “I go to work by” as unrelated exact strings.
+         </li>
+         <li>
+          This does not mean the two words have identical meaning.
+         </li>
+         <li>
+          Start with an ordinary two-dimensional vector so we can draw it.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#two-words-can-be-different-labels-but-related-inputs">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 03 · Section 2
+       </div>
+       <h3>
+        A dot product is a weighted comparison
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          For query q=[1,0] and candidate a=[0.8,0.6], the dot product is 1×0.8+0×0.6=0.8.
+         </li>
+         <li>
+          A dot product combines direction and magnitude.
+         </li>
+        </ul>
+        <figure class="mechanism-figure">
+         <figcaption>
+          One query, two different rankings
+         </figcaption>
+         <svg aria-label="q=[1,0], a=[0.8,0.6], b=[3,4]" class="vector-chart" role="img" viewbox="0 0 500 290">
+          <defs>
+           <marker id="vector-arrow-slide-1" markerheight="8" markerwidth="8" orient="auto" refx="7" refy="3">
+            <path d="M0,0 L0,6 L8,3 z" fill="context-stroke">
+            </path>
+           </marker>
+          </defs>
+          <path d="M45 250 H455 M45 250 V20" fill="none" stroke="#aab9ae">
+          </path>
+          <path d="M45 250 L101 250" marker-end="url(#vector-arrow-slide-1)" stroke="#ba633b" stroke-width="4">
+          </path>
+          <path d="M45 250 L89.8 216.4" marker-end="url(#vector-arrow-slide-1)" stroke="#25816d" stroke-width="4">
+          </path>
+          <path d="M45 250 L213 26" marker-end="url(#vector-arrow-slide-1)" stroke="#5752a6" stroke-width="4">
+          </path>
+          <text x="106" y="269">
+           q = [1, 0]
+          </text>
+          <text x="100" y="207">
+           a = [0.8, 0.6]
+          </text>
+          <text x="228" y="40">
+           b = [3, 4]
+          </text>
+         </svg>
+         <div class="table-wrap">
+          <table>
+           <tr>
+            <th>
+             Candidate
+            </th>
+            <th>
+             dot product
+            </th>
+            <th>
+             cosine
+            </th>
+           </tr>
+           <tr>
+            <td>
+             a
+            </td>
+            <td>
+             0.8
+            </td>
+            <td>
+             0.8
+            </td>
+           </tr>
+           <tr>
+            <td>
+             b
+            </td>
+            <td>
+             3.0
+            </td>
+            <td>
+             0.6
+            </td>
+           </tr>
+          </table>
+         </div>
+         <p>
+          Dot product ranks b first; cosine ranks a first. The numeric coordinates are a teaching example.
+         </p>
+        </figure>
+        <a class="slide-section-link" href="#a-dot-product-is-a-weighted-comparison">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 03 · Section 3
+       </div>
+       <h3>
+        Cosine compares direction
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          The norms are ||q||=1, ||a||=sqrt(0.8²+0.6²)=1, and ||b||=sqrt(3²+4²)=5.
+         </li>
+         <li>
+          Normalize each nonzero candidate to unit length: a stays [0.8,0.6], while b becomes [0.6,0.8].
+         </li>
+         <li>
+          Choose the operation that fits the model.
+         </li>
+        </ul>
+        <div class="table-wrap">
+         <table>
+          <thead>
+           <tr>
+            <th>
+             Candidate
+            </th>
+            <th>
+             Norm
+            </th>
+            <th>
+             dot(q,candidate)
+            </th>
+            <th>
+             cosine(q,candidate)
+            </th>
+           </tr>
+          </thead>
+          <tbody>
+           <tr>
+            <td>
+             a=[0.8,0.6]
+            </td>
+            <td>
+             1
+            </td>
+            <td>
+             0.8
+            </td>
+            <td>
+             0.8
+            </td>
+           </tr>
+           <tr>
+            <td>
+             b=[3,4]
+            </td>
+            <td>
+             5
+            </td>
+            <td>
+             3
+            </td>
+            <td>
+             0.6
+            </td>
+           </tr>
+          </tbody>
+         </table>
+        </div>
+        <a class="slide-section-link" href="#cosine-compares-direction">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 03 · Section 4
+       </div>
+       <h3>
+        An embedding table learns through prediction errors
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Suppose a simple model sees the token school and predicts the next token.
+         </li>
+         <li>
+          The embedding coordinates are among the parameters that can change.
+         </li>
+         <li>
+          Different random seeds can produce different coordinate values that support similar predictions.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#an-embedding-table-learns-through-prediction-errors">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 03 · Section 5
+       </div>
+       <h3>
+        Starting vectors and contextual vectors
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          The starting vector for bus comes from its vocabulary row.
+         </li>
+         <li>
+          The context tells us whether we are discussing a travel choice or a breakdown.
+         </li>
+         <li>
+          Keep token embeddings, contextual token representations, and whole-sentence embeddings distinct.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#starting-vectors-and-contextual-vectors">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 03 · Section 6
+       </div>
+       <h3>
+        One word, several senses, and uneven geometry
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Polysemy means one word has several senses.
+         </li>
+         <li>
+          Anisotropy describes an embedding space whose vectors occupy some directions more strongly than others.
+         </li>
+         <li>
+          The familiar king − man + woman analogy can illustrate a pattern in some learned spaces, but it is not a reliable algebra of meaning.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#one-word-several-senses-and-uneven-geometry">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 03 · Section 7
+       </div>
+       <h3>
+        A simple sentence representation and its limitations
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          One easy way to represent a sentence is to average its token vectors.
+         </li>
+         <li>
+          That limitation motivates context and position processing.
+         </li>
+         <li>
+          In week 17, we will return to sentence embeddings trained for search.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#a-simple-sentence-representation-and-its-limitations">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 03 · Section 8
+       </div>
+       <h3>
+        A small numerical experiment
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Move q to [0,1]. Its dot products with a=[0.8,0.6] and b=[3,4] become 0.6 and 4; their cosines are 0.6 and 0.8. Both methods now prefer b. A scoring rule and the query direction together determine the ranking.
+         </li>
+         <li>
+          For q=[−1,0], dot products are −0.8 and −3, while cosines are −0.8 and −0.6.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#a-small-numerical-experiment">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 03 · Section 9
+       </div>
+       <h3>
+        Worked practice and a readiness check
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Calculate the norm of [3,4], normalize it, and compute its cosine with [1,0].
+         </li>
+         <li>
+          Explain why changing the embedding table without adjusting the rest of a trained model can change behavior.
+         </li>
+         <li>
+          You should now be able to follow an embedding lookup, a dot product, normalization, and the difference between an initial and contextual representation.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#worked-practice-and-a-readiness-check">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 03 · Section 10
+       </div>
+       <h3>
+        A second representation example
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Suppose a toy vocabulary has school=[1,0], work=[0.8,0.2], and bus=[0,1].
+         </li>
+         <li>
+          Now reverse “school bus” to “bus school.” The mean stays the same because addition is commutative.
+         </li>
+         <li>
+          The next question is constructive: how could the model distinguish the orders?
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#a-second-representation-example">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+     </div>
+     <div class="deck-controls">
+      <button class="slide-prev" type="button">
+       ← Previous
+      </button>
+      <span aria-live="polite" class="slide-counter">
+       1 / 10
+      </span>
+      <button class="slide-next" type="button">
+       Next →
+      </button>
+     </div>
+     <label class="slide-jump-label">
+      Go to slide
+      <select aria-label="Go to slide" class="slide-jump">
+       <option value="0">
+        1. Two words can be different labels but related inputs
+       </option>
+       <option value="1">
+        2. A dot product is a weighted comparison
+       </option>
+       <option value="2">
+        3. Cosine compares direction
+       </option>
+       <option value="3">
+        4. An embedding table learns through prediction errors
+       </option>
+       <option value="4">
+        5. Starting vectors and contextual vectors
+       </option>
+       <option value="5">
+        6. One word, several senses, and uneven geometry
+       </option>
+       <option value="6">
+        7. A simple sentence representation and its limitations
+       </option>
+       <option value="7">
+        8. A small numerical experiment
+       </option>
+       <option value="8">
+        9. Worked practice and a readiness check
+       </option>
+       <option value="9">
+        10. A second representation example
+       </option>
+      </select>
+     </label>
+     <button aria-pressed="false" class="deck-all" type="button">
+      Show all slides
+     </button>
+    </section>
+    <section aria-label="Embedding geometry" class="visual-lesson">
+     <div class="eyebrow">
+      Explore the mechanism
+     </div>
+     <h2>
+      Embedding geometry
+     </h2>
+     <p class="visual-intro">
+      Compare vector direction and magnitude using exact arithmetic.
+     </p>
+     <div data-widget="geometry">
+      <p>
+       Enable JavaScript to use this illustration. The lecture notes below explain the same mechanism.
+      </p>
+     </div>
+    </section>
+    <nav aria-label="In this lesson" class="reader-toc">
+     <strong>
+      In this lesson
+     </strong>
+     <ol>
+      <li>
+       <a href="#two-words-can-be-different-labels-but-related-inputs">
+        Two words can be different labels but related inputs
+       </a>
+      </li>
+      <li>
+       <a href="#a-dot-product-is-a-weighted-comparison">
+        A dot product is a weighted comparison
+       </a>
+      </li>
+      <li>
+       <a href="#cosine-compares-direction">
+        Cosine compares direction
+       </a>
+      </li>
+      <li>
+       <a href="#an-embedding-table-learns-through-prediction-errors">
+        An embedding table learns through prediction errors
+       </a>
+      </li>
+      <li>
+       <a href="#starting-vectors-and-contextual-vectors">
+        Starting vectors and contextual vectors
+       </a>
+      </li>
+      <li>
+       <a href="#one-word-several-senses-and-uneven-geometry">
+        One word, several senses, and uneven geometry
+       </a>
+      </li>
+      <li>
+       <a href="#a-simple-sentence-representation-and-its-limitations">
+        A simple sentence representation and its limitations
+       </a>
+      </li>
+      <li>
+       <a href="#a-small-numerical-experiment">
+        A small numerical experiment
+       </a>
+      </li>
+      <li>
+       <a href="#worked-practice-and-a-readiness-check">
+        Worked practice and a readiness check
+       </a>
+      </li>
+      <li>
+       <a href="#a-second-representation-example">
+        A second representation example
+       </a>
+      </li>
+     </ol>
+    </nav>
+    <article class="prose full-notes" id="full-notes" role="tabpanel">
+     <div class="eyebrow">
+      Complete lecture reader
+     </div>
+     <h2>
+      Read the full explanation
+     </h2>
+     <h3 id="two-words-can-be-different-labels-but-related-inputs">
+      Two words can be different labels but related inputs
+     </h3>
+     <p>
+      Our count model treated “I go to school by” and “I go to work by” as unrelated exact strings. A neural model can reuse numerical features across examples. If school and work occur in some similar travel contexts, their learned representations may share useful properties for predicting transportation words.
+     </p>
+     <p>
+      This does not mean the two words have identical meaning. A representation is useful for a task when its coordinates help the model reduce that task's error. What the model learns depends on the data and objective.
+     </p>
+     <p>
+      Start with an ordinary two-dimensional vector so we can draw it. A vector has a direction and a length. Those two properties affect common similarity calculations differently.
+     </p>
+     <h3 id="a-dot-product-is-a-weighted-comparison">
+      A dot product is a weighted comparison
+     </h3>
+     <figure class="mechanism-figure">
+      <figcaption>
+       One query, two different rankings
+      </figcaption>
+      <svg aria-label="q=[1,0], a=[0.8,0.6], b=[3,4]" class="vector-chart" role="img" viewbox="0 0 500 290">
+       <defs>
+        <marker id="vector-arrow" markerheight="8" markerwidth="8" orient="auto" refx="7" refy="3">
+         <path d="M0,0 L0,6 L8,3 z" fill="context-stroke">
+         </path>
+        </marker>
+       </defs>
+       <path d="M45 250 H455 M45 250 V20" fill="none" stroke="#aab9ae">
+       </path>
+       <path d="M45 250 L101 250" marker-end="url(#vector-arrow)" stroke="#ba633b" stroke-width="4">
+       </path>
+       <path d="M45 250 L89.8 216.4" marker-end="url(#vector-arrow)" stroke="#25816d" stroke-width="4">
+       </path>
+       <path d="M45 250 L213 26" marker-end="url(#vector-arrow)" stroke="#5752a6" stroke-width="4">
+       </path>
+       <text x="106" y="269">
+        q = [1, 0]
+       </text>
+       <text x="100" y="207">
+        a = [0.8, 0.6]
+       </text>
+       <text x="228" y="40">
+        b = [3, 4]
+       </text>
+      </svg>
+      <div class="table-wrap">
+       <table>
+        <tr>
+         <th>
+          Candidate
+         </th>
+         <th>
+          dot product
+         </th>
+         <th>
+          cosine
+         </th>
+        </tr>
+        <tr>
+         <td>
+          a
+         </td>
+         <td>
+          0.8
+         </td>
+         <td>
+          0.8
+         </td>
+        </tr>
+        <tr>
+         <td>
+          b
+         </td>
+         <td>
+          3.0
+         </td>
+         <td>
+          0.6
+         </td>
+        </tr>
+       </table>
+      </div>
+      <p>
+       Dot product ranks b first; cosine ranks a first. The numeric coordinates are a teaching example.
+      </p>
+     </figure>
+     <p>
+      For query q=[1,0] and candidate a=[0.8,0.6], the dot product is 1×0.8+0×0.6=0.8. For b=[3,4], the dot product is 3. Raw dot product therefore ranks b above a. We will keep these same three vectors in the next calculation.
+     </p>
+     <p>
+      A dot product combines direction and magnitude. In attention, learned query and key projections produce the vectors being compared. In retrieval, the scoring rule must match the embedding model and its training objective. The arithmetic alone does not define semantic relevance.
+     </p>
+     <h3 id="cosine-compares-direction">
+      Cosine compares direction
+     </h3>
+     <p>
+      The norms are ||q||=1, ||a||=sqrt(0.8²+0.6²)=1, and ||b||=sqrt(3²+4²)=5. Cosine similarity divides the dot product by both norms. Thus cosine(q,a)=0.8 and cosine(q,b)=3/5=0.6. Cosine ranks a first, while raw dot product ranks b first: a real ranking reversal, not just a tie.
+     </p>
+     <div class="table-wrap">
+      <table>
+       <thead>
+        <tr>
+         <th>
+          Candidate
+         </th>
+         <th>
+          Norm
+         </th>
+         <th>
+          dot(q,candidate)
+         </th>
+         <th>
+          cosine(q,candidate)
+         </th>
+        </tr>
+       </thead>
+       <tbody>
+        <tr>
+         <td>
+          a=[0.8,0.6]
+         </td>
+         <td>
+          1
+         </td>
+         <td>
+          0.8
+         </td>
+         <td>
+          0.8
+         </td>
+        </tr>
+        <tr>
+         <td>
+          b=[3,4]
+         </td>
+         <td>
+          5
+         </td>
+         <td>
+          3
+         </td>
+         <td>
+          0.6
+         </td>
+        </tr>
+       </tbody>
+      </table>
+     </div>
+     <p>
+      Normalize each nonzero candidate to unit length: a stays [0.8,0.6], while b becomes [0.6,0.8]. Dot products with unit q now equal the cosine values. A zero vector has no defined cosine because its norm is zero.
+     </p>
+     <p>
+      Choose the operation that fits the model. Normalizing removes magnitude information, which can help one task and discard useful information for another. We will measure retrieval relevance in week 17 instead of declaring one score always better.
+     </p>
+     <h3 id="an-embedding-table-learns-through-prediction-errors">
+      An embedding table learns through prediction errors
+     </h3>
+     <p>
+      Suppose a simple model sees the token school and predicts the next token. It selects the school row, transforms it, and produces scores over vocabulary entries. If the correct next token is by and the model gives it too little probability, training changes parameters through gradients.
+     </p>
+     <p>
+      The embedding coordinates are among the parameters that can change. Repeated contexts create pressure for useful shared structure. We are not manually assigning school an “education coordinate.”
+     </p>
+     <p>
+      Different random seeds can produce different coordinate values that support similar predictions. Rotating a representation space together with compatible downstream transformations can preserve relevant behavior. This is one reason to avoid interpreting individual coordinates as fixed human concepts.
+     </p>
+     <h3 id="starting-vectors-and-contextual-vectors">
+      Starting vectors and contextual vectors
+     </h3>
+     <p>
+      The starting vector for bus comes from its vocabulary row. In “I go to school by bus” and “The bus broke down,” that lookup row can be the same. After context processing, the representation at bus can differ between the sentences.
+     </p>
+     <p>
+      The context tells us whether we are discussing a travel choice or a breakdown. A contextual vector represents a token at a position under available context. Later, the causal mask will determine which other positions are available.
+     </p>
+     <p>
+      Keep token embeddings, contextual token representations, and whole-sentence embeddings distinct. A vector chosen from a lookup table is not automatically a good summary of an entire paragraph.
+     </p>
+     <h3 id="one-word-several-senses-and-uneven-geometry">
+      One word, several senses, and uneven geometry
+     </h3>
+     <p>
+      Polysemy means one word has several senses. Compare “I waited by the bank of the river” with “I deposited cash at the bank.” A static lookup can begin with the same bank vector in both sentences, while contextual layers produce different representations from the surrounding words. The context available to a causal model matters: it cannot use words it has not yet received.
+     </p>
+     <p>
+      Anisotropy describes an embedding space whose vectors occupy some directions more strongly than others. Many contextual embeddings share common directional components, so even unrelated words can have a high cosine. The observed geometry depends on model, layer, pooling, and training. A cosine such as 0.8 is therefore a comparison score, not an 80% semantic-match probability.
+     </p>
+     <p>
+      The familiar king − man + woman analogy can illustrate a pattern in some learned spaces, but it is not a reliable algebra of meaning. Results change with vocabulary, context, scoring, and the chosen examples; social associations in the data can also introduce stereotypes. Inspect several counterexamples and evaluate the actual task instead of treating one successful analogy as proof that vector coordinates encode universal human concepts.
+     </p>
+     <h3 id="a-simple-sentence-representation-and-its-limitations">
+      A simple sentence representation and its limitations
+     </h3>
+     <p>
+      One easy way to represent a sentence is to average its token vectors. This combines information but loses much of the ordering. “The dog chased the boy” and “The boy chased the dog” contain the same word inventory under a simple tokenizer, so an order-insensitive average can be identical.
+     </p>
+     <p>
+      That limitation motivates context and position processing. Averaging can still be a useful baseline, but knowing its failure mode prevents us from mistaking convenience for a complete language model.
+     </p>
+     <p>
+      In week 17, we will return to sentence embeddings trained for search. That application requires an objective and evaluation of its own. For now, the goal is understanding how numerical representations can share information.
+     </p>
+     <h3 id="a-small-numerical-experiment">
+      A small numerical experiment
+     </h3>
+     <p>
+      Move q to [0,1]. Its dot products with a=[0.8,0.6] and b=[3,4] become 0.6 and 4; their cosines are 0.6 and 0.8. Both methods now prefer b. A scoring rule and the query direction together determine the ranking.
+     </p>
+     <p>
+      For q=[−1,0], dot products are −0.8 and −3, while cosines are −0.8 and −0.6. Negative values are valid scores. Compute each ranking explicitly and use the geometry illustration to compare direction and magnitude.
+     </p>
+     <h3 id="worked-practice-and-a-readiness-check">
+      Worked practice and a readiness check
+     </h3>
+     <p>
+      Calculate the norm of [3,4], normalize it, and compute its cosine with [1,0]. The answers are 5, [0.6,0.8], and 0.6. Then compare [6,8] and explain what changes and what remains the same.
+     </p>
+     <p>
+      Explain why changing the embedding table without adjusting the rest of a trained model can change behavior. Explain why two separately trained 384-dimensional models do not necessarily use compatible coordinates.
+     </p>
+     <p>
+      You should now be able to follow an embedding lookup, a dot product, normalization, and the difference between an initial and contextual representation. These are the numerical building blocks we need before attention.
+     </p>
+     <h3 id="a-second-representation-example">
+      A second representation example
+     </h3>
+     <p>
+      Suppose a toy vocabulary has school=[1,0], work=[0.8,0.2], and bus=[0,1]. A mean representation for “school bus” is [0.5,0.5], while “work bus” gives [0.4,0.6]. Their similarity partly reflects a shared bus component. These coordinates are deliberately chosen; an actual model would need training and evaluation.
+     </p>
+     <p>
+      Now reverse “school bus” to “bus school.” The mean stays the same because addition is commutative. This gives an exact counterexample to the claim that averaging always preserves language meaning. We do not need a large benchmark to establish this particular invariance.
+     </p>
+     <p>
+      The next question is constructive: how could the model distinguish the orders? Position information can change the starting rows, and contextual processing can combine them differently. This connects the limitation of a simple vector average directly to the architecture we are building.
+     </p>
+    </article>
+    <nav aria-label="Adjacent lectures" class="chapter-pagination">
+     <a href="02.html">
+      <small>
+       Previous week
+      </small>
+      From text to tokens and numerical IDs
+     </a>
+     <a href="04.html">
+      <small>
+       Next week
+      </small>
+      From scores to probabilities and learning signals
+     </a>
+    </nav>
+   </div>
+   <footer class="footer">
+    <span>
+     Applied AI · An independent self-study course
+    </span>
+    <span>
+     32 weeks · 10 hours per week
+    </span>
+    <a href="../resources.html#about-this-course">
+     About and sources
+    </a>
+   </footer>
+  </main>
+  <dialog aria-labelledby="search-title" class="search-dialog">
+   <div class="dialog-head">
+    <h2 id="search-title">
+     Find a concept
+    </h2>
+    <button aria-label="Close search" class="search-close" type="button">
+     Close
+    </button>
+   </div>
+   <label class="sr-only" for="course-search">
+    Search all lectures and tutorials
+   </label>
+   <input autocomplete="off" id="course-search" placeholder="Try attention, fine-tuning, or harness…" type="search"/>
+   <p aria-live="polite" class="search-status">
+    Search lecture notes, tutorials, tests and readings.
+   </p>
+   <div class="search-results">
+   </div>
+  </dialog>
+  <div aria-live="polite" class="toast" role="status">
+  </div>
+ </body>
+</html>

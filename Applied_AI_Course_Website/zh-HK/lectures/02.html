@@ -1,50 +1,1245 @@
 <!DOCTYPE html>
-
-<html lang="zh-HK"><head><script src="../../assets/translations-zh-HK.js"></script><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/><title>從文字到 token 和數值 ID · Applied AI</title><meta content="Applied generative AI and LLM systems course material" name="description"/><meta content="#173c36" name="theme-color"/><link href="../../assets/favicon.svg" rel="icon" type="image/svg+xml"/><link href="../../assets/style.css" rel="stylesheet"/><link href="../../assets/slides.css" rel="stylesheet"/><script>window.COURSE_BASE="../";</script><script defer="" src="../../assets/site-config.js"></script><script defer="" src="../assets/search-index.js"></script><script defer="" src="../../assets/app.js"></script><script defer="" src="../../assets/visuals.js"></script><script defer="" src="../../assets/slides.js"></script><script defer="" src="../../assets/beginner-visuals.js"></script><script defer="True" src="../../assets/locale-patterns.js"></script><script defer="True" src="../../assets/locale.js"></script><link href="../../assets/bilingual.css" rel="stylesheet"/><link href="../../lectures/02.html" hreflang="en" rel="alternate"/></head><body data-page-kind="lecture" data-week="2"><a class="skip-link" href="#main">跳至內容</a><header class="topbar"><button aria-controls="course-sidebar" aria-expanded="false" class="menu-toggle" type="button">選單</button><a class="brand" href="../index.html"><span aria-hidden="true" class="brand-mark">a<span>i</span></span><span>APPLIED AI<small>從原理到實踐</small></span></a><nav aria-label="主要導覽"><a href="../index.html">課程</a><a href="../visuals.html">互動圖解</a><a href="../project.html">專題</a><a class="language-switch" href="../../lectures/02.html" hreflang="en" lang="en">English</a></nav><button class="search-open" type="button">搜尋課程 <span aria-hidden="true">/</span></button></header><aside aria-label="課程章節" class="sidebar" id="course-sidebar"><a class="side-home" href="../index.html">課程概覽</a><details class="semester-nav" open=""><summary>第一學期<span>第 1–16 週</span></summary><ol start="1"><li><a href="../lectures/01.html"><span class="week-number">01</span><span>Language model 究竟在學甚麼</span><span class="week-tick" data-week-tick="1"></span></a></li><li><a aria-current="page" href="../lectures/02.html"><span class="week-number">02</span><span>從文字到 token 和數值 ID</span><span class="week-tick" data-week-tick="2"></span></a></li><li><a href="../lectures/03.html"><span class="week-number">03</span><span>Word vector 能表達甚麼</span><span class="week-tick" data-week-tick="3"></span></a></li><li><a href="../lectures/04.html"><span class="week-number">04</span><span>從 score 到 probability 和學習訊號</span><span class="week-tick" data-week-tick="4"></span></a></li><li><a href="../lectures/05.html"><span class="week-number">05</span><span>為甚麼語言需要 context 和次序</span><span class="week-tick" data-week-tick="5"></span></a></li><li><a href="../lectures/06.html"><span class="week-number">06</span><span>Attention 由 weighted mixture 開始</span><span class="week-tick" data-week-tick="6"></span></a></li><li><a href="../lectures/07.html"><span class="week-number">07</span><span>Query、key 和 value 從何而來</span><span class="week-tick" data-week-tick="7"></span></a></li><li><a href="../lectures/08.html"><span class="week-number">08</span><span>正確進行 attention scaling 和 masking</span><span class="week-tick" data-week-tick="8"></span></a></li><li><a href="../lectures/09.html"><span class="week-number">09</span><span>多個 attention head 與位置</span><span class="week-tick" data-week-tick="9"></span></a></li><li><a href="../lectures/10.html"><span class="week-number">10</span><span>逐步拆解 transformer block</span><span class="week-tick" data-week-tick="10"></span></a></li><li><a href="../lectures/11.html"><span class="week-number">11</span><span>Encoder、decoder 與完整 model architecture</span><span class="week-tick" data-week-tick="11"></span></a></li><li><a href="../lectures/12.html"><span class="week-number">12</span><span>訓練一個小型 transformer</span><span class="week-tick" data-week-tick="12"></span></a></li><li><a href="../lectures/13.html"><span class="week-number">13</span><span>Generation、decoding 與 KV cache</span><span class="week-tick" data-week-tick="13"></span></a></li><li><a href="../lectures/14.html"><span class="week-number">14</span><span>從 pretraining 到 instruction following 和 reasoning</span><span class="week-tick" data-week-tick="14"></span></a></li><li><a href="../lectures/15.html"><span class="week-number">15</span><span>文字以外的 Generative AI</span><span class="week-tick" data-week-tick="15"></span></a></li><li><a href="../lectures/16.html"><span class="week-number">16</span><span>完整 transformer 導覽與第一學期溫習</span><span class="week-tick" data-week-tick="16"></span></a></li></ol></details><details class="semester-nav"><summary>第二學期<span>第 17–32 週</span></summary><ol start="17"><li><a href="../lectures/17.html"><span class="week-number">17</span><span>從 word vector 到 semantic search</span><span class="week-tick" data-week-tick="17"></span></a></li><li><a href="../lectures/18.html"><span class="week-number">18</span><span>從一列 vector 建立 vector database</span><span class="week-tick" data-week-tick="18"></span></a></li><li><a href="../lectures/19.html"><span class="week-number">19</span><span>把 RAG 理解為開卷作答</span><span class="week-tick" data-week-tick="19"></span></a></li><li><a href="../lectures/20.html"><span class="week-number">20</span><span>在保持基本任務的前提下改善 RAG</span><span class="week-tick" data-week-tick="20"></span></a></li><li><a href="../lectures/21.html"><span class="week-number">21</span><span>評估 retrieval、答案與 uncertainty</span><span class="week-tick" data-week-tick="21"></span></a></li><li><a href="../lectures/22.html"><span class="week-number">22</span><span>CPU、GPU、memory 與 model 資源計算</span><span class="week-tick" data-week-tick="22"></span></a></li><li><a href="../lectures/23.html"><span class="week-number">23</span><span>CUDA kernel 與 profiling</span><span class="week-tick" data-week-tick="23"></span></a></li><li><a href="../lectures/24.html"><span class="week-number">24</span><span>Fine-tuning 由教學 dataset 開始</span><span class="week-tick" data-week-tick="24"></span></a></li><li><a href="../lectures/25.html"><span class="week-number">25</span><span>從小型 matrix 理解 LoRA 和 QLoRA</span><span class="week-tick" data-week-tick="25"></span></a></li><li><a href="../lectures/26.html"><span class="week-number">26</span><span>Fine-tuning 實驗、preference 與 distillation</span><span class="week-tick" data-week-tick="26"></span></a></li><li><a href="../lectures/27.html"><span class="week-number">27</span><span>Tool、function、workflow 與 agent</span><span class="week-tick" data-week-tick="27"></span></a></li><li><a href="../lectures/28.html"><span class="week-number">28</span><span>Harness、planning、memory 與有界執行</span><span class="week-tick" data-week-tick="28"></span></a></li><li><a href="../lectures/29.html"><span class="week-number">29</span><span>從 notebook 到 MLOps 和 inference serving</span><span class="week-tick" data-week-tick="29"></span></a></li><li><a href="../lectures/30.html"><span class="week-number">30</span><span>Monitoring、security、regression test 與 rollback</span><span class="week-tick" data-week-tick="30"></span></a></li><li><a href="../lectures/31.html"><span class="week-number">31</span><span>整合文件助手與進階延伸</span><span class="week-tick" data-week-tick="31"></span></a></li><li><a href="../lectures/32.html"><span class="week-number">32</span><span>溫習、答辯與持續學習計劃</span><span class="week-tick" data-week-tick="32"></span></a></li></ol></details><div class="side-links"><a href="../visuals.html">互動圖解實驗室 <span>14 個互動課節</span></a><a href="../project.html">文件助手 <span>你的 capstone project</span></a><a href="../resources.html">閱讀材料與環境設定</a></div><div class="side-progress"><div><span>你的進度</span><strong data-progress-count="">0 / 32</strong></div><progress aria-label="已完成 lecture" max="32" value="0"></progress><small>儲存在這個瀏覽器</small></div></aside><main class="main" id="main"><div class="content"><div class="chapter-header"><div class="eyebrow">第一學期 / 第 02 週</div><h1>從文字到 token 和數值 ID</h1></div><div class="lesson-links"><a href="../tutorials/02.html">練習 02</a><a href="../tests/02.html">檢查你的理解</a><button aria-pressed="false" class="mark-complete" data-week="2" type="button">標記為已完成</button></div><section aria-label="Lecture slides" class="lecture-deck" id="lecture-slides"><div class="deck-top"><div><div class="eyebrow">課堂投影片 · 第 02 週</div><h2>一步一步學習。</h2></div><button class="deck-present" type="button">簡報模式</button></div><p class="deck-help">閱讀每段解說，停下來預測結果，然後繼續。選取簡報後，可用方向鍵操作。完整講義在下方。</p><div aria-label="簡報：使用左右方向鍵" class="slide-viewport" tabindex="0"><section class="lecture-slide" data-slide=""><div class="slide-stage">由例子開始</div><h3>為何 model 需要 representation</h3><div class="slide-prose"><p>我們看得懂「I go to school by bus」，但數值 model 需要一套可重現的方法來表示它。先用一個簡單規則：「遇到空格就分開」。句子變成六個 token：I、go、to、school、by、bus。Vocabulary 列出 model 認識的 token 類型。</p>
-<p>分配 ID：I=0、go=1、to=2、school=3、by=4、bus=5。句子就變成 [0,1,2,3,4,5]。ID 是標籤。School 的 ID 比 go 大，不代表 school 更有意義。如果我們一致地調換 ID 和相應 model tables 的排列，標籤本身不會改變任務。</p>
-<p>要分清三樣東西：原始文字、token sequence 和 ID sequence。Tokenizer 決定轉換方法；vocabulary 決定哪些 ID 對應哪些 token 字串；model 透過 representation layer 使用這些 ID。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">由例子開始</div><h3>標點暴露出按單字分割的弱點</h3><div class="slide-prose"><p>比較「bus」和「bus.」。單純按空格分割，會把它們視為不同字串。那麼「school-bus」、「school bus」或拼字錯誤又如何處理？把每個可能的字形都當成獨立 vocabulary 項目，會產生大量罕見項目，也難以處理未見過的字。</p>
-<p>Character tokenizer 則把 b、u、s 和標點分開表示。它的基本項目較少，但 sequence 會較長。Subword tokenizer 使用介乎完整單字與 character 之間、可重用的片段。常見字可能只用一個 token，較罕見的字則拆成數個片段。</p>
-<p>沒有任何規則規定一個 token 等於一個單字。使用真正 model 時，必須檢查它實際採用的 tokenizer。按單字分割仍適合教學，因為我們可以逐個 ID 手算追蹤。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">建立對機制的理解</div><h3>Vocabulary 必須先學好或選好，才投入使用</h3><div class="slide-prose"><p>假設 vocabulary 包含完整 token school 和 schools，卻沒有 schoolyard。Word-level 系統需要 unknown-token policy。Subword 系統可能用 school 和 yard 編碼 schoolyard，也可能按學到的 vocabulary 使用其他片段。</p>
-<p>Tokenization 必須與訓練好的 model 相容。如果 training 時 ID 5 代表 bus，inference 時卻代表 train，即使兩者都是有效整數，model 收到的 representation 仍然錯了。因此，model checkpoint 和它的 tokenizer 必須配套使用。</p>
-<p>Special token 可以標示 sequence 的開始或結束、padding，或對話邊界。確切意思取決於 model。我們稍後才會介紹 conversation template，不會假設「assistant」這類看得見的字，自動就是特殊角色標記。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">建立對機制的理解</div><h3>用小例子理解 byte pair encoding</h3><div class="slide-prose"><p>考慮 low、low 和 lower。由 character 和結束標記開始：l o w _、l o w _、l o w e r _。點算相鄰 pair。l,o 出現三次，o,w 也出現三次。採用固定的同分處理規則，把 l,o 合併成 lo。重新點算；lo,w 現在出現三次，於是合併成 low。</p>
-<p>這個 algorithm 從常見的相鄰模式建立可重用片段。實際 tokenizer 還有更多細節，包括初始 alphabet 和文字 preprocessing。我們的例子只是解釋 merge 的概念，並非聲稱重現某個正式使用的 tokenizer。</p>
-<p>編碼新文字時，要套用已儲存的 merge rules，不要為每個句子各自重新訓練 tokenizer。否則，model 學好的 parameter 所依賴的 input vocabulary 會不斷改變。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">建立對機制的理解</div><h3>透過 lookup table，把 ID 變成 vector</h3><div class="slide-prose"><p>Embedding table 為每個 vocabulary 項目儲存一個學習得到的 vector。如果 table 有六行，而每個 vector 有三個 coordinate，它的 shape 就是 [6,3]。查找 bus，即 ID 5，就會選出 row 5。</p>
-<p>為方便說明，假設 bus 的 vector 是 [0.2,0.8,0.1]，school 是 [0.9,0.1,0.4]。這些數字只是為了追蹤計算而虛構，並不表示第一個 coordinate 真的代表教育，或第二個代表交通。</p>
-<p>這個六個 token 的句子，現在變成六行三列的 matrix。每行對應 sequence 中的一個 position。第 3 週會研究 vector geometry；之後 attention 會結合這些 row 之間的資訊。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">深入學習，檢查理解</div><h3>One-hot encoding 與 lookup 選取的是同一行</h3><div class="slide-prose"><p>ID 5 的 one-hot vector 有六個 coordinate，除了 index 5 是一，其餘全是零。把這個 row vector 乘上 [6,3] embedding table，會選出與 lookup 相同的 row。這個等價關係從數學上解釋了此操作。</p>
-<p>實作通常採用有效率的 indexing operation，而不是實際建立龐大的 one-hot matrix。兩者的分別，在於同一選取操作的數學描述，以及有效率的程式實作。</p>
-<p>此時 bus 的 vector 還不取決於所在句子。不論 bus 出現在哪裏，lookup 都產生相同的起始 row。之後的 contextual processing 才會利用周圍 token 改變 representation。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">深入學習，檢查理解</div><h3>長度與 decoding</h3><div class="slide-prose"><p>如果 word tokenizer 產生六個 token，而 character tokenizer 產生二十一個，同一段文字就會讓 model 處理不同長度的 sequence。長度會影響後續步驟所需的計算量和 memory。</p>
-<p>Decoding 按 tokenizer 的規則，把 ID 轉回文字。空白與 special token 要特別留意；把 token 字串用空格接起來，並不是通用的 decoding algorithm。檢查 round-trip 行為時，要保留原始字串。</p>
-<p>Tutorial 會比較簡單的 word tokenizer 和 UTF-8 bytes。Byte count 有助檢查 encoding，但不能代替 pretrained model 的 token count。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">深入學習，檢查理解</div><h3>實例練習與學習檢查</h3><div class="slide-prose"><p>為「I go to school by bus」和「You go to work by train」建立 vocabulary。決定如何表示句號和結束標記。編碼這兩個句子，再 decode 回文字。然後在 vocabulary 沒有 bicycle 的情況下，編碼「I go to school by bicycle」。</p>
-<p>說明你的 unknown-token policy，並解釋為何另一個 tokenizer 可以透過較小片段避開這個特定 unknown。若 vocabulary 有 100 項、vector width 是 16，計算出 embedding parameters 有 1600 個。若句子有七個 token，寫出它的 representation shape 為 [7,16]。</p>
-<p>當你能解釋 ID 為何只是標籤、tokenizer 為何必須配合 model，以及 ID 如何選取 vector，就準備好繼續。理解這一層，不需要 sentence similarity 服務或 database。</p></div></section></div><div class="deck-controls"><button class="slide-prev" type="button">← 上一頁</button><span aria-live="polite" class="slide-counter">1 / 8</span><button class="slide-next" type="button">下一頁 →</button></div><label class="slide-jump-label">前往 slide <select aria-label="跳至 slide" class="slide-jump"><option value="0">1</option><option value="1">2</option><option value="2">3</option><option value="3">4</option><option value="4">5</option><option value="5">6</option><option value="6">7</option><option value="7">8</option></select></label><button aria-pressed="false" class="deck-all" type="button">顯示全部 slides</button><a class="reader-link" href="#full-notes">閱讀完整講義 ↓</a></section><section aria-label="字詞變成 row number" class="visual-lesson"><div class="eyebrow">探索機制</div><h2>字詞變成 row number</h2><p class="visual-intro">逐步查看日常句子。Token ID 是任意 index，不是數值上的意義。</p><div data-widget="tokens"><p>啟用 JavaScript 以使用此圖解。下方 lecture notes 會解釋同一機制。</p></div></section><article class="prose full-notes" id="full-notes"><div class="eyebrow">完整講義</div><h2>閱讀完整解說</h2><h3 id="why-the-model-needs-a-representation">為何 model 需要 representation</h3>
-<p>我們看得懂「I go to school by bus」，但數值 model 需要一套可重現的方法來表示它。先用一個簡單規則：「遇到空格就分開」。句子變成六個 token：I、go、to、school、by、bus。Vocabulary 列出 model 認識的 token 類型。</p>
-<p>分配 ID：I=0、go=1、to=2、school=3、by=4、bus=5。句子就變成 [0,1,2,3,4,5]。ID 是標籤。School 的 ID 比 go 大，不代表 school 更有意義。如果我們一致地調換 ID 和相應 model tables 的排列，標籤本身不會改變任務。</p>
-<p>要分清三樣東西：原始文字、token sequence 和 ID sequence。Tokenizer 決定轉換方法；vocabulary 決定哪些 ID 對應哪些 token 字串；model 透過 representation layer 使用這些 ID。</p>
-<h3 id="punctuation-reveals-a-weakness-in-word-splitting">標點暴露出按單字分割的弱點</h3>
-<p>比較「bus」和「bus.」。單純按空格分割，會把它們視為不同字串。那麼「school-bus」、「school bus」或拼字錯誤又如何處理？把每個可能的字形都當成獨立 vocabulary 項目，會產生大量罕見項目，也難以處理未見過的字。</p>
-<p>Character tokenizer 則把 b、u、s 和標點分開表示。它的基本項目較少，但 sequence 會較長。Subword tokenizer 使用介乎完整單字與 character 之間、可重用的片段。常見字可能只用一個 token，較罕見的字則拆成數個片段。</p>
-<p>沒有任何規則規定一個 token 等於一個單字。使用真正 model 時，必須檢查它實際採用的 tokenizer。按單字分割仍適合教學，因為我們可以逐個 ID 手算追蹤。</p>
-<h3 id="a-vocabulary-is-learned-or-chosen-before-use">Vocabulary 必須先學好或選好，才投入使用</h3>
-<p>假設 vocabulary 包含完整 token school 和 schools，卻沒有 schoolyard。Word-level 系統需要 unknown-token policy。Subword 系統可能用 school 和 yard 編碼 schoolyard，也可能按學到的 vocabulary 使用其他片段。</p>
-<p>Tokenization 必須與訓練好的 model 相容。如果 training 時 ID 5 代表 bus，inference 時卻代表 train，即使兩者都是有效整數，model 收到的 representation 仍然錯了。因此，model checkpoint 和它的 tokenizer 必須配套使用。</p>
-<p>Special token 可以標示 sequence 的開始或結束、padding，或對話邊界。確切意思取決於 model。我們稍後才會介紹 conversation template，不會假設「assistant」這類看得見的字，自動就是特殊角色標記。</p>
-<h3 id="byte-pair-encoding-with-a-tiny-example">用小例子理解 byte pair encoding</h3>
-<p>考慮 low、low 和 lower。由 character 和結束標記開始：l o w _、l o w _、l o w e r _。點算相鄰 pair。l,o 出現三次，o,w 也出現三次。採用固定的同分處理規則，把 l,o 合併成 lo。重新點算；lo,w 現在出現三次，於是合併成 low。</p>
-<p>這個 algorithm 從常見的相鄰模式建立可重用片段。實際 tokenizer 還有更多細節，包括初始 alphabet 和文字 preprocessing。我們的例子只是解釋 merge 的概念，並非聲稱重現某個正式使用的 tokenizer。</p>
-<p>編碼新文字時，要套用已儲存的 merge rules，不要為每個句子各自重新訓練 tokenizer。否則，model 學好的 parameter 所依賴的 input vocabulary 會不斷改變。</p>
-<h3 id="ids-become-vectors-through-a-lookup-table">透過 lookup table，把 ID 變成 vector</h3>
-<p>Embedding table 為每個 vocabulary 項目儲存一個學習得到的 vector。如果 table 有六行，而每個 vector 有三個 coordinate，它的 shape 就是 [6,3]。查找 bus，即 ID 5，就會選出 row 5。</p>
-<p>為方便說明，假設 bus 的 vector 是 [0.2,0.8,0.1]，school 是 [0.9,0.1,0.4]。這些數字只是為了追蹤計算而虛構，並不表示第一個 coordinate 真的代表教育，或第二個代表交通。</p>
-<p>這個六個 token 的句子，現在變成六行三列的 matrix。每行對應 sequence 中的一個 position。第 3 週會研究 vector geometry；之後 attention 會結合這些 row 之間的資訊。</p>
-<h3 id="one-hot-encoding-and-lookup-mean-the-same-selection">One-hot encoding 與 lookup 選取的是同一行</h3>
-<p>ID 5 的 one-hot vector 有六個 coordinate，除了 index 5 是一，其餘全是零。把這個 row vector 乘上 [6,3] embedding table，會選出與 lookup 相同的 row。這個等價關係從數學上解釋了此操作。</p>
-<p>實作通常採用有效率的 indexing operation，而不是實際建立龐大的 one-hot matrix。兩者的分別，在於同一選取操作的數學描述，以及有效率的程式實作。</p>
-<p>此時 bus 的 vector 還不取決於所在句子。不論 bus 出現在哪裏，lookup 都產生相同的起始 row。之後的 contextual processing 才會利用周圍 token 改變 representation。</p>
-<h3 id="length-and-decoding">長度與 decoding</h3>
-<p>如果 word tokenizer 產生六個 token，而 character tokenizer 產生二十一個，同一段文字就會讓 model 處理不同長度的 sequence。長度會影響後續步驟所需的計算量和 memory。</p>
-<p>Decoding 按 tokenizer 的規則，把 ID 轉回文字。空白與 special token 要特別留意；把 token 字串用空格接起來，並不是通用的 decoding algorithm。檢查 round-trip 行為時，要保留原始字串。</p>
-<p>Tutorial 會比較簡單的 word tokenizer 和 UTF-8 bytes。Byte count 有助檢查 encoding，但不能代替 pretrained model 的 token count。</p>
-<h3 id="worked-practice-and-a-readiness-check">實例練習與學習檢查</h3>
-<p>為「I go to school by bus」和「You go to work by train」建立 vocabulary。決定如何表示句號和結束標記。編碼這兩個句子，再 decode 回文字。然後在 vocabulary 沒有 bicycle 的情況下，編碼「I go to school by bicycle」。</p>
-<p>說明你的 unknown-token policy，並解釋為何另一個 tokenizer 可以透過較小片段避開這個特定 unknown。若 vocabulary 有 100 項、vector width 是 16，計算出 embedding parameters 有 1600 個。若句子有七個 token，寫出它的 representation shape 為 [7,16]。</p>
-<p>當你能解釋 ID 為何只是標籤、tokenizer 為何必須配合 model，以及 ID 如何選取 vector，就準備好繼續。理解這一層，不需要 sentence similarity 服務或 database。</p></article><nav aria-label="前後 lecture" class="chapter-pagination"><a href="01.html"><small>上一週</small>Language model 究竟在學甚麼</a><a href="03.html"><small>下一週</small>Word vector 能表達甚麼</a></nav></div><footer class="footer"><span>Applied AI · 獨立自學課程</span><span>32 週 · 每週 10 小時</span><a href="../resources.html#about-this-course">關於課程及資料來源</a></footer></main><dialog aria-labelledby="search-title" class="search-dialog"><div class="dialog-head"><h2 id="search-title">尋找概念</h2><button aria-label="關閉搜尋" class="search-close" type="button">關閉</button></div><label class="sr-only" for="course-search">搜尋所有 lecture 和 tutorial</label><input autocomplete="off" id="course-search" placeholder="試試 attention、fine-tuning 或 harness……" type="search"/><p aria-live="polite" class="search-status">搜尋 lecture notes、tutorial、測驗及閱讀材料。</p><div class="search-results"></div></dialog><div aria-live="polite" class="toast" role="status"></div></body></html>
+<html lang="zh-HK">
+ <head>
+  <script src="../../assets/translations-zh-HK.js">
+  </script>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width,initial-scale=1" name="viewport"/>
+  <title>
+   從文字到 token 和數值 ID · Applied AI
+  </title>
+  <meta content="Applied generative AI and LLM systems course material" name="description"/>
+  <meta content="#173c36" name="theme-color"/>
+  <link href="../../assets/favicon.svg" rel="icon" type="image/svg+xml"/>
+  <link href="../../assets/style.css" rel="stylesheet"/>
+  <link href="../../assets/slides.css" rel="stylesheet"/>
+  <script>
+   window.COURSE_BASE="../";
+  </script>
+  <script defer="" src="../../assets/site-config.js">
+  </script>
+  <script defer="" src="../assets/search-index.js">
+  </script>
+  <script defer="" src="../../assets/app.js">
+  </script>
+  <script defer="" src="../../assets/visuals.js">
+  </script>
+  <script defer="" src="../../assets/slides.js">
+  </script>
+  <script defer="" src="../../assets/beginner-visuals.js">
+  </script>
+  <script defer="True" src="../../assets/locale-patterns.js">
+  </script>
+  <script defer="True" src="../../assets/locale.js">
+  </script>
+  <link href="../../assets/bilingual.css" rel="stylesheet"/>
+  <link href="../../lectures/02.html" hreflang="en" rel="alternate"/>
+  <link href="../../assets/reader-v3.css" rel="stylesheet"/>
+  <script defer="True" src="../../assets/reader-v3.js">
+  </script>
+ </head>
+ <body data-page-kind="lecture" data-week="2">
+  <a class="skip-link" href="#main">
+   跳至內容
+  </a>
+  <header class="topbar">
+   <button aria-controls="course-sidebar" aria-expanded="false" class="menu-toggle" type="button">
+    選單
+   </button>
+   <a class="brand" href="../index.html">
+    <span aria-hidden="true" class="brand-mark">
+     a
+     <span>
+      i
+     </span>
+    </span>
+    <span>
+     APPLIED AI
+     <small>
+      從原理到實踐
+     </small>
+    </span>
+   </a>
+   <nav aria-label="主要導覽">
+    <a href="../index.html">
+     課程
+    </a>
+    <a href="../visuals.html">
+     互動圖解
+    </a>
+    <a href="../project.html">
+     專題
+    </a>
+    <a class="language-switch" href="../../lectures/02.html" hreflang="en" lang="en">
+     English
+    </a>
+   </nav>
+   <button class="search-open" type="button">
+    搜尋課程
+    <span aria-hidden="true">
+     /
+    </span>
+   </button>
+  </header>
+  <aside aria-label="課程章節" class="sidebar" id="course-sidebar">
+   <a class="side-home" href="../index.html">
+    課程概覽
+   </a>
+   <details class="semester-nav" open="">
+    <summary>
+     第一學期
+     <span>
+      第 1–16 週
+     </span>
+    </summary>
+    <ol start="1">
+     <li>
+      <a href="../lectures/01.html">
+       <span class="week-number">
+        01
+       </span>
+       <span>
+        Language model 究竟在學甚麼
+       </span>
+       <span class="week-tick" data-week-tick="1">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a aria-current="page" href="../lectures/02.html">
+       <span class="week-number">
+        02
+       </span>
+       <span>
+        從文字到 token 和數值 ID
+       </span>
+       <span class="week-tick" data-week-tick="2">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/03.html">
+       <span class="week-number">
+        03
+       </span>
+       <span>
+        Word vector 能表達甚麼
+       </span>
+       <span class="week-tick" data-week-tick="3">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/04.html">
+       <span class="week-number">
+        04
+       </span>
+       <span>
+        從 score 到 probability 和學習訊號
+       </span>
+       <span class="week-tick" data-week-tick="4">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/05.html">
+       <span class="week-number">
+        05
+       </span>
+       <span>
+        為甚麼語言需要 context 和次序
+       </span>
+       <span class="week-tick" data-week-tick="5">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/06.html">
+       <span class="week-number">
+        06
+       </span>
+       <span>
+        Attention 由 weighted mixture 開始
+       </span>
+       <span class="week-tick" data-week-tick="6">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/07.html">
+       <span class="week-number">
+        07
+       </span>
+       <span>
+        Query、key 和 value 從何而來
+       </span>
+       <span class="week-tick" data-week-tick="7">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/08.html">
+       <span class="week-number">
+        08
+       </span>
+       <span>
+        正確進行 attention scaling 和 masking
+       </span>
+       <span class="week-tick" data-week-tick="8">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/09.html">
+       <span class="week-number">
+        09
+       </span>
+       <span>
+        多個 attention head 與位置
+       </span>
+       <span class="week-tick" data-week-tick="9">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/10.html">
+       <span class="week-number">
+        10
+       </span>
+       <span>
+        逐步拆解 transformer block
+       </span>
+       <span class="week-tick" data-week-tick="10">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/11.html">
+       <span class="week-number">
+        11
+       </span>
+       <span>
+        Encoder、decoder 與完整 model architecture
+       </span>
+       <span class="week-tick" data-week-tick="11">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/12.html">
+       <span class="week-number">
+        12
+       </span>
+       <span>
+        訓練一個小型 transformer
+       </span>
+       <span class="week-tick" data-week-tick="12">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/13.html">
+       <span class="week-number">
+        13
+       </span>
+       <span>
+        Generation、decoding 與 KV cache
+       </span>
+       <span class="week-tick" data-week-tick="13">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/14.html">
+       <span class="week-number">
+        14
+       </span>
+       <span>
+        從 pretraining 到 instruction following 和 reasoning
+       </span>
+       <span class="week-tick" data-week-tick="14">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/15.html">
+       <span class="week-number">
+        15
+       </span>
+       <span>
+        文字以外的 Generative AI
+       </span>
+       <span class="week-tick" data-week-tick="15">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/16.html">
+       <span class="week-number">
+        16
+       </span>
+       <span>
+        完整 transformer 導覽與第一學期溫習
+       </span>
+       <span class="week-tick" data-week-tick="16">
+       </span>
+      </a>
+     </li>
+    </ol>
+   </details>
+   <details class="semester-nav">
+    <summary>
+     第二學期
+     <span>
+      第 17–32 週
+     </span>
+    </summary>
+    <ol start="17">
+     <li>
+      <a href="../lectures/17.html">
+       <span class="week-number">
+        17
+       </span>
+       <span>
+        從 word vector 到 semantic search
+       </span>
+       <span class="week-tick" data-week-tick="17">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/18.html">
+       <span class="week-number">
+        18
+       </span>
+       <span>
+        從一列 vector 建立 vector database
+       </span>
+       <span class="week-tick" data-week-tick="18">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/19.html">
+       <span class="week-number">
+        19
+       </span>
+       <span>
+        把 RAG 理解為開卷作答
+       </span>
+       <span class="week-tick" data-week-tick="19">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/20.html">
+       <span class="week-number">
+        20
+       </span>
+       <span>
+        在保持基本任務的前提下改善 RAG
+       </span>
+       <span class="week-tick" data-week-tick="20">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/21.html">
+       <span class="week-number">
+        21
+       </span>
+       <span>
+        評估 retrieval、答案與 uncertainty
+       </span>
+       <span class="week-tick" data-week-tick="21">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/22.html">
+       <span class="week-number">
+        22
+       </span>
+       <span>
+        CPU、GPU、memory 與 model 資源計算
+       </span>
+       <span class="week-tick" data-week-tick="22">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/23.html">
+       <span class="week-number">
+        23
+       </span>
+       <span>
+        CUDA kernel 與 profiling
+       </span>
+       <span class="week-tick" data-week-tick="23">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/24.html">
+       <span class="week-number">
+        24
+       </span>
+       <span>
+        Fine-tuning 由教學 dataset 開始
+       </span>
+       <span class="week-tick" data-week-tick="24">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/25.html">
+       <span class="week-number">
+        25
+       </span>
+       <span>
+        從小型 matrix 理解 LoRA 和 QLoRA
+       </span>
+       <span class="week-tick" data-week-tick="25">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/26.html">
+       <span class="week-number">
+        26
+       </span>
+       <span>
+        Fine-tuning 實驗、preference 與 distillation
+       </span>
+       <span class="week-tick" data-week-tick="26">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/27.html">
+       <span class="week-number">
+        27
+       </span>
+       <span>
+        Tool、function、workflow 與 agent
+       </span>
+       <span class="week-tick" data-week-tick="27">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/28.html">
+       <span class="week-number">
+        28
+       </span>
+       <span>
+        Harness、planning、memory 與有界執行
+       </span>
+       <span class="week-tick" data-week-tick="28">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/29.html">
+       <span class="week-number">
+        29
+       </span>
+       <span>
+        從 notebook 到 MLOps 和 inference serving
+       </span>
+       <span class="week-tick" data-week-tick="29">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/30.html">
+       <span class="week-number">
+        30
+       </span>
+       <span>
+        Monitoring、security、regression test 與 rollback
+       </span>
+       <span class="week-tick" data-week-tick="30">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/31.html">
+       <span class="week-number">
+        31
+       </span>
+       <span>
+        整合文件助手與進階延伸
+       </span>
+       <span class="week-tick" data-week-tick="31">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/32.html">
+       <span class="week-number">
+        32
+       </span>
+       <span>
+        溫習、答辯與持續學習計劃
+       </span>
+       <span class="week-tick" data-week-tick="32">
+       </span>
+      </a>
+     </li>
+    </ol>
+   </details>
+   <div class="side-links">
+    <a href="../visuals.html">
+     互動圖解實驗室
+     <span>
+      14 個互動課節
+     </span>
+    </a>
+    <a href="../project.html">
+     文件助手
+     <span>
+      你的 capstone project
+     </span>
+    </a>
+    <a href="../resources.html">
+     閱讀材料與環境設定
+    </a>
+   </div>
+   <div class="side-progress">
+    <div>
+     <span>
+      你的進度
+     </span>
+     <strong data-progress-count="">
+      0 / 32
+     </strong>
+    </div>
+    <progress aria-label="已完成 lecture" max="32" value="0">
+    </progress>
+    <small>
+     儲存在這個瀏覽器
+    </small>
+   </div>
+  </aside>
+  <main class="main" id="main">
+   <div class="content">
+    <div class="chapter-header">
+     <div class="eyebrow">
+      第一學期 / 第 02 週
+     </div>
+     <h1>
+      從文字到 token 和數值 ID
+     </h1>
+    </div>
+    <div class="lesson-links">
+     <a href="../tutorials/02.html">
+      練習 02
+     </a>
+     <a href="../tests/02.html">
+      檢查你的理解
+     </a>
+     <button aria-pressed="false" class="mark-complete" data-week="2" type="button">
+      標記為已完成
+     </button>
+    </div>
+    <div aria-label="課堂檢視" class="lesson-mode" role="tablist">
+     <button aria-controls="full-notes" aria-selected="true" data-mode="read" id="mode-read" role="tab" type="button">
+      閱讀講義
+     </button>
+     <button aria-controls="lecture-slides" aria-selected="false" data-mode="slides" id="mode-slides" role="tab" type="button">
+      課堂 slides
+     </button>
+    </div>
+    <section aria-label="Lecture slides" class="lecture-deck" hidden="" id="lecture-slides" role="tabpanel">
+     <div class="deck-top">
+      <div>
+       <div class="eyebrow">
+        課堂投影片 · 第 02 週
+       </div>
+       <h2>
+        重點步驟與圖解
+       </h2>
+      </div>
+      <button class="deck-present" type="button">
+       簡報模式
+      </button>
+     </div>
+     <p class="deck-help">
+      用 slides 溫習機制；按「閱讀完整解說」可開啟完整講義及程式碼。
+     </p>
+     <div aria-label="簡報：使用左右方向鍵" class="slide-viewport" tabindex="0">
+      <section class="lecture-slide" data-slide="">
+       <div class="slide-stage">
+        第 02 週 · 課節 1
+       </div>
+       <h3>
+        為何 model 需要 representation
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          我們看得懂「I go to school by bus」，但數值 model 需要一套可重現的方法來表示它。
+         </li>
+         <li>
+          分配 ID：I=0、go=1、to=2、school=3、by=4、bus=5。
+         </li>
+         <li>
+          要分清三樣東西：原始文字、token sequence 和 ID sequence。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#why-the-model-needs-a-representation">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 02 週 · 課節 2
+       </div>
+       <h3>
+        標點暴露出按單字分割的弱點
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          比較「bus」和「bus.」。單純按空格分割，會把它們視為不同字串。那麼「school-bus」、「school bus」或拼字錯誤又如何處理？把每個可能的字形都當成獨立 vocabulary 項目，會產生大量罕見項目，也難以處理未見過的字。
+         </li>
+         <li>
+          Character tokenizer 則把 b、u、s 和標點分開表示。
+         </li>
+         <li>
+          沒有任何規則規定一個 token 等於一個單字。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#punctuation-reveals-a-weakness-in-word-splitting">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 02 週 · 課節 3
+       </div>
+       <h3>
+        Vocabulary 必須先學好或選好，才投入使用
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          假設 vocabulary 包含完整 token school 和 schools，卻沒有 schoolyard。
+         </li>
+         <li>
+          Tokenization 必須與訓練好的 model 相容。
+         </li>
+         <li>
+          Special token 可以標示 sequence 的開始或結束、padding，或對話邊界。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#a-vocabulary-is-learned-or-chosen-before-use">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 02 週 · 課節 4
+       </div>
+       <h3>
+        用小例子理解 byte pair encoding
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          使用人為設計的 training corpus：bus 出現四次、busy 兩次、plus 一次。
+         </li>
+         <li>
+          Merge 後重新點算。b,us 出現 6 次，us,_ 出現 5 次；下一步便把 b,us 合併成 bus。BPE 會在目前 representation 中，重複合併最常見的 adjacent pair；它不是挑選最長的 word，亦不是一直沿用最初的 pair counts。其他 corpus 若出現並列情況，就需要固定的 tie rule。
+         </li>
+         <li>
+          儲存學到的 vocabulary 和 merge order。
+         </li>
+        </ul>
+        <figure class="mechanism-figure">
+         <figcaption>
+          先點算 corpus 中的 pairs
+         </figcaption>
+         <ol class="mechanism-flow">
+          <li>
+           <span class="mechanism-number">
+            01
+           </span>
+           <strong>
+            b u s
+           </strong>
+           <small>
+            bus × 4
+           </small>
+          </li>
+          <li>
+           <span class="mechanism-number">
+            02
+           </span>
+           <strong>
+            b u s y
+           </strong>
+           <small>
+            busy × 2
+           </small>
+          </li>
+          <li>
+           <span class="mechanism-number">
+            03
+           </span>
+           <strong>
+            p l u s
+           </strong>
+           <small>
+            plus × 1
+           </small>
+          </li>
+         </ol>
+         <p>
+          按 corpus 點算相鄰 pairs：(u,s)=7、(b,u)=6。先合併最常見的 pair。
+         </p>
+        </figure>
+        <a class="slide-section-link" href="#byte-pair-encoding-with-a-tiny-example">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 02 週 · 課節 5
+       </div>
+       <h3>
+        Bytes、subword algorithms 與 SentencePiece
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Byte-level BPE 由 byte symbols 開始，而非為每個 Unicode character 設立獨立初始 symbol。
+         </li>
+         <li>
+          BPE 學習 frequent pair merges。
+         </li>
+         <li>
+          Whitespace 和 digits 都是 input 的一部分。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#bytes-subword-algorithms-and-sentencepiece">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 02 週 · 課節 6
+       </div>
+       <h3>
+        英文與繁體中文的 token budget
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          香港的 application 應用選定 model 的實際 tokenizer，比較「I go to school by bus.」和意思相近的繁體中文句子，例如「我搭巴士返學。
+         </li>
+         <li>
+          不同 tokenizers 分配 vocabulary capacity 的方式不同，因此不存在固定的英文對中文 token ratio。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#english-and-traditional-chinese-use-different-token-budgets">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 02 週 · 課節 7
+       </div>
+       <h3>
+        透過 lookup table，把 ID 變成 vector
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Embedding table 為每個 vocabulary 項目儲存一個學習得到的 vector。
+         </li>
+         <li>
+          為方便說明，假設 bus 的 vector 是 [0.2,0.8,0.1]，school 是 [0.9,0.1,0.4]。
+         </li>
+         <li>
+          這個六個 token 的句子，現在變成六行三列的 matrix。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#ids-become-vectors-through-a-lookup-table">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 02 週 · 課節 8
+       </div>
+       <h3>
+        One-hot encoding 與 lookup 選取的是同一行
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          ID 5 的 one-hot vector 有六個 coordinate，除了 index 5 是一，其餘全是零。
+         </li>
+         <li>
+          實作通常採用有效率的 indexing operation，而不是實際建立龐大的 one-hot matrix。
+         </li>
+         <li>
+          此時 bus 的 vector 還不取決於所在句子。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#one-hot-encoding-and-lookup-mean-the-same-selection">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 02 週 · 課節 9
+       </div>
+       <h3>
+        長度與 decoding
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          如果 word tokenizer 產生六個 token，而 character tokenizer 產生二十一個，同一段文字就會讓 model 處理不同長度的 sequence。
+         </li>
+         <li>
+          Decoding 按 tokenizer 的規則，把 ID 轉回文字。
+         </li>
+         <li>
+          Tutorial 會比較簡單的 word tokenizer 和 UTF-8 bytes。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#length-and-decoding">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 02 週 · 課節 10
+       </div>
+       <h3>
+        實例練習與學習檢查
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          為「I go to school by bus」和「You go to work by train」建立 vocabulary。
+         </li>
+         <li>
+          說明你的 unknown-token policy，並解釋為何另一個 tokenizer 可以透過較小片段避開這個特定 unknown。
+         </li>
+         <li>
+          當你能解釋為何 IDs 是 labels、tokenizer 為何必須與 model 配合，以及 ID 如何選出 vector，就已準備好繼續。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#worked-practice-and-a-readiness-check">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+     </div>
+     <div class="deck-controls">
+      <button class="slide-prev" type="button">
+       ← 上一頁
+      </button>
+      <span aria-live="polite" class="slide-counter">
+       1 / 10
+      </span>
+      <button class="slide-next" type="button">
+       下一頁 →
+      </button>
+     </div>
+     <label class="slide-jump-label">
+      前往 slide
+      <select aria-label="跳至 slide" class="slide-jump">
+       <option value="0">
+        1. 為何 model 需要 representation
+       </option>
+       <option value="1">
+        2. 標點暴露出按單字分割的弱點
+       </option>
+       <option value="2">
+        3. Vocabulary 必須先學好或選好，才投入使用
+       </option>
+       <option value="3">
+        4. 用小例子理解 byte pair encoding
+       </option>
+       <option value="4">
+        5. Bytes、subword algorithms 與 SentencePiece
+       </option>
+       <option value="5">
+        6. 英文與繁體中文的 token budget
+       </option>
+       <option value="6">
+        7. 透過 lookup table，把 ID 變成 vector
+       </option>
+       <option value="7">
+        8. One-hot encoding 與 lookup 選取的是同一行
+       </option>
+       <option value="8">
+        9. 長度與 decoding
+       </option>
+       <option value="9">
+        10. 實例練習與學習檢查
+       </option>
+      </select>
+     </label>
+     <button aria-pressed="false" class="deck-all" type="button">
+      顯示全部 slides
+     </button>
+    </section>
+    <section aria-label="字詞變成 row number" class="visual-lesson">
+     <div class="eyebrow">
+      探索機制
+     </div>
+     <h2>
+      字詞變成 row number
+     </h2>
+     <p class="visual-intro">
+      逐步查看日常句子。Token ID 是任意 index，不是數值上的意義。
+     </p>
+     <div data-widget="tokens">
+      <p>
+       啟用 JavaScript 以使用此圖解。下方 lecture notes 會解釋同一機制。
+      </p>
+     </div>
+    </section>
+    <nav aria-label="本課內容" class="reader-toc">
+     <strong>
+      本課內容
+     </strong>
+     <ol>
+      <li>
+       <a href="#why-the-model-needs-a-representation">
+        為何 model 需要 representation
+       </a>
+      </li>
+      <li>
+       <a href="#punctuation-reveals-a-weakness-in-word-splitting">
+        標點暴露出按單字分割的弱點
+       </a>
+      </li>
+      <li>
+       <a href="#a-vocabulary-is-learned-or-chosen-before-use">
+        Vocabulary 必須先學好或選好，才投入使用
+       </a>
+      </li>
+      <li>
+       <a href="#byte-pair-encoding-with-a-tiny-example">
+        用小例子理解 byte pair encoding
+       </a>
+      </li>
+      <li>
+       <a href="#bytes-subword-algorithms-and-sentencepiece">
+        Bytes、subword algorithms 與 SentencePiece
+       </a>
+      </li>
+      <li>
+       <a href="#english-and-traditional-chinese-use-different-token-budgets">
+        英文與繁體中文的 token budget
+       </a>
+      </li>
+      <li>
+       <a href="#ids-become-vectors-through-a-lookup-table">
+        透過 lookup table，把 ID 變成 vector
+       </a>
+      </li>
+      <li>
+       <a href="#one-hot-encoding-and-lookup-mean-the-same-selection">
+        One-hot encoding 與 lookup 選取的是同一行
+       </a>
+      </li>
+      <li>
+       <a href="#length-and-decoding">
+        長度與 decoding
+       </a>
+      </li>
+      <li>
+       <a href="#worked-practice-and-a-readiness-check">
+        實例練習與學習檢查
+       </a>
+      </li>
+     </ol>
+    </nav>
+    <article class="prose full-notes" id="full-notes" role="tabpanel">
+     <div class="eyebrow">
+      完整講義
+     </div>
+     <h2>
+      閱讀完整解說
+     </h2>
+     <h3 id="why-the-model-needs-a-representation">
+      為何 model 需要 representation
+     </h3>
+     <p>
+      我們看得懂「I go to school by bus」，但數值 model 需要一套可重現的方法來表示它。先用一個簡單規則：「遇到空格就分開」。句子變成六個 token：I、go、to、school、by、bus。Vocabulary 列出 model 認識的 token 類型。
+     </p>
+     <p>
+      分配 ID：I=0、go=1、to=2、school=3、by=4、bus=5。句子就變成 [0,1,2,3,4,5]。ID 是標籤。School 的 ID 比 go 大，不代表 school 更有意義。如果我們一致地調換 ID 和相應 model tables 的排列，標籤本身不會改變任務。
+     </p>
+     <p>
+      要分清三樣東西：原始文字、token sequence 和 ID sequence。Tokenizer 決定轉換方法；vocabulary 決定哪些 ID 對應哪些 token 字串；model 透過 representation layer 使用這些 ID。
+     </p>
+     <h3 id="punctuation-reveals-a-weakness-in-word-splitting">
+      標點暴露出按單字分割的弱點
+     </h3>
+     <p>
+      比較「bus」和「bus.」。單純按空格分割，會把它們視為不同字串。那麼「school-bus」、「school bus」或拼字錯誤又如何處理？把每個可能的字形都當成獨立 vocabulary 項目，會產生大量罕見項目，也難以處理未見過的字。
+     </p>
+     <p>
+      Character tokenizer 則把 b、u、s 和標點分開表示。它的基本項目較少，但 sequence 會較長。Subword tokenizer 使用介乎完整單字與 character 之間、可重用的片段。常見字可能只用一個 token，較罕見的字則拆成數個片段。
+     </p>
+     <p>
+      沒有任何規則規定一個 token 等於一個單字。使用真正 model 時，必須檢查它實際採用的 tokenizer。按單字分割仍適合教學，因為我們可以逐個 ID 手算追蹤。
+     </p>
+     <h3 id="a-vocabulary-is-learned-or-chosen-before-use">
+      Vocabulary 必須先學好或選好，才投入使用
+     </h3>
+     <p>
+      假設 vocabulary 包含完整 token school 和 schools，卻沒有 schoolyard。Word-level 系統需要 unknown-token policy。Subword 系統可能用 school 和 yard 編碼 schoolyard，也可能按學到的 vocabulary 使用其他片段。
+     </p>
+     <p>
+      Tokenization 必須與訓練好的 model 相容。如果 training 時 ID 5 代表 bus，inference 時卻代表 train，即使兩者都是有效整數，model 收到的 representation 仍然錯了。因此，model checkpoint 和它的 tokenizer 必須配套使用。
+     </p>
+     <p>
+      Special token 可以標示 sequence 的開始或結束、padding，或對話邊界。確切意思取決於 model。我們稍後才會介紹 conversation template，不會假設「assistant」這類看得見的字，自動就是特殊角色標記。
+     </p>
+     <h3 id="byte-pair-encoding-with-a-tiny-example">
+      用小例子理解 byte pair encoding
+     </h3>
+     <figure class="mechanism-figure">
+      <figcaption>
+       先點算 corpus 中的 pairs
+      </figcaption>
+      <ol class="mechanism-flow">
+       <li>
+        <span class="mechanism-number">
+         01
+        </span>
+        <strong>
+         b u s
+        </strong>
+        <small>
+         bus × 4
+        </small>
+       </li>
+       <li>
+        <span class="mechanism-number">
+         02
+        </span>
+        <strong>
+         b u s y
+        </strong>
+        <small>
+         busy × 2
+        </small>
+       </li>
+       <li>
+        <span class="mechanism-number">
+         03
+        </span>
+        <strong>
+         p l u s
+        </strong>
+        <small>
+         plus × 1
+        </small>
+       </li>
+      </ol>
+      <p>
+       按 corpus 點算相鄰 pairs：(u,s)=7、(b,u)=6。先合併最常見的 pair。
+      </p>
+     </figure>
+     <p>
+      使用人為設計的 training corpus：bus 出現四次、busy 兩次、plus 一次。把每個 word 拆成 characters，並加上可見的 end marker _。計算 adjacent pairs 時要包括 word frequencies：u,s 出現 7 次，b,u 出現 6 次，s,_ 出現 5 次，其他 pairs 更少。因此 u,s 是唯一最常出現的 pair，會合併成 us。
+     </p>
+     <div class="table-wrap">
+      <table>
+       <thead>
+        <tr>
+         <th>
+          Word 及 frequency
+         </th>
+         <th>
+          第一次 merge 前
+         </th>
+         <th>
+          u,s 合併成 us 後
+         </th>
+        </tr>
+       </thead>
+       <tbody>
+        <tr>
+         <td>
+          bus × 4
+         </td>
+         <td>
+          b u s _
+         </td>
+         <td>
+          b us _
+         </td>
+        </tr>
+        <tr>
+         <td>
+          busy × 2
+         </td>
+         <td>
+          b u s y _
+         </td>
+         <td>
+          b us y _
+         </td>
+        </tr>
+        <tr>
+         <td>
+          plus × 1
+         </td>
+         <td>
+          p l u s _
+         </td>
+         <td>
+          p l us _
+         </td>
+        </tr>
+       </tbody>
+      </table>
+     </div>
+     <p>
+      Merge 後重新點算。b,us 出現 6 次，us,_ 出現 5 次；下一步便把 b,us 合併成 bus。BPE 會在目前 representation 中，重複合併最常見的 adjacent pair；它不是挑選最長的 word，亦不是一直沿用最初的 pair counts。其他 corpus 若出現並列情況，就需要固定的 tie rule。
+     </p>
+     <p>
+      儲存學到的 vocabulary 和 merge order。Encode 新句子時使用已儲存的 rules；若每句都重新 fit tokenizer，model input IDs 的意義便會改變。本手算例子的 end marker 是教學慣例，並非任何特定 pretrained tokenizer 的規格。
+     </p>
+     <h3 id="bytes-subword-algorithms-and-sentencepiece">
+      Bytes、subword algorithms 與 SentencePiece
+     </h3>
+     <p>
+      Byte-level BPE 由 byte symbols 開始，而非為每個 Unicode character 設立獨立初始 symbol。英文 bus 的 UTF-8 bytes 是 [98,117,115]。一個中文字可能佔多個 UTF-8 bytes；學到的 merges 可以把 bytes 組成較大的 tokens。完整的 byte alphabet 能表示任何 UTF-8 input，但 normalization 和 decoding settings 仍會影響最終 text round trip。Byte count 和 model token count 是不同的量度。
+     </p>
+     <p>
+      BPE 學習 frequent pair merges。WordPiece 是另一類 subword 方法：其 vocabulary-training criterion 與簡單 BPE frequency counting 不同，常見 implementations 會用 vocabulary pieces 配對 words。Unigram 由 candidate pieces 開始，學習 probabilistic segmentation model，並逐步刪減 vocabulary。SentencePiece 是 tokenizer toolkit 及 text-processing approach，可以直接由 raw text 訓練 BPE 或 Unigram model；它並不是第四種互斥的 merge algorithm。
+     </p>
+     <p>
+      Whitespace 和 digits 都是 input 的一部分。bus 和「 bus」可能經過不同的 tokenization path；2026 亦可能是一個或多個 pieces，視乎 tokenizer。Leading-space symbol 等可見 markers 是 tokenizer conventions。應查看 token IDs 和 decoded pieces，而不是刪去 spaces，或假設每個數字只佔一個 token。
+     </p>
+     <h3 id="english-and-traditional-chinese-use-different-token-budgets">
+      英文與繁體中文的 token budget
+     </h3>
+     <p>
+      香港的 application 應用選定 model 的實際 tokenizer，比較「I go to school by bus.」和意思相近的繁體中文句子，例如「我搭巴士返學。」。記錄 text、UTF-8 byte count、token IDs、token 數量及 tokenizer revision，再測試 code identifier、日期，以及中英夾雜文字。這有助分清 language coverage、句子長度和 formatting 的影響。
+     </p>
+     <p>
+      不同 tokenizers 分配 vocabulary capacity 的方式不同，因此不存在固定的英文對中文 token ratio。某些以英文為主的 vocabularies 會把中文 encode 成較多 pieces；multilingual vocabulary 的表現可能不同。較多 tokens 會佔更多 context space，亦可能增加 model work 及按 token 收費服務的成本。先完成翻譯，再用部署時的 tokenizer 量度，並分開計算 input 和 output token budgets。
+     </p>
+     <h3 id="ids-become-vectors-through-a-lookup-table">
+      透過 lookup table，把 ID 變成 vector
+     </h3>
+     <p>
+      Embedding table 為每個 vocabulary 項目儲存一個學習得到的 vector。如果 table 有六行，而每個 vector 有三個 coordinate，它的 shape 就是 [6,3]。查找 bus，即 ID 5，就會選出 row 5。
+     </p>
+     <p>
+      為方便說明，假設 bus 的 vector 是 [0.2,0.8,0.1]，school 是 [0.9,0.1,0.4]。這些數字只是為了追蹤計算而虛構，並不表示第一個 coordinate 真的代表教育，或第二個代表交通。
+     </p>
+     <p>
+      這個六個 token 的句子，現在變成六行三列的 matrix。每行對應 sequence 中的一個 position。第 3 週會研究 vector geometry；之後 attention 會結合這些 row 之間的資訊。
+     </p>
+     <h3 id="one-hot-encoding-and-lookup-mean-the-same-selection">
+      One-hot encoding 與 lookup 選取的是同一行
+     </h3>
+     <p>
+      ID 5 的 one-hot vector 有六個 coordinate，除了 index 5 是一，其餘全是零。把這個 row vector 乘上 [6,3] embedding table，會選出與 lookup 相同的 row。這個等價關係從數學上解釋了此操作。
+     </p>
+     <p>
+      實作通常採用有效率的 indexing operation，而不是實際建立龐大的 one-hot matrix。兩者的分別，在於同一選取操作的數學描述，以及有效率的程式實作。
+     </p>
+     <p>
+      此時 bus 的 vector 還不取決於所在句子。不論 bus 出現在哪裏，lookup 都產生相同的起始 row。之後的 contextual processing 才會利用周圍 token 改變 representation。
+     </p>
+     <h3 id="length-and-decoding">
+      長度與 decoding
+     </h3>
+     <p>
+      如果 word tokenizer 產生六個 token，而 character tokenizer 產生二十一個，同一段文字就會讓 model 處理不同長度的 sequence。長度會影響後續步驟所需的計算量和 memory。
+     </p>
+     <p>
+      Decoding 按 tokenizer 的規則，把 ID 轉回文字。空白與 special token 要特別留意；把 token 字串用空格接起來，並不是通用的 decoding algorithm。檢查 round-trip 行為時，要保留原始字串。
+     </p>
+     <p>
+      Tutorial 會比較簡單的 word tokenizer 和 UTF-8 bytes。Byte count 有助檢查 encoding，但不能代替 pretrained model 的 token count。
+     </p>
+     <h3 id="worked-practice-and-a-readiness-check">
+      實例練習與學習檢查
+     </h3>
+     <p>
+      為「I go to school by bus」和「You go to work by train」建立 vocabulary。決定如何表示句號和結束標記。編碼這兩個句子，再 decode 回文字。然後在 vocabulary 沒有 bicycle 的情況下，編碼「I go to school by bicycle」。
+     </p>
+     <p>
+      說明你的 unknown-token policy，並解釋為何另一個 tokenizer 可以透過較小片段避開這個特定 unknown。若 vocabulary 有 100 項、vector width 是 16，計算出 embedding parameters 有 1600 個。若句子有七個 token，寫出它的 representation shape 為 [7,16]。
+     </p>
+     <p>
+      當你能解釋為何 IDs 是 labels、tokenizer 為何必須與 model 配合，以及 ID 如何選出 vector，就已準備好繼續。Lookup 本身就是對 embedding table 進行 indexing。
+     </p>
+    </article>
+    <nav aria-label="前後 lecture" class="chapter-pagination">
+     <a href="01.html">
+      <small>
+       上一週
+      </small>
+      Language model 究竟在學甚麼
+     </a>
+     <a href="03.html">
+      <small>
+       下一週
+      </small>
+      Word vector 能表達甚麼
+     </a>
+    </nav>
+   </div>
+   <footer class="footer">
+    <span>
+     Applied AI · 獨立自學課程
+    </span>
+    <span>
+     32 週 · 每週 10 小時
+    </span>
+    <a href="../resources.html#about-this-course">
+     關於課程及資料來源
+    </a>
+   </footer>
+  </main>
+  <dialog aria-labelledby="search-title" class="search-dialog">
+   <div class="dialog-head">
+    <h2 id="search-title">
+     尋找概念
+    </h2>
+    <button aria-label="關閉搜尋" class="search-close" type="button">
+     關閉
+    </button>
+   </div>
+   <label class="sr-only" for="course-search">
+    搜尋所有 lecture 和 tutorial
+   </label>
+   <input autocomplete="off" id="course-search" placeholder="試試 attention、fine-tuning 或 harness……" type="search"/>
+   <p aria-live="polite" class="search-status">
+    搜尋 lecture notes、tutorial、測驗及閱讀材料。
+   </p>
+   <div class="search-results">
+   </div>
+  </dialog>
+  <div aria-live="polite" class="toast" role="status">
+  </div>
+ </body>
+</html>

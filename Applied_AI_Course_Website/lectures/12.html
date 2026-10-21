@@ -1,67 +1,1286 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/><title>Training a small transformer · Applied AI</title><meta content="Applied generative AI and LLM systems course material" name="description"/><meta content="#173c36" name="theme-color"/><link href="../assets/favicon.svg" rel="icon" type="image/svg+xml"/><link href="../assets/style.css" rel="stylesheet"/><link href="../assets/slides.css" rel="stylesheet"/><script>window.COURSE_BASE="../";</script><script defer="" src="../assets/site-config.js"></script><script defer="" src="../assets/search-index.js"></script><script defer="" src="../assets/app.js"></script><script defer="" src="../assets/visuals.js"></script><script defer="" src="../assets/slides.js"></script><script defer="" src="../assets/beginner-visuals.js"></script><link href="../zh-HK/lectures/12.html" hreflang="zh-HK" rel="alternate"/><link href="../assets/bilingual.css" rel="stylesheet"/></head><body data-page-kind="lecture" data-week="12"><a class="skip-link" href="#main">Skip to content</a><header class="topbar"><button aria-controls="course-sidebar" aria-expanded="false" class="menu-toggle" type="button">Menu</button><a class="brand" href="../index.html"><span aria-hidden="true" class="brand-mark">a<span>i</span></span><span>APPLIED AI<small>Principles into practice</small></span></a><nav aria-label="Main navigation"><a href="../index.html">The course</a><a href="../visuals.html">Visual lab</a><a href="../project.html">Project</a><a class="language-switch" href="../zh-HK/lectures/12.html" hreflang="zh-HK" lang="zh-HK">繁體中文</a></nav><button class="search-open" type="button">Search the course <span aria-hidden="true">/</span></button></header><aside aria-label="Course chapters" class="sidebar" id="course-sidebar"><a class="side-home" href="../index.html">Course overview</a><details class="semester-nav" open=""><summary>Semester 1<span>Weeks 1–16</span></summary><ol start="1"><li><a href="../lectures/01.html"><span class="week-number">01</span><span>What a language model is trying to learn</span><span class="week-tick" data-week-tick="1"></span></a></li><li><a href="../lectures/02.html"><span class="week-number">02</span><span>From text to tokens and numerical IDs</span><span class="week-tick" data-week-tick="2"></span></a></li><li><a href="../lectures/03.html"><span class="week-number">03</span><span>What word vectors can represent</span><span class="week-tick" data-week-tick="3"></span></a></li><li><a href="../lectures/04.html"><span class="week-number">04</span><span>From scores to probabilities and learning signals</span><span class="week-tick" data-week-tick="4"></span></a></li><li><a href="../lectures/05.html"><span class="week-number">05</span><span>Why language needs context and order</span><span class="week-tick" data-week-tick="5"></span></a></li><li><a href="../lectures/06.html"><span class="week-number">06</span><span>Attention begins as a weighted mixture</span><span class="week-tick" data-week-tick="6"></span></a></li><li><a href="../lectures/07.html"><span class="week-number">07</span><span>Where queries keys and values come from</span><span class="week-tick" data-week-tick="7"></span></a></li><li><a href="../lectures/08.html"><span class="week-number">08</span><span>Scaling and masking attention correctly</span><span class="week-tick" data-week-tick="8"></span></a></li><li><a href="../lectures/09.html"><span class="week-number">09</span><span>Multiple attention heads and position</span><span class="week-tick" data-week-tick="9"></span></a></li><li><a href="../lectures/10.html"><span class="week-number">10</span><span>The transformer block step by step</span><span class="week-tick" data-week-tick="10"></span></a></li><li><a href="../lectures/11.html"><span class="week-number">11</span><span>Encoders decoders and complete model architectures</span><span class="week-tick" data-week-tick="11"></span></a></li><li><a aria-current="page" href="../lectures/12.html"><span class="week-number">12</span><span>Training a small transformer</span><span class="week-tick" data-week-tick="12"></span></a></li><li><a href="../lectures/13.html"><span class="week-number">13</span><span>Generation decoding and the KV cache</span><span class="week-tick" data-week-tick="13"></span></a></li><li><a href="../lectures/14.html"><span class="week-number">14</span><span>From pretraining to instruction following and reasoning</span><span class="week-tick" data-week-tick="14"></span></a></li><li><a href="../lectures/15.html"><span class="week-number">15</span><span>Generative AI beyond text</span><span class="week-tick" data-week-tick="15"></span></a></li><li><a href="../lectures/16.html"><span class="week-number">16</span><span>A complete transformer walkthrough and first semester review</span><span class="week-tick" data-week-tick="16"></span></a></li></ol></details><details class="semester-nav"><summary>Semester 2<span>Weeks 17–32</span></summary><ol start="17"><li><a href="../lectures/17.html"><span class="week-number">17</span><span>From word vectors to semantic search</span><span class="week-tick" data-week-tick="17"></span></a></li><li><a href="../lectures/18.html"><span class="week-number">18</span><span>A vector database from a list of vectors</span><span class="week-tick" data-week-tick="18"></span></a></li><li><a href="../lectures/19.html"><span class="week-number">19</span><span>RAG as an open book question</span><span class="week-tick" data-week-tick="19"></span></a></li><li><a href="../lectures/20.html"><span class="week-number">20</span><span>Improving RAG without losing the basic task</span><span class="week-tick" data-week-tick="20"></span></a></li><li><a href="../lectures/21.html"><span class="week-number">21</span><span>Evaluating retrieval answers and uncertainty</span><span class="week-tick" data-week-tick="21"></span></a></li><li><a href="../lectures/22.html"><span class="week-number">22</span><span>CPU GPU memory and model resource accounting</span><span class="week-tick" data-week-tick="22"></span></a></li><li><a href="../lectures/23.html"><span class="week-number">23</span><span>CUDA kernels and profiling</span><span class="week-tick" data-week-tick="23"></span></a></li><li><a href="../lectures/24.html"><span class="week-number">24</span><span>Fine tuning starts with a teaching dataset</span><span class="week-tick" data-week-tick="24"></span></a></li><li><a href="../lectures/25.html"><span class="week-number">25</span><span>LoRA and QLoRA from a small matrix</span><span class="week-tick" data-week-tick="25"></span></a></li><li><a href="../lectures/26.html"><span class="week-number">26</span><span>Fine tuning experiments preferences and distillation</span><span class="week-tick" data-week-tick="26"></span></a></li><li><a href="../lectures/27.html"><span class="week-number">27</span><span>Tools functions workflows and agents</span><span class="week-tick" data-week-tick="27"></span></a></li><li><a href="../lectures/28.html"><span class="week-number">28</span><span>Harnesses planning memory and bounded execution</span><span class="week-tick" data-week-tick="28"></span></a></li><li><a href="../lectures/29.html"><span class="week-number">29</span><span>From a notebook to MLOps and inference serving</span><span class="week-tick" data-week-tick="29"></span></a></li><li><a href="../lectures/30.html"><span class="week-number">30</span><span>Monitoring security regression tests and rollback</span><span class="week-tick" data-week-tick="30"></span></a></li><li><a href="../lectures/31.html"><span class="week-number">31</span><span>Integrating the documentation assistant and advanced extensions</span><span class="week-tick" data-week-tick="31"></span></a></li><li><a href="../lectures/32.html"><span class="week-number">32</span><span>Review defense and a continuing learning plan</span><span class="week-tick" data-week-tick="32"></span></a></li></ol></details><div class="side-links"><a href="../visuals.html">Visual laboratory <span>14 interactive lessons</span></a><a href="../project.html">Documentation assistant <span>Your capstone project</span></a><a href="../resources.html">Readings and setup</a></div><div class="side-progress"><div><span>Your progress</span><strong data-progress-count="">0 / 32</strong></div><progress aria-label="Completed lectures" max="32" value="0"></progress><small>Saved in this browser</small></div></aside><main class="main" id="main"><div class="content"><div class="chapter-header"><div class="eyebrow">Semester 1 / Week 12</div><h1>Training a small transformer</h1></div><div class="lesson-links"><a href="../tutorials/12.html">Tutorial 12</a><a href="../tests/12.html">Test your understanding</a><button aria-pressed="false" class="mark-complete" data-week="12" type="button">Mark as complete</button></div><section aria-label="Lecture slides" class="lecture-deck" id="lecture-slides"><div class="deck-top"><div><div class="eyebrow">Lecture slides · Week 12</div><h2>Learn one step at a time.</h2></div><button class="deck-present" type="button">Present</button></div><p class="deck-help">Read each explanation, pause to predict the result, then continue. Use the arrow keys while the presentation is focused. The complete lecture reader is below.</p><div aria-label="Presentation: use left and right arrow keys" class="slide-viewport" tabindex="0"><section class="lecture-slide" data-slide=""><div class="slide-stage">Start with an example</div><h3>One sentence supplies several supervised predictions</h3><div class="slide-prose"><p>Take the tokens [I,go,to,school,by,bus]. Build inputs [I,go,to,school,by] and targets [go,to,school,by,bus]. At each input position, the model predicts the next token.</p>
-<p>This shift is easy to state and easy to implement incorrectly. If the target equals the token at the same position, a model may learn a different, much easier copying task. Low loss would then answer the wrong question.</p>
-<p>Use a printed example of IDs and decoded tokens before beginning a long training run. Check the first and last supervised positions explicitly.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Start with an example</div><h3>The forward pass produces one vocabulary row per position</h3><div class="slide-prose"><p>For batch size B, sequence length T, and vocabulary size V, logits have shape [B,T,V]. Targets have shape [B,T]. Cross entropy compares each valid row with the corresponding target ID.</p>
-<p>The causal mask prevents future input leakage. The loss mask removes padding or other unsupervised target positions from the average. They work at different boundaries.</p>
-<p>Flattening logits to [B×T,V] and targets to [B×T] is one implementation convenience. It should preserve the original pairing between each row and target.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Build the mechanism</div><h3>A training step is a sequence of operations</h3><div class="slide-prose"><p>Choose a batch, run the model, calculate loss, clear old gradients, backpropagate, optionally clip gradients, and update parameters using the optimizer. Repeat with more data.</p>
-<p>An optimizer such as AdamW maintains additional state and follows a specific update rule. You do not need to derive it again to inspect whether gradients reach the embedding table and attention projections.</p>
-<p>Save a small record at intervals: step, number of valid tokens, training loss, validation loss, learning rate, and any numerical errors. A single final loss hides the path that produced it.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Build the mechanism</div><h3>Debugging before judging quality</h3><div class="slide-prose"><p>A one-batch overfit experiment asks whether the model and training loop can fit a tiny fixed batch. It is a useful implementation diagnostic, not a generalization result.</p>
-<p>Then restore a separate validation set. Disable dropout and gradient tracking for validation, and return to training mode afterward. Accidentally leaving a model in the wrong mode can change subsequent behavior.</p>
-<p>Check finite losses and nonzero gradients. A plotting library cannot repair unshifted targets or an attention mask that exposes the answer.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Build the mechanism</div><h3>Learning patterns versus memorizing sentences</h3><div class="slide-prose"><p>A tiny collection of school/travel sentences makes every example understandable, but repeated strings make memorization easy. Split complete examples before generating overlapping training windows.</p>
-<p>Include a few held-out sentence patterns and report exactly what they test. A tiny model producing “I go to school by bus” does not establish broad reasoning or documentation expertise.</p>
-<p>More data, model capacity, and training steps can change results, but changing all of them at once makes diagnosis difficult. Start with a controlled small configuration.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Build the mechanism</div><h3>Loss and generation tell different stories</h3><div class="slide-prose"><p>A model can reduce average next-token loss while still generating a weak continuation under a particular decoding choice. Generation compounds decisions and can visit prefixes unlike those seen during training.</p>
-<p>Conversely, one attractive generated sentence can come from a model with poor average performance. Evaluate several inputs and save raw outputs rather than selecting only the best demonstration.</p>
-<p>For matched tokenization, perplexity is the exponential of average negative log probability. Keep the tokenizer and valid-token counting consistent when comparing runs.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Build the mechanism</div><h3>Batch size and accumulated gradients</h3><div class="slide-prose"><p>If microbatch size is 2 and you accumulate across 4 equally sized microbatches, the effective example batch is 8 on one device. Divide each microbatch loss by 4 before backward if you want the average of those means, and update only after the accumulation group.</p>
-<p>Different sequence lengths complicate exact token-weighted equivalence. Four means over different valid-token counts do not automatically equal a single global token mean.</p>
-<p>We will study GPU memory and scaling later. For this week, a small float32 CPU run can establish correctness without requiring a large accelerator.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Build the mechanism</div><h3>Worked practice and a readiness check</h3><div class="slide-prose"><p>Write the shifted targets for [3,8,2,5]. Then calculate average loss if valid target probabilities are [0.5,0.25,0.25]. Identify which positions should be excluded if one target is padding.</p>
-<p>Train the tiny teaching model, save the configuration and loss history, and inspect at least three generated prefixes. Explain one failure using data, capacity, or implementation evidence.</p>
-<p>You are ready when you can reproduce a run, show the actual input-target pairing, and distinguish a debugging overfit test from a held-out evaluation.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Optional deeper study</div><h3>A deeper pass after the worked introduction</h3><div class="slide-prose"><p>The following reference treatment is for a second pass. First explain the ordinary example above, then use the equations and implementation details below to make the explanation more precise.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Optional deeper study</div><h3>Further study 6 From prediction to loss</h3><div class="slide-prose"><p>Given token IDs <code>x[0:T+1]</code>, the input is <code>x[0:T]</code> and the target is <code>x[1:T+1]</code>. For logits z at a position, cross entropy is <code>-log softmax(z)[target]</code>. The language-model loss averages over valid target positions. If the model assigns probability 0.25 to each correct token, loss is <code>-log(0.25)=1.3863</code> nats and perplexity is 4. Perplexity is comparable only under appropriate matching tokenization and evaluation conditions.</p>
-<p>Padding targets should be ignored. In SFT later, prompt positions may also be ignored while answer positions receive loss. Confusing an attention mask with a loss mask is a common bug: one controls information access, the other controls which predictions are supervised.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Optional deeper study</div><h3>Further study 6 Data quality is an engineering problem</h3><div class="slide-prose"><p>Pretraining data pipelines filter, deduplicate, segment and tokenize. Duplicated or near-duplicated documents crossing train/test boundaries can create inflated evaluations. Split at a meaningful group boundary before producing overlapping chunks. For documentation, a page family or API topic may be a stronger group than an arbitrary text span. Keep version, license, origin, time and transformation metadata.</p>
-<p>Gradient descent reduces training loss but does not guarantee the desired application behavior. Use training and validation curves to separate underfitting, overfitting and implementation bugs. Validate with dropout disabled and gradients off, without accidentally leaving the model in evaluation mode for the next training batch.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Optional deeper study</div><h3>Further study 6 Worked optimization example</h3><div class="slide-prose"><p>If the microbatch size is 2 and you accumulate gradients across 8 microbatches on one device, the effective example batch is 16, provided each microbatch is equally sized. Divide each microbatch's loss by 8 before backpropagation, step the optimizer once, and clear gradients afterward. If sequence lengths vary, equal averaging of microbatch means may not equal a global valid-token average. Account for token counts when exact equivalence matters.</p>
-<p>Adam-style optimizers maintain moment estimates, adding substantial memory. Learning-rate warmup and clipping can stabilize some settings, but first verify labels, masks and data. A scheduler cannot repair training on the wrong target. Save optimizer state, random states, tokenizer identity and current step if you want faithful resume behavior.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Optional deeper study</div><h3>Further study 6 Experiment</h3><div class="slide-prose"><p>In notebook 12, compare train/dev losses for one fixed configuration over time. Intentionally train with unshifted labels once and explain why the task changes. Try a one-batch overfit test, then an actual grouped split. The starter's tiny corpus is too small for strong statistical conclusions; your report should say so.</p>
-<p><strong>Exit criterion:</strong> implement shifted labels, explain perplexity and list the artifacts needed to resume a training run. <strong>Reading:</strong> R01 data and optimization lecture headings. <strong>Tutorial:</strong> 12.</p></div></section></div><div class="deck-controls"><button class="slide-prev" type="button">← Previous</button><span aria-live="polite" class="slide-counter">1 / 13</span><button class="slide-next" type="button">Next →</button></div><label class="slide-jump-label">Go to slide <select aria-label="Go to slide" class="slide-jump"><option value="0">1</option><option value="1">2</option><option value="2">3</option><option value="3">4</option><option value="4">5</option><option value="5">6</option><option value="6">7</option><option value="7">8</option><option value="8">9</option><option value="9">10</option><option value="10">11</option><option value="11">12</option><option value="12">13</option></select></label><button aria-pressed="false" class="deck-all" type="button">Show all slides</button><a class="reader-link" href="#full-notes">Read the complete lecture ↓</a></section><article class="prose full-notes" id="full-notes"><div class="eyebrow">Complete lecture reader</div><h2>Read the full explanation</h2><h3 id="one-sentence-supplies-several-supervised-predictions">One sentence supplies several supervised predictions</h3>
-<p>Take the tokens [I,go,to,school,by,bus]. Build inputs [I,go,to,school,by] and targets [go,to,school,by,bus]. At each input position, the model predicts the next token.</p>
-<p>This shift is easy to state and easy to implement incorrectly. If the target equals the token at the same position, a model may learn a different, much easier copying task. Low loss would then answer the wrong question.</p>
-<p>Use a printed example of IDs and decoded tokens before beginning a long training run. Check the first and last supervised positions explicitly.</p>
-<h3 id="the-forward-pass-produces-one-vocabulary-row-per-position">The forward pass produces one vocabulary row per position</h3>
-<p>For batch size B, sequence length T, and vocabulary size V, logits have shape [B,T,V]. Targets have shape [B,T]. Cross entropy compares each valid row with the corresponding target ID.</p>
-<p>The causal mask prevents future input leakage. The loss mask removes padding or other unsupervised target positions from the average. They work at different boundaries.</p>
-<p>Flattening logits to [B×T,V] and targets to [B×T] is one implementation convenience. It should preserve the original pairing between each row and target.</p>
-<h3 id="a-training-step-is-a-sequence-of-operations">A training step is a sequence of operations</h3>
-<p>Choose a batch, run the model, calculate loss, clear old gradients, backpropagate, optionally clip gradients, and update parameters using the optimizer. Repeat with more data.</p>
-<p>An optimizer such as AdamW maintains additional state and follows a specific update rule. You do not need to derive it again to inspect whether gradients reach the embedding table and attention projections.</p>
-<p>Save a small record at intervals: step, number of valid tokens, training loss, validation loss, learning rate, and any numerical errors. A single final loss hides the path that produced it.</p>
-<h3 id="debugging-before-judging-quality">Debugging before judging quality</h3>
-<p>A one-batch overfit experiment asks whether the model and training loop can fit a tiny fixed batch. It is a useful implementation diagnostic, not a generalization result.</p>
-<p>Then restore a separate validation set. Disable dropout and gradient tracking for validation, and return to training mode afterward. Accidentally leaving a model in the wrong mode can change subsequent behavior.</p>
-<p>Check finite losses and nonzero gradients. A plotting library cannot repair unshifted targets or an attention mask that exposes the answer.</p>
-<h3 id="learning-patterns-versus-memorizing-sentences">Learning patterns versus memorizing sentences</h3>
-<p>A tiny collection of school/travel sentences makes every example understandable, but repeated strings make memorization easy. Split complete examples before generating overlapping training windows.</p>
-<p>Include a few held-out sentence patterns and report exactly what they test. A tiny model producing “I go to school by bus” does not establish broad reasoning or documentation expertise.</p>
-<p>More data, model capacity, and training steps can change results, but changing all of them at once makes diagnosis difficult. Start with a controlled small configuration.</p>
-<h3 id="loss-and-generation-tell-different-stories">Loss and generation tell different stories</h3>
-<p>A model can reduce average next-token loss while still generating a weak continuation under a particular decoding choice. Generation compounds decisions and can visit prefixes unlike those seen during training.</p>
-<p>Conversely, one attractive generated sentence can come from a model with poor average performance. Evaluate several inputs and save raw outputs rather than selecting only the best demonstration.</p>
-<p>For matched tokenization, perplexity is the exponential of average negative log probability. Keep the tokenizer and valid-token counting consistent when comparing runs.</p>
-<h3 id="batch-size-and-accumulated-gradients">Batch size and accumulated gradients</h3>
-<p>If microbatch size is 2 and you accumulate across 4 equally sized microbatches, the effective example batch is 8 on one device. Divide each microbatch loss by 4 before backward if you want the average of those means, and update only after the accumulation group.</p>
-<p>Different sequence lengths complicate exact token-weighted equivalence. Four means over different valid-token counts do not automatically equal a single global token mean.</p>
-<p>We will study GPU memory and scaling later. For this week, a small float32 CPU run can establish correctness without requiring a large accelerator.</p>
-<h3 id="worked-practice-and-a-readiness-check">Worked practice and a readiness check</h3>
-<p>Write the shifted targets for [3,8,2,5]. Then calculate average loss if valid target probabilities are [0.5,0.25,0.25]. Identify which positions should be excluded if one target is padding.</p>
-<p>Train the tiny teaching model, save the configuration and loss history, and inspect at least three generated prefixes. Explain one failure using data, capacity, or implementation evidence.</p>
-<p>You are ready when you can reproduce a run, show the actual input-target pairing, and distinguish a debugging overfit test from a held-out evaluation.</p>
-<h3 id="a-deeper-pass-after-the-worked-introduction">A deeper pass after the worked introduction</h3>
-<p>The following reference treatment is for a second pass. First explain the ordinary example above, then use the equations and implementation details below to make the explanation more precise.</p>
-<h3 id="further-study-6-from-prediction-to-loss">Further study 6 From prediction to loss</h3>
-<p>Given token IDs <code>x[0:T+1]</code>, the input is <code>x[0:T]</code> and the target is <code>x[1:T+1]</code>. For logits z at a position, cross entropy is <code>-log softmax(z)[target]</code>. The language-model loss averages over valid target positions. If the model assigns probability 0.25 to each correct token, loss is <code>-log(0.25)=1.3863</code> nats and perplexity is 4. Perplexity is comparable only under appropriate matching tokenization and evaluation conditions.</p>
-<p>Padding targets should be ignored. In SFT later, prompt positions may also be ignored while answer positions receive loss. Confusing an attention mask with a loss mask is a common bug: one controls information access, the other controls which predictions are supervised.</p>
-<h3 id="further-study-6-data-quality-is-an-engineering-problem">Further study 6 Data quality is an engineering problem</h3>
-<p>Pretraining data pipelines filter, deduplicate, segment and tokenize. Duplicated or near-duplicated documents crossing train/test boundaries can create inflated evaluations. Split at a meaningful group boundary before producing overlapping chunks. For documentation, a page family or API topic may be a stronger group than an arbitrary text span. Keep version, license, origin, time and transformation metadata.</p>
-<p>Gradient descent reduces training loss but does not guarantee the desired application behavior. Use training and validation curves to separate underfitting, overfitting and implementation bugs. Validate with dropout disabled and gradients off, without accidentally leaving the model in evaluation mode for the next training batch.</p>
-<h3 id="further-study-6-worked-optimization-example">Further study 6 Worked optimization example</h3>
-<p>If the microbatch size is 2 and you accumulate gradients across 8 microbatches on one device, the effective example batch is 16, provided each microbatch is equally sized. Divide each microbatch's loss by 8 before backpropagation, step the optimizer once, and clear gradients afterward. If sequence lengths vary, equal averaging of microbatch means may not equal a global valid-token average. Account for token counts when exact equivalence matters.</p>
-<p>Adam-style optimizers maintain moment estimates, adding substantial memory. Learning-rate warmup and clipping can stabilize some settings, but first verify labels, masks and data. A scheduler cannot repair training on the wrong target. Save optimizer state, random states, tokenizer identity and current step if you want faithful resume behavior.</p>
-<h3 id="further-study-6-experiment">Further study 6 Experiment</h3>
-<p>In notebook 12, compare train/dev losses for one fixed configuration over time. Intentionally train with unshifted labels once and explain why the task changes. Try a one-batch overfit test, then an actual grouped split. The starter's tiny corpus is too small for strong statistical conclusions; your report should say so.</p>
-<p><strong>Exit criterion:</strong> implement shifted labels, explain perplexity and list the artifacts needed to resume a training run. <strong>Reading:</strong> R01 data and optimization lecture headings. <strong>Tutorial:</strong> 12.</p></article><nav aria-label="Adjacent lectures" class="chapter-pagination"><a href="11.html"><small>Previous week</small>Encoders decoders and complete model architectures</a><a href="13.html"><small>Next week</small>Generation decoding and the KV cache</a></nav></div><footer class="footer"><span>Applied AI · An independent self-study course</span><span>32 weeks · 10 hours per week</span><a href="../resources.html#about-this-course">About and sources</a></footer></main><dialog aria-labelledby="search-title" class="search-dialog"><div class="dialog-head"><h2 id="search-title">Find a concept</h2><button aria-label="Close search" class="search-close" type="button">Close</button></div><label class="sr-only" for="course-search">Search all lectures and tutorials</label><input autocomplete="off" id="course-search" placeholder="Try attention, fine-tuning, or harness…" type="search"/><p aria-live="polite" class="search-status">Search lecture notes, tutorials, tests and readings.</p><div class="search-results"></div></dialog><div aria-live="polite" class="toast" role="status"></div></body></html>
+<html lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width,initial-scale=1" name="viewport"/>
+  <title>
+   Training a small transformer · Applied AI
+  </title>
+  <meta content="Applied generative AI and LLM systems course material" name="description"/>
+  <meta content="#173c36" name="theme-color"/>
+  <link href="../assets/favicon.svg" rel="icon" type="image/svg+xml"/>
+  <link href="../assets/style.css" rel="stylesheet"/>
+  <link href="../assets/slides.css" rel="stylesheet"/>
+  <script>
+   window.COURSE_BASE="../";
+  </script>
+  <script defer="" src="../assets/site-config.js">
+  </script>
+  <script defer="" src="../assets/search-index.js">
+  </script>
+  <script defer="" src="../assets/app.js">
+  </script>
+  <script defer="" src="../assets/visuals.js">
+  </script>
+  <script defer="" src="../assets/slides.js">
+  </script>
+  <script defer="" src="../assets/beginner-visuals.js">
+  </script>
+  <link href="../zh-HK/lectures/12.html" hreflang="zh-HK" rel="alternate"/>
+  <link href="../assets/bilingual.css" rel="stylesheet"/>
+  <link href="../assets/reader-v3.css" rel="stylesheet"/>
+  <script defer="True" src="../assets/reader-v3.js">
+  </script>
+ </head>
+ <body data-page-kind="lecture" data-week="12">
+  <a class="skip-link" href="#main">
+   Skip to content
+  </a>
+  <header class="topbar">
+   <button aria-controls="course-sidebar" aria-expanded="false" class="menu-toggle" type="button">
+    Menu
+   </button>
+   <a class="brand" href="../index.html">
+    <span aria-hidden="true" class="brand-mark">
+     a
+     <span>
+      i
+     </span>
+    </span>
+    <span>
+     APPLIED AI
+     <small>
+      Principles into practice
+     </small>
+    </span>
+   </a>
+   <nav aria-label="Main navigation">
+    <a href="../index.html">
+     The course
+    </a>
+    <a href="../visuals.html">
+     Visual lab
+    </a>
+    <a href="../project.html">
+     Project
+    </a>
+    <a class="language-switch" href="../zh-HK/lectures/12.html" hreflang="zh-HK" lang="zh-HK">
+     繁體中文
+    </a>
+   </nav>
+   <button class="search-open" type="button">
+    Search the course
+    <span aria-hidden="true">
+     /
+    </span>
+   </button>
+  </header>
+  <aside aria-label="Course chapters" class="sidebar" id="course-sidebar">
+   <a class="side-home" href="../index.html">
+    Course overview
+   </a>
+   <details class="semester-nav" open="">
+    <summary>
+     Semester 1
+     <span>
+      Weeks 1–16
+     </span>
+    </summary>
+    <ol start="1">
+     <li>
+      <a href="../lectures/01.html">
+       <span class="week-number">
+        01
+       </span>
+       <span>
+        What a language model is trying to learn
+       </span>
+       <span class="week-tick" data-week-tick="1">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/02.html">
+       <span class="week-number">
+        02
+       </span>
+       <span>
+        From text to tokens and numerical IDs
+       </span>
+       <span class="week-tick" data-week-tick="2">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/03.html">
+       <span class="week-number">
+        03
+       </span>
+       <span>
+        What word vectors can represent
+       </span>
+       <span class="week-tick" data-week-tick="3">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/04.html">
+       <span class="week-number">
+        04
+       </span>
+       <span>
+        From scores to probabilities and learning signals
+       </span>
+       <span class="week-tick" data-week-tick="4">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/05.html">
+       <span class="week-number">
+        05
+       </span>
+       <span>
+        Why language needs context and order
+       </span>
+       <span class="week-tick" data-week-tick="5">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/06.html">
+       <span class="week-number">
+        06
+       </span>
+       <span>
+        Attention begins as a weighted mixture
+       </span>
+       <span class="week-tick" data-week-tick="6">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/07.html">
+       <span class="week-number">
+        07
+       </span>
+       <span>
+        Where queries keys and values come from
+       </span>
+       <span class="week-tick" data-week-tick="7">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/08.html">
+       <span class="week-number">
+        08
+       </span>
+       <span>
+        Scaling and masking attention correctly
+       </span>
+       <span class="week-tick" data-week-tick="8">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/09.html">
+       <span class="week-number">
+        09
+       </span>
+       <span>
+        Multiple attention heads and position
+       </span>
+       <span class="week-tick" data-week-tick="9">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/10.html">
+       <span class="week-number">
+        10
+       </span>
+       <span>
+        The transformer block step by step
+       </span>
+       <span class="week-tick" data-week-tick="10">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/11.html">
+       <span class="week-number">
+        11
+       </span>
+       <span>
+        Encoders decoders and complete model architectures
+       </span>
+       <span class="week-tick" data-week-tick="11">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a aria-current="page" href="../lectures/12.html">
+       <span class="week-number">
+        12
+       </span>
+       <span>
+        Training a small transformer
+       </span>
+       <span class="week-tick" data-week-tick="12">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/13.html">
+       <span class="week-number">
+        13
+       </span>
+       <span>
+        Generation decoding and the KV cache
+       </span>
+       <span class="week-tick" data-week-tick="13">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/14.html">
+       <span class="week-number">
+        14
+       </span>
+       <span>
+        From pretraining to instruction following and reasoning
+       </span>
+       <span class="week-tick" data-week-tick="14">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/15.html">
+       <span class="week-number">
+        15
+       </span>
+       <span>
+        Generative AI beyond text
+       </span>
+       <span class="week-tick" data-week-tick="15">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/16.html">
+       <span class="week-number">
+        16
+       </span>
+       <span>
+        A complete transformer walkthrough and first semester review
+       </span>
+       <span class="week-tick" data-week-tick="16">
+       </span>
+      </a>
+     </li>
+    </ol>
+   </details>
+   <details class="semester-nav">
+    <summary>
+     Semester 2
+     <span>
+      Weeks 17–32
+     </span>
+    </summary>
+    <ol start="17">
+     <li>
+      <a href="../lectures/17.html">
+       <span class="week-number">
+        17
+       </span>
+       <span>
+        From word vectors to semantic search
+       </span>
+       <span class="week-tick" data-week-tick="17">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/18.html">
+       <span class="week-number">
+        18
+       </span>
+       <span>
+        A vector database from a list of vectors
+       </span>
+       <span class="week-tick" data-week-tick="18">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/19.html">
+       <span class="week-number">
+        19
+       </span>
+       <span>
+        RAG as an open book question
+       </span>
+       <span class="week-tick" data-week-tick="19">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/20.html">
+       <span class="week-number">
+        20
+       </span>
+       <span>
+        Improving RAG without losing the basic task
+       </span>
+       <span class="week-tick" data-week-tick="20">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/21.html">
+       <span class="week-number">
+        21
+       </span>
+       <span>
+        Evaluating retrieval answers and uncertainty
+       </span>
+       <span class="week-tick" data-week-tick="21">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/22.html">
+       <span class="week-number">
+        22
+       </span>
+       <span>
+        CPU GPU memory and model resource accounting
+       </span>
+       <span class="week-tick" data-week-tick="22">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/23.html">
+       <span class="week-number">
+        23
+       </span>
+       <span>
+        CUDA kernels and profiling
+       </span>
+       <span class="week-tick" data-week-tick="23">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/24.html">
+       <span class="week-number">
+        24
+       </span>
+       <span>
+        Fine tuning starts with a teaching dataset
+       </span>
+       <span class="week-tick" data-week-tick="24">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/25.html">
+       <span class="week-number">
+        25
+       </span>
+       <span>
+        LoRA and QLoRA from a small matrix
+       </span>
+       <span class="week-tick" data-week-tick="25">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/26.html">
+       <span class="week-number">
+        26
+       </span>
+       <span>
+        Fine tuning experiments preferences and distillation
+       </span>
+       <span class="week-tick" data-week-tick="26">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/27.html">
+       <span class="week-number">
+        27
+       </span>
+       <span>
+        Tools functions workflows and agents
+       </span>
+       <span class="week-tick" data-week-tick="27">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/28.html">
+       <span class="week-number">
+        28
+       </span>
+       <span>
+        Harnesses planning memory and bounded execution
+       </span>
+       <span class="week-tick" data-week-tick="28">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/29.html">
+       <span class="week-number">
+        29
+       </span>
+       <span>
+        From a notebook to MLOps and inference serving
+       </span>
+       <span class="week-tick" data-week-tick="29">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/30.html">
+       <span class="week-number">
+        30
+       </span>
+       <span>
+        Monitoring security regression tests and rollback
+       </span>
+       <span class="week-tick" data-week-tick="30">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/31.html">
+       <span class="week-number">
+        31
+       </span>
+       <span>
+        Integrating the documentation assistant and advanced extensions
+       </span>
+       <span class="week-tick" data-week-tick="31">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/32.html">
+       <span class="week-number">
+        32
+       </span>
+       <span>
+        Review defense and a continuing learning plan
+       </span>
+       <span class="week-tick" data-week-tick="32">
+       </span>
+      </a>
+     </li>
+    </ol>
+   </details>
+   <div class="side-links">
+    <a href="../visuals.html">
+     Visual laboratory
+     <span>
+      14 interactive lessons
+     </span>
+    </a>
+    <a href="../project.html">
+     Documentation assistant
+     <span>
+      Your capstone project
+     </span>
+    </a>
+    <a href="../resources.html">
+     Readings and setup
+    </a>
+   </div>
+   <div class="side-progress">
+    <div>
+     <span>
+      Your progress
+     </span>
+     <strong data-progress-count="">
+      0 / 32
+     </strong>
+    </div>
+    <progress aria-label="Completed lectures" max="32" value="0">
+    </progress>
+    <small>
+     Saved in this browser
+    </small>
+   </div>
+  </aside>
+  <main class="main" id="main">
+   <div class="content">
+    <div class="chapter-header">
+     <div class="eyebrow">
+      Semester 1 / Week 12
+     </div>
+     <h1>
+      Training a small transformer
+     </h1>
+    </div>
+    <div class="lesson-links">
+     <a href="../tutorials/12.html">
+      Tutorial 12
+     </a>
+     <a href="../tests/12.html">
+      Test your understanding
+     </a>
+     <button aria-pressed="false" class="mark-complete" data-week="12" type="button">
+      Mark as complete
+     </button>
+    </div>
+    <div aria-label="Lesson view" class="lesson-mode" role="tablist">
+     <button aria-controls="full-notes" aria-selected="true" data-mode="read" id="mode-read" role="tab" type="button">
+      Read lesson
+     </button>
+     <button aria-controls="lecture-slides" aria-selected="false" data-mode="slides" id="mode-slides" role="tab" type="button">
+      Lesson slides
+     </button>
+    </div>
+    <section aria-label="Lecture slides" class="lecture-deck" hidden="" id="lecture-slides" role="tabpanel">
+     <div class="deck-top">
+      <div>
+       <div class="eyebrow">
+        Lecture slides · Week 12
+       </div>
+       <h2>
+        Key steps and worked visuals
+       </h2>
+      </div>
+      <button class="deck-present" type="button">
+       Present
+      </button>
+     </div>
+     <p class="deck-help">
+      Use these slides to review the mechanism. Open “Read the worked explanation” for the complete notes and code.
+     </p>
+     <div aria-label="Presentation: use left and right arrow keys" class="slide-viewport" tabindex="0">
+      <section class="lecture-slide" data-slide="">
+       <div class="slide-stage">
+        Week 12 · Section 1
+       </div>
+       <h3>
+        One sentence supplies several supervised predictions
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Take the tokens [I,go,to,school,by,bus].
+         </li>
+         <li>
+          This shift is easy to state and easy to implement incorrectly.
+         </li>
+         <li>
+          Use a printed example of IDs and decoded tokens before beginning a long training run.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#one-sentence-supplies-several-supervised-predictions">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 12 · Section 2
+       </div>
+       <h3>
+        The forward pass produces one vocabulary row per position
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          For batch size B, sequence length T, and vocabulary size V, logits have shape [B,T,V].
+         </li>
+         <li>
+          The causal mask prevents future input leakage.
+         </li>
+         <li>
+          Flattening logits to [B×T,V] and targets to [B×T] is one implementation convenience.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#the-forward-pass-produces-one-vocabulary-row-per-position">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 12 · Section 3
+       </div>
+       <h3>
+        A training step is a sequence of operations
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Choose a batch, run the model, calculate loss, clear old gradients, backpropagate, optionally clip gradients, and update parameters using the optimizer.
+         </li>
+         <li>
+          An optimizer such as AdamW maintains additional state and follows a specific update rule.
+         </li>
+         <li>
+          Save a small record at intervals: step, number of valid tokens, training loss, validation loss, learning rate, and any numerical errors.
+         </li>
+        </ul>
+        <figure class="mechanism-figure">
+         <figcaption>
+          One complete training step
+         </figcaption>
+         <ol class="mechanism-flow">
+          <li>
+           <span class="mechanism-number">
+            01
+           </span>
+           <strong>
+            Forward
+           </strong>
+           <small>
+            tokens → logits
+           </small>
+          </li>
+          <li>
+           <span class="mechanism-number">
+            02
+           </span>
+           <strong>
+            Objective
+           </strong>
+           <small>
+            shifted target → loss
+           </small>
+          </li>
+          <li>
+           <span class="mechanism-number">
+            03
+           </span>
+           <strong>
+            Backward
+           </strong>
+           <small>
+            loss → gradients
+           </small>
+          </li>
+          <li>
+           <span class="mechanism-number">
+            04
+           </span>
+           <strong>
+            Update
+           </strong>
+           <small>
+            optimizer → parameters
+           </small>
+          </li>
+         </ol>
+         <p>
+          Clear or deliberately accumulate gradients. The optimizer update changes the model used by the next forward pass.
+         </p>
+        </figure>
+        <a class="slide-section-link" href="#a-training-step-is-a-sequence-of-operations">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 12 · Section 4
+       </div>
+       <h3>
+        Debugging before judging quality
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          A one-batch overfit experiment asks whether the model and training loop can fit a tiny fixed batch.
+         </li>
+         <li>
+          Then restore a separate validation set.
+         </li>
+         <li>
+          Check finite losses and nonzero gradients.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#debugging-before-judging-quality">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 12 · Section 5
+       </div>
+       <h3>
+        Learning patterns versus memorizing sentences
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          A tiny collection of school/travel sentences makes every example understandable, but repeated strings make memorization easy.
+         </li>
+         <li>
+          Include a few held-out sentence patterns and report exactly what they test.
+         </li>
+         <li>
+          More data, model capacity, and training steps can change results, but changing all of them at once makes diagnosis difficult.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#learning-patterns-versus-memorizing-sentences">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 12 · Section 6
+       </div>
+       <h3>
+        Loss and generation tell different stories
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          A model can reduce average next-token loss while still generating a weak continuation under a particular decoding choice.
+         </li>
+         <li>
+          Conversely, one attractive generated sentence can come from a model with poor average performance.
+         </li>
+         <li>
+          For matched tokenization, perplexity is the exponential of average negative log probability.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#loss-and-generation-tell-different-stories">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 12 · Section 7
+       </div>
+       <h3>
+        Batch size and accumulated gradients
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          If microbatch size is 2 and you accumulate across 4 equally sized microbatches, the effective example batch is 8 on one device.
+         </li>
+         <li>
+          Different sequence lengths complicate exact token-weighted equivalence.
+         </li>
+         <li>
+          We will study GPU memory and scaling later.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#batch-size-and-accumulated-gradients">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 12 · Section 8
+       </div>
+       <h3>
+        A learning-rate schedule controls step size over time
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          The learning rate is the step-size multiplier in the optimizer update.
+         </li>
+         <li>
+          AdamW keeps moving estimates of gradient moments and applies decoupled weight decay.
+         </li>
+         <li>
+          Gradient clipping limits an update’s input gradient norm rather than repairing wrong labels.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#a-learning-rate-schedule-controls-step-size-over-time">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 12 · Section 9
+       </div>
+       <h3>
+        Data mixture and contamination change the experiment
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          A data mixture states how training examples are sampled.
+         </li>
+         <li>
+          Source: AdamW update rule .
+         </li>
+         <li>
+          Source: PyTorch automatic mixed precision recipe .
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#data-mixture-and-contamination-change-the-experiment">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 12 · Section 10
+       </div>
+       <h3>
+        Worked practice and a readiness check
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Write the shifted targets for [3,8,2,5].
+         </li>
+         <li>
+          Train the tiny teaching model, save the configuration and loss history, and inspect at least three generated prefixes.
+         </li>
+         <li>
+          You are ready when you can reproduce a run, show the actual input-target pairing, and distinguish a debugging overfit test from a held-out evaluation.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#worked-practice-and-a-readiness-check">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+     </div>
+     <div class="deck-controls">
+      <button class="slide-prev" type="button">
+       ← Previous
+      </button>
+      <span aria-live="polite" class="slide-counter">
+       1 / 10
+      </span>
+      <button class="slide-next" type="button">
+       Next →
+      </button>
+     </div>
+     <label class="slide-jump-label">
+      Go to slide
+      <select aria-label="Go to slide" class="slide-jump">
+       <option value="0">
+        1. One sentence supplies several supervised predictions
+       </option>
+       <option value="1">
+        2. The forward pass produces one vocabulary row per position
+       </option>
+       <option value="2">
+        3. A training step is a sequence of operations
+       </option>
+       <option value="3">
+        4. Debugging before judging quality
+       </option>
+       <option value="4">
+        5. Learning patterns versus memorizing sentences
+       </option>
+       <option value="5">
+        6. Loss and generation tell different stories
+       </option>
+       <option value="6">
+        7. Batch size and accumulated gradients
+       </option>
+       <option value="7">
+        8. A learning-rate schedule controls step size over time
+       </option>
+       <option value="8">
+        9. Data mixture and contamination change the experiment
+       </option>
+       <option value="9">
+        10. Worked practice and a readiness check
+       </option>
+      </select>
+     </label>
+     <button aria-pressed="false" class="deck-all" type="button">
+      Show all slides
+     </button>
+    </section>
+    <nav aria-label="In this lesson" class="reader-toc">
+     <strong>
+      In this lesson
+     </strong>
+     <ol>
+      <li>
+       <a href="#one-sentence-supplies-several-supervised-predictions">
+        One sentence supplies several supervised predictions
+       </a>
+      </li>
+      <li>
+       <a href="#the-forward-pass-produces-one-vocabulary-row-per-position">
+        The forward pass produces one vocabulary row per position
+       </a>
+      </li>
+      <li>
+       <a href="#a-training-step-is-a-sequence-of-operations">
+        A training step is a sequence of operations
+       </a>
+      </li>
+      <li>
+       <a href="#debugging-before-judging-quality">
+        Debugging before judging quality
+       </a>
+      </li>
+      <li>
+       <a href="#learning-patterns-versus-memorizing-sentences">
+        Learning patterns versus memorizing sentences
+       </a>
+      </li>
+      <li>
+       <a href="#loss-and-generation-tell-different-stories">
+        Loss and generation tell different stories
+       </a>
+      </li>
+      <li>
+       <a href="#batch-size-and-accumulated-gradients">
+        Batch size and accumulated gradients
+       </a>
+      </li>
+      <li>
+       <a href="#a-learning-rate-schedule-controls-step-size-over-time">
+        A learning-rate schedule controls step size over time
+       </a>
+      </li>
+      <li>
+       <a href="#data-mixture-and-contamination-change-the-experiment">
+        Data mixture and contamination change the experiment
+       </a>
+      </li>
+      <li>
+       <a href="#worked-practice-and-a-readiness-check">
+        Worked practice and a readiness check
+       </a>
+      </li>
+     </ol>
+    </nav>
+    <article class="prose full-notes" id="full-notes" role="tabpanel">
+     <div class="eyebrow">
+      Complete lecture reader
+     </div>
+     <h2>
+      Read the full explanation
+     </h2>
+     <h3 id="one-sentence-supplies-several-supervised-predictions">
+      One sentence supplies several supervised predictions
+     </h3>
+     <p>
+      Take the tokens [I,go,to,school,by,bus]. Build inputs [I,go,to,school,by] and targets [go,to,school,by,bus]. At each input position, the model predicts the next token.
+     </p>
+     <p>
+      This shift is easy to state and easy to implement incorrectly. If the target equals the token at the same position, a model may learn a different, much easier copying task. Low loss would then answer the wrong question.
+     </p>
+     <p>
+      Use a printed example of IDs and decoded tokens before beginning a long training run. Check the first and last supervised positions explicitly.
+     </p>
+     <h3 id="the-forward-pass-produces-one-vocabulary-row-per-position">
+      The forward pass produces one vocabulary row per position
+     </h3>
+     <p>
+      For batch size B, sequence length T, and vocabulary size V, logits have shape [B,T,V]. Targets have shape [B,T]. Cross entropy compares each valid row with the corresponding target ID.
+     </p>
+     <p>
+      The causal mask prevents future input leakage. The loss mask removes padding or other unsupervised target positions from the average. They work at different boundaries.
+     </p>
+     <p>
+      Flattening logits to [B×T,V] and targets to [B×T] is one implementation convenience. It should preserve the original pairing between each row and target.
+     </p>
+     <h3 id="a-training-step-is-a-sequence-of-operations">
+      A training step is a sequence of operations
+     </h3>
+     <figure class="mechanism-figure">
+      <figcaption>
+       One complete training step
+      </figcaption>
+      <ol class="mechanism-flow">
+       <li>
+        <span class="mechanism-number">
+         01
+        </span>
+        <strong>
+         Forward
+        </strong>
+        <small>
+         tokens → logits
+        </small>
+       </li>
+       <li>
+        <span class="mechanism-number">
+         02
+        </span>
+        <strong>
+         Objective
+        </strong>
+        <small>
+         shifted target → loss
+        </small>
+       </li>
+       <li>
+        <span class="mechanism-number">
+         03
+        </span>
+        <strong>
+         Backward
+        </strong>
+        <small>
+         loss → gradients
+        </small>
+       </li>
+       <li>
+        <span class="mechanism-number">
+         04
+        </span>
+        <strong>
+         Update
+        </strong>
+        <small>
+         optimizer → parameters
+        </small>
+       </li>
+      </ol>
+      <p>
+       Clear or deliberately accumulate gradients. The optimizer update changes the model used by the next forward pass.
+      </p>
+     </figure>
+     <p>
+      Choose a batch, run the model, calculate loss, clear old gradients, backpropagate, optionally clip gradients, and update parameters using the optimizer. Repeat with more data.
+     </p>
+     <p>
+      An optimizer such as AdamW maintains additional state and follows a specific update rule. You do not need to derive it again to inspect whether gradients reach the embedding table and attention projections.
+     </p>
+     <p>
+      Save a small record at intervals: step, number of valid tokens, training loss, validation loss, learning rate, and any numerical errors. A single final loss hides the path that produced it.
+     </p>
+     <h3 id="debugging-before-judging-quality">
+      Debugging before judging quality
+     </h3>
+     <p>
+      A one-batch overfit experiment asks whether the model and training loop can fit a tiny fixed batch. It is a useful implementation diagnostic, not a generalization result.
+     </p>
+     <p>
+      Then restore a separate validation set. Disable dropout and gradient tracking for validation, and return to training mode afterward. Accidentally leaving a model in the wrong mode can change subsequent behavior.
+     </p>
+     <p>
+      Check finite losses and nonzero gradients. A plotting library cannot repair unshifted targets or an attention mask that exposes the answer.
+     </p>
+     <h3 id="learning-patterns-versus-memorizing-sentences">
+      Learning patterns versus memorizing sentences
+     </h3>
+     <p>
+      A tiny collection of school/travel sentences makes every example understandable, but repeated strings make memorization easy. Split complete examples before generating overlapping training windows.
+     </p>
+     <p>
+      Include a few held-out sentence patterns and report exactly what they test. A tiny model producing “I go to school by bus” does not establish broad reasoning or documentation expertise.
+     </p>
+     <p>
+      More data, model capacity, and training steps can change results, but changing all of them at once makes diagnosis difficult. Start with a controlled small configuration.
+     </p>
+     <h3 id="loss-and-generation-tell-different-stories">
+      Loss and generation tell different stories
+     </h3>
+     <p>
+      A model can reduce average next-token loss while still generating a weak continuation under a particular decoding choice. Generation compounds decisions and can visit prefixes unlike those seen during training.
+     </p>
+     <p>
+      Conversely, one attractive generated sentence can come from a model with poor average performance. Evaluate several inputs and save raw outputs rather than selecting only the best demonstration.
+     </p>
+     <p>
+      For matched tokenization, perplexity is the exponential of average negative log probability. Keep the tokenizer and valid-token counting consistent when comparing runs.
+     </p>
+     <h3 id="batch-size-and-accumulated-gradients">
+      Batch size and accumulated gradients
+     </h3>
+     <p>
+      If microbatch size is 2 and you accumulate across 4 equally sized microbatches, the effective example batch is 8 on one device. Divide each microbatch loss by 4 before backward if you want the average of those means, and update only after the accumulation group.
+     </p>
+     <p>
+      Different sequence lengths complicate exact token-weighted equivalence. Four means over different valid-token counts do not automatically equal a single global token mean.
+     </p>
+     <p>
+      We will study GPU memory and scaling later. For this week, a small float32 CPU run can establish correctness without requiring a large accelerator.
+     </p>
+     <h3 id="a-learning-rate-schedule-controls-step-size-over-time">
+      A learning-rate schedule controls step size over time
+     </h3>
+     <p>
+      The learning rate is the step-size multiplier in the optimizer update. Warmup starts with a smaller rate and increases it over early steps. A later cosine decay gradually reduces the rate. For a 100-step teaching run, choose a peak of 0.001, warm up for 10 steps, and decay to 0.0001 by step 100. At step 5 the linear warmup gives 0.0005; at step 10 the rate is 0.001; halfway through the decay, step 55, it is 0.00055. Plot this schedule before training so the intended changes are visible.
+     </p>
+     <p>
+      AdamW keeps moving estimates of gradient moments and applies decoupled weight decay. With learning rate η and decay λ, the decay contribution shrinks a selected weight by the factor 1−ηλ before considering its adaptive-gradient contribution. For weight 2, η=0.01 and λ=0.1, the decay-only result is 1.998. This is separate from choosing a smaller learning rate. Parameter groups commonly exclude biases and normalization weights from decay; record the actual grouping rather than assuming it.
+     </p>
+     <p>
+      Gradient clipping limits an update’s input gradient norm rather than repairing wrong labels. If a gradient vector has norm 10 and the maximum norm is 2, scale that vector by 0.2. Log the unclipped norm so repeated clipping remains visible. Mixed precision uses lower-precision arithmetic for supported operations while retaining higher precision where needed. FP16 training often uses gradient scaling to avoid underflow; BF16 has a wider exponent range but still requires suitable hardware and kernels. Keep labels, masks, and loss computation correct before interpreting a speedup.
+     </p>
+     <h3 id="data-mixture-and-contamination-change-the-experiment">
+      Data mixture and contamination change the experiment
+     </h3>
+     <p>
+      A data mixture states how training examples are sampled. If 90% of the school corpus is bus sentences and 10% is library sentences, validation behavior may favor transport language. Record sampling weights, deduplication, document sources, and any oversampling. A held-out question, its answer, or a near-duplicate in training can contaminate an evaluation. Split meaningful document or problem families first, then generate paraphrases inside each split; retain a final set that never controls training or prompt choices.
+     </p>
+     <p>
+      Source:
+      <a href="https://docs.pytorch.org/docs/stable/generated/torch.optim.AdamW.html">
+       AdamW update rule
+      </a>
+      .
+     </p>
+     <p>
+      Source:
+      <a href="https://docs.pytorch.org/tutorials/recipes/recipes/amp_recipe.html">
+       PyTorch automatic mixed precision recipe
+      </a>
+      .
+     </p>
+     <h3 id="worked-practice-and-a-readiness-check">
+      Worked practice and a readiness check
+     </h3>
+     <p>
+      Write the shifted targets for [3,8,2,5]. Then calculate average loss if valid target probabilities are [0.5,0.25,0.25]. Identify which positions should be excluded if one target is padding.
+     </p>
+     <p>
+      Train the tiny teaching model, save the configuration and loss history, and inspect at least three generated prefixes. Explain one failure using data, capacity, or implementation evidence.
+     </p>
+     <p>
+      You are ready when you can reproduce a run, show the actual input-target pairing, and distinguish a debugging overfit test from a held-out evaluation.
+     </p>
+     <details class="reference-details" id="reference-details">
+      <summary>
+       Reference details and checks
+      </summary>
+      <h3 id="review-a-from-prediction-to-loss">
+       Review A: From prediction to loss
+      </h3>
+      <p>
+       Given token IDs
+       <code>
+        x[0:T+1]
+       </code>
+       , the input is
+       <code>
+        x[0:T]
+       </code>
+       and the target is
+       <code>
+        x[1:T+1]
+       </code>
+       . For logits z at a position, cross entropy is
+       <code>
+        -log softmax(z)[target]
+       </code>
+       . The language-model loss averages over valid target positions. If the model assigns probability 0.25 to each correct token, loss is
+       <code>
+        -log(0.25)=1.3863
+       </code>
+       nats and perplexity is 4. Perplexity is comparable only under appropriate matching tokenization and evaluation conditions.
+      </p>
+      <p>
+       Padding targets should be ignored. In SFT later, prompt positions may also be ignored while answer positions receive loss. Confusing an attention mask with a loss mask is a common bug: one controls information access, the other controls which predictions are supervised.
+      </p>
+      <h3 id="review-a-data-quality-is-an-engineering-problem">
+       Review A: Data quality is an engineering problem
+      </h3>
+      <p>
+       Pretraining data pipelines filter, deduplicate, segment and tokenize. Duplicated or near-duplicated documents crossing train/test boundaries can create inflated evaluations. Split at a meaningful group boundary before producing overlapping chunks. For documentation, a page family or API topic may be a stronger group than an arbitrary text span. Keep version, license, origin, time and transformation metadata.
+      </p>
+      <p>
+       Gradient descent reduces training loss but does not guarantee the desired application behavior. Use training and validation curves to separate underfitting, overfitting and implementation bugs. Validate with dropout disabled and gradients off, without accidentally leaving the model in evaluation mode for the next training batch.
+      </p>
+      <h3 id="review-a-worked-optimization-example">
+       Review A: Worked optimization example
+      </h3>
+      <p>
+       If the microbatch size is 2 and you accumulate gradients across 8 microbatches on one device, the effective example batch is 16, provided each microbatch is equally sized. Divide each microbatch's loss by 8 before backpropagation, step the optimizer once, and clear gradients afterward. If sequence lengths vary, equal averaging of microbatch means may not equal a global valid-token average. Account for token counts when exact equivalence matters.
+      </p>
+      <p>
+       Adam-style optimizers maintain moment estimates, adding substantial memory. Learning-rate warmup and clipping can stabilize some settings, but first verify labels, masks and data. A scheduler cannot repair training on the wrong target. Save optimizer state, random states, tokenizer identity and current step if you want faithful resume behavior.
+      </p>
+      <h3 id="review-a-experiment">
+       Review A: Experiment
+      </h3>
+      <p>
+       In
+       <a href="../tutorials/12.html">
+        Tutorial 12: Training a small transformer
+       </a>
+       , compare train/dev losses for one fixed configuration over time. Intentionally train with unshifted labels once and explain why the task changes. Try a one-batch overfit test, then an actual grouped split. The starter's tiny corpus is too small for strong statistical conclusions; your report should say so.
+      </p>
+      <p>
+       <strong>
+        Exit criterion:
+       </strong>
+       implement shifted labels, explain perplexity and list the artifacts needed to resume a training run.
+       <strong>
+        Reading:
+       </strong>
+       <a class="inline-reading" href="../resources.html#reference-r01">
+        Stanford CS336 Language Modeling from Scratch (R01)
+       </a>
+       data and optimization lecture headings.
+       <strong>
+        Tutorial:
+       </strong>
+       12.
+      </p>
+     </details>
+    </article>
+    <nav aria-label="Adjacent lectures" class="chapter-pagination">
+     <a href="11.html">
+      <small>
+       Previous week
+      </small>
+      Encoders decoders and complete model architectures
+     </a>
+     <a href="13.html">
+      <small>
+       Next week
+      </small>
+      Generation decoding and the KV cache
+     </a>
+    </nav>
+   </div>
+   <footer class="footer">
+    <span>
+     Applied AI · An independent self-study course
+    </span>
+    <span>
+     32 weeks · 10 hours per week
+    </span>
+    <a href="../resources.html#about-this-course">
+     About and sources
+    </a>
+   </footer>
+  </main>
+  <dialog aria-labelledby="search-title" class="search-dialog">
+   <div class="dialog-head">
+    <h2 id="search-title">
+     Find a concept
+    </h2>
+    <button aria-label="Close search" class="search-close" type="button">
+     Close
+    </button>
+   </div>
+   <label class="sr-only" for="course-search">
+    Search all lectures and tutorials
+   </label>
+   <input autocomplete="off" id="course-search" placeholder="Try attention, fine-tuning, or harness…" type="search"/>
+   <p aria-live="polite" class="search-status">
+    Search lecture notes, tutorials, tests and readings.
+   </p>
+   <div class="search-results">
+   </div>
+  </dialog>
+  <div aria-live="polite" class="toast" role="status">
+  </div>
+ </body>
+</html>

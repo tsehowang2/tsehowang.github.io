@@ -1,68 +1,1071 @@
 <!DOCTYPE html>
-
-<html lang="zh-HK"><head><script src="../../assets/translations-zh-HK.js"></script><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/><title>Fine-tuning 由教學 dataset 開始 · Applied AI</title><meta content="Applied generative AI and LLM systems course material" name="description"/><meta content="#173c36" name="theme-color"/><link href="../../assets/favicon.svg" rel="icon" type="image/svg+xml"/><link href="../../assets/style.css" rel="stylesheet"/><link href="../../assets/slides.css" rel="stylesheet"/><script>window.COURSE_BASE="../";</script><script defer="" src="../../assets/site-config.js"></script><script defer="" src="../assets/search-index.js"></script><script defer="" src="../../assets/app.js"></script><script defer="" src="../../assets/visuals.js"></script><script defer="" src="../../assets/slides.js"></script><script defer="" src="../../assets/beginner-visuals.js"></script><script defer="True" src="../../assets/locale-patterns.js"></script><script defer="True" src="../../assets/locale.js"></script><link href="../../assets/bilingual.css" rel="stylesheet"/><link href="../../lectures/24.html" hreflang="en" rel="alternate"/></head><body data-page-kind="lecture" data-week="24"><a class="skip-link" href="#main">跳至內容</a><header class="topbar"><button aria-controls="course-sidebar" aria-expanded="false" class="menu-toggle" type="button">選單</button><a class="brand" href="../index.html"><span aria-hidden="true" class="brand-mark">a<span>i</span></span><span>APPLIED AI<small>從原理到實踐</small></span></a><nav aria-label="主要導覽"><a href="../index.html">課程</a><a href="../visuals.html">互動圖解</a><a href="../project.html">專題</a><a class="language-switch" href="../../lectures/24.html" hreflang="en" lang="en">English</a></nav><button class="search-open" type="button">搜尋課程 <span aria-hidden="true">/</span></button></header><aside aria-label="課程章節" class="sidebar" id="course-sidebar"><a class="side-home" href="../index.html">課程概覽</a><details class="semester-nav"><summary>第一學期<span>第 1–16 週</span></summary><ol start="1"><li><a href="../lectures/01.html"><span class="week-number">01</span><span>Language model 究竟在學甚麼</span><span class="week-tick" data-week-tick="1"></span></a></li><li><a href="../lectures/02.html"><span class="week-number">02</span><span>從文字到 token 和數值 ID</span><span class="week-tick" data-week-tick="2"></span></a></li><li><a href="../lectures/03.html"><span class="week-number">03</span><span>Word vector 能表達甚麼</span><span class="week-tick" data-week-tick="3"></span></a></li><li><a href="../lectures/04.html"><span class="week-number">04</span><span>從 score 到 probability 和學習訊號</span><span class="week-tick" data-week-tick="4"></span></a></li><li><a href="../lectures/05.html"><span class="week-number">05</span><span>為甚麼語言需要 context 和次序</span><span class="week-tick" data-week-tick="5"></span></a></li><li><a href="../lectures/06.html"><span class="week-number">06</span><span>Attention 由 weighted mixture 開始</span><span class="week-tick" data-week-tick="6"></span></a></li><li><a href="../lectures/07.html"><span class="week-number">07</span><span>Query、key 和 value 從何而來</span><span class="week-tick" data-week-tick="7"></span></a></li><li><a href="../lectures/08.html"><span class="week-number">08</span><span>正確進行 attention scaling 和 masking</span><span class="week-tick" data-week-tick="8"></span></a></li><li><a href="../lectures/09.html"><span class="week-number">09</span><span>多個 attention head 與位置</span><span class="week-tick" data-week-tick="9"></span></a></li><li><a href="../lectures/10.html"><span class="week-number">10</span><span>逐步拆解 transformer block</span><span class="week-tick" data-week-tick="10"></span></a></li><li><a href="../lectures/11.html"><span class="week-number">11</span><span>Encoder、decoder 與完整 model architecture</span><span class="week-tick" data-week-tick="11"></span></a></li><li><a href="../lectures/12.html"><span class="week-number">12</span><span>訓練一個小型 transformer</span><span class="week-tick" data-week-tick="12"></span></a></li><li><a href="../lectures/13.html"><span class="week-number">13</span><span>Generation、decoding 與 KV cache</span><span class="week-tick" data-week-tick="13"></span></a></li><li><a href="../lectures/14.html"><span class="week-number">14</span><span>從 pretraining 到 instruction following 和 reasoning</span><span class="week-tick" data-week-tick="14"></span></a></li><li><a href="../lectures/15.html"><span class="week-number">15</span><span>文字以外的 Generative AI</span><span class="week-tick" data-week-tick="15"></span></a></li><li><a href="../lectures/16.html"><span class="week-number">16</span><span>完整 transformer 導覽與第一學期溫習</span><span class="week-tick" data-week-tick="16"></span></a></li></ol></details><details class="semester-nav" open=""><summary>第二學期<span>第 17–32 週</span></summary><ol start="17"><li><a href="../lectures/17.html"><span class="week-number">17</span><span>從 word vector 到 semantic search</span><span class="week-tick" data-week-tick="17"></span></a></li><li><a href="../lectures/18.html"><span class="week-number">18</span><span>從一列 vector 建立 vector database</span><span class="week-tick" data-week-tick="18"></span></a></li><li><a href="../lectures/19.html"><span class="week-number">19</span><span>把 RAG 理解為開卷作答</span><span class="week-tick" data-week-tick="19"></span></a></li><li><a href="../lectures/20.html"><span class="week-number">20</span><span>在保持基本任務的前提下改善 RAG</span><span class="week-tick" data-week-tick="20"></span></a></li><li><a href="../lectures/21.html"><span class="week-number">21</span><span>評估 retrieval、答案與 uncertainty</span><span class="week-tick" data-week-tick="21"></span></a></li><li><a href="../lectures/22.html"><span class="week-number">22</span><span>CPU、GPU、memory 與 model 資源計算</span><span class="week-tick" data-week-tick="22"></span></a></li><li><a href="../lectures/23.html"><span class="week-number">23</span><span>CUDA kernel 與 profiling</span><span class="week-tick" data-week-tick="23"></span></a></li><li><a aria-current="page" href="../lectures/24.html"><span class="week-number">24</span><span>Fine-tuning 由教學 dataset 開始</span><span class="week-tick" data-week-tick="24"></span></a></li><li><a href="../lectures/25.html"><span class="week-number">25</span><span>從小型 matrix 理解 LoRA 和 QLoRA</span><span class="week-tick" data-week-tick="25"></span></a></li><li><a href="../lectures/26.html"><span class="week-number">26</span><span>Fine-tuning 實驗、preference 與 distillation</span><span class="week-tick" data-week-tick="26"></span></a></li><li><a href="../lectures/27.html"><span class="week-number">27</span><span>Tool、function、workflow 與 agent</span><span class="week-tick" data-week-tick="27"></span></a></li><li><a href="../lectures/28.html"><span class="week-number">28</span><span>Harness、planning、memory 與有界執行</span><span class="week-tick" data-week-tick="28"></span></a></li><li><a href="../lectures/29.html"><span class="week-number">29</span><span>從 notebook 到 MLOps 和 inference serving</span><span class="week-tick" data-week-tick="29"></span></a></li><li><a href="../lectures/30.html"><span class="week-number">30</span><span>Monitoring、security、regression test 與 rollback</span><span class="week-tick" data-week-tick="30"></span></a></li><li><a href="../lectures/31.html"><span class="week-number">31</span><span>整合文件助手與進階延伸</span><span class="week-tick" data-week-tick="31"></span></a></li><li><a href="../lectures/32.html"><span class="week-number">32</span><span>溫習、答辯與持續學習計劃</span><span class="week-tick" data-week-tick="32"></span></a></li></ol></details><div class="side-links"><a href="../visuals.html">互動圖解實驗室 <span>14 個互動課節</span></a><a href="../project.html">文件助手 <span>你的 capstone project</span></a><a href="../resources.html">閱讀材料與環境設定</a></div><div class="side-progress"><div><span>你的進度</span><strong data-progress-count="">0 / 32</strong></div><progress aria-label="已完成 lecture" max="32" value="0"></progress><small>儲存在這個瀏覽器</small></div></aside><main class="main" id="main"><div class="content"><div class="chapter-header"><div class="eyebrow">第二學期 / 第 24 週</div><h1>Fine-tuning 由教學 dataset 開始</h1></div><div class="lesson-links"><a href="../tutorials/24.html">練習 24</a><a href="../tests/24.html">檢查你的理解</a><button aria-pressed="false" class="mark-complete" data-week="24" type="button">標記為已完成</button></div><section aria-label="Lecture slides" class="lecture-deck" id="lecture-slides"><div class="deck-top"><div><div class="eyebrow">課堂投影片 · 第 24 週</div><h2>一步一步學習。</h2></div><button class="deck-present" type="button">簡報模式</button></div><p class="deck-help">閱讀每段解說，停下來預測結果，然後繼續。選取簡報後，可用方向鍵操作。完整講義在下方。</p><div aria-label="簡報：使用左右方向鍵" class="slide-viewport" tabindex="0"><section class="lecture-slide" data-slide=""><div class="slide-stage">由例子開始</div><h3>一個反覆出現的 behavior 問題</h3><div class="slide-prose"><p>假設 assistant 知道提供的 school fact，卻經常忽略 “Answer with one transport word.”。它回傳一段 paragraph，而不是 bus。</p>
-<p>修改 prompt 和加入 output constraint，是成本較低的第一步。如果仍有可重現的 behavior gap，supervised fine-tuning 可能是合理實驗。</p>
-<p>如果問題是 bus timetable 根本沒有進入 prompt，調整 weight 可能是錯誤介入。選 training method 之前，先診斷 failure。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">由例子開始</div><h3>Input 與理想 output</h3><div class="slide-prose"><p>SFT example 包含 instruction/context 和 target response。簡單 record 可以問 “Complete: I go to school by ___; answer with one word”，target 是 bus。</p>
-<p>另一筆可以問手冊裏沒有支持 fact 的問題，target 是指出資料不足的 response。加入這類 example，避免 dataset 暗示每條問題都應收到自信的 factual answer。</p>
-<p>Target 必須符合實際提供的 evidence 和要求 format。流暢的 synthetic target 也可能錯。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">建立對機制的理解</div><h3>建立 model sequence</h3><div class="slide-prose"><p>使用 model 的 chat template，serialize prompt 和 assistant response。Answer-only training 期間，prompt token 仍作 context，但其 loss label 設為 ignored。</p>
-<p>檢查實際 token boundary。String length 不等於 token length。如果對 prefix 的假設不符合 template，就可能 mask 錯誤位置。</p>
-<p>如果 truncation 移除了所有 answer token，這筆 record 就沒有預期的 supervised target。Training 前先偵測，不要把其後的 failure 當作 tuning problem。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">建立對機制的理解</div><h3>Label mask 的計算例子</h3><div class="slide-prose"><p>對 toy ID sequence，prompt 是 [10,11,12]，answer 是 [20,21]，完整 input 為 [10,11,12,20,21]。Answer-only label 可以把 prompt position 標為 ignored，把 answer position 按 model 的 shifted-loss convention 標為 supervised。</p>
-<p>要明確指出哪個 library 會在內部執行 next-token shift。不要手動 shift 兩次。</p>
-<p>本 tutorial 檢查 prepared record；之後的 training notebook 使用所選 model 的 convention。印出的 token ID 和 label，是有用的 debugging artifact。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">建立對機制的理解</div><h3>先 split data，再做 paraphrase</h3><div class="slide-prose"><p>如果同一問題的十個改寫版本跨越 train 和 test，表面 generalization 可能主要來自重複 task structure。生成 paraphrase 之前，先按有意義的 question/source family split。</p>
-<p>Final evaluation record 要與 adaptation 和 configuration selection 分開。如果可行，真正 project 的 train set 可由 100–300 個經 review 的 narrow example 組成；較小 pilot 必須作更有限的 claim。</p>
-<p>Manual review 和 executable check 互補。Validator 可以檢查 citation ID 或 calculation，reviewer 則檢查 target 是否真正回答 question。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">建立對機制的理解</div><h3>選擇 adaptation objective</h3><div class="slide-prose"><p>SFT 教 model 模仿 target。Continued pretraining 在額外 text 上使用 language-model objective。Preference training 比較 alternative。這些 objective 並不解決完全相同的問題。</p>
-<p>對狹窄的 output-format behavior，label 做得好的 SFT 可以合適。對經常改變的 factual information，透過 retrieval 保持 evidence 更新，可能更易維護。</p>
-<p>方法可以結合，但實驗必須隔離改變了甚麼。同時改善 prompt、retrieval 和 weight，便無法對 adapter 作乾淨的結論。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">建立對機制的理解</div><h3>Training 前先寫實驗提案</h3><div class="slide-prose"><p>寫出 failure distribution、計劃 dataset、baseline、expected improvement 和 possible regression。例如：改善有效 tool-call format，同時監察 argument correctness 和不適當作答。</p>
-<p>在 independent example 上選 metric，並在看到 result 前定義 release gate。Training loss 是診斷指標，不是最後 application criterion。</p>
-<p>下週會用 LoRA 減少 trainable parameter state。這種 optimization 仍依賴你現在設計的 dataset 和 objective。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">建立對機制的理解</div><h3>實例練習與學習檢查</h3><div class="slide-prose"><p>建立 correct-format、wrong-format、insufficient-evidence 和 wrong-version example。檢查其 serialized token 和 loss mask。</p>
-<p>提出 grouped split，並 audit 十筆 record。指出一種 SFT 不太可能修復的 failure，原因是缺少 relevant evidence。</p>
-<p>當「fine-tune model」對你而言，代表具體 dataset、objective、trainable configuration、baseline comparison 和 evaluation plan，就已準備好繼續。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">選讀：深入學習</div><h3>完成引導例子後，再深入一層</h3><div class="slide-prose"><p>以下內容適合第二次閱讀。先解釋上面的日常例子，再用以下 equation 和實作細節，把解釋說得更精確。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">選讀：深入學習</div><h3>深入研習 17：直觀理解</h3><div class="slide-prose"><p>Assistant 失敗時，改變 model weight 只是其中一種介入。缺少 source material，指向 ingestion 問題；缺少 relevant passage，指向 retrieval；answer 忽略現有 evidence，可能涉及 context、prompting 或 model capability。持續出錯的 output format，才可能適合 supervised fine-tuning。付出 training cost 前，先診斷失敗的 boundary。</p>
-<p>Prompting 在 inference time 改變 instruction 和 demonstration。RAG 改變提供的 information。Supervised fine-tuning 改變 parameter，以模仿理想 output。Continued pretraining 在新 text 上，透過 language-model objective 改變 parameter。Preference optimization 改變可能 response 之間的相對 preference。方法可以共存，但它們處理不同的直接問題，也有不同 update cost。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">選讀：深入學習</div><h3>深入研習 17：SFT dataset 設計</h3><div class="slide-prose"><p>SFT example 包含 input 和 target response。對本 assistant，可以教狹窄 behavior，例如選擇有效 tool，或產生引用 evidence 的 JSON answer。加入 answerable task、資料不足 case、version-specific evidence 和 tool failure。如果每個 example 都可作答，model 可能學到「給答案永遠有獎勵」。</p>
-<p>Target 在提供的 context 下必須正確。Synthetic generator 可以產生合理卻錯誤的 example；要人手 audit sample，並盡可能使用 executable 或 source check。儲存 provenance 和 generation setting。製作 paraphrase 之前，按 task family 或 documentation group split，否則風格上近乎重複的內容可能洩漏至 evaluation。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">選讀：深入學習</div><h3>深入研習 17：選擇介入的例子</h3><div class="slide-prose"><p>想像有 50 個 development failure：25 個缺少 evidence，10 個有正確 evidence 但 JSON 無效，10 個需要尚未提供的 calculation tool，5 個本身有歧義。拿全部 50 個來 training，會混合四種原因。先修 ingestion/retrieval，加入 typed calculation interface，並釐清歧義任務。只有 prompt/schema constraint 之後仍有量度到的 gap，才 fine-tune format adherence。</p>
-<p>對 answer-only loss，用 ignored label mask prompt token，並 supervise answer token。Input 要保留 evidence。不要用 final held-out label training，也不要用 hidden test set 選 epoch 數。記錄 truncation rate；target 被切掉的 example，不提供預期 supervision。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">選讀：深入學習</div><h3>深入研習 17：實驗</h3><div class="slide-prose"><p>Notebook 24 建立 training record、檢查 source ID，並 split grouped task。小型 synthetic example 教的是 data pipeline，不是有用的 production behavior。為真正 project 建立更大、經 review 的 development dataset。Training 前先預測：哪個 metric 應改善，哪個可能 regression？保留 frozen RAG baseline 作比較。</p>
-<p><strong>完成標準：</strong> 用 error taxonomy 說明為甚麼選 SFT，並建立有考慮 leakage 的 dataset。 <strong>閱讀材料：</strong> R01 的 post-training 主題；R14 的 configuration overview。 <strong>Tutorial：</strong> 24.</p></div></section></div><div class="deck-controls"><button class="slide-prev" type="button">← 上一頁</button><span aria-live="polite" class="slide-counter">1 / 13</span><button class="slide-next" type="button">下一頁 →</button></div><label class="slide-jump-label">前往 slide <select aria-label="跳至 slide" class="slide-jump"><option value="0">1</option><option value="1">2</option><option value="2">3</option><option value="3">4</option><option value="4">5</option><option value="5">6</option><option value="6">7</option><option value="7">8</option><option value="8">9</option><option value="9">10</option><option value="10">11</option><option value="11">12</option><option value="12">13</option></select></label><button aria-pressed="false" class="deck-all" type="button">顯示全部 slides</button><a class="reader-link" href="#full-notes">閱讀完整講義 ↓</a></section><article class="prose full-notes" id="full-notes"><div class="eyebrow">完整講義</div><h2>閱讀完整解說</h2><h3 id="a-repeated-behavior-problem">一個反覆出現的 behavior 問題</h3>
-<p>假設 assistant 知道提供的 school fact，卻經常忽略 “Answer with one transport word.”。它回傳一段 paragraph，而不是 bus。</p>
-<p>修改 prompt 和加入 output constraint，是成本較低的第一步。如果仍有可重現的 behavior gap，supervised fine-tuning 可能是合理實驗。</p>
-<p>如果問題是 bus timetable 根本沒有進入 prompt，調整 weight 可能是錯誤介入。選 training method 之前，先診斷 failure。</p>
-<h3 id="inputs-and-desired-outputs">Input 與理想 output</h3>
-<p>SFT example 包含 instruction/context 和 target response。簡單 record 可以問 “Complete: I go to school by ___; answer with one word”，target 是 bus。</p>
-<p>另一筆可以問手冊裏沒有支持 fact 的問題，target 是指出資料不足的 response。加入這類 example，避免 dataset 暗示每條問題都應收到自信的 factual answer。</p>
-<p>Target 必須符合實際提供的 evidence 和要求 format。流暢的 synthetic target 也可能錯。</p>
-<h3 id="constructing-the-model-sequence">建立 model sequence</h3>
-<p>使用 model 的 chat template，serialize prompt 和 assistant response。Answer-only training 期間，prompt token 仍作 context，但其 loss label 設為 ignored。</p>
-<p>檢查實際 token boundary。String length 不等於 token length。如果對 prefix 的假設不符合 template，就可能 mask 錯誤位置。</p>
-<p>如果 truncation 移除了所有 answer token，這筆 record 就沒有預期的 supervised target。Training 前先偵測，不要把其後的 failure 當作 tuning problem。</p>
-<h3 id="a-worked-label-mask">Label mask 的計算例子</h3>
-<p>對 toy ID sequence，prompt 是 [10,11,12]，answer 是 [20,21]，完整 input 為 [10,11,12,20,21]。Answer-only label 可以把 prompt position 標為 ignored，把 answer position 按 model 的 shifted-loss convention 標為 supervised。</p>
-<p>要明確指出哪個 library 會在內部執行 next-token shift。不要手動 shift 兩次。</p>
-<p>本 tutorial 檢查 prepared record；之後的 training notebook 使用所選 model 的 convention。印出的 token ID 和 label，是有用的 debugging artifact。</p>
-<h3 id="data-splits-before-paraphrases">先 split data，再做 paraphrase</h3>
-<p>如果同一問題的十個改寫版本跨越 train 和 test，表面 generalization 可能主要來自重複 task structure。生成 paraphrase 之前，先按有意義的 question/source family split。</p>
-<p>Final evaluation record 要與 adaptation 和 configuration selection 分開。如果可行，真正 project 的 train set 可由 100–300 個經 review 的 narrow example 組成；較小 pilot 必須作更有限的 claim。</p>
-<p>Manual review 和 executable check 互補。Validator 可以檢查 citation ID 或 calculation，reviewer 則檢查 target 是否真正回答 question。</p>
-<h3 id="choosing-the-adaptation-objective">選擇 adaptation objective</h3>
-<p>SFT 教 model 模仿 target。Continued pretraining 在額外 text 上使用 language-model objective。Preference training 比較 alternative。這些 objective 並不解決完全相同的問題。</p>
-<p>對狹窄的 output-format behavior，label 做得好的 SFT 可以合適。對經常改變的 factual information，透過 retrieval 保持 evidence 更新，可能更易維護。</p>
-<p>方法可以結合，但實驗必須隔離改變了甚麼。同時改善 prompt、retrieval 和 weight，便無法對 adapter 作乾淨的結論。</p>
-<h3 id="an-experiment-proposal-before-training">Training 前先寫實驗提案</h3>
-<p>寫出 failure distribution、計劃 dataset、baseline、expected improvement 和 possible regression。例如：改善有效 tool-call format，同時監察 argument correctness 和不適當作答。</p>
-<p>在 independent example 上選 metric，並在看到 result 前定義 release gate。Training loss 是診斷指標，不是最後 application criterion。</p>
-<p>下週會用 LoRA 減少 trainable parameter state。這種 optimization 仍依賴你現在設計的 dataset 和 objective。</p>
-<h3 id="worked-practice-and-a-readiness-check">實例練習與學習檢查</h3>
-<p>建立 correct-format、wrong-format、insufficient-evidence 和 wrong-version example。檢查其 serialized token 和 loss mask。</p>
-<p>提出 grouped split，並 audit 十筆 record。指出一種 SFT 不太可能修復的 failure，原因是缺少 relevant evidence。</p>
-<p>當「fine-tune model」對你而言，代表具體 dataset、objective、trainable configuration、baseline comparison 和 evaluation plan，就已準備好繼續。</p>
-<h3 id="a-deeper-pass-after-the-worked-introduction">完成引導例子後，再深入一層</h3>
-<p>以下內容適合第二次閱讀。先解釋上面的日常例子，再用以下 equation 和實作細節，把解釋說得更精確。</p>
-<h3 id="further-study-17-intuition">深入研習 17：直觀理解</h3>
-<p>Assistant 失敗時，改變 model weight 只是其中一種介入。缺少 source material，指向 ingestion 問題；缺少 relevant passage，指向 retrieval；answer 忽略現有 evidence，可能涉及 context、prompting 或 model capability。持續出錯的 output format，才可能適合 supervised fine-tuning。付出 training cost 前，先診斷失敗的 boundary。</p>
-<p>Prompting 在 inference time 改變 instruction 和 demonstration。RAG 改變提供的 information。Supervised fine-tuning 改變 parameter，以模仿理想 output。Continued pretraining 在新 text 上，透過 language-model objective 改變 parameter。Preference optimization 改變可能 response 之間的相對 preference。方法可以共存，但它們處理不同的直接問題，也有不同 update cost。</p>
-<h3 id="further-study-17-sft-dataset-design">深入研習 17：SFT dataset 設計</h3>
-<p>SFT example 包含 input 和 target response。對本 assistant，可以教狹窄 behavior，例如選擇有效 tool，或產生引用 evidence 的 JSON answer。加入 answerable task、資料不足 case、version-specific evidence 和 tool failure。如果每個 example 都可作答，model 可能學到「給答案永遠有獎勵」。</p>
-<p>Target 在提供的 context 下必須正確。Synthetic generator 可以產生合理卻錯誤的 example；要人手 audit sample，並盡可能使用 executable 或 source check。儲存 provenance 和 generation setting。製作 paraphrase 之前，按 task family 或 documentation group split，否則風格上近乎重複的內容可能洩漏至 evaluation。</p>
-<h3 id="further-study-17-worked-intervention-decision">深入研習 17：選擇介入的例子</h3>
-<p>想像有 50 個 development failure：25 個缺少 evidence，10 個有正確 evidence 但 JSON 無效，10 個需要尚未提供的 calculation tool，5 個本身有歧義。拿全部 50 個來 training，會混合四種原因。先修 ingestion/retrieval，加入 typed calculation interface，並釐清歧義任務。只有 prompt/schema constraint 之後仍有量度到的 gap，才 fine-tune format adherence。</p>
-<p>對 answer-only loss，用 ignored label mask prompt token，並 supervise answer token。Input 要保留 evidence。不要用 final held-out label training，也不要用 hidden test set 選 epoch 數。記錄 truncation rate；target 被切掉的 example，不提供預期 supervision。</p>
-<h3 id="further-study-17-experiment">深入研習 17：實驗</h3>
-<p>Notebook 24 建立 training record、檢查 source ID，並 split grouped task。小型 synthetic example 教的是 data pipeline，不是有用的 production behavior。為真正 project 建立更大、經 review 的 development dataset。Training 前先預測：哪個 metric 應改善，哪個可能 regression？保留 frozen RAG baseline 作比較。</p>
-<p><strong>完成標準：</strong> 用 error taxonomy 說明為甚麼選 SFT，並建立有考慮 leakage 的 dataset。 <strong>閱讀材料：</strong> R01 的 post-training 主題；R14 的 configuration overview。 <strong>Tutorial：</strong> 24.</p></article><nav aria-label="前後 lecture" class="chapter-pagination"><a href="23.html"><small>上一週</small>CUDA kernel 與 profiling</a><a href="25.html"><small>下一週</small>從小型 matrix 理解 LoRA 和 QLoRA</a></nav></div><footer class="footer"><span>Applied AI · 獨立自學課程</span><span>32 週 · 每週 10 小時</span><a href="../resources.html#about-this-course">關於課程及資料來源</a></footer></main><dialog aria-labelledby="search-title" class="search-dialog"><div class="dialog-head"><h2 id="search-title">尋找概念</h2><button aria-label="關閉搜尋" class="search-close" type="button">關閉</button></div><label class="sr-only" for="course-search">搜尋所有 lecture 和 tutorial</label><input autocomplete="off" id="course-search" placeholder="試試 attention、fine-tuning 或 harness……" type="search"/><p aria-live="polite" class="search-status">搜尋 lecture notes、tutorial、測驗及閱讀材料。</p><div class="search-results"></div></dialog><div aria-live="polite" class="toast" role="status"></div></body></html>
+<html lang="zh-HK">
+ <head>
+  <script src="../../assets/translations-zh-HK.js">
+  </script>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width,initial-scale=1" name="viewport"/>
+  <title>
+   Fine-tuning 由教學 dataset 開始 · Applied AI
+  </title>
+  <meta content="Applied generative AI and LLM systems course material" name="description"/>
+  <meta content="#173c36" name="theme-color"/>
+  <link href="../../assets/favicon.svg" rel="icon" type="image/svg+xml"/>
+  <link href="../../assets/style.css" rel="stylesheet"/>
+  <link href="../../assets/slides.css" rel="stylesheet"/>
+  <script>
+   window.COURSE_BASE="../";
+  </script>
+  <script defer="" src="../../assets/site-config.js">
+  </script>
+  <script defer="" src="../assets/search-index.js">
+  </script>
+  <script defer="" src="../../assets/app.js">
+  </script>
+  <script defer="" src="../../assets/visuals.js">
+  </script>
+  <script defer="" src="../../assets/slides.js">
+  </script>
+  <script defer="" src="../../assets/beginner-visuals.js">
+  </script>
+  <script defer="True" src="../../assets/locale-patterns.js">
+  </script>
+  <script defer="True" src="../../assets/locale.js">
+  </script>
+  <link href="../../assets/bilingual.css" rel="stylesheet"/>
+  <link href="../../lectures/24.html" hreflang="en" rel="alternate"/>
+  <link href="../../assets/reader-v3.css" rel="stylesheet"/>
+  <script defer="True" src="../../assets/reader-v3.js">
+  </script>
+ </head>
+ <body data-page-kind="lecture" data-week="24">
+  <a class="skip-link" href="#main">
+   跳至內容
+  </a>
+  <header class="topbar">
+   <button aria-controls="course-sidebar" aria-expanded="false" class="menu-toggle" type="button">
+    選單
+   </button>
+   <a class="brand" href="../index.html">
+    <span aria-hidden="true" class="brand-mark">
+     a
+     <span>
+      i
+     </span>
+    </span>
+    <span>
+     APPLIED AI
+     <small>
+      從原理到實踐
+     </small>
+    </span>
+   </a>
+   <nav aria-label="主要導覽">
+    <a href="../index.html">
+     課程
+    </a>
+    <a href="../visuals.html">
+     互動圖解
+    </a>
+    <a href="../project.html">
+     專題
+    </a>
+    <a class="language-switch" href="../../lectures/24.html" hreflang="en" lang="en">
+     English
+    </a>
+   </nav>
+   <button class="search-open" type="button">
+    搜尋課程
+    <span aria-hidden="true">
+     /
+    </span>
+   </button>
+  </header>
+  <aside aria-label="課程章節" class="sidebar" id="course-sidebar">
+   <a class="side-home" href="../index.html">
+    課程概覽
+   </a>
+   <details class="semester-nav">
+    <summary>
+     第一學期
+     <span>
+      第 1–16 週
+     </span>
+    </summary>
+    <ol start="1">
+     <li>
+      <a href="../lectures/01.html">
+       <span class="week-number">
+        01
+       </span>
+       <span>
+        Language model 究竟在學甚麼
+       </span>
+       <span class="week-tick" data-week-tick="1">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/02.html">
+       <span class="week-number">
+        02
+       </span>
+       <span>
+        從文字到 token 和數值 ID
+       </span>
+       <span class="week-tick" data-week-tick="2">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/03.html">
+       <span class="week-number">
+        03
+       </span>
+       <span>
+        Word vector 能表達甚麼
+       </span>
+       <span class="week-tick" data-week-tick="3">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/04.html">
+       <span class="week-number">
+        04
+       </span>
+       <span>
+        從 score 到 probability 和學習訊號
+       </span>
+       <span class="week-tick" data-week-tick="4">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/05.html">
+       <span class="week-number">
+        05
+       </span>
+       <span>
+        為甚麼語言需要 context 和次序
+       </span>
+       <span class="week-tick" data-week-tick="5">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/06.html">
+       <span class="week-number">
+        06
+       </span>
+       <span>
+        Attention 由 weighted mixture 開始
+       </span>
+       <span class="week-tick" data-week-tick="6">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/07.html">
+       <span class="week-number">
+        07
+       </span>
+       <span>
+        Query、key 和 value 從何而來
+       </span>
+       <span class="week-tick" data-week-tick="7">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/08.html">
+       <span class="week-number">
+        08
+       </span>
+       <span>
+        正確進行 attention scaling 和 masking
+       </span>
+       <span class="week-tick" data-week-tick="8">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/09.html">
+       <span class="week-number">
+        09
+       </span>
+       <span>
+        多個 attention head 與位置
+       </span>
+       <span class="week-tick" data-week-tick="9">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/10.html">
+       <span class="week-number">
+        10
+       </span>
+       <span>
+        逐步拆解 transformer block
+       </span>
+       <span class="week-tick" data-week-tick="10">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/11.html">
+       <span class="week-number">
+        11
+       </span>
+       <span>
+        Encoder、decoder 與完整 model architecture
+       </span>
+       <span class="week-tick" data-week-tick="11">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/12.html">
+       <span class="week-number">
+        12
+       </span>
+       <span>
+        訓練一個小型 transformer
+       </span>
+       <span class="week-tick" data-week-tick="12">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/13.html">
+       <span class="week-number">
+        13
+       </span>
+       <span>
+        Generation、decoding 與 KV cache
+       </span>
+       <span class="week-tick" data-week-tick="13">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/14.html">
+       <span class="week-number">
+        14
+       </span>
+       <span>
+        從 pretraining 到 instruction following 和 reasoning
+       </span>
+       <span class="week-tick" data-week-tick="14">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/15.html">
+       <span class="week-number">
+        15
+       </span>
+       <span>
+        文字以外的 Generative AI
+       </span>
+       <span class="week-tick" data-week-tick="15">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/16.html">
+       <span class="week-number">
+        16
+       </span>
+       <span>
+        完整 transformer 導覽與第一學期溫習
+       </span>
+       <span class="week-tick" data-week-tick="16">
+       </span>
+      </a>
+     </li>
+    </ol>
+   </details>
+   <details class="semester-nav" open="">
+    <summary>
+     第二學期
+     <span>
+      第 17–32 週
+     </span>
+    </summary>
+    <ol start="17">
+     <li>
+      <a href="../lectures/17.html">
+       <span class="week-number">
+        17
+       </span>
+       <span>
+        從 word vector 到 semantic search
+       </span>
+       <span class="week-tick" data-week-tick="17">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/18.html">
+       <span class="week-number">
+        18
+       </span>
+       <span>
+        從一列 vector 建立 vector database
+       </span>
+       <span class="week-tick" data-week-tick="18">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/19.html">
+       <span class="week-number">
+        19
+       </span>
+       <span>
+        把 RAG 理解為開卷作答
+       </span>
+       <span class="week-tick" data-week-tick="19">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/20.html">
+       <span class="week-number">
+        20
+       </span>
+       <span>
+        在保持基本任務的前提下改善 RAG
+       </span>
+       <span class="week-tick" data-week-tick="20">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/21.html">
+       <span class="week-number">
+        21
+       </span>
+       <span>
+        評估 retrieval、答案與 uncertainty
+       </span>
+       <span class="week-tick" data-week-tick="21">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/22.html">
+       <span class="week-number">
+        22
+       </span>
+       <span>
+        CPU、GPU、memory 與 model 資源計算
+       </span>
+       <span class="week-tick" data-week-tick="22">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/23.html">
+       <span class="week-number">
+        23
+       </span>
+       <span>
+        CUDA kernel 與 profiling
+       </span>
+       <span class="week-tick" data-week-tick="23">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a aria-current="page" href="../lectures/24.html">
+       <span class="week-number">
+        24
+       </span>
+       <span>
+        Fine-tuning 由教學 dataset 開始
+       </span>
+       <span class="week-tick" data-week-tick="24">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/25.html">
+       <span class="week-number">
+        25
+       </span>
+       <span>
+        從小型 matrix 理解 LoRA 和 QLoRA
+       </span>
+       <span class="week-tick" data-week-tick="25">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/26.html">
+       <span class="week-number">
+        26
+       </span>
+       <span>
+        Fine-tuning 實驗、preference 與 distillation
+       </span>
+       <span class="week-tick" data-week-tick="26">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/27.html">
+       <span class="week-number">
+        27
+       </span>
+       <span>
+        Tool、function、workflow 與 agent
+       </span>
+       <span class="week-tick" data-week-tick="27">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/28.html">
+       <span class="week-number">
+        28
+       </span>
+       <span>
+        Harness、planning、memory 與有界執行
+       </span>
+       <span class="week-tick" data-week-tick="28">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/29.html">
+       <span class="week-number">
+        29
+       </span>
+       <span>
+        從 notebook 到 MLOps 和 inference serving
+       </span>
+       <span class="week-tick" data-week-tick="29">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/30.html">
+       <span class="week-number">
+        30
+       </span>
+       <span>
+        Monitoring、security、regression test 與 rollback
+       </span>
+       <span class="week-tick" data-week-tick="30">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/31.html">
+       <span class="week-number">
+        31
+       </span>
+       <span>
+        整合文件助手與進階延伸
+       </span>
+       <span class="week-tick" data-week-tick="31">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/32.html">
+       <span class="week-number">
+        32
+       </span>
+       <span>
+        溫習、答辯與持續學習計劃
+       </span>
+       <span class="week-tick" data-week-tick="32">
+       </span>
+      </a>
+     </li>
+    </ol>
+   </details>
+   <div class="side-links">
+    <a href="../visuals.html">
+     互動圖解實驗室
+     <span>
+      14 個互動課節
+     </span>
+    </a>
+    <a href="../project.html">
+     文件助手
+     <span>
+      你的 capstone project
+     </span>
+    </a>
+    <a href="../resources.html">
+     閱讀材料與環境設定
+    </a>
+   </div>
+   <div class="side-progress">
+    <div>
+     <span>
+      你的進度
+     </span>
+     <strong data-progress-count="">
+      0 / 32
+     </strong>
+    </div>
+    <progress aria-label="已完成 lecture" max="32" value="0">
+    </progress>
+    <small>
+     儲存在這個瀏覽器
+    </small>
+   </div>
+  </aside>
+  <main class="main" id="main">
+   <div class="content">
+    <div class="chapter-header">
+     <div class="eyebrow">
+      第二學期 / 第 24 週
+     </div>
+     <h1>
+      Fine-tuning 由教學 dataset 開始
+     </h1>
+    </div>
+    <div class="lesson-links">
+     <a href="../tutorials/24.html">
+      練習 24
+     </a>
+     <a href="../tests/24.html">
+      檢查你的理解
+     </a>
+     <button aria-pressed="false" class="mark-complete" data-week="24" type="button">
+      標記為已完成
+     </button>
+    </div>
+    <div aria-label="課堂檢視" class="lesson-mode" role="tablist">
+     <button aria-controls="full-notes" aria-selected="true" data-mode="read" id="mode-read" role="tab" type="button">
+      閱讀講義
+     </button>
+     <button aria-controls="lecture-slides" aria-selected="false" data-mode="slides" id="mode-slides" role="tab" type="button">
+      課堂 slides
+     </button>
+    </div>
+    <section aria-label="Lecture slides" class="lecture-deck" hidden="" id="lecture-slides" role="tabpanel">
+     <div class="deck-top">
+      <div>
+       <div class="eyebrow">
+        課堂投影片 · 第 24 週
+       </div>
+       <h2>
+        重點步驟與圖解
+       </h2>
+      </div>
+      <button class="deck-present" type="button">
+       簡報模式
+      </button>
+     </div>
+     <p class="deck-help">
+      用 slides 溫習機制；按「閱讀完整解說」可開啟完整講義及程式碼。
+     </p>
+     <div aria-label="簡報：使用左右方向鍵" class="slide-viewport" tabindex="0">
+      <section class="lecture-slide" data-slide="">
+       <div class="slide-stage">
+        第 24 週 · 課節 1
+       </div>
+       <h3>
+        一個反覆出現的 behavior 問題
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          假設 assistant 知道提供的 school fact，卻經常忽略 “Answer with one transport word.”。
+         </li>
+         <li>
+          修改 prompt 和加入 output constraint，是成本較低的第一步。
+         </li>
+         <li>
+          如果問題是 bus timetable 根本沒有進入 prompt，調整 weight 可能是錯誤介入。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#a-repeated-behavior-problem">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 24 週 · 課節 2
+       </div>
+       <h3>
+        Input 與理想 output
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          SFT example 包含 instruction/context 和 target response。
+         </li>
+         <li>
+          另一筆可以問手冊裏沒有支持 fact 的問題，target 是指出資料不足的 response。
+         </li>
+         <li>
+          Target 必須符合實際提供的 evidence 和要求 format。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#inputs-and-desired-outputs">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 24 週 · 課節 3
+       </div>
+       <h3>
+        建立 model sequence
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          使用 model 的 chat template，serialize prompt 和 assistant response。
+         </li>
+         <li>
+          檢查實際 token boundary。String length 不等於 token length。如果對 prefix 的假設不符合 template，就可能 mask 錯誤位置。
+         </li>
+         <li>
+          如果 truncation 移除了所有 answer token，這筆 record 就沒有預期的 supervised target。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#constructing-the-model-sequence">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 24 週 · 課節 4
+       </div>
+       <h3>
+        Label mask 的計算例子
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          對 toy ID sequence，prompt 是 [10,11,12]，answer 是 [20,21]，完整 input 為 [10,11,12,20,21]。
+         </li>
+         <li>
+          要明確指出哪個 library 會在內部執行 next-token shift。
+         </li>
+         <li>
+          本 tutorial 檢查 prepared record；之後的 training notebook 使用所選 model 的 convention。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#a-worked-label-mask">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 24 週 · 課節 5
+       </div>
+       <h3>
+        先 split data，再做 paraphrase
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          如果同一問題的十個改寫版本跨越 train 和 test，表面 generalization 可能主要來自重複 task structure。
+         </li>
+         <li>
+          Final evaluation record 要與 adaptation 和 configuration selection 分開。
+         </li>
+         <li>
+          Manual review 和 executable check 互補。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#data-splits-before-paraphrases">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 24 週 · 課節 6
+       </div>
+       <h3>
+        選擇 adaptation objective
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          SFT 教 model 模仿 target。Continued pretraining 在額外 text 上使用 language-model objective。Preference training 比較 alternative。這些 objective 並不解決完全相同的問題。
+         </li>
+         <li>
+          對狹窄的 output-format behavior，label 做得好的 SFT 可以合適。
+         </li>
+         <li>
+          方法可以結合，但實驗必須隔離改變了甚麼。同時改善 prompt、retrieval 和 weight，便無法對 adapter 作乾淨的結論。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#choosing-the-adaptation-objective">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 24 週 · 課節 7
+       </div>
+       <h3>
+        Training 前先寫實驗提案
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          寫出 failure distribution、計劃 dataset、baseline、expected improvement 和 possible regression。
+         </li>
+         <li>
+          在 independent example 上選 metric，並在看到 result 前定義 release gate。
+         </li>
+         <li>
+          下週會用 LoRA 減少 trainable parameter state。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#an-experiment-proposal-before-training">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 24 週 · 課節 8
+       </div>
+       <h3>
+        實例練習與學習檢查
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          建立 correct-format、wrong-format、insufficient-evidence 和 wrong-version example。
+         </li>
+         <li>
+          提出 grouped split，並 audit 十筆 record。
+         </li>
+         <li>
+          當「fine-tune model」對你而言，代表具體 dataset、objective、trainable configuration、baseline comparison 和 evaluation plan，就已準備好繼續。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#worked-practice-and-a-readiness-check">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+     </div>
+     <div class="deck-controls">
+      <button class="slide-prev" type="button">
+       ← 上一頁
+      </button>
+      <span aria-live="polite" class="slide-counter">
+       1 / 8
+      </span>
+      <button class="slide-next" type="button">
+       下一頁 →
+      </button>
+     </div>
+     <label class="slide-jump-label">
+      前往 slide
+      <select aria-label="跳至 slide" class="slide-jump">
+       <option value="0">
+        1. 一個反覆出現的 behavior 問題
+       </option>
+       <option value="1">
+        2. Input 與理想 output
+       </option>
+       <option value="2">
+        3. 建立 model sequence
+       </option>
+       <option value="3">
+        4. Label mask 的計算例子
+       </option>
+       <option value="4">
+        5. 先 split data，再做 paraphrase
+       </option>
+       <option value="5">
+        6. 選擇 adaptation objective
+       </option>
+       <option value="6">
+        7. Training 前先寫實驗提案
+       </option>
+       <option value="7">
+        8. 實例練習與學習檢查
+       </option>
+      </select>
+     </label>
+     <button aria-pressed="false" class="deck-all" type="button">
+      顯示全部 slides
+     </button>
+    </section>
+    <nav aria-label="本課內容" class="reader-toc">
+     <strong>
+      本課內容
+     </strong>
+     <ol>
+      <li>
+       <a href="#a-repeated-behavior-problem">
+        一個反覆出現的 behavior 問題
+       </a>
+      </li>
+      <li>
+       <a href="#inputs-and-desired-outputs">
+        Input 與理想 output
+       </a>
+      </li>
+      <li>
+       <a href="#constructing-the-model-sequence">
+        建立 model sequence
+       </a>
+      </li>
+      <li>
+       <a href="#a-worked-label-mask">
+        Label mask 的計算例子
+       </a>
+      </li>
+      <li>
+       <a href="#data-splits-before-paraphrases">
+        先 split data，再做 paraphrase
+       </a>
+      </li>
+      <li>
+       <a href="#choosing-the-adaptation-objective">
+        選擇 adaptation objective
+       </a>
+      </li>
+      <li>
+       <a href="#an-experiment-proposal-before-training">
+        Training 前先寫實驗提案
+       </a>
+      </li>
+      <li>
+       <a href="#worked-practice-and-a-readiness-check">
+        實例練習與學習檢查
+       </a>
+      </li>
+     </ol>
+    </nav>
+    <article class="prose full-notes" id="full-notes" role="tabpanel">
+     <div class="eyebrow">
+      完整講義
+     </div>
+     <h2>
+      閱讀完整解說
+     </h2>
+     <h3 id="a-repeated-behavior-problem">
+      一個反覆出現的 behavior 問題
+     </h3>
+     <p>
+      假設 assistant 知道提供的 school fact，卻經常忽略 “Answer with one transport word.”。它回傳一段 paragraph，而不是 bus。
+     </p>
+     <p>
+      修改 prompt 和加入 output constraint，是成本較低的第一步。如果仍有可重現的 behavior gap，supervised fine-tuning 可能是合理實驗。
+     </p>
+     <p>
+      如果問題是 bus timetable 根本沒有進入 prompt，調整 weight 可能是錯誤介入。選 training method 之前，先診斷 failure。
+     </p>
+     <h3 id="inputs-and-desired-outputs">
+      Input 與理想 output
+     </h3>
+     <p>
+      SFT example 包含 instruction/context 和 target response。簡單 record 可以問 “Complete: I go to school by ___; answer with one word”，target 是 bus。
+     </p>
+     <p>
+      另一筆可以問手冊裏沒有支持 fact 的問題，target 是指出資料不足的 response。加入這類 example，避免 dataset 暗示每條問題都應收到自信的 factual answer。
+     </p>
+     <p>
+      Target 必須符合實際提供的 evidence 和要求 format。流暢的 synthetic target 也可能錯。
+     </p>
+     <h3 id="constructing-the-model-sequence">
+      建立 model sequence
+     </h3>
+     <p>
+      使用 model 的 chat template，serialize prompt 和 assistant response。Answer-only training 期間，prompt token 仍作 context，但其 loss label 設為 ignored。
+     </p>
+     <p>
+      檢查實際 token boundary。String length 不等於 token length。如果對 prefix 的假設不符合 template，就可能 mask 錯誤位置。
+     </p>
+     <p>
+      如果 truncation 移除了所有 answer token，這筆 record 就沒有預期的 supervised target。Training 前先偵測，不要把其後的 failure 當作 tuning problem。
+     </p>
+     <h3 id="a-worked-label-mask">
+      Label mask 的計算例子
+     </h3>
+     <p>
+      對 toy ID sequence，prompt 是 [10,11,12]，answer 是 [20,21]，完整 input 為 [10,11,12,20,21]。Answer-only label 可以把 prompt position 標為 ignored，把 answer position 按 model 的 shifted-loss convention 標為 supervised。
+     </p>
+     <p>
+      要明確指出哪個 library 會在內部執行 next-token shift。不要手動 shift 兩次。
+     </p>
+     <p>
+      本 tutorial 檢查 prepared record；之後的 training notebook 使用所選 model 的 convention。印出的 token ID 和 label，是有用的 debugging artifact。
+     </p>
+     <h3 id="data-splits-before-paraphrases">
+      先 split data，再做 paraphrase
+     </h3>
+     <p>
+      如果同一問題的十個改寫版本跨越 train 和 test，表面 generalization 可能主要來自重複 task structure。生成 paraphrase 之前，先按有意義的 question/source family split。
+     </p>
+     <p>
+      Final evaluation record 要與 adaptation 和 configuration selection 分開。如果可行，真正 project 的 train set 可由 100–300 個經 review 的 narrow example 組成；較小 pilot 必須作更有限的 claim。
+     </p>
+     <p>
+      Manual review 和 executable check 互補。Validator 可以檢查 citation ID 或 calculation，reviewer 則檢查 target 是否真正回答 question。
+     </p>
+     <h3 id="choosing-the-adaptation-objective">
+      選擇 adaptation objective
+     </h3>
+     <p>
+      SFT 教 model 模仿 target。Continued pretraining 在額外 text 上使用 language-model objective。Preference training 比較 alternative。這些 objective 並不解決完全相同的問題。
+     </p>
+     <p>
+      對狹窄的 output-format behavior，label 做得好的 SFT 可以合適。對經常改變的 factual information，透過 retrieval 保持 evidence 更新，可能更易維護。
+     </p>
+     <p>
+      方法可以結合，但實驗必須隔離改變了甚麼。同時改善 prompt、retrieval 和 weight，便無法對 adapter 作乾淨的結論。
+     </p>
+     <h3 id="an-experiment-proposal-before-training">
+      Training 前先寫實驗提案
+     </h3>
+     <p>
+      寫出 failure distribution、計劃 dataset、baseline、expected improvement 和 possible regression。例如：改善有效 tool-call format，同時監察 argument correctness 和不適當作答。
+     </p>
+     <p>
+      在 independent example 上選 metric，並在看到 result 前定義 release gate。Training loss 是診斷指標，不是最後 application criterion。
+     </p>
+     <p>
+      下週會用 LoRA 減少 trainable parameter state。這種 optimization 仍依賴你現在設計的 dataset 和 objective。
+     </p>
+     <h3 id="worked-practice-and-a-readiness-check">
+      實例練習與學習檢查
+     </h3>
+     <p>
+      建立 correct-format、wrong-format、insufficient-evidence 和 wrong-version example。檢查其 serialized token 和 loss mask。
+     </p>
+     <p>
+      提出 grouped split，並 audit 十筆 record。指出一種 SFT 不太可能修復的 failure，原因是缺少 relevant evidence。
+     </p>
+     <p>
+      當「fine-tune model」對你而言，代表具體 dataset、objective、trainable configuration、baseline comparison 和 evaluation plan，就已準備好繼續。
+     </p>
+     <details class="reference-details" id="reference-details">
+      <summary>
+       參考細節與學習檢查
+      </summary>
+      <h3 id="review-a-intuition">
+       複習 A：直觀理解
+      </h3>
+      <p>
+       Assistant 失敗時，改變 model weight 只是其中一種介入。缺少 source material，指向 ingestion 問題；缺少 relevant passage，指向 retrieval；answer 忽略現有 evidence，可能涉及 context、prompting 或 model capability。持續出錯的 output format，才可能適合 supervised fine-tuning。付出 training cost 前，先診斷失敗的 boundary。
+      </p>
+      <p>
+       Prompting 在 inference time 改變 instruction 和 demonstration。RAG 改變提供的 information。Supervised fine-tuning 改變 parameter，以模仿理想 output。Continued pretraining 在新 text 上，透過 language-model objective 改變 parameter。Preference optimization 改變可能 response 之間的相對 preference。方法可以共存，但它們處理不同的直接問題，也有不同 update cost。
+      </p>
+      <h3 id="review-a-sft-dataset-design">
+       複習 A：SFT dataset 設計
+      </h3>
+      <p>
+       SFT example 包含 input 和 target response。對本 assistant，可以教狹窄 behavior，例如選擇有效 tool，或產生引用 evidence 的 JSON answer。加入 answerable task、資料不足 case、version-specific evidence 和 tool failure。如果每個 example 都可作答，model 可能學到「給答案永遠有獎勵」。
+      </p>
+      <p>
+       Target 在提供的 context 下必須正確。Synthetic generator 可以產生合理卻錯誤的 example；要人手 audit sample，並盡可能使用 executable 或 source check。儲存 provenance 和 generation setting。製作 paraphrase 之前，按 task family 或 documentation group split，否則風格上近乎重複的內容可能洩漏至 evaluation。
+      </p>
+      <h3 id="review-a-worked-intervention-decision">
+       複習 A：選擇介入的例子
+      </h3>
+      <p>
+       想像有 50 個 development failure：25 個缺少 evidence，10 個有正確 evidence 但 JSON 無效，10 個需要尚未提供的 calculation tool，5 個本身有歧義。拿全部 50 個來 training，會混合四種原因。先修 ingestion/retrieval，加入 typed calculation interface，並釐清歧義任務。只有 prompt/schema constraint 之後仍有量度到的 gap，才 fine-tune format adherence。
+      </p>
+      <p>
+       對 answer-only loss，用 ignored label mask prompt token，並 supervise answer token。Input 要保留 evidence。不要用 final held-out label training，也不要用 hidden test set 選 epoch 數。記錄 truncation rate；target 被切掉的 example，不提供預期 supervision。
+      </p>
+      <h3 id="review-a-experiment">
+       複習 A：實驗
+      </h3>
+      <p>
+       <a href="../tutorials/24.html">
+        Tutorial 24: Fine-tuning 由教學 dataset 開始
+       </a>
+       建立 training record、檢查 source ID，並 split grouped task。小型 synthetic example 教的是 data pipeline，不是有用的 production behavior。為真正 project 建立更大、經 review 的 development dataset。Training 前先預測：哪個 metric 應改善，哪個可能 regression？保留 frozen RAG baseline 作比較。
+      </p>
+      <p>
+       <strong>
+        完成標準：
+       </strong>
+       用 error taxonomy 說明為甚麼選 SFT，並建立有考慮 leakage 的 dataset。
+       <strong>
+        閱讀材料：
+       </strong>
+       <a class="inline-reading" href="../resources.html#reference-r01">
+        Stanford CS336 Language Modeling from Scratch (R01)
+       </a>
+       的 post-training 主題；
+       <a class="inline-reading" href="../resources.html#reference-r14">
+        Hugging Face PEFT LoRA guide (R14)
+       </a>
+       的 configuration overview。
+       <strong>
+        Tutorial：
+       </strong>
+       24.
+      </p>
+     </details>
+    </article>
+    <nav aria-label="前後 lecture" class="chapter-pagination">
+     <a href="23.html">
+      <small>
+       上一週
+      </small>
+      CUDA kernel 與 profiling
+     </a>
+     <a href="25.html">
+      <small>
+       下一週
+      </small>
+      從小型 matrix 理解 LoRA 和 QLoRA
+     </a>
+    </nav>
+   </div>
+   <footer class="footer">
+    <span>
+     Applied AI · 獨立自學課程
+    </span>
+    <span>
+     32 週 · 每週 10 小時
+    </span>
+    <a href="../resources.html#about-this-course">
+     關於課程及資料來源
+    </a>
+   </footer>
+  </main>
+  <dialog aria-labelledby="search-title" class="search-dialog">
+   <div class="dialog-head">
+    <h2 id="search-title">
+     尋找概念
+    </h2>
+    <button aria-label="關閉搜尋" class="search-close" type="button">
+     關閉
+    </button>
+   </div>
+   <label class="sr-only" for="course-search">
+    搜尋所有 lecture 和 tutorial
+   </label>
+   <input autocomplete="off" id="course-search" placeholder="試試 attention、fine-tuning 或 harness……" type="search"/>
+   <p aria-live="polite" class="search-status">
+    搜尋 lecture notes、tutorial、測驗及閱讀材料。
+   </p>
+   <div class="search-results">
+   </div>
+  </dialog>
+  <div aria-live="polite" class="toast" role="status">
+  </div>
+ </body>
+</html>

@@ -1,56 +1,1069 @@
 <!DOCTYPE html>
-
-<html lang="zh-HK"><head><script src="../../assets/translations-zh-HK.js"></script><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/><title>完整 transformer 導覽與第一學期溫習 · Applied AI</title><meta content="Applied generative AI and LLM systems course material" name="description"/><meta content="#173c36" name="theme-color"/><link href="../../assets/favicon.svg" rel="icon" type="image/svg+xml"/><link href="../../assets/style.css" rel="stylesheet"/><link href="../../assets/slides.css" rel="stylesheet"/><script>window.COURSE_BASE="../";</script><script defer="" src="../../assets/site-config.js"></script><script defer="" src="../assets/search-index.js"></script><script defer="" src="../../assets/app.js"></script><script defer="" src="../../assets/visuals.js"></script><script defer="" src="../../assets/slides.js"></script><script defer="" src="../../assets/beginner-visuals.js"></script><script defer="True" src="../../assets/locale-patterns.js"></script><script defer="True" src="../../assets/locale.js"></script><link href="../../assets/bilingual.css" rel="stylesheet"/><link href="../../lectures/16.html" hreflang="en" rel="alternate"/></head><body data-page-kind="lecture" data-week="16"><a class="skip-link" href="#main">跳至內容</a><header class="topbar"><button aria-controls="course-sidebar" aria-expanded="false" class="menu-toggle" type="button">選單</button><a class="brand" href="../index.html"><span aria-hidden="true" class="brand-mark">a<span>i</span></span><span>APPLIED AI<small>從原理到實踐</small></span></a><nav aria-label="主要導覽"><a href="../index.html">課程</a><a href="../visuals.html">互動圖解</a><a href="../project.html">專題</a><a class="language-switch" href="../../lectures/16.html" hreflang="en" lang="en">English</a></nav><button class="search-open" type="button">搜尋課程 <span aria-hidden="true">/</span></button></header><aside aria-label="課程章節" class="sidebar" id="course-sidebar"><a class="side-home" href="../index.html">課程概覽</a><details class="semester-nav" open=""><summary>第一學期<span>第 1–16 週</span></summary><ol start="1"><li><a href="../lectures/01.html"><span class="week-number">01</span><span>Language model 究竟在學甚麼</span><span class="week-tick" data-week-tick="1"></span></a></li><li><a href="../lectures/02.html"><span class="week-number">02</span><span>從文字到 token 和數值 ID</span><span class="week-tick" data-week-tick="2"></span></a></li><li><a href="../lectures/03.html"><span class="week-number">03</span><span>Word vector 能表達甚麼</span><span class="week-tick" data-week-tick="3"></span></a></li><li><a href="../lectures/04.html"><span class="week-number">04</span><span>從 score 到 probability 和學習訊號</span><span class="week-tick" data-week-tick="4"></span></a></li><li><a href="../lectures/05.html"><span class="week-number">05</span><span>為甚麼語言需要 context 和次序</span><span class="week-tick" data-week-tick="5"></span></a></li><li><a href="../lectures/06.html"><span class="week-number">06</span><span>Attention 由 weighted mixture 開始</span><span class="week-tick" data-week-tick="6"></span></a></li><li><a href="../lectures/07.html"><span class="week-number">07</span><span>Query、key 和 value 從何而來</span><span class="week-tick" data-week-tick="7"></span></a></li><li><a href="../lectures/08.html"><span class="week-number">08</span><span>正確進行 attention scaling 和 masking</span><span class="week-tick" data-week-tick="8"></span></a></li><li><a href="../lectures/09.html"><span class="week-number">09</span><span>多個 attention head 與位置</span><span class="week-tick" data-week-tick="9"></span></a></li><li><a href="../lectures/10.html"><span class="week-number">10</span><span>逐步拆解 transformer block</span><span class="week-tick" data-week-tick="10"></span></a></li><li><a href="../lectures/11.html"><span class="week-number">11</span><span>Encoder、decoder 與完整 model architecture</span><span class="week-tick" data-week-tick="11"></span></a></li><li><a href="../lectures/12.html"><span class="week-number">12</span><span>訓練一個小型 transformer</span><span class="week-tick" data-week-tick="12"></span></a></li><li><a href="../lectures/13.html"><span class="week-number">13</span><span>Generation、decoding 與 KV cache</span><span class="week-tick" data-week-tick="13"></span></a></li><li><a href="../lectures/14.html"><span class="week-number">14</span><span>從 pretraining 到 instruction following 和 reasoning</span><span class="week-tick" data-week-tick="14"></span></a></li><li><a href="../lectures/15.html"><span class="week-number">15</span><span>文字以外的 Generative AI</span><span class="week-tick" data-week-tick="15"></span></a></li><li><a aria-current="page" href="../lectures/16.html"><span class="week-number">16</span><span>完整 transformer 導覽與第一學期溫習</span><span class="week-tick" data-week-tick="16"></span></a></li></ol></details><details class="semester-nav"><summary>第二學期<span>第 17–32 週</span></summary><ol start="17"><li><a href="../lectures/17.html"><span class="week-number">17</span><span>從 word vector 到 semantic search</span><span class="week-tick" data-week-tick="17"></span></a></li><li><a href="../lectures/18.html"><span class="week-number">18</span><span>從一列 vector 建立 vector database</span><span class="week-tick" data-week-tick="18"></span></a></li><li><a href="../lectures/19.html"><span class="week-number">19</span><span>把 RAG 理解為開卷作答</span><span class="week-tick" data-week-tick="19"></span></a></li><li><a href="../lectures/20.html"><span class="week-number">20</span><span>在保持基本任務的前提下改善 RAG</span><span class="week-tick" data-week-tick="20"></span></a></li><li><a href="../lectures/21.html"><span class="week-number">21</span><span>評估 retrieval、答案與 uncertainty</span><span class="week-tick" data-week-tick="21"></span></a></li><li><a href="../lectures/22.html"><span class="week-number">22</span><span>CPU、GPU、memory 與 model 資源計算</span><span class="week-tick" data-week-tick="22"></span></a></li><li><a href="../lectures/23.html"><span class="week-number">23</span><span>CUDA kernel 與 profiling</span><span class="week-tick" data-week-tick="23"></span></a></li><li><a href="../lectures/24.html"><span class="week-number">24</span><span>Fine-tuning 由教學 dataset 開始</span><span class="week-tick" data-week-tick="24"></span></a></li><li><a href="../lectures/25.html"><span class="week-number">25</span><span>從小型 matrix 理解 LoRA 和 QLoRA</span><span class="week-tick" data-week-tick="25"></span></a></li><li><a href="../lectures/26.html"><span class="week-number">26</span><span>Fine-tuning 實驗、preference 與 distillation</span><span class="week-tick" data-week-tick="26"></span></a></li><li><a href="../lectures/27.html"><span class="week-number">27</span><span>Tool、function、workflow 與 agent</span><span class="week-tick" data-week-tick="27"></span></a></li><li><a href="../lectures/28.html"><span class="week-number">28</span><span>Harness、planning、memory 與有界執行</span><span class="week-tick" data-week-tick="28"></span></a></li><li><a href="../lectures/29.html"><span class="week-number">29</span><span>從 notebook 到 MLOps 和 inference serving</span><span class="week-tick" data-week-tick="29"></span></a></li><li><a href="../lectures/30.html"><span class="week-number">30</span><span>Monitoring、security、regression test 與 rollback</span><span class="week-tick" data-week-tick="30"></span></a></li><li><a href="../lectures/31.html"><span class="week-number">31</span><span>整合文件助手與進階延伸</span><span class="week-tick" data-week-tick="31"></span></a></li><li><a href="../lectures/32.html"><span class="week-number">32</span><span>溫習、答辯與持續學習計劃</span><span class="week-tick" data-week-tick="32"></span></a></li></ol></details><div class="side-links"><a href="../visuals.html">互動圖解實驗室 <span>14 個互動課節</span></a><a href="../project.html">文件助手 <span>你的 capstone project</span></a><a href="../resources.html">閱讀材料與環境設定</a></div><div class="side-progress"><div><span>你的進度</span><strong data-progress-count="">0 / 32</strong></div><progress aria-label="已完成 lecture" max="32" value="0"></progress><small>儲存在這個瀏覽器</small></div></aside><main class="main" id="main"><div class="content"><div class="chapter-header"><div class="eyebrow">第一學期 / 第 16 週</div><h1>完整 transformer 導覽與第一學期溫習</h1></div><div class="lesson-links"><a href="../tutorials/16.html">練習 16</a><a href="../tests/16.html">檢查你的理解</a><button aria-pressed="false" class="mark-complete" data-week="16" type="button">標記為已完成</button></div><section aria-label="Lecture slides" class="lecture-deck" id="lecture-slides"><div class="deck-top"><div><div class="eyebrow">課堂投影片 · 第 16 週</div><h2>一步一步學習。</h2></div><button class="deck-present" type="button">簡報模式</button></div><p class="deck-help">閱讀每段解說，停下來預測結果，然後繼續。選取簡報後，可用方向鍵操作。完整講義在下方。</p><div aria-label="簡報：使用左右方向鍵" class="slide-viewport" tabindex="0"><section class="lecture-slide" data-slide=""><div class="slide-stage">由例子開始</div><h3>本學期回到一句話</h3><div class="slide-prose"><p>我們由「I go to school by ___.」開始，現在已能追蹤預測續寫的 causal transformer。本課目標是連接學過的 component，而非介紹 application framework。</p>
-<p>使用小型 vocabulary 和兩個 block 的教學 model。在圖中清楚標示 token ID、representation width、head count 和 sequence length。</p>
-<p>這個 model 刻意設計得足夠小，方便檢查。architecture 與大型 system 分享重要概念，但 performance 和 resource 仍非常不同。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">由例子開始</div><h3>第一階段：text 變成 representation</h3><div class="slide-prose"><p>將 prefix tokenize 成 [I,go,to,school,by]，再轉成 ID。從 embedding table 為每個 ID 選一個 vector。</p>
-<p>為每個位置加上 position vector。若有五個 token，width D=8，representation matrix 就是 [5,8]。</p>
-<p>ID 本身不編碼順序或 semantic distance。embedding lookup 和 position representation 提供不同資訊，供後續 transformation 使用。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">建立對機制的理解</div><h3>第二階段：每個 block 混合並轉換資訊</h3><div class="slide-prose"><p>normalize 每個 row，形成 Q/K/V，分出合適 head axis，計算 scaled pairwise score，套用 causal visibility，再沿 key 做 softmax。與 value 相乘、合併 head，再 project 回 width 8。</p>
-<p>透過 residual path 加入 sublayer output。再次 normalize，套用 position-wise MLP，並進行第二次 residual addition。</p>
-<p>在下一個 block 重複。output 仍保留每個 position 的 contextual row。任何 causal query 的計算，都不得使用尚未可得的未來 input。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">建立對機制的理解</div><h3>第三階段：vocabulary prediction</h3><div class="slide-prose"><p>最後 output head 將每個 contextual row 轉成 V 個 vocabulary logit。prefix 最後的 position by，提供用來選下一個 token 的 logit。</p>
-<p>假設 bus=2、train=1、bicycle=0，而且在這個小算例排除所有其他 candidate。softmax 約得到 [0.665,0.245,0.090]。</p>
-<p>真實 vocabulary 包含很多其他 candidate，所以 denominator 亦要包括它們的 score。必須明說算例限制了範圍；這不是真實 model 的完整 output distribution。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">建立對機制的理解</div><h3>第四階段：training 與 generation 以不同方式使用結果</h3><div class="slide-prose"><p>用完整句子 training 時，預期 target bus 提供 cross-entropy loss。它的 gradient 經過剛才追蹤的計算路徑，改變 parameter。</p>
-<p>inference 時，沒有預先給定的 bus target 可以 backpropagate。decoding rule 選下一個 token、附加它、按需要更新或重用 cached state，繼續直至停止條件。</p>
-<p>這個分別解釋了同一 network 為何在 training 和使用時都能產生 logit，但周邊程序不同。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">建立對機制的理解</div><h3>在正確邊界診斷錯誤</h3><div class="slide-prose"><p>若 ID decode 成錯字，檢查 tokenizer/vocabulary 配對。若改動未來 input 影響較早 output，檢查 visibility。若 output width 不同於 vocabulary size，檢查 output head。</p>
-<p>若 training loss 下降，但 held-out 任務仍弱，先檢查 data、capacity、optimization 和 evaluation，才斷定 block 實作有誤。</p>
-<p>有系統的 debug 解釋會指出邊界、具體觀察，以及能區分可能原因的 test。「AI 很混亂」並沒有提供這些資訊。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">深入學習，檢查理解</div><h3>做好準備後閱讀原版 architecture</h3><div class="slide-prose"><p>打開原版 transformer paper 的 model 圖和 attention equation。辨認哪些 component 已實作，哪些屬於 encoder-decoder 翻譯 architecture，而非我們的 decoder-only 練習。</p>
-<p>在一條 equation 旁寫出 tensor shape。找出 residual connection 和 MLP。留意我們的 pre-norm 教學 block，與原版 architecture 的 normalization 排列不同。</p>
-<p>現在是適合讀 paper 的時候：你已有 operation 和 example，能用來理解精簡的論文表達。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">深入學習，檢查理解</div><h3>semester one 評核及下一步</h3><div class="slide-prose"><p>完成 semester one exam。內容包括 tokenization、probability、attention、mask、block shape、architecture visibility、shifted training 和 generation。不需要 vector database、RAG service 或 agent 實作。</p>
-<p>完成 tiny-model 實驗，並誠實記錄其限制。第一學期的 artifact 是經解釋和測試的 model mechanism，而非過早拼湊的 application。</p>
-<p>semester two 將運用你已理解的 representation 和 evaluation 概念，引入 search 和外部證據。前進前，先大聲解釋完整 school 句子路徑，不要由 token ID 直接跳到「model 回答」。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">深入學習，檢查理解</div><h3>最後的 shape 紀錄表</h3><div class="slide-prose"><p>若 B=2,T=5,D=8,H=2，vocabulary size V=20，token ID shape 是 [2,5]，起始 row 是 [2,5,8]，每個 head 的 query 是 [2,2,5,4]，attention score 是 [2,2,5,5]。合併後的 contextual output 回到 [2,5,8]，vocabulary logit 是 [2,5,20]。</p>
-<p>普通續寫時，每個 sequence 最後的 input position 提供一個 twenty-way next-token distribution。training 時，所有有效 position 都可以對 shifted target 貢獻 loss。兩種情況中，causal constraint 都限制每個 query 的可見 key。</p>
-<p>寫 reshape 前，先用文字解釋每個 axis。然後建立小 tensor，刻意讓 batch、head、position、feature index 的數值各有分別，錯誤 transpose 就會顯現。這個小實驗讓 shape 紀錄成為實作檢查，而非裝飾性符號。</p></div></section></div><div class="deck-controls"><button class="slide-prev" type="button">← 上一頁</button><span aria-live="polite" class="slide-counter">1 / 9</span><button class="slide-next" type="button">下一頁 →</button></div><label class="slide-jump-label">前往 slide <select aria-label="跳至 slide" class="slide-jump"><option value="0">1</option><option value="1">2</option><option value="2">3</option><option value="3">4</option><option value="4">5</option><option value="5">6</option><option value="6">7</option><option value="7">8</option><option value="8">9</option></select></label><button aria-pressed="false" class="deck-all" type="button">顯示全部 slides</button><a class="reader-link" href="#full-notes">閱讀完整講義 ↓</a></section><section aria-label="Transformer block" class="visual-lesson"><div class="eyebrow">探索機制</div><h2>Transformer block</h2><p class="visual-intro">追蹤 residual stream 如何經過資訊交流與 feature 處理。</p><div data-widget="block"><p>啟用 JavaScript 以使用此圖解。下方 lecture notes 會解釋同一機制。</p></div></section><article class="prose full-notes" id="full-notes"><div class="eyebrow">完整講義</div><h2>閱讀完整解說</h2><h3 id="the-semester-returns-to-one-sentence">本學期回到一句話</h3>
-<p>我們由「I go to school by ___.」開始，現在已能追蹤預測續寫的 causal transformer。本課目標是連接學過的 component，而非介紹 application framework。</p>
-<p>使用小型 vocabulary 和兩個 block 的教學 model。在圖中清楚標示 token ID、representation width、head count 和 sequence length。</p>
-<p>這個 model 刻意設計得足夠小，方便檢查。architecture 與大型 system 分享重要概念，但 performance 和 resource 仍非常不同。</p>
-<h3 id="stage-one-text-becomes-representations">第一階段：text 變成 representation</h3>
-<p>將 prefix tokenize 成 [I,go,to,school,by]，再轉成 ID。從 embedding table 為每個 ID 選一個 vector。</p>
-<p>為每個位置加上 position vector。若有五個 token，width D=8，representation matrix 就是 [5,8]。</p>
-<p>ID 本身不編碼順序或 semantic distance。embedding lookup 和 position representation 提供不同資訊，供後續 transformation 使用。</p>
-<h3 id="stage-two-each-block-mixes-and-transforms">第二階段：每個 block 混合並轉換資訊</h3>
-<p>normalize 每個 row，形成 Q/K/V，分出合適 head axis，計算 scaled pairwise score，套用 causal visibility，再沿 key 做 softmax。與 value 相乘、合併 head，再 project 回 width 8。</p>
-<p>透過 residual path 加入 sublayer output。再次 normalize，套用 position-wise MLP，並進行第二次 residual addition。</p>
-<p>在下一個 block 重複。output 仍保留每個 position 的 contextual row。任何 causal query 的計算，都不得使用尚未可得的未來 input。</p>
-<h3 id="stage-three-vocabulary-predictions">第三階段：vocabulary prediction</h3>
-<p>最後 output head 將每個 contextual row 轉成 V 個 vocabulary logit。prefix 最後的 position by，提供用來選下一個 token 的 logit。</p>
-<p>假設 bus=2、train=1、bicycle=0，而且在這個小算例排除所有其他 candidate。softmax 約得到 [0.665,0.245,0.090]。</p>
-<p>真實 vocabulary 包含很多其他 candidate，所以 denominator 亦要包括它們的 score。必須明說算例限制了範圍；這不是真實 model 的完整 output distribution。</p>
-<h3 id="stage-four-training-and-generation-use-the-result-differently">第四階段：training 與 generation 以不同方式使用結果</h3>
-<p>用完整句子 training 時，預期 target bus 提供 cross-entropy loss。它的 gradient 經過剛才追蹤的計算路徑，改變 parameter。</p>
-<p>inference 時，沒有預先給定的 bus target 可以 backpropagate。decoding rule 選下一個 token、附加它、按需要更新或重用 cached state，繼續直至停止條件。</p>
-<p>這個分別解釋了同一 network 為何在 training 和使用時都能產生 logit，但周邊程序不同。</p>
-<h3 id="diagnosing-mistakes-at-the-correct-boundary">在正確邊界診斷錯誤</h3>
-<p>若 ID decode 成錯字，檢查 tokenizer/vocabulary 配對。若改動未來 input 影響較早 output，檢查 visibility。若 output width 不同於 vocabulary size，檢查 output head。</p>
-<p>若 training loss 下降，但 held-out 任務仍弱，先檢查 data、capacity、optimization 和 evaluation，才斷定 block 實作有誤。</p>
-<p>有系統的 debug 解釋會指出邊界、具體觀察，以及能區分可能原因的 test。「AI 很混亂」並沒有提供這些資訊。</p>
-<h3 id="reading-the-original-architecture-with-preparation">做好準備後閱讀原版 architecture</h3>
-<p>打開原版 transformer paper 的 model 圖和 attention equation。辨認哪些 component 已實作，哪些屬於 encoder-decoder 翻譯 architecture，而非我們的 decoder-only 練習。</p>
-<p>在一條 equation 旁寫出 tensor shape。找出 residual connection 和 MLP。留意我們的 pre-norm 教學 block，與原版 architecture 的 normalization 排列不同。</p>
-<p>現在是適合讀 paper 的時候：你已有 operation 和 example，能用來理解精簡的論文表達。</p>
-<h3 id="first-semester-assessment-and-the-next-step">semester one 評核及下一步</h3>
-<p>完成 semester one exam。內容包括 tokenization、probability、attention、mask、block shape、architecture visibility、shifted training 和 generation。不需要 vector database、RAG service 或 agent 實作。</p>
-<p>完成 tiny-model 實驗，並誠實記錄其限制。第一學期的 artifact 是經解釋和測試的 model mechanism，而非過早拼湊的 application。</p>
-<p>semester two 將運用你已理解的 representation 和 evaluation 概念，引入 search 和外部證據。前進前，先大聲解釋完整 school 句子路徑，不要由 token ID 直接跳到「model 回答」。</p>
-<h3 id="a-final-shape-ledger">最後的 shape 紀錄表</h3>
-<p>若 B=2,T=5,D=8,H=2，vocabulary size V=20，token ID shape 是 [2,5]，起始 row 是 [2,5,8]，每個 head 的 query 是 [2,2,5,4]，attention score 是 [2,2,5,5]。合併後的 contextual output 回到 [2,5,8]，vocabulary logit 是 [2,5,20]。</p>
-<p>普通續寫時，每個 sequence 最後的 input position 提供一個 twenty-way next-token distribution。training 時，所有有效 position 都可以對 shifted target 貢獻 loss。兩種情況中，causal constraint 都限制每個 query 的可見 key。</p>
-<p>寫 reshape 前，先用文字解釋每個 axis。然後建立小 tensor，刻意讓 batch、head、position、feature index 的數值各有分別，錯誤 transpose 就會顯現。這個小實驗讓 shape 紀錄成為實作檢查，而非裝飾性符號。</p></article><nav aria-label="前後 lecture" class="chapter-pagination"><a href="15.html"><small>上一週</small>文字以外的 Generative AI</a><a href="17.html"><small>下一週</small>從 word vector 到 semantic search</a></nav></div><footer class="footer"><span>Applied AI · 獨立自學課程</span><span>32 週 · 每週 10 小時</span><a href="../resources.html#about-this-course">關於課程及資料來源</a></footer></main><dialog aria-labelledby="search-title" class="search-dialog"><div class="dialog-head"><h2 id="search-title">尋找概念</h2><button aria-label="關閉搜尋" class="search-close" type="button">關閉</button></div><label class="sr-only" for="course-search">搜尋所有 lecture 和 tutorial</label><input autocomplete="off" id="course-search" placeholder="試試 attention、fine-tuning 或 harness……" type="search"/><p aria-live="polite" class="search-status">搜尋 lecture notes、tutorial、測驗及閱讀材料。</p><div class="search-results"></div></dialog><div aria-live="polite" class="toast" role="status"></div></body></html>
+<html lang="zh-HK">
+ <head>
+  <script src="../../assets/translations-zh-HK.js">
+  </script>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width,initial-scale=1" name="viewport"/>
+  <title>
+   完整 transformer 導覽與第一學期溫習 · Applied AI
+  </title>
+  <meta content="Applied generative AI and LLM systems course material" name="description"/>
+  <meta content="#173c36" name="theme-color"/>
+  <link href="../../assets/favicon.svg" rel="icon" type="image/svg+xml"/>
+  <link href="../../assets/style.css" rel="stylesheet"/>
+  <link href="../../assets/slides.css" rel="stylesheet"/>
+  <script>
+   window.COURSE_BASE="../";
+  </script>
+  <script defer="" src="../../assets/site-config.js">
+  </script>
+  <script defer="" src="../assets/search-index.js">
+  </script>
+  <script defer="" src="../../assets/app.js">
+  </script>
+  <script defer="" src="../../assets/visuals.js">
+  </script>
+  <script defer="" src="../../assets/slides.js">
+  </script>
+  <script defer="" src="../../assets/beginner-visuals.js">
+  </script>
+  <script defer="True" src="../../assets/locale-patterns.js">
+  </script>
+  <script defer="True" src="../../assets/locale.js">
+  </script>
+  <link href="../../assets/bilingual.css" rel="stylesheet"/>
+  <link href="../../lectures/16.html" hreflang="en" rel="alternate"/>
+  <link href="../../assets/reader-v3.css" rel="stylesheet"/>
+  <script defer="True" src="../../assets/reader-v3.js">
+  </script>
+ </head>
+ <body data-page-kind="lecture" data-week="16">
+  <a class="skip-link" href="#main">
+   跳至內容
+  </a>
+  <header class="topbar">
+   <button aria-controls="course-sidebar" aria-expanded="false" class="menu-toggle" type="button">
+    選單
+   </button>
+   <a class="brand" href="../index.html">
+    <span aria-hidden="true" class="brand-mark">
+     a
+     <span>
+      i
+     </span>
+    </span>
+    <span>
+     APPLIED AI
+     <small>
+      從原理到實踐
+     </small>
+    </span>
+   </a>
+   <nav aria-label="主要導覽">
+    <a href="../index.html">
+     課程
+    </a>
+    <a href="../visuals.html">
+     互動圖解
+    </a>
+    <a href="../project.html">
+     專題
+    </a>
+    <a class="language-switch" href="../../lectures/16.html" hreflang="en" lang="en">
+     English
+    </a>
+   </nav>
+   <button class="search-open" type="button">
+    搜尋課程
+    <span aria-hidden="true">
+     /
+    </span>
+   </button>
+  </header>
+  <aside aria-label="課程章節" class="sidebar" id="course-sidebar">
+   <a class="side-home" href="../index.html">
+    課程概覽
+   </a>
+   <details class="semester-nav" open="">
+    <summary>
+     第一學期
+     <span>
+      第 1–16 週
+     </span>
+    </summary>
+    <ol start="1">
+     <li>
+      <a href="../lectures/01.html">
+       <span class="week-number">
+        01
+       </span>
+       <span>
+        Language model 究竟在學甚麼
+       </span>
+       <span class="week-tick" data-week-tick="1">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/02.html">
+       <span class="week-number">
+        02
+       </span>
+       <span>
+        從文字到 token 和數值 ID
+       </span>
+       <span class="week-tick" data-week-tick="2">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/03.html">
+       <span class="week-number">
+        03
+       </span>
+       <span>
+        Word vector 能表達甚麼
+       </span>
+       <span class="week-tick" data-week-tick="3">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/04.html">
+       <span class="week-number">
+        04
+       </span>
+       <span>
+        從 score 到 probability 和學習訊號
+       </span>
+       <span class="week-tick" data-week-tick="4">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/05.html">
+       <span class="week-number">
+        05
+       </span>
+       <span>
+        為甚麼語言需要 context 和次序
+       </span>
+       <span class="week-tick" data-week-tick="5">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/06.html">
+       <span class="week-number">
+        06
+       </span>
+       <span>
+        Attention 由 weighted mixture 開始
+       </span>
+       <span class="week-tick" data-week-tick="6">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/07.html">
+       <span class="week-number">
+        07
+       </span>
+       <span>
+        Query、key 和 value 從何而來
+       </span>
+       <span class="week-tick" data-week-tick="7">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/08.html">
+       <span class="week-number">
+        08
+       </span>
+       <span>
+        正確進行 attention scaling 和 masking
+       </span>
+       <span class="week-tick" data-week-tick="8">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/09.html">
+       <span class="week-number">
+        09
+       </span>
+       <span>
+        多個 attention head 與位置
+       </span>
+       <span class="week-tick" data-week-tick="9">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/10.html">
+       <span class="week-number">
+        10
+       </span>
+       <span>
+        逐步拆解 transformer block
+       </span>
+       <span class="week-tick" data-week-tick="10">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/11.html">
+       <span class="week-number">
+        11
+       </span>
+       <span>
+        Encoder、decoder 與完整 model architecture
+       </span>
+       <span class="week-tick" data-week-tick="11">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/12.html">
+       <span class="week-number">
+        12
+       </span>
+       <span>
+        訓練一個小型 transformer
+       </span>
+       <span class="week-tick" data-week-tick="12">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/13.html">
+       <span class="week-number">
+        13
+       </span>
+       <span>
+        Generation、decoding 與 KV cache
+       </span>
+       <span class="week-tick" data-week-tick="13">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/14.html">
+       <span class="week-number">
+        14
+       </span>
+       <span>
+        從 pretraining 到 instruction following 和 reasoning
+       </span>
+       <span class="week-tick" data-week-tick="14">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/15.html">
+       <span class="week-number">
+        15
+       </span>
+       <span>
+        文字以外的 Generative AI
+       </span>
+       <span class="week-tick" data-week-tick="15">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a aria-current="page" href="../lectures/16.html">
+       <span class="week-number">
+        16
+       </span>
+       <span>
+        完整 transformer 導覽與第一學期溫習
+       </span>
+       <span class="week-tick" data-week-tick="16">
+       </span>
+      </a>
+     </li>
+    </ol>
+   </details>
+   <details class="semester-nav">
+    <summary>
+     第二學期
+     <span>
+      第 17–32 週
+     </span>
+    </summary>
+    <ol start="17">
+     <li>
+      <a href="../lectures/17.html">
+       <span class="week-number">
+        17
+       </span>
+       <span>
+        從 word vector 到 semantic search
+       </span>
+       <span class="week-tick" data-week-tick="17">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/18.html">
+       <span class="week-number">
+        18
+       </span>
+       <span>
+        從一列 vector 建立 vector database
+       </span>
+       <span class="week-tick" data-week-tick="18">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/19.html">
+       <span class="week-number">
+        19
+       </span>
+       <span>
+        把 RAG 理解為開卷作答
+       </span>
+       <span class="week-tick" data-week-tick="19">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/20.html">
+       <span class="week-number">
+        20
+       </span>
+       <span>
+        在保持基本任務的前提下改善 RAG
+       </span>
+       <span class="week-tick" data-week-tick="20">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/21.html">
+       <span class="week-number">
+        21
+       </span>
+       <span>
+        評估 retrieval、答案與 uncertainty
+       </span>
+       <span class="week-tick" data-week-tick="21">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/22.html">
+       <span class="week-number">
+        22
+       </span>
+       <span>
+        CPU、GPU、memory 與 model 資源計算
+       </span>
+       <span class="week-tick" data-week-tick="22">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/23.html">
+       <span class="week-number">
+        23
+       </span>
+       <span>
+        CUDA kernel 與 profiling
+       </span>
+       <span class="week-tick" data-week-tick="23">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/24.html">
+       <span class="week-number">
+        24
+       </span>
+       <span>
+        Fine-tuning 由教學 dataset 開始
+       </span>
+       <span class="week-tick" data-week-tick="24">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/25.html">
+       <span class="week-number">
+        25
+       </span>
+       <span>
+        從小型 matrix 理解 LoRA 和 QLoRA
+       </span>
+       <span class="week-tick" data-week-tick="25">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/26.html">
+       <span class="week-number">
+        26
+       </span>
+       <span>
+        Fine-tuning 實驗、preference 與 distillation
+       </span>
+       <span class="week-tick" data-week-tick="26">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/27.html">
+       <span class="week-number">
+        27
+       </span>
+       <span>
+        Tool、function、workflow 與 agent
+       </span>
+       <span class="week-tick" data-week-tick="27">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/28.html">
+       <span class="week-number">
+        28
+       </span>
+       <span>
+        Harness、planning、memory 與有界執行
+       </span>
+       <span class="week-tick" data-week-tick="28">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/29.html">
+       <span class="week-number">
+        29
+       </span>
+       <span>
+        從 notebook 到 MLOps 和 inference serving
+       </span>
+       <span class="week-tick" data-week-tick="29">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/30.html">
+       <span class="week-number">
+        30
+       </span>
+       <span>
+        Monitoring、security、regression test 與 rollback
+       </span>
+       <span class="week-tick" data-week-tick="30">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/31.html">
+       <span class="week-number">
+        31
+       </span>
+       <span>
+        整合文件助手與進階延伸
+       </span>
+       <span class="week-tick" data-week-tick="31">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/32.html">
+       <span class="week-number">
+        32
+       </span>
+       <span>
+        溫習、答辯與持續學習計劃
+       </span>
+       <span class="week-tick" data-week-tick="32">
+       </span>
+      </a>
+     </li>
+    </ol>
+   </details>
+   <div class="side-links">
+    <a href="../visuals.html">
+     互動圖解實驗室
+     <span>
+      14 個互動課節
+     </span>
+    </a>
+    <a href="../project.html">
+     文件助手
+     <span>
+      你的 capstone project
+     </span>
+    </a>
+    <a href="../resources.html">
+     閱讀材料與環境設定
+    </a>
+   </div>
+   <div class="side-progress">
+    <div>
+     <span>
+      你的進度
+     </span>
+     <strong data-progress-count="">
+      0 / 32
+     </strong>
+    </div>
+    <progress aria-label="已完成 lecture" max="32" value="0">
+    </progress>
+    <small>
+     儲存在這個瀏覽器
+    </small>
+   </div>
+  </aside>
+  <main class="main" id="main">
+   <div class="content">
+    <div class="chapter-header">
+     <div class="eyebrow">
+      第一學期 / 第 16 週
+     </div>
+     <h1>
+      完整 transformer 導覽與第一學期溫習
+     </h1>
+    </div>
+    <div class="lesson-links">
+     <a href="../tutorials/16.html">
+      練習 16
+     </a>
+     <a href="../tests/16.html">
+      檢查你的理解
+     </a>
+     <button aria-pressed="false" class="mark-complete" data-week="16" type="button">
+      標記為已完成
+     </button>
+    </div>
+    <div aria-label="課堂檢視" class="lesson-mode" role="tablist">
+     <button aria-controls="full-notes" aria-selected="true" data-mode="read" id="mode-read" role="tab" type="button">
+      閱讀講義
+     </button>
+     <button aria-controls="lecture-slides" aria-selected="false" data-mode="slides" id="mode-slides" role="tab" type="button">
+      課堂 slides
+     </button>
+    </div>
+    <section aria-label="Lecture slides" class="lecture-deck" hidden="" id="lecture-slides" role="tabpanel">
+     <div class="deck-top">
+      <div>
+       <div class="eyebrow">
+        課堂投影片 · 第 16 週
+       </div>
+       <h2>
+        重點步驟與圖解
+       </h2>
+      </div>
+      <button class="deck-present" type="button">
+       簡報模式
+      </button>
+     </div>
+     <p class="deck-help">
+      用 slides 溫習機制；按「閱讀完整解說」可開啟完整講義及程式碼。
+     </p>
+     <div aria-label="簡報：使用左右方向鍵" class="slide-viewport" tabindex="0">
+      <section class="lecture-slide" data-slide="">
+       <div class="slide-stage">
+        第 16 週 · 課節 1
+       </div>
+       <h3>
+        本學期回到一句話
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          我們由「I go to school by ___.」開始，現在已能追蹤預測續寫的 causal transformer。
+         </li>
+         <li>
+          使用小型 vocabulary 和兩個 block 的教學 model。
+         </li>
+         <li>
+          這個 model 刻意設計得足夠小，方便檢查。architecture 與大型 system 分享重要概念，但 performance 和 resource 仍非常不同。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#the-semester-returns-to-one-sentence">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 16 週 · 課節 2
+       </div>
+       <h3>
+        第一階段：text 變成 representation
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          將 prefix tokenize 成 [I,go,to,school,by]，再轉成 ID。
+         </li>
+         <li>
+          為每個位置加上 position vector。
+         </li>
+         <li>
+          ID 本身不編碼順序或 semantic distance。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#stage-one-text-becomes-representations">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 16 週 · 課節 3
+       </div>
+       <h3>
+        第二階段：每個 block 混合並轉換資訊
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          normalize 每個 row，形成 Q/K/V，分出合適 head axis，計算 scaled pairwise score，套用 causal visibility，再沿 key 做 softmax。
+         </li>
+         <li>
+          透過 residual path 加入 sublayer output。
+         </li>
+         <li>
+          在下一個 block 重複。output 仍保留每個 position 的 contextual row。任何 causal query 的計算，都不得使用尚未可得的未來 input。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#stage-two-each-block-mixes-and-transforms">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 16 週 · 課節 4
+       </div>
+       <h3>
+        第三階段：vocabulary prediction
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          最後 output head 將每個 contextual row 轉成 V 個 vocabulary logit。
+         </li>
+         <li>
+          假設 bus=2、train=1、bicycle=0，而且在這個小算例排除所有其他 candidate。
+         </li>
+         <li>
+          真實 vocabulary 包含很多其他 candidate，所以 denominator 亦要包括它們的 score。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#stage-three-vocabulary-predictions">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 16 週 · 課節 5
+       </div>
+       <h3>
+        第四階段：training 與 generation 以不同方式使用結果
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          用完整句子 training 時，預期 target bus 提供 cross-entropy loss。
+         </li>
+         <li>
+          inference 時，沒有預先給定的 bus target 可以 backpropagate。
+         </li>
+         <li>
+          這個分別解釋了同一 network 為何在 training 和使用時都能產生 logit，但周邊程序不同。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#stage-four-training-and-generation-use-the-result-differently">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 16 週 · 課節 6
+       </div>
+       <h3>
+        在正確邊界診斷錯誤
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          若 ID decode 成錯字，檢查 tokenizer/vocabulary 配對。
+         </li>
+         <li>
+          若 training loss 下降，但 held-out 任務仍弱，先檢查 data、capacity、optimization 和 evaluation，才斷定 block 實作有誤。
+         </li>
+         <li>
+          有系統的 debug 解釋會指出邊界、具體觀察，以及能區分可能原因的 test。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#diagnosing-mistakes-at-the-correct-boundary">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 16 週 · 課節 7
+       </div>
+       <h3>
+        做好準備後閱讀原版 architecture
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          打開原版 transformer paper 的 model 圖和 attention equation。
+         </li>
+         <li>
+          在一條 equation 旁寫出 tensor shape。
+         </li>
+         <li>
+          現在是適合讀 paper 的時候：你已有 operation 和 example，能用來理解精簡的論文表達。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#reading-the-original-architecture-with-preparation">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 16 週 · 課節 8
+       </div>
+       <h3>
+        semester one 評核及下一步
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          完成 semester one exam。內容包括 tokenization、probability、attention、mask、block shape、architecture visibility、shifted training 和 generation。不需要 vector database、RAG service 或 agent 實作。
+         </li>
+         <li>
+          完成 tiny-model 實驗，並誠實記錄其限制。
+         </li>
+         <li>
+          semester two 將運用你已理解的 representation 和 evaluation 概念，引入 search 和外部證據。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#first-semester-assessment-and-the-next-step">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 16 週 · 課節 9
+       </div>
+       <h3>
+        最後的 shape 紀錄表
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          若 B=2,T=5,d_model=8,H=2，vocabulary size V=20，token ID shape 是 [2,5]，起始 row 是 [2,5,8]，每個 head 的 query 是 [2,2,5,4]，attention score 是 [2,2,5,5]。
+         </li>
+         <li>
+          普通續寫時，每個 sequence 最後的 input position 提供一個 twenty-way next-token distribution。
+         </li>
+         <li>
+          寫 reshape 前，先用文字解釋每個 axis。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#a-final-shape-ledger">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+     </div>
+     <div class="deck-controls">
+      <button class="slide-prev" type="button">
+       ← 上一頁
+      </button>
+      <span aria-live="polite" class="slide-counter">
+       1 / 9
+      </span>
+      <button class="slide-next" type="button">
+       下一頁 →
+      </button>
+     </div>
+     <label class="slide-jump-label">
+      前往 slide
+      <select aria-label="跳至 slide" class="slide-jump">
+       <option value="0">
+        1. 本學期回到一句話
+       </option>
+       <option value="1">
+        2. 第一階段：text 變成 representation
+       </option>
+       <option value="2">
+        3. 第二階段：每個 block 混合並轉換資訊
+       </option>
+       <option value="3">
+        4. 第三階段：vocabulary prediction
+       </option>
+       <option value="4">
+        5. 第四階段：training 與 generation 以不同方式使用結果
+       </option>
+       <option value="5">
+        6. 在正確邊界診斷錯誤
+       </option>
+       <option value="6">
+        7. 做好準備後閱讀原版 architecture
+       </option>
+       <option value="7">
+        8. semester one 評核及下一步
+       </option>
+       <option value="8">
+        9. 最後的 shape 紀錄表
+       </option>
+      </select>
+     </label>
+     <button aria-pressed="false" class="deck-all" type="button">
+      顯示全部 slides
+     </button>
+    </section>
+    <section aria-label="Transformer block" class="visual-lesson">
+     <div class="eyebrow">
+      探索機制
+     </div>
+     <h2>
+      Transformer block
+     </h2>
+     <p class="visual-intro">
+      追蹤 residual stream 如何經過資訊交流與 feature 處理。
+     </p>
+     <div data-widget="block">
+      <p>
+       啟用 JavaScript 以使用此圖解。下方 lecture notes 會解釋同一機制。
+      </p>
+     </div>
+    </section>
+    <nav aria-label="本課內容" class="reader-toc">
+     <strong>
+      本課內容
+     </strong>
+     <ol>
+      <li>
+       <a href="#the-semester-returns-to-one-sentence">
+        本學期回到一句話
+       </a>
+      </li>
+      <li>
+       <a href="#stage-one-text-becomes-representations">
+        第一階段：text 變成 representation
+       </a>
+      </li>
+      <li>
+       <a href="#stage-two-each-block-mixes-and-transforms">
+        第二階段：每個 block 混合並轉換資訊
+       </a>
+      </li>
+      <li>
+       <a href="#stage-three-vocabulary-predictions">
+        第三階段：vocabulary prediction
+       </a>
+      </li>
+      <li>
+       <a href="#stage-four-training-and-generation-use-the-result-differently">
+        第四階段：training 與 generation 以不同方式使用結果
+       </a>
+      </li>
+      <li>
+       <a href="#diagnosing-mistakes-at-the-correct-boundary">
+        在正確邊界診斷錯誤
+       </a>
+      </li>
+      <li>
+       <a href="#reading-the-original-architecture-with-preparation">
+        做好準備後閱讀原版 architecture
+       </a>
+      </li>
+      <li>
+       <a href="#first-semester-assessment-and-the-next-step">
+        semester one 評核及下一步
+       </a>
+      </li>
+      <li>
+       <a href="#a-final-shape-ledger">
+        最後的 shape 紀錄表
+       </a>
+      </li>
+     </ol>
+    </nav>
+    <article class="prose full-notes" id="full-notes" role="tabpanel">
+     <div class="eyebrow">
+      完整講義
+     </div>
+     <h2>
+      閱讀完整解說
+     </h2>
+     <h3 id="the-semester-returns-to-one-sentence">
+      本學期回到一句話
+     </h3>
+     <p>
+      我們由「I go to school by ___.」開始，現在已能追蹤預測續寫的 causal transformer。本課目標是連接學過的 component，而非介紹 application framework。
+     </p>
+     <p>
+      使用小型 vocabulary 和兩個 block 的教學 model。在圖中清楚標示 token ID、representation width、head count 和 sequence length。
+     </p>
+     <p>
+      這個 model 刻意設計得足夠小，方便檢查。architecture 與大型 system 分享重要概念，但 performance 和 resource 仍非常不同。
+     </p>
+     <h3 id="stage-one-text-becomes-representations">
+      第一階段：text 變成 representation
+     </h3>
+     <p>
+      將 prefix tokenize 成 [I,go,to,school,by]，再轉成 ID。從 embedding table 為每個 ID 選一個 vector。
+     </p>
+     <p>
+      為每個位置加上 position vector。若有五個 token，width d_model=8，representation matrix 就是 [5,8]。
+     </p>
+     <p>
+      ID 本身不編碼順序或 semantic distance。embedding lookup 和 position representation 提供不同資訊，供後續 transformation 使用。
+     </p>
+     <h3 id="stage-two-each-block-mixes-and-transforms">
+      第二階段：每個 block 混合並轉換資訊
+     </h3>
+     <p>
+      normalize 每個 row，形成 Q/K/V，分出合適 head axis，計算 scaled pairwise score，套用 causal visibility，再沿 key 做 softmax。與 value 相乘、合併 head，再 project 回 width 8。
+     </p>
+     <p>
+      透過 residual path 加入 sublayer output。再次 normalize，套用 position-wise MLP，並進行第二次 residual addition。
+     </p>
+     <p>
+      在下一個 block 重複。output 仍保留每個 position 的 contextual row。任何 causal query 的計算，都不得使用尚未可得的未來 input。
+     </p>
+     <h3 id="stage-three-vocabulary-predictions">
+      第三階段：vocabulary prediction
+     </h3>
+     <p>
+      最後 output head 將每個 contextual row 轉成 V 個 vocabulary logit。prefix 最後的 position by，提供用來選下一個 token 的 logit。
+     </p>
+     <p>
+      假設 bus=2、train=1、bicycle=0，而且在這個小算例排除所有其他 candidate。softmax 約得到 [0.665,0.245,0.090]。
+     </p>
+     <p>
+      真實 vocabulary 包含很多其他 candidate，所以 denominator 亦要包括它們的 score。必須明說算例限制了範圍；這不是真實 model 的完整 output distribution。
+     </p>
+     <h3 id="stage-four-training-and-generation-use-the-result-differently">
+      第四階段：training 與 generation 以不同方式使用結果
+     </h3>
+     <p>
+      用完整句子 training 時，預期 target bus 提供 cross-entropy loss。它的 gradient 經過剛才追蹤的計算路徑，改變 parameter。
+     </p>
+     <p>
+      inference 時，沒有預先給定的 bus target 可以 backpropagate。decoding rule 選下一個 token、附加它、按需要更新或重用 cached state，繼續直至停止條件。
+     </p>
+     <p>
+      這個分別解釋了同一 network 為何在 training 和使用時都能產生 logit，但周邊程序不同。
+     </p>
+     <h3 id="diagnosing-mistakes-at-the-correct-boundary">
+      在正確邊界診斷錯誤
+     </h3>
+     <p>
+      若 ID decode 成錯字，檢查 tokenizer/vocabulary 配對。若改動未來 input 影響較早 output，檢查 visibility。若 output width 不同於 vocabulary size，檢查 output head。
+     </p>
+     <p>
+      若 training loss 下降，但 held-out 任務仍弱，先檢查 data、capacity、optimization 和 evaluation，才斷定 block 實作有誤。
+     </p>
+     <p>
+      有系統的 debug 解釋會指出邊界、具體觀察，以及能區分可能原因的 test。「AI 很混亂」並沒有提供這些資訊。
+     </p>
+     <h3 id="reading-the-original-architecture-with-preparation">
+      做好準備後閱讀原版 architecture
+     </h3>
+     <p>
+      打開原版 transformer paper 的 model 圖和 attention equation。辨認哪些 component 已實作，哪些屬於 encoder-decoder 翻譯 architecture，而非我們的 decoder-only 練習。
+     </p>
+     <p>
+      在一條 equation 旁寫出 tensor shape。找出 residual connection 和 MLP。留意我們的 pre-norm 教學 block，與原版 architecture 的 normalization 排列不同。
+     </p>
+     <p>
+      現在是適合讀 paper 的時候：你已有 operation 和 example，能用來理解精簡的論文表達。
+     </p>
+     <h3 id="first-semester-assessment-and-the-next-step">
+      semester one 評核及下一步
+     </h3>
+     <p>
+      完成 semester one exam。內容包括 tokenization、probability、attention、mask、block shape、architecture visibility、shifted training 和 generation。不需要 vector database、RAG service 或 agent 實作。
+     </p>
+     <p>
+      完成 tiny-model 實驗，並誠實記錄其限制。第一學期的 artifact 是經解釋和測試的 model mechanism，而非過早拼湊的 application。
+     </p>
+     <p>
+      semester two 將運用你已理解的 representation 和 evaluation 概念，引入 search 和外部證據。前進前，先大聲解釋完整 school 句子路徑，不要由 token ID 直接跳到「model 回答」。
+     </p>
+     <h3 id="a-final-shape-ledger">
+      最後的 shape 紀錄表
+     </h3>
+     <p>
+      若 B=2,T=5,d_model=8,H=2，vocabulary size V=20，token ID shape 是 [2,5]，起始 row 是 [2,5,8]，每個 head 的 query 是 [2,2,5,4]，attention score 是 [2,2,5,5]。合併後的 contextual output 回到 [2,5,8]，vocabulary logit 是 [2,5,20]。
+     </p>
+     <p>
+      普通續寫時，每個 sequence 最後的 input position 提供一個 twenty-way next-token distribution。training 時，所有有效 position 都可以對 shifted target 貢獻 loss。兩種情況中，causal constraint 都限制每個 query 的可見 key。
+     </p>
+     <p>
+      寫 reshape 前，先用文字解釋每個 axis。然後建立小 tensor，刻意讓 batch、head、position、feature index 的數值各有分別，錯誤 transpose 就會顯現。這個小實驗讓 shape 紀錄成為實作檢查，而非裝飾性符號。
+     </p>
+    </article>
+    <nav aria-label="前後 lecture" class="chapter-pagination">
+     <a href="15.html">
+      <small>
+       上一週
+      </small>
+      文字以外的 Generative AI
+     </a>
+     <a href="17.html">
+      <small>
+       下一週
+      </small>
+      從 word vector 到 semantic search
+     </a>
+    </nav>
+   </div>
+   <footer class="footer">
+    <span>
+     Applied AI · 獨立自學課程
+    </span>
+    <span>
+     32 週 · 每週 10 小時
+    </span>
+    <a href="../resources.html#about-this-course">
+     關於課程及資料來源
+    </a>
+   </footer>
+  </main>
+  <dialog aria-labelledby="search-title" class="search-dialog">
+   <div class="dialog-head">
+    <h2 id="search-title">
+     尋找概念
+    </h2>
+    <button aria-label="關閉搜尋" class="search-close" type="button">
+     關閉
+    </button>
+   </div>
+   <label class="sr-only" for="course-search">
+    搜尋所有 lecture 和 tutorial
+   </label>
+   <input autocomplete="off" id="course-search" placeholder="試試 attention、fine-tuning 或 harness……" type="search"/>
+   <p aria-live="polite" class="search-status">
+    搜尋 lecture notes、tutorial、測驗及閱讀材料。
+   </p>
+   <div class="search-results">
+   </div>
+  </dialog>
+  <div aria-live="polite" class="toast" role="status">
+  </div>
+ </body>
+</html>

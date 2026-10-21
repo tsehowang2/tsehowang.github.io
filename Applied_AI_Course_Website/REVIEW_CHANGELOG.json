@@ -1,0 +1,230 @@
+{
+  "course_pages": {
+    "en": {
+      "pages": 106,
+      "slides": 330
+    },
+    "zh-HK": {
+      "pages": 106,
+      "slides": 330
+    }
+  },
+  "site_checks": {
+    "html_pages": 212,
+    "links_checked": 14405,
+    "slides_both_languages": 660,
+    "displayed_code_blocks": 190,
+    "english_chinese_same_code": true,
+    "reader_slide_modes": "checked on all 64 lecture pages",
+    "source_archive_present": true,
+    "errors": []
+  },
+  "practice_checks": {
+    "changed_notebooks": [
+      2,
+      3,
+      9,
+      10,
+      13,
+      17,
+      18,
+      20,
+      21,
+      22,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30
+    ],
+    "new_cpu_cells": {
+      "2": [
+        "A BPE merge with unequal counts"
+      ],
+      "3": [
+        "When cosine and dot product disagree"
+      ],
+      "9": [
+        "RoPE with different position angles"
+      ],
+      "10": [
+        "Count the specified architecture"
+      ],
+      "17": [
+        "Cosine scores and temperature"
+      ],
+      "21": [
+        "Graded ranking and paired outcomes"
+      ],
+      "22": [
+        "Quantized weight storage and a bandwidth ceiling"
+      ],
+      "25": [
+        "Check the first LoRA gradient path"
+      ],
+      "27": [
+        "Parallel calls and dependencies"
+      ],
+      "29": [
+        "Continuous batching admission trace"
+      ],
+      "30": [
+        "Block an exfiltration-shaped output"
+      ]
+    },
+    "cpu_cell_results": [
+      {
+        "week": 2,
+        "cell": "A BPE merge with unequal counts",
+        "status": "passed"
+      },
+      {
+        "week": 3,
+        "cell": "When cosine and dot product disagree",
+        "status": "passed"
+      },
+      {
+        "week": 9,
+        "cell": "RoPE with different position angles",
+        "status": "passed"
+      },
+      {
+        "week": 10,
+        "cell": "Count the specified architecture",
+        "status": "passed"
+      },
+      {
+        "week": 17,
+        "cell": "Cosine scores and temperature",
+        "status": "passed"
+      },
+      {
+        "week": 21,
+        "cell": "Graded ranking and paired outcomes",
+        "status": "passed"
+      },
+      {
+        "week": 22,
+        "cell": "Quantized weight storage and a bandwidth ceiling",
+        "status": "passed"
+      },
+      {
+        "week": 25,
+        "cell": "Check the first LoRA gradient path",
+        "status": "passed"
+      },
+      {
+        "week": 27,
+        "cell": "Parallel calls and dependencies",
+        "status": "passed"
+      },
+      {
+        "week": 29,
+        "cell": "Continuous batching admission trace",
+        "status": "passed"
+      },
+      {
+        "week": 30,
+        "cell": "Block an exfiltration-shaped output",
+        "status": "passed"
+      }
+    ],
+    "syntax_checked_notebooks": 32,
+    "model_paths": "E5-small prefixes plus Qwen3 non-thinking chat templates; model download, training and GPU execution unverified",
+    "assessments": "Preserved three weekly questions; updated ranking reversal, scoped parameter count, multi-step reasoning, DPO scale and notation",
+    "translations": 68,
+    "cpu_tutorial_runs": [
+      {
+        "week": 2,
+        "passed": true,
+        "stdout": "Course root: C:\\Users\\terrytse\\.codex\\.chatgpt-projects\\g-p-6ad077d278dc8191b9cb5084a32b653c\\outputs\\llm_course_v2\n{'I': 0, 'go': 1, 'to': 2, 'school': 3, 'by': 4, 'bus': 5} [0, 1, 2, 3, 4, 5]\nInputs: [0, 1, 2, 3, 4] Targets: [1, 2, 3, 4, 5]\nCharacters: 21 UTF-8 bytes: 21\nPair counts: Counter({('u', 's'): 7, ('b', 'u'): 6, ('s', '_'): 5, ('s', 'y'): 2, ('y', '_'): 2, ('p', 'l'): 1, ('l', 'u'): 1})\nFirst merge: ('u', 's') Next best: ('b', 'us')\nTokenizer measurement skipped; no token counts are assumed.\n",
+        "stderr": ""
+      },
+      {
+        "week": 3,
+        "passed": true,
+        "stdout": "Course root: C:\\Users\\terrytse\\.codex\\.chatgpt-projects\\g-p-6ad077d278dc8191b9cb5084a32b653c\\outputs\\llm_course_v2\nbus dot 1.0 cosine 1.0\ntrain dot 0.8 cosine 0.8\nbanana dot 0.0 cosine 0.0\nDot a,b: 0.8 3.0 Cosine a,b: 0.8 0.6\n",
+        "stderr": ""
+      },
+      {
+        "week": 9,
+        "passed": true,
+        "stdout": "32b653c\\outputs\\llm_course_v2\nOriginal (1, 6, 8) split (1, 2, 6, 4) merged (1, 6, 8)\nPosition vectors: [[ 0.00000000e+00  1.00000000e+00  0.00000000e+00  1.00000000e+00\n   0.00000000e+00  1.00000000e+00  0.00000000e+00  1.00000000e+00]\n [ 8.41470985e-01  5.40302306e-01  9.98334166e-02  9.95004165e-01\n   9.99983333e-03  9.99950000e-01  9.99999833e-04  9.99999500e-01]\n [ 9.09297427e-01 -4.16146837e-01  1.98669331e-01  9.80066578e-01\n   1.99986667e-02  9.99800007e-01  1.99999867e-03  9.99998000e-01]]\n0 0 relative offset 0 dot 1.0\n30 90 relative offset 60 dot 0.5\n60 120 relative offset 60 dot 0.5\n",
+        "stderr": ""
+      },
+      {
+        "week": 10,
+        "passed": true,
+        "stdout": "Course root: C:\\Users\\terrytse\\.codex\\.chatgpt-projects\\g-p-6ad077d278dc8191b9cb5084a32b653c\\outputs\\llm_course_v2\nRow means [-5.55111512e-17 -5.55111512e-17  8.32667268e-17  0.00000000e+00\n  3.05311332e-16  0.00000000e+00] row variances [0.9999481  0.99998662 0.99995906 0.99997048 0.99996235 0.99998554]\nMLP is positionwise; a changed row did not change the other rows.\nMHA, GQA: 16384 10240 Plain, gated MLP: 32768 49152\nMHA plus plain MLP: 49152 GQA plus gated MLP: 59392\n",
+        "stderr": ""
+      },
+      {
+        "week": 13,
+        "passed": true,
+        "stdout": "Course root: C:\\Users\\terrytse\\.codex\\.chatgpt-projects\\g-p-6ad077d278dc8191b9cb5084a32b653c\\outputs\\llm_course_v2\nGreedy: bus\nTwenty samples: ['train' 'bicycle' 'train' 'bus' 'bus' 'bicycle' 'bus' 'bicycle' 'train'\n 'bus' 'bus' 'bus' 'bus' 'bus' 'bus' 'bus' 'bicycle' 'train' 'train'\n 'bicycle']\n0.5 [0.81818182 0.09090909 0.09090909]\n1.0 [0.6 0.2 0.2]\n2.0 [0.46410162 0.26794919 0.26794919]\nReal-model generation skipped. Set RUN_MODEL=True to download and run.\n",
+        "stderr": ""
+      },
+      {
+        "week": 17,
+        "passed": true,
+        "stdout": "andidate probabilities: [[0.6652409557748218, 0.24472847105479764, 0.09003057317038046], [0.09003057317038046, 0.6652409557748218, 0.24472847105479764], [0.24472847105479764, 0.09003057317038046, 0.6652409557748218]]\nMean contrastive loss: 0.4076059644443804\nFalse-negative example Q1 loss: 0.7586236756795135\nActual embedding model skipped; enable RUN_EMBEDDINGS for model results.\ntau 1.0 p [0.42237892110127173, 0.34581461215750964, 0.23180646674121863] positive loss 0.8618524505311191\ntau 0.05 p [0.9820078648958167, 0.01798610143932861, 6.033664854558337e-06] positive loss 0.01815596160086702\n",
+        "stderr": ""
+      },
+      {
+        "week": 20,
+        "passed": true,
+        "stdout": "aching fixture.', 'citations': ['timeout-v2', 'concurrency-v2', 'retry-v2'], 'version': '2', 'status': 'evidence_found', 'generator': 'lexical_extractor_not_llm', 'grounding_verified': False, 'latency_ms': 0.051099807024002075}\nAbsent baseline {'answer': 'Insufficient evidence in this version.', 'citations': [], 'version': '2', 'status': 'insufficient_evidence', 'generator': 'lexical_extractor_not_llm', 'grounding_verified': False, 'latency_ms': 0.01309998333454132}\nSource-ID existence does not establish semantic support.\nReal-model RAG block not executed. Enable it for the completed RAG lab.\n",
+        "stderr": ""
+      },
+      {
+        "week": 21,
+        "passed": true,
+        "stdout": "Course root: C:\\Users\\terrytse\\.codex\\.chatgpt-projects\\g-p-6ad077d278dc8191b9cb5084a32b653c\\outputs\\llm_course_v2\nIllustrative paired data, NOT model results: {'difference': 0.16666666666666666, 'ci95': [0.0, 0.5], 'n': 6, 'seed': 7}\nFill manual fields; preserve failures and evaluate unsupported cases separately.\nnDCG using gain 2**rel-1: 0.9721212198129313 Exact two-sided McNemar p: 0.021484375\n",
+        "stderr": ""
+      },
+      {
+        "week": 22,
+        "passed": true,
+        "stdout": "Course root: C:\\Users\\terrytse\\.codex\\.chatgpt-projects\\g-p-6ad077d278dc8191b9cb5084a32b653c\\outputs\\llm_course_v2\n2 bytes/parameter: 0.5587935447692871 GiB\n4 bytes/parameter: 1.1175870895385742 GiB\n16 bytes/parameter: 4.470348358154297 GiB\nHypothetical KV cache: 96.0 MiB\nPacked weights only, GiB: 0.46566128730773926\nIdealized batch-one bandwidth ceiling, tokens/s: 50.0\n",
+        "stderr": ""
+      },
+      {
+        "week": 25,
+        "passed": true,
+        "stdout": "Course root: C:\\Users\\terrytse\\.codex\\.chatgpt-projects\\g-p-6ad077d278dc8191b9cb5084a32b653c\\outputs\\llm_course_v2\nDense parameters 12 adapter parameters 14 delta rank 2\n2048x4096 rank 1 adapter count 6144\n2048x4096 rank 2 adapter count 12288\n2048x4096 rank 4 adapter count 24576\n2048x4096 rank 16 adapter count 98304\nInitial grad_B: [[0.3]\n [0.3]] Initial grad_A: [[0. 0.]]\n",
+        "stderr": ""
+      },
+      {
+        "week": 27,
+        "passed": true,
+        "stdout": "      \"version\": \"2\",\n          \"source\": \"fixture://atlas/2/concurrency\",\n          \"text\": \"The example client allows at most 4 simultaneous requests by default. Additional work should wait in a bounded queue. This statement concerns request concurrency, not the retry count.\",\n          \"score\": 1.3814225730487937\n        }\n      ]\n    },\n    {\n      \"step\": 1,\n      \"name\": \"calculate\",\n      \"arguments\": {\n        \"expression\": \"100+200+400\"\n      },\n      \"result\": {\n        \"value\": 700\n      }\n    }\n  ],\n  \"grounding_verified\": false\n}\nTwo independent reads, then dependent multiply: 12\n",
+        "stderr": ""
+      },
+      {
+        "week": 29,
+        "passed": true,
+        "stdout": "Course root: C:\\Users\\terrytse\\.codex\\.chatgpt-projects\\g-p-6ad077d278dc8191b9cb5084a32b653c\\outputs\\llm_course_v2\nRejected incompatible manifest: corpus hash mismatch; rebuild/re-evaluate dependent artifacts\nLocal extractor median ms 15.189600177109241 nearest-rank p95 16.358899883925915\nDecode-step scheduling fixture: [(1, ['A', 'B'], ['B']), (2, ['A', 'C'], ['B']), (3, ['A', 'C'], ['B', 'A', 'C'])]\n",
+        "stderr": ""
+      },
+      {
+        "week": 30,
+        "passed": true,
+        "stdout": "Course root: C:\\Users\\terrytse\\.codex\\.chatgpt-projects\\g-p-6ad077d278dc8191b9cb5084a32b653c\\outputs\\llm_course_v2\nSynthetic release A n 100 empty rate 0.03 alert False\nSynthetic release B n 100 empty rate 0.25 alert True\nexport_secrets invalid_action\ncalculate invalid_action\nlookup invalid_action\nvalidate_config budget_exhausted\nA valid tool call returning invalid config differs from an invalid call schema.\nreject_and_restore_previous\nIdeal 4-way speedup 0.7 2.1052631578947367\nIdeal 4-way speedup 0.8 2.5\nBlocked fixture; no URL was fetched.\n",
+        "stderr": "wn_tool_never_executes (test_contracts.ControllerTests.test_unknown_tool_never_executes) ... ok\ntest_unobserved_citation_rejected (test_contracts.ControllerTests.test_unobserved_citation_rejected) ... ok\ntest_version_scope_is_enforced_by_code (test_contracts.ControllerTests.test_version_scope_is_enforced_by_code) ... ok\ntest_bootstrap_uses_paired_difference (test_contracts.RetrievalTests.test_bootstrap_uses_paired_difference) ... ok\ntest_comparison_can_retrieve_both_versions (test_contracts.RetrievalTests.test_comparison_can_retrieve_both_versions) ... ok\ntest_duplicate_ids_rejected (test_contracts.RetrievalTests.test_duplicate_ids_rejected) ... ok\ntest_duplicate_ranks_do_not_inflate_recall (test_contracts.RetrievalTests.test_duplicate_ranks_do_not_inflate_recall) ... ok\ntest_no_matching_term_has_no_evidence (test_contracts.RetrievalTests.test_no_matching_term_has_no_evidence) ... ok\ntest_recall_differs_from_hit (test_contracts.RetrievalTests.test_recall_differs_from_hit) ... ok\ntest_rrf_can_favor_consensus (test_contracts.RetrievalTests.test_rrf_can_favor_consensus) ... ok\ntest_unanswerable_recall_is_not_defined (test_contracts.RetrievalTests.test_unanswerable_recall_is_not_defined) ... ok\ntest_version_filter_prevents_cross_version_evidence (test_contracts.RetrievalTests.test_version_filter_prevents_cross_version_evidence) ... ok\ntest_arithmetic (test_contracts.ToolTests.test_arithmetic) ... ok\ntest_code_execution_syntax_rejected (test_contracts.ToolTests.test_code_execution_syntax_rejected) ... ok\ntest_complexity_bound (test_contracts.ToolTests.test_complexity_bound) ... ok\ntest_config_types_and_boundaries (test_contracts.ToolTests.test_config_types_and_boundaries) ... ok\ntest_division_zero_and_numeric_bounds (test_contracts.ToolTests.test_division_zero_and_numeric_bounds) ... ok\ntest_extra_fields_rejected (test_contracts.ToolTests.test_extra_fields_rejected) ... ok\n\n----------------------------------------------------------------------\nRan 23 tests in 0.014s\n\nOK\n"
+      },
+      {
+        "week": 26,
+        "passed": true,
+        "scope": "DPO arithmetic only; model-training cells not executed"
+      }
+    ],
+    "additional_changes": [
+      "Optional actual tokenizer measurement for English/TraditionalChinese/whitespace/digits; skipped by default",
+      "Corrected tutorial10 second residual uses h",
+      "DPO arithmetic moved before model loading"
+    ],
+    "environment_note": "NumPy resides in a workspace user-base path; CPU validation resolved its absolute site-packages path for subprocesses. No notebook code relies on this workspace-only location."
+  },
+  "scope": "All items from the supplied review, with primary-source qualifications for ANN memory, DPO beta and current support."
+}

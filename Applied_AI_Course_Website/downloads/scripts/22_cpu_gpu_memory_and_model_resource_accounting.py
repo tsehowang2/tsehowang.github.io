@@ -1,4 +1,3 @@
-# %%
 from pathlib import Path
 import sys,json,time,random,hashlib,math
 if hasattr(sys.stdout,'reconfigure'): sys.stdout.reconfigure(encoding='utf-8')
@@ -11,13 +10,21 @@ from coursekit.core import *
 random.seed(7)
 print('Course root:',COURSE)
 
-# %%
+
 parameters=300_000_000
 for bytes_per_parameter in [2,4,16]:
     size=parameters*bytes_per_parameter
-    print(bytes_per_parameter,'bytes/parameter:',size/1e9,'GB',size/2**30,'GiB')
-layers,batch,tokens,kv_heads,head_dim,bytes_per_element=24,1,2048,8,64,2
-cache=2*layers*batch*tokens*kv_heads*head_dim*bytes_per_element
+    print(bytes_per_parameter,'bytes/parameter:',size/2**30,'GiB')
+layers,batch,tokens,H_kv,d_head,bytes_per_element=24,1,2048,8,64,2
+cache=2*layers*batch*tokens*H_kv*d_head*bytes_per_element
 assert cache/2**20==96
 print('Hypothetical KV cache:',cache/2**20,'MiB')
 
+
+parameters=1_000_000_000;bits_per_weight=4
+packed_bytes=parameters*bits_per_weight/8
+print('Packed weights only, GiB:',packed_bytes/2**30)
+bandwidth_bytes_per_second=100e9;weight_bytes=2e9
+ceiling=bandwidth_bytes_per_second/weight_bytes
+assert ceiling==50
+print('Idealized batch-one bandwidth ceiling, tokens/s:',ceiling)

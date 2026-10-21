@@ -1,18 +1,646 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/><title>Semester 2 examination · Applied AI</title><meta content="Applied generative AI and LLM systems course material" name="description"/><meta content="#173c36" name="theme-color"/><link href="../assets/favicon.svg" rel="icon" type="image/svg+xml"/><link href="../assets/style.css" rel="stylesheet"/><link href="../assets/slides.css" rel="stylesheet"/><script>window.COURSE_BASE="../";</script><script defer="" src="../assets/site-config.js"></script><script defer="" src="../assets/search-index.js"></script><script defer="" src="../assets/app.js"></script><script defer="" src="../assets/visuals.js"></script><script defer="" src="../assets/slides.js"></script><script defer="" src="../assets/beginner-visuals.js"></script><link href="../zh-HK/tests/semester-2.html" hreflang="zh-HK" rel="alternate"/><link href="../assets/bilingual.css" rel="stylesheet"/></head><body data-page-kind="exam" data-week="32"><a class="skip-link" href="#main">Skip to content</a><header class="topbar"><button aria-controls="course-sidebar" aria-expanded="false" class="menu-toggle" type="button">Menu</button><a class="brand" href="../index.html"><span aria-hidden="true" class="brand-mark">a<span>i</span></span><span>APPLIED AI<small>Principles into practice</small></span></a><nav aria-label="Main navigation"><a href="../index.html">The course</a><a href="../visuals.html">Visual lab</a><a href="../project.html">Project</a><a class="language-switch" href="../zh-HK/tests/semester-2.html" hreflang="zh-HK" lang="zh-HK">繁體中文</a></nav><button class="search-open" type="button">Search the course <span aria-hidden="true">/</span></button></header><aside aria-label="Course chapters" class="sidebar" id="course-sidebar"><a class="side-home" href="../index.html">Course overview</a><details class="semester-nav"><summary>Semester 1<span>Weeks 1–16</span></summary><ol start="1"><li><a href="../lectures/01.html"><span class="week-number">01</span><span>What a language model is trying to learn</span><span class="week-tick" data-week-tick="1"></span></a></li><li><a href="../lectures/02.html"><span class="week-number">02</span><span>From text to tokens and numerical IDs</span><span class="week-tick" data-week-tick="2"></span></a></li><li><a href="../lectures/03.html"><span class="week-number">03</span><span>What word vectors can represent</span><span class="week-tick" data-week-tick="3"></span></a></li><li><a href="../lectures/04.html"><span class="week-number">04</span><span>From scores to probabilities and learning signals</span><span class="week-tick" data-week-tick="4"></span></a></li><li><a href="../lectures/05.html"><span class="week-number">05</span><span>Why language needs context and order</span><span class="week-tick" data-week-tick="5"></span></a></li><li><a href="../lectures/06.html"><span class="week-number">06</span><span>Attention begins as a weighted mixture</span><span class="week-tick" data-week-tick="6"></span></a></li><li><a href="../lectures/07.html"><span class="week-number">07</span><span>Where queries keys and values come from</span><span class="week-tick" data-week-tick="7"></span></a></li><li><a href="../lectures/08.html"><span class="week-number">08</span><span>Scaling and masking attention correctly</span><span class="week-tick" data-week-tick="8"></span></a></li><li><a href="../lectures/09.html"><span class="week-number">09</span><span>Multiple attention heads and position</span><span class="week-tick" data-week-tick="9"></span></a></li><li><a href="../lectures/10.html"><span class="week-number">10</span><span>The transformer block step by step</span><span class="week-tick" data-week-tick="10"></span></a></li><li><a href="../lectures/11.html"><span class="week-number">11</span><span>Encoders decoders and complete model architectures</span><span class="week-tick" data-week-tick="11"></span></a></li><li><a href="../lectures/12.html"><span class="week-number">12</span><span>Training a small transformer</span><span class="week-tick" data-week-tick="12"></span></a></li><li><a href="../lectures/13.html"><span class="week-number">13</span><span>Generation decoding and the KV cache</span><span class="week-tick" data-week-tick="13"></span></a></li><li><a href="../lectures/14.html"><span class="week-number">14</span><span>From pretraining to instruction following and reasoning</span><span class="week-tick" data-week-tick="14"></span></a></li><li><a href="../lectures/15.html"><span class="week-number">15</span><span>Generative AI beyond text</span><span class="week-tick" data-week-tick="15"></span></a></li><li><a href="../lectures/16.html"><span class="week-number">16</span><span>A complete transformer walkthrough and first semester review</span><span class="week-tick" data-week-tick="16"></span></a></li></ol></details><details class="semester-nav" open=""><summary>Semester 2<span>Weeks 17–32</span></summary><ol start="17"><li><a href="../lectures/17.html"><span class="week-number">17</span><span>From word vectors to semantic search</span><span class="week-tick" data-week-tick="17"></span></a></li><li><a href="../lectures/18.html"><span class="week-number">18</span><span>A vector database from a list of vectors</span><span class="week-tick" data-week-tick="18"></span></a></li><li><a href="../lectures/19.html"><span class="week-number">19</span><span>RAG as an open book question</span><span class="week-tick" data-week-tick="19"></span></a></li><li><a href="../lectures/20.html"><span class="week-number">20</span><span>Improving RAG without losing the basic task</span><span class="week-tick" data-week-tick="20"></span></a></li><li><a href="../lectures/21.html"><span class="week-number">21</span><span>Evaluating retrieval answers and uncertainty</span><span class="week-tick" data-week-tick="21"></span></a></li><li><a href="../lectures/22.html"><span class="week-number">22</span><span>CPU GPU memory and model resource accounting</span><span class="week-tick" data-week-tick="22"></span></a></li><li><a href="../lectures/23.html"><span class="week-number">23</span><span>CUDA kernels and profiling</span><span class="week-tick" data-week-tick="23"></span></a></li><li><a href="../lectures/24.html"><span class="week-number">24</span><span>Fine tuning starts with a teaching dataset</span><span class="week-tick" data-week-tick="24"></span></a></li><li><a href="../lectures/25.html"><span class="week-number">25</span><span>LoRA and QLoRA from a small matrix</span><span class="week-tick" data-week-tick="25"></span></a></li><li><a href="../lectures/26.html"><span class="week-number">26</span><span>Fine tuning experiments preferences and distillation</span><span class="week-tick" data-week-tick="26"></span></a></li><li><a href="../lectures/27.html"><span class="week-number">27</span><span>Tools functions workflows and agents</span><span class="week-tick" data-week-tick="27"></span></a></li><li><a href="../lectures/28.html"><span class="week-number">28</span><span>Harnesses planning memory and bounded execution</span><span class="week-tick" data-week-tick="28"></span></a></li><li><a href="../lectures/29.html"><span class="week-number">29</span><span>From a notebook to MLOps and inference serving</span><span class="week-tick" data-week-tick="29"></span></a></li><li><a href="../lectures/30.html"><span class="week-number">30</span><span>Monitoring security regression tests and rollback</span><span class="week-tick" data-week-tick="30"></span></a></li><li><a href="../lectures/31.html"><span class="week-number">31</span><span>Integrating the documentation assistant and advanced extensions</span><span class="week-tick" data-week-tick="31"></span></a></li><li><a aria-current="page" href="../lectures/32.html"><span class="week-number">32</span><span>Review defense and a continuing learning plan</span><span class="week-tick" data-week-tick="32"></span></a></li></ol></details><div class="side-links"><a href="../visuals.html">Visual laboratory <span>14 interactive lessons</span></a><a href="../project.html">Documentation assistant <span>Your capstone project</span></a><a href="../resources.html">Readings and setup</a></div><div class="side-progress"><div><span>Your progress</span><strong data-progress-count="">0 / 32</strong></div><progress aria-label="Completed lectures" max="32" value="0"></progress><small>Saved in this browser</small></div></aside><main class="main" id="main"><div class="content"><div class="chapter-header"><div class="eyebrow">Semester 2 / Examination</div><h1>Semester 2 examination</h1><p class="deck">Two hours · 100 points · Attempt without notes or an LLM.</p></div><article class="prose"><h3 id="question-1-adaptation-20-points">Question 1 Adaptation 20 points</h3>
-<p>For W shaped [2048,4096] and LoRA rank 16, give A/B shapes and parameter counts, dense count and adapter/dense ratio (8). Explain zero-update initialization (4). Contrast LoRA and QLoRA without assuming four-bit activations (4). Name saved dependencies for adapter reproduction (4).</p>
-<h3 id="question-2-fine-tuning-study-15-points">Question 2 Fine-tuning study 15 points</h3>
-<p>A new adapter improves exact tool JSON from 75% to 95% but increases incorrect tool arguments from 5% to 20%. Design a controlled evaluation and release decision (8), identify two possible dataset causes (4), and explain why training loss alone cannot resolve the question (3).</p>
-<h3 id="question-3-agent-controller-20-points">Question 3 Agent controller 20 points</h3>
-<p>Write pseudocode for a bounded model/tool loop with typed proposals, schema checks, scope checks, observations and terminal statuses (12). Explain why a step cap is not a call timeout (4). Explain how an invented but valid-looking citation must be handled and what checking its ID cannot establish (4).</p>
-<h3 id="question-4-mlops-and-security-20-points">Question 4 MLOps and security 20 points</h3>
-<p>After changing the embedding model, developers reuse the old vectors and omit tenant scope from answer-cache keys. Explain both failures (6), propose manifest/index migration and cache controls (8), and define regression tests and rollback unit (6).</p>
-<h3 id="question-5-performance-and-scaling-15-points">Question 5 Performance and scaling 15 points</h3>
-<p>Average arrival rate is 1.5 requests/s and average time in system is 4 s. Estimate average work in flight and state assumptions (4). Distinguish TTFT and end-to-end latency (3). Calculate ideal four-way speedup for 80% scalable and 20% serial work (4). Explain why this does not predict production p95 or communication cost (4).</p>
-<h3 id="question-6-capstone-defense-10-points">Question 6 Capstone defense 10 points</h3>
-<p>Your agent is more expensive than the fixed workflow, your adapter shows no reliable improvement, and your retriever measurably improves paraphrase questions. Choose a default release and justify it with the evidence you would present (6). Name two limitations and a focused next experiment (4).</p><details class="solution exam-solution"><summary>Open the complete marking guide after your attempt</summary><p><strong>Q1 (20).</strong> A=[16,4096], B=[2048,16]. Adapter=16×(4096+2048)=98,304; dense=2048×4096=8,388,608; ratio=.01171875=1.171875% (8). One random factor/one zero factor yields zero initial delta while allowing gradient flow; both zero can block initial factor learning (4). LoRA trains factors on frozen base; QLoRA additionally quantizes frozen base, retaining higher-precision compute/state where required (4). Base/tokenizer revision, adapter config/weights, target modules, environment, training data/config and eval metadata; four distinct dependencies (4).</p>
-<p><strong>Q2 (15).</strong> Same model/base/context/tasks/decoding/tool validator, separate prompt control, per-task valid JSON and semantic argument correctness, invalid/forbidden actions and budgets; reject if incorrect actions violate gate even though syntax improved (8). Dataset may reward valid format with wrong arguments, omit negative/refusal cases, include wrong-version labels or have leaked paraphrases; two diagnosed causes (4). Loss is fit to labels, and biased/wrong labels can be learned successfully (3).</p>
-<p><strong>Q3 (20).</strong> Initialize scope/state/budgets; for finite steps call planner with controlled context; parse and validate proposal; final validates citations/contract then terminates; tool action validates name/schema/authority/limits, executes with per-call enforcement, records normalized result; catches typed failures; exhausts explicitly. Six meaningful controls/branches at 2 points each (12). A blocking call can exceed wall time before loop checks; real client timeout/process enforcement needed (4). Reject IDs not authorized/observed; existing IDs still do not prove semantic entailment (4).</p>
-<p><strong>Q4 (20).</strong> Incompatible coordinate systems make old vectors unsuitable; missing tenant cache scope can expose restricted answers (6). Manifest embeds model/index/source compatibility, rebuild versioned index, benchmark/switch/rollback; scope-aware cache keys, permission enforcement and invalidation (8). Tests deliberately mismatch embedding manifest and cross tenant requests; roll back coherent prompt/model/adapter/index/tool/corpus config, not weights alone (6).</p>
-<p><strong>Q5 (15).</strong> L=1.5×4=6 average in system, assuming stable averages and correct boundary (4). TTFT until first output token; end-to-end until response finishes including all application stages (3). 1/(.2+.8/4)=2.5 ideal speedup (4). Tail latency depends on variance/load/queueing and distributed work has communication/coordination; no p95 prediction from these means (4).</p>
-<p><strong>Q6 (10).</strong> Prefer qualifying retriever plus fixed workflow/base generator if agent/adapter add no demonstrated value; retain experimental branches and raw comparisons, report budget/quality/safety and actual negative results (6). Limits could be task-set size, small model capability, lack of real users or untested high concurrency. Next experiment must target an observed failure with a control and metric, e.g. reranking the paraphrase misses under a fixed context budget (4).</p></details></article></div><footer class="footer"><span>Applied AI · An independent self-study course</span><span>32 weeks · 10 hours per week</span><a href="../resources.html#about-this-course">About and sources</a></footer></main><dialog aria-labelledby="search-title" class="search-dialog"><div class="dialog-head"><h2 id="search-title">Find a concept</h2><button aria-label="Close search" class="search-close" type="button">Close</button></div><label class="sr-only" for="course-search">Search all lectures and tutorials</label><input autocomplete="off" id="course-search" placeholder="Try attention, fine-tuning, or harness…" type="search"/><p aria-live="polite" class="search-status">Search lecture notes, tutorials, tests and readings.</p><div class="search-results"></div></dialog><div aria-live="polite" class="toast" role="status"></div></body></html>
+<html lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width,initial-scale=1" name="viewport"/>
+  <title>
+   Semester 2 examination · Applied AI
+  </title>
+  <meta content="Applied generative AI and LLM systems course material" name="description"/>
+  <meta content="#173c36" name="theme-color"/>
+  <link href="../assets/favicon.svg" rel="icon" type="image/svg+xml"/>
+  <link href="../assets/style.css" rel="stylesheet"/>
+  <link href="../assets/slides.css" rel="stylesheet"/>
+  <script>
+   window.COURSE_BASE="../";
+  </script>
+  <script defer="" src="../assets/site-config.js">
+  </script>
+  <script defer="" src="../assets/search-index.js">
+  </script>
+  <script defer="" src="../assets/app.js">
+  </script>
+  <script defer="" src="../assets/visuals.js">
+  </script>
+  <script defer="" src="../assets/slides.js">
+  </script>
+  <script defer="" src="../assets/beginner-visuals.js">
+  </script>
+  <link href="../zh-HK/tests/semester-2.html" hreflang="zh-HK" rel="alternate"/>
+  <link href="../assets/bilingual.css" rel="stylesheet"/>
+  <link href="../assets/reader-v3.css" rel="stylesheet"/>
+  <script defer="True" src="../assets/reader-v3.js">
+  </script>
+ </head>
+ <body data-page-kind="exam" data-week="32">
+  <a class="skip-link" href="#main">
+   Skip to content
+  </a>
+  <header class="topbar">
+   <button aria-controls="course-sidebar" aria-expanded="false" class="menu-toggle" type="button">
+    Menu
+   </button>
+   <a class="brand" href="../index.html">
+    <span aria-hidden="true" class="brand-mark">
+     a
+     <span>
+      i
+     </span>
+    </span>
+    <span>
+     APPLIED AI
+     <small>
+      Principles into practice
+     </small>
+    </span>
+   </a>
+   <nav aria-label="Main navigation">
+    <a href="../index.html">
+     The course
+    </a>
+    <a href="../visuals.html">
+     Visual lab
+    </a>
+    <a href="../project.html">
+     Project
+    </a>
+    <a class="language-switch" href="../zh-HK/tests/semester-2.html" hreflang="zh-HK" lang="zh-HK">
+     繁體中文
+    </a>
+   </nav>
+   <button class="search-open" type="button">
+    Search the course
+    <span aria-hidden="true">
+     /
+    </span>
+   </button>
+  </header>
+  <aside aria-label="Course chapters" class="sidebar" id="course-sidebar">
+   <a class="side-home" href="../index.html">
+    Course overview
+   </a>
+   <details class="semester-nav">
+    <summary>
+     Semester 1
+     <span>
+      Weeks 1–16
+     </span>
+    </summary>
+    <ol start="1">
+     <li>
+      <a href="../lectures/01.html">
+       <span class="week-number">
+        01
+       </span>
+       <span>
+        What a language model is trying to learn
+       </span>
+       <span class="week-tick" data-week-tick="1">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/02.html">
+       <span class="week-number">
+        02
+       </span>
+       <span>
+        From text to tokens and numerical IDs
+       </span>
+       <span class="week-tick" data-week-tick="2">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/03.html">
+       <span class="week-number">
+        03
+       </span>
+       <span>
+        What word vectors can represent
+       </span>
+       <span class="week-tick" data-week-tick="3">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/04.html">
+       <span class="week-number">
+        04
+       </span>
+       <span>
+        From scores to probabilities and learning signals
+       </span>
+       <span class="week-tick" data-week-tick="4">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/05.html">
+       <span class="week-number">
+        05
+       </span>
+       <span>
+        Why language needs context and order
+       </span>
+       <span class="week-tick" data-week-tick="5">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/06.html">
+       <span class="week-number">
+        06
+       </span>
+       <span>
+        Attention begins as a weighted mixture
+       </span>
+       <span class="week-tick" data-week-tick="6">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/07.html">
+       <span class="week-number">
+        07
+       </span>
+       <span>
+        Where queries keys and values come from
+       </span>
+       <span class="week-tick" data-week-tick="7">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/08.html">
+       <span class="week-number">
+        08
+       </span>
+       <span>
+        Scaling and masking attention correctly
+       </span>
+       <span class="week-tick" data-week-tick="8">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/09.html">
+       <span class="week-number">
+        09
+       </span>
+       <span>
+        Multiple attention heads and position
+       </span>
+       <span class="week-tick" data-week-tick="9">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/10.html">
+       <span class="week-number">
+        10
+       </span>
+       <span>
+        The transformer block step by step
+       </span>
+       <span class="week-tick" data-week-tick="10">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/11.html">
+       <span class="week-number">
+        11
+       </span>
+       <span>
+        Encoders decoders and complete model architectures
+       </span>
+       <span class="week-tick" data-week-tick="11">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/12.html">
+       <span class="week-number">
+        12
+       </span>
+       <span>
+        Training a small transformer
+       </span>
+       <span class="week-tick" data-week-tick="12">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/13.html">
+       <span class="week-number">
+        13
+       </span>
+       <span>
+        Generation decoding and the KV cache
+       </span>
+       <span class="week-tick" data-week-tick="13">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/14.html">
+       <span class="week-number">
+        14
+       </span>
+       <span>
+        From pretraining to instruction following and reasoning
+       </span>
+       <span class="week-tick" data-week-tick="14">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/15.html">
+       <span class="week-number">
+        15
+       </span>
+       <span>
+        Generative AI beyond text
+       </span>
+       <span class="week-tick" data-week-tick="15">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/16.html">
+       <span class="week-number">
+        16
+       </span>
+       <span>
+        A complete transformer walkthrough and first semester review
+       </span>
+       <span class="week-tick" data-week-tick="16">
+       </span>
+      </a>
+     </li>
+    </ol>
+   </details>
+   <details class="semester-nav" open="">
+    <summary>
+     Semester 2
+     <span>
+      Weeks 17–32
+     </span>
+    </summary>
+    <ol start="17">
+     <li>
+      <a href="../lectures/17.html">
+       <span class="week-number">
+        17
+       </span>
+       <span>
+        From word vectors to semantic search
+       </span>
+       <span class="week-tick" data-week-tick="17">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/18.html">
+       <span class="week-number">
+        18
+       </span>
+       <span>
+        A vector database from a list of vectors
+       </span>
+       <span class="week-tick" data-week-tick="18">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/19.html">
+       <span class="week-number">
+        19
+       </span>
+       <span>
+        RAG as an open book question
+       </span>
+       <span class="week-tick" data-week-tick="19">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/20.html">
+       <span class="week-number">
+        20
+       </span>
+       <span>
+        Improving RAG without losing the basic task
+       </span>
+       <span class="week-tick" data-week-tick="20">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/21.html">
+       <span class="week-number">
+        21
+       </span>
+       <span>
+        Evaluating retrieval answers and uncertainty
+       </span>
+       <span class="week-tick" data-week-tick="21">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/22.html">
+       <span class="week-number">
+        22
+       </span>
+       <span>
+        CPU GPU memory and model resource accounting
+       </span>
+       <span class="week-tick" data-week-tick="22">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/23.html">
+       <span class="week-number">
+        23
+       </span>
+       <span>
+        CUDA kernels and profiling
+       </span>
+       <span class="week-tick" data-week-tick="23">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/24.html">
+       <span class="week-number">
+        24
+       </span>
+       <span>
+        Fine tuning starts with a teaching dataset
+       </span>
+       <span class="week-tick" data-week-tick="24">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/25.html">
+       <span class="week-number">
+        25
+       </span>
+       <span>
+        LoRA and QLoRA from a small matrix
+       </span>
+       <span class="week-tick" data-week-tick="25">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/26.html">
+       <span class="week-number">
+        26
+       </span>
+       <span>
+        Fine tuning experiments preferences and distillation
+       </span>
+       <span class="week-tick" data-week-tick="26">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/27.html">
+       <span class="week-number">
+        27
+       </span>
+       <span>
+        Tools functions workflows and agents
+       </span>
+       <span class="week-tick" data-week-tick="27">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/28.html">
+       <span class="week-number">
+        28
+       </span>
+       <span>
+        Harnesses planning memory and bounded execution
+       </span>
+       <span class="week-tick" data-week-tick="28">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/29.html">
+       <span class="week-number">
+        29
+       </span>
+       <span>
+        From a notebook to MLOps and inference serving
+       </span>
+       <span class="week-tick" data-week-tick="29">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/30.html">
+       <span class="week-number">
+        30
+       </span>
+       <span>
+        Monitoring security regression tests and rollback
+       </span>
+       <span class="week-tick" data-week-tick="30">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/31.html">
+       <span class="week-number">
+        31
+       </span>
+       <span>
+        Integrating the documentation assistant and advanced extensions
+       </span>
+       <span class="week-tick" data-week-tick="31">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a aria-current="page" href="../lectures/32.html">
+       <span class="week-number">
+        32
+       </span>
+       <span>
+        Review defense and a continuing learning plan
+       </span>
+       <span class="week-tick" data-week-tick="32">
+       </span>
+      </a>
+     </li>
+    </ol>
+   </details>
+   <div class="side-links">
+    <a href="../visuals.html">
+     Visual laboratory
+     <span>
+      14 interactive lessons
+     </span>
+    </a>
+    <a href="../project.html">
+     Documentation assistant
+     <span>
+      Your capstone project
+     </span>
+    </a>
+    <a href="../resources.html">
+     Readings and setup
+    </a>
+   </div>
+   <div class="side-progress">
+    <div>
+     <span>
+      Your progress
+     </span>
+     <strong data-progress-count="">
+      0 / 32
+     </strong>
+    </div>
+    <progress aria-label="Completed lectures" max="32" value="0">
+    </progress>
+    <small>
+     Saved in this browser
+    </small>
+   </div>
+  </aside>
+  <main class="main" id="main">
+   <div class="content">
+    <div class="chapter-header">
+     <div class="eyebrow">
+      Semester 2 / Examination
+     </div>
+     <h1>
+      Semester 2 examination
+     </h1>
+     <p class="deck">
+      Two hours · 100 points · Attempt without notes or an LLM.
+     </p>
+    </div>
+    <article class="prose">
+     <h3 id="question-1-adaptation-20-points">
+      Question 1 Adaptation 20 points
+     </h3>
+     <p>
+      For W shaped [2048,4096] and LoRA rank 16, give A/B shapes and parameter counts, dense count and adapter/dense ratio (8). Explain zero-update initialization (4). Contrast LoRA and QLoRA without assuming four-bit activations (4). Name saved dependencies for adapter reproduction (4).
+     </p>
+     <h3 id="question-2-fine-tuning-study-15-points">
+      Question 2 Fine-tuning study 15 points
+     </h3>
+     <p>
+      A new adapter improves exact tool JSON from 75% to 95% but increases incorrect tool arguments from 5% to 20%. Design a controlled evaluation and release decision (8), identify two possible dataset causes (4), and explain why training loss alone cannot resolve the question (3).
+     </p>
+     <h3 id="question-3-agent-controller-20-points">
+      Question 3 Agent controller 20 points
+     </h3>
+     <p>
+      Write pseudocode for a bounded model/tool loop with typed proposals, schema checks, scope checks, observations and terminal statuses (12). Explain why a step cap is not a call timeout (4). Explain how an invented but valid-looking citation must be handled and what checking its ID cannot establish (4).
+     </p>
+     <h3 id="question-4-mlops-and-security-20-points">
+      Question 4 MLOps and security 20 points
+     </h3>
+     <p>
+      After changing the embedding model, developers reuse the old vectors and omit tenant scope from answer-cache keys. Explain both failures (6), propose manifest/index migration and cache controls (8), and define regression tests and rollback unit (6).
+     </p>
+     <h3 id="question-5-performance-and-scaling-15-points">
+      Question 5 Performance and scaling 15 points
+     </h3>
+     <p>
+      Average arrival rate is 1.5 requests/s and average time in system is 4 s. Estimate average work in flight and state assumptions (4). Distinguish TTFT and end-to-end latency (3). Calculate ideal four-way speedup for 80% scalable and 20% serial work (4). Explain why this does not predict production p95 or communication cost (4).
+     </p>
+     <h3 id="question-6-capstone-defense-10-points">
+      Question 6 Capstone defense 10 points
+     </h3>
+     <p>
+      Your agent is more expensive than the fixed workflow, your adapter shows no reliable improvement, and your retriever measurably improves paraphrase questions. Choose a default release and justify it with the evidence you would present (6). Name two limitations and a focused next experiment (4).
+     </p>
+     <details class="solution exam-solution">
+      <summary>
+       Open the complete marking guide after your attempt
+      </summary>
+      <p>
+       <strong>
+        Q1 (20).
+       </strong>
+       A=[16,4096], B=[2048,16]. Adapter=16×(4096+2048)=98,304; dense=2048×4096=8,388,608; ratio=.01171875=1.171875% (8). Random A and zero B yield zero initial delta. B can receive the first gradient; A starts learning after B changes. Both zero block both initial factor gradients (4). LoRA trains factors on frozen base; QLoRA additionally quantizes frozen base, retaining higher-precision compute/state where required (4). Base/tokenizer revision, adapter config/weights, target modules, environment, training data/config and eval metadata; four distinct dependencies (4).
+      </p>
+      <p>
+       <strong>
+        Q2 (15).
+       </strong>
+       Same model/base/context/tasks/decoding/tool validator, separate prompt control, per-task valid JSON and semantic argument correctness, invalid/forbidden actions and budgets; reject if incorrect actions violate gate even though syntax improved (8). Dataset may reward valid format with wrong arguments, omit negative/refusal cases, include wrong-version labels or have leaked paraphrases; two diagnosed causes (4). Loss is fit to labels, and biased/wrong labels can be learned successfully (3).
+      </p>
+      <p>
+       <strong>
+        Q3 (20).
+       </strong>
+       Initialize scope/state/budgets; for finite steps call planner with controlled context; parse and validate proposal; final validates citations/contract then terminates; tool action validates name/schema/authority/limits, executes with per-call enforcement, records normalized result; catches typed failures; exhausts explicitly. Six meaningful controls/branches at 2 points each (12). A blocking call can exceed wall time before loop checks; real client timeout/process enforcement needed (4). Reject IDs not authorized/observed; existing IDs still do not prove semantic entailment (4).
+      </p>
+      <p>
+       <strong>
+        Q4 (20).
+       </strong>
+       Incompatible coordinate systems make old vectors unsuitable; missing tenant cache scope can expose restricted answers (6). Manifest embeds model/index/source compatibility, rebuild versioned index, benchmark/switch/rollback; scope-aware cache keys, permission enforcement and invalidation (8). Tests deliberately mismatch embedding manifest and cross tenant requests; roll back coherent prompt/model/adapter/index/tool/corpus config, not weights alone (6).
+      </p>
+      <p>
+       <strong>
+        Q5 (15).
+       </strong>
+       L=1.5×4=6 average in system, assuming stable averages and correct boundary (4). TTFT until first output token; end-to-end until response finishes including all application stages (3). 1/(.2+.8/4)=2.5 ideal speedup (4). Tail latency depends on variance/load/queueing and distributed work has communication/coordination; no p95 prediction from these means (4).
+      </p>
+      <p>
+       <strong>
+        Q6 (10).
+       </strong>
+       Prefer qualifying retriever plus fixed workflow/base generator if agent/adapter add no demonstrated value; retain experimental branches and raw comparisons, report budget/quality/safety and actual negative results (6). Limits could be task-set size, small model capability, lack of real users or untested high concurrency. Next experiment must target an observed failure with a control and metric, e.g. reranking the paraphrase misses under a fixed context budget (4).
+      </p>
+     </details>
+    </article>
+   </div>
+   <footer class="footer">
+    <span>
+     Applied AI · An independent self-study course
+    </span>
+    <span>
+     32 weeks · 10 hours per week
+    </span>
+    <a href="../resources.html#about-this-course">
+     About and sources
+    </a>
+   </footer>
+  </main>
+  <dialog aria-labelledby="search-title" class="search-dialog">
+   <div class="dialog-head">
+    <h2 id="search-title">
+     Find a concept
+    </h2>
+    <button aria-label="Close search" class="search-close" type="button">
+     Close
+    </button>
+   </div>
+   <label class="sr-only" for="course-search">
+    Search all lectures and tutorials
+   </label>
+   <input autocomplete="off" id="course-search" placeholder="Try attention, fine-tuning, or harness…" type="search"/>
+   <p aria-live="polite" class="search-status">
+    Search lecture notes, tutorials, tests and readings.
+   </p>
+   <div class="search-results">
+   </div>
+  </dialog>
+  <div aria-live="polite" class="toast" role="status">
+  </div>
+ </body>
+</html>

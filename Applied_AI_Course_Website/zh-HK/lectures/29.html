@@ -1,86 +1,1438 @@
 <!DOCTYPE html>
-
-<html lang="zh-HK"><head><script src="../../assets/translations-zh-HK.js"></script><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/><title>從 notebook 到 MLOps 和 inference serving · Applied AI</title><meta content="Applied generative AI and LLM systems course material" name="description"/><meta content="#173c36" name="theme-color"/><link href="../../assets/favicon.svg" rel="icon" type="image/svg+xml"/><link href="../../assets/style.css" rel="stylesheet"/><link href="../../assets/slides.css" rel="stylesheet"/><script>window.COURSE_BASE="../";</script><script defer="" src="../../assets/site-config.js"></script><script defer="" src="../assets/search-index.js"></script><script defer="" src="../../assets/app.js"></script><script defer="" src="../../assets/visuals.js"></script><script defer="" src="../../assets/slides.js"></script><script defer="" src="../../assets/beginner-visuals.js"></script><script defer="True" src="../../assets/locale-patterns.js"></script><script defer="True" src="../../assets/locale.js"></script><link href="../../assets/bilingual.css" rel="stylesheet"/><link href="../../lectures/29.html" hreflang="en" rel="alternate"/></head><body data-page-kind="lecture" data-week="29"><a class="skip-link" href="#main">跳至內容</a><header class="topbar"><button aria-controls="course-sidebar" aria-expanded="false" class="menu-toggle" type="button">選單</button><a class="brand" href="../index.html"><span aria-hidden="true" class="brand-mark">a<span>i</span></span><span>APPLIED AI<small>從原理到實踐</small></span></a><nav aria-label="主要導覽"><a href="../index.html">課程</a><a href="../visuals.html">互動圖解</a><a href="../project.html">專題</a><a class="language-switch" href="../../lectures/29.html" hreflang="en" lang="en">English</a></nav><button class="search-open" type="button">搜尋課程 <span aria-hidden="true">/</span></button></header><aside aria-label="課程章節" class="sidebar" id="course-sidebar"><a class="side-home" href="../index.html">課程概覽</a><details class="semester-nav"><summary>第一學期<span>第 1–16 週</span></summary><ol start="1"><li><a href="../lectures/01.html"><span class="week-number">01</span><span>Language model 究竟在學甚麼</span><span class="week-tick" data-week-tick="1"></span></a></li><li><a href="../lectures/02.html"><span class="week-number">02</span><span>從文字到 token 和數值 ID</span><span class="week-tick" data-week-tick="2"></span></a></li><li><a href="../lectures/03.html"><span class="week-number">03</span><span>Word vector 能表達甚麼</span><span class="week-tick" data-week-tick="3"></span></a></li><li><a href="../lectures/04.html"><span class="week-number">04</span><span>從 score 到 probability 和學習訊號</span><span class="week-tick" data-week-tick="4"></span></a></li><li><a href="../lectures/05.html"><span class="week-number">05</span><span>為甚麼語言需要 context 和次序</span><span class="week-tick" data-week-tick="5"></span></a></li><li><a href="../lectures/06.html"><span class="week-number">06</span><span>Attention 由 weighted mixture 開始</span><span class="week-tick" data-week-tick="6"></span></a></li><li><a href="../lectures/07.html"><span class="week-number">07</span><span>Query、key 和 value 從何而來</span><span class="week-tick" data-week-tick="7"></span></a></li><li><a href="../lectures/08.html"><span class="week-number">08</span><span>正確進行 attention scaling 和 masking</span><span class="week-tick" data-week-tick="8"></span></a></li><li><a href="../lectures/09.html"><span class="week-number">09</span><span>多個 attention head 與位置</span><span class="week-tick" data-week-tick="9"></span></a></li><li><a href="../lectures/10.html"><span class="week-number">10</span><span>逐步拆解 transformer block</span><span class="week-tick" data-week-tick="10"></span></a></li><li><a href="../lectures/11.html"><span class="week-number">11</span><span>Encoder、decoder 與完整 model architecture</span><span class="week-tick" data-week-tick="11"></span></a></li><li><a href="../lectures/12.html"><span class="week-number">12</span><span>訓練一個小型 transformer</span><span class="week-tick" data-week-tick="12"></span></a></li><li><a href="../lectures/13.html"><span class="week-number">13</span><span>Generation、decoding 與 KV cache</span><span class="week-tick" data-week-tick="13"></span></a></li><li><a href="../lectures/14.html"><span class="week-number">14</span><span>從 pretraining 到 instruction following 和 reasoning</span><span class="week-tick" data-week-tick="14"></span></a></li><li><a href="../lectures/15.html"><span class="week-number">15</span><span>文字以外的 Generative AI</span><span class="week-tick" data-week-tick="15"></span></a></li><li><a href="../lectures/16.html"><span class="week-number">16</span><span>完整 transformer 導覽與第一學期溫習</span><span class="week-tick" data-week-tick="16"></span></a></li></ol></details><details class="semester-nav" open=""><summary>第二學期<span>第 17–32 週</span></summary><ol start="17"><li><a href="../lectures/17.html"><span class="week-number">17</span><span>從 word vector 到 semantic search</span><span class="week-tick" data-week-tick="17"></span></a></li><li><a href="../lectures/18.html"><span class="week-number">18</span><span>從一列 vector 建立 vector database</span><span class="week-tick" data-week-tick="18"></span></a></li><li><a href="../lectures/19.html"><span class="week-number">19</span><span>把 RAG 理解為開卷作答</span><span class="week-tick" data-week-tick="19"></span></a></li><li><a href="../lectures/20.html"><span class="week-number">20</span><span>在保持基本任務的前提下改善 RAG</span><span class="week-tick" data-week-tick="20"></span></a></li><li><a href="../lectures/21.html"><span class="week-number">21</span><span>評估 retrieval、答案與 uncertainty</span><span class="week-tick" data-week-tick="21"></span></a></li><li><a href="../lectures/22.html"><span class="week-number">22</span><span>CPU、GPU、memory 與 model 資源計算</span><span class="week-tick" data-week-tick="22"></span></a></li><li><a href="../lectures/23.html"><span class="week-number">23</span><span>CUDA kernel 與 profiling</span><span class="week-tick" data-week-tick="23"></span></a></li><li><a href="../lectures/24.html"><span class="week-number">24</span><span>Fine-tuning 由教學 dataset 開始</span><span class="week-tick" data-week-tick="24"></span></a></li><li><a href="../lectures/25.html"><span class="week-number">25</span><span>從小型 matrix 理解 LoRA 和 QLoRA</span><span class="week-tick" data-week-tick="25"></span></a></li><li><a href="../lectures/26.html"><span class="week-number">26</span><span>Fine-tuning 實驗、preference 與 distillation</span><span class="week-tick" data-week-tick="26"></span></a></li><li><a href="../lectures/27.html"><span class="week-number">27</span><span>Tool、function、workflow 與 agent</span><span class="week-tick" data-week-tick="27"></span></a></li><li><a href="../lectures/28.html"><span class="week-number">28</span><span>Harness、planning、memory 與有界執行</span><span class="week-tick" data-week-tick="28"></span></a></li><li><a aria-current="page" href="../lectures/29.html"><span class="week-number">29</span><span>從 notebook 到 MLOps 和 inference serving</span><span class="week-tick" data-week-tick="29"></span></a></li><li><a href="../lectures/30.html"><span class="week-number">30</span><span>Monitoring、security、regression test 與 rollback</span><span class="week-tick" data-week-tick="30"></span></a></li><li><a href="../lectures/31.html"><span class="week-number">31</span><span>整合文件助手與進階延伸</span><span class="week-tick" data-week-tick="31"></span></a></li><li><a href="../lectures/32.html"><span class="week-number">32</span><span>溫習、答辯與持續學習計劃</span><span class="week-tick" data-week-tick="32"></span></a></li></ol></details><div class="side-links"><a href="../visuals.html">互動圖解實驗室 <span>14 個互動課節</span></a><a href="../project.html">文件助手 <span>你的 capstone project</span></a><a href="../resources.html">閱讀材料與環境設定</a></div><div class="side-progress"><div><span>你的進度</span><strong data-progress-count="">0 / 32</strong></div><progress aria-label="已完成 lecture" max="32" value="0"></progress><small>儲存在這個瀏覽器</small></div></aside><main class="main" id="main"><div class="content"><div class="chapter-header"><div class="eyebrow">第二學期 / 第 29 週</div><h1>從 notebook 到 MLOps 和 inference serving</h1></div><div class="lesson-links"><a href="../tutorials/29.html">練習 29</a><a href="../tests/29.html">檢查你的理解</a><button aria-pressed="false" class="mark-complete" data-week="29" type="button">標記為已完成</button></div><section aria-label="Lecture slides" class="lecture-deck" id="lecture-slides"><div class="deck-top"><div><div class="eyebrow">課堂投影片 · 第 29 週</div><h2>一步一步學習。</h2></div><button class="deck-present" type="button">簡報模式</button></div><p class="deck-help">閱讀每段解說，停下來預測結果，然後繼續。選取簡報後，可用方向鍵操作。完整講義在下方。</p><div aria-label="簡報：使用左右方向鍵" class="slide-viewport" tabindex="0"><section class="lecture-slide" data-slide=""><div class="slide-stage">由例子開始</div><h3>儲存的 model 與運行中的 service</h3><div class="slide-prose"><p>Notebook 在你執行 cells 時運作。Service 則接受 callers 的 requests、管理 resources，並在失敗時仍回傳已定義 responses。</p>
-<p>Documentation assistant 的 request 需要 question 和 scope；response 需要 answer/status、citations 和 release identity。所選 model 只是 service 內的一項 dependency。</p>
-<p>先從 local loopback API 開始。Public hosting 帶來額外 access、resource 和 infrastructure requirements，應明確實作和描述。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">由例子開始</div><h3>定義 release 的 artifacts</h3><div class="slide-prose"><p>Release 依賴 sources、chunker、embedding model、index、generator、tokenizer、adapter（如有使用）、prompt、tool schemas 和 environment。</p>
-<p>Prompt 改變即使不改 weights，也可改變 behavior。Embedding 改變通常需要相容的新 vectors/index。Source deletion 會影響下游 evidence，亦可能影響 caches。</p>
-<p>MLOps 管理 model-dependent systems 的 development、provenance、evaluation 和 operation。LLMOps 則強調這個場景中特有的 prompt、retrieval 和 tool dependencies。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">建立對機制的理解</div><h3>Run manifest</h3><div class="slide-prose"><p>記錄 source hashes、model/tokenizer revisions、index identity、prompt hash、tool version、decoding settings、code/environment、seed（如適用），以及 raw outputs。</p>
-<p>Manifest 協助其他人重現 evaluation 過的 configuration。Content hash 識別 bytes，但不證明 quality 或 permissions。</p>
-<p>不要把 secret values 放入 manifest 或 source repository。另行記錄所需 secret names 和 environment setup。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">建立對機制的理解</div><h3>Request handling</h3><div class="slide-prose"><p>Validate input size 和 schema、apply scope controls、在 limits 下執行 retrieval 和 generation、validate result，再回傳受控 status。</p>
-<p>使用 bounded queues，以及適當 dependency timeouts/cancellation。Health check 不應要求完整昂貴 model query；readiness 則可能需要確認 required artifacts 可用。</p>
-<p>教學 API 是一個起始 contract，不是 multi-tenant authentication 或 production capacity 的證據。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">建立對機制的理解</div><h3>Prefill 與 decode</h3><div class="slide-prose"><p>Prompt processing 通常稱為 prefill。之後的 autoregressive steps 利用 cached state，decode 新 tokens。</p>
-<p>Time to first token 包括 queueing、retrieval、prompt work 和 initial generation。End-to-end time 一直計至 response 結束。Inter-token timing 描述後續 output speed。</p>
-<p>Throughput 衡量每單位時間完成的有用工作。透過 batching 改善 throughput，可能改變 latency 和 memory use；因此聲稱 serving 改善前，要先定義 workload。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">建立對機制的理解</div><h3>一個簡單 capacity consistency check</h3><div class="slide-prose"><p>在穩定情況下，若平均 arrival rate 為每秒兩個 requests，平均 time in system 為三秒，Little's law 表示 system 內平均有六個 requests。</p>
-<p>這不會決定安全 worker count，也不能預測 p95 latency。Variation、saturation、scheduling、batching 和 failures 仍很重要。</p>
-<p>把 arithmetic 當作 consistency check，然後以有代表性的 input/output lengths 執行實測 load experiment。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">建立對機制的理解</div><h3>實驗與 release dependencies</h3><div class="slide-prose"><p>Tracking tools 可儲存 runs、parameters、metrics 和 artifacts。在採用 service 前，一份小型 structured JSON record 已足夠學習概念。</p>
-<p>按改變的 dependencies 選擇 checks。Prompt edit 需要 behavioral evaluation；embedding migration 需要 retrieval compatibility 和下游 tests。</p>
-<p>保持 training 與 serving templates 一致。Evaluation 用一個 prompt/chunker，serving 卻用另一個，即使 source model 沒變，仍會產生 mismatch。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">建立對機制的理解</div><h3>實例練習與學習檢查</h3><div class="slide-prose"><p>執行 local API，驗證 scoped citations，並記錄實際 end-to-end timings。然後整合所選真正 model，再測一次，交代 lengths、concurrency、warm/cold state 和 failures。</p>
-<p>建立 manifest，故意測試 mismatch。從乾淨 directory 重現一次 evaluation。</p>
-<p>當另一個人能識別運行中的 release、按 contract invoke，並區分實測 performance 和建議 deployment plan，就已準備好。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">選讀：深入學習</div><h3>完成引導例子後，再深入一層</h3><div class="slide-prose"><p>以下內容適合第二次閱讀。先解釋上面的日常例子，再用以下 equation 和實作細節，把解釋說得更精確。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">選讀：深入學習</div><h3>深入學習 25：直觀理解</h3><div class="slide-prose"><p>Model 只是 LLM application 的一個 artifact。Corpus、chunker、embedding model、vector index、generator、adapter、prompt、tool schemas 和 evaluation dataset 會一起演變。MLOps 管理 model-dependent systems 的可重現 development 和 operation；LLMOps 特別強調 prompt、retrieval 和 tool dependencies。</p>
-<p>把 pipeline 看成 dependency graph。Chunker 改變會令 chunk IDs 和 embeddings 失效。Embedding 改變會破壞 vector compatibility。Prompt 改變即使不改 weights，也可影響 tool selection。Tool schema 改變可能破壞已儲存 planner prompt。每個 release 應識別預期能一起運作的 versions。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">選讀：深入學習</div><h3>深入學習 25：實驗記錄與 registry</h3><div class="slide-prose"><p>Run 儲存 parameters、measured metrics 和 artifacts。Artifact registry 把 immutable outputs 與 provenance 和 evaluation 關聯。MLflow 是這些概念的一種 implementation [R20]；小型 JSON-based record 已足夠學習。Secrets 放在 configs 以外，必要時 redact logged inputs。</p>
-<p>Data lineage 包括 raw source hash、transformation version、time、license 和產生的 chunk IDs。Content hash 偵測 bytes 改變，但不證明 semantic quality 或 authorization。Reproducibility manifest 也需要 environment 和 configuration。若 remote model identifier 默默指向不同 revision，單說 “same code” 並不足夠。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">選讀：深入學習</div><h3>深入學習 25：變更影響分析實例</h3><div class="slide-prose"><p>改 system prompt 通常需要 answer/agent regression tests，但不必為沒變的 source chunks 重新 embedding。改 embedding model 需要 index rebuild 和 retrieval benchmark。改 document access group，即使 text 相同，亦需更新 authorization payloads 和檢查 caches。利用 dependency graph 選 checks，不必每次 edit 都重跑昂貴 training。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">選讀：深入學習</div><h3>深入學習 25：實驗</h3><div class="slide-prose"><p>notebook 29 建立 manifest，並驗證 source-hash mismatch。為真正 project 的 prompt、tokenizer、tools 和 index 加入 hashes。在乾淨 directory，根據 manifest 重現一次 evaluation。若 GPU computation 並非 deterministic，說明預期 tolerance，檢查 metrics、artifacts 和 configuration，而非承諾 bitwise identity。</p>
-<p>保持 development 和 serving data contracts 一致。Training example 若使用與 serving 不同的 chat template，可造成 deployment regression。Retriever 若 evaluation 用一種 chunker、serving 用另一種，也有類似 mismatch。</p>
-<p><strong>完成標準：</strong> 解釋某項建議 change 會令哪些 artifacts 失效，並重建一次 evaluation run。 <strong>閱讀材料：</strong> R02 和 R20 run/artifact 概念。 <strong>Tutorial：</strong> 29.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">選讀：深入學習</div><h3>完成引導例子後，再深入一層</h3><div class="slide-prose"><p>以下內容適合第二次閱讀。先解釋上面的日常例子，再用以下 equation 和實作細節，把解釋說得更精確。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">選讀：深入學習</div><h3>深入學習 26：直觀理解</h3><div class="slide-prose"><p>Offline notebook 在你按 Run 時處理一個 request。Service 要處理 concurrent requests、slow clients、cancellations、unavailable dependencies 和 bounded resources。Performance 要同時在 user boundary 和 model 內部定義。</p>
-<p>Time to first token 包括 queueing、retrieval、prompt processing 和 initial generation。Inter-token latency 衡量後續 output speed。End-to-end latency 包括整個 response。Throughput 計算每單位時間完成的有用工作。單一 request benchmark 很快，不代表負載下 tail latency 可接受。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">選讀：深入學習</div><h3>深入學習 26：Prefill、decode 與 batching</h3><div class="slide-prose"><p>Prefill 處理 prompt tokens；decode 讀取 cached state，逐一產生 tokens。長 prompts 增加 prefill work 和 cache storage。較大 batches 可能提高 throughput，卻增加 waiting time 或 memory use。Continuous batching 和 paged cache management 是值得理解的 serving strategies；課程的簡單 server 沒有實作它們。</p>
-<p>Quantization 可減少 weight memory，有時可加快，但取決於 hardware、kernels、batch size 和 quality。Speculative decoding 由一個 draft proposal，再由另一 model 驗證；效益取決於 acceptance rates 和 system costs。不要只憑方法名稱就推論有 speedup。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">選讀：深入學習</div><h3>深入學習 26：容量估算實例</h3><div class="slide-prose"><p>在穩定情況下，若 requests 每秒到達兩個、平均 time in system 三秒，Little's law 表示 system 平均約有六個 requests。這不能指定安全 worker count 或 p95 latency：service-time variation、batching、queueing 和 saturation 仍很重要。把它用作 consistency check，再實測。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">選讀：深入學習</div><h3>深入學習 26：實驗</h3><div class="slide-prose"><p>notebook 29 呼叫 local API，記錄已定義的 end-to-end latency distribution。附帶 load script 量度的是教學 extraction service，不是 LLM serving throughput。替換 generator 後重測，交代 input/output token lengths、warm/cold state 和 concurrency。Results 要包含 timeouts 和 failed requests。</p>
-<p>使用 request limits、bounded queues、dependency timeouts 和 cancellation。決定如何回傳 partial 或 failed result。Streaming text 不會令 unsupported claims 變得可接受；應考慮能否在正式交出 answer 前 validation citations。Health/readiness checks 要與昂貴完整 model query 分開。</p>
-<p><strong>完成標準：</strong> 區分 TTFT、decode speed、throughput 和 end-to-end latency，再說明 benchmark 的限制。 <strong>閱讀材料：</strong> R01 inference 主題；R19 profiling。 <strong>Tutorial：</strong> 29.</p></div></section></div><div class="deck-controls"><button class="slide-prev" type="button">← 上一頁</button><span aria-live="polite" class="slide-counter">1 / 18</span><button class="slide-next" type="button">下一頁 →</button></div><label class="slide-jump-label">前往 slide <select aria-label="跳至 slide" class="slide-jump"><option value="0">1</option><option value="1">2</option><option value="2">3</option><option value="3">4</option><option value="4">5</option><option value="5">6</option><option value="6">7</option><option value="7">8</option><option value="8">9</option><option value="9">10</option><option value="10">11</option><option value="11">12</option><option value="12">13</option><option value="13">14</option><option value="14">15</option><option value="15">16</option><option value="16">17</option><option value="17">18</option></select></label><button aria-pressed="false" class="deck-all" type="button">顯示全部 slides</button><a class="reader-link" href="#full-notes">閱讀完整講義 ↓</a></section><article class="prose full-notes" id="full-notes"><div class="eyebrow">完整講義</div><h2>閱讀完整解說</h2><h3 id="a-saved-model-and-a-running-service">儲存的 model 與運行中的 service</h3>
-<p>Notebook 在你執行 cells 時運作。Service 則接受 callers 的 requests、管理 resources，並在失敗時仍回傳已定義 responses。</p>
-<p>Documentation assistant 的 request 需要 question 和 scope；response 需要 answer/status、citations 和 release identity。所選 model 只是 service 內的一項 dependency。</p>
-<p>先從 local loopback API 開始。Public hosting 帶來額外 access、resource 和 infrastructure requirements，應明確實作和描述。</p>
-<h3 id="the-artifacts-that-define-a-release">定義 release 的 artifacts</h3>
-<p>Release 依賴 sources、chunker、embedding model、index、generator、tokenizer、adapter（如有使用）、prompt、tool schemas 和 environment。</p>
-<p>Prompt 改變即使不改 weights，也可改變 behavior。Embedding 改變通常需要相容的新 vectors/index。Source deletion 會影響下游 evidence，亦可能影響 caches。</p>
-<p>MLOps 管理 model-dependent systems 的 development、provenance、evaluation 和 operation。LLMOps 則強調這個場景中特有的 prompt、retrieval 和 tool dependencies。</p>
-<h3 id="a-run-manifest">Run manifest</h3>
-<p>記錄 source hashes、model/tokenizer revisions、index identity、prompt hash、tool version、decoding settings、code/environment、seed（如適用），以及 raw outputs。</p>
-<p>Manifest 協助其他人重現 evaluation 過的 configuration。Content hash 識別 bytes，但不證明 quality 或 permissions。</p>
-<p>不要把 secret values 放入 manifest 或 source repository。另行記錄所需 secret names 和 environment setup。</p>
-<h3 id="request-handling">Request handling</h3>
-<p>Validate input size 和 schema、apply scope controls、在 limits 下執行 retrieval 和 generation、validate result，再回傳受控 status。</p>
-<p>使用 bounded queues，以及適當 dependency timeouts/cancellation。Health check 不應要求完整昂貴 model query；readiness 則可能需要確認 required artifacts 可用。</p>
-<p>教學 API 是一個起始 contract，不是 multi-tenant authentication 或 production capacity 的證據。</p>
-<h3 id="prefill-and-decode">Prefill 與 decode</h3>
-<p>Prompt processing 通常稱為 prefill。之後的 autoregressive steps 利用 cached state，decode 新 tokens。</p>
-<p>Time to first token 包括 queueing、retrieval、prompt work 和 initial generation。End-to-end time 一直計至 response 結束。Inter-token timing 描述後續 output speed。</p>
-<p>Throughput 衡量每單位時間完成的有用工作。透過 batching 改善 throughput，可能改變 latency 和 memory use；因此聲稱 serving 改善前，要先定義 workload。</p>
-<h3 id="a-simple-capacity-consistency-check">一個簡單 capacity consistency check</h3>
-<p>在穩定情況下，若平均 arrival rate 為每秒兩個 requests，平均 time in system 為三秒，Little's law 表示 system 內平均有六個 requests。</p>
-<p>這不會決定安全 worker count，也不能預測 p95 latency。Variation、saturation、scheduling、batching 和 failures 仍很重要。</p>
-<p>把 arithmetic 當作 consistency check，然後以有代表性的 input/output lengths 執行實測 load experiment。</p>
-<h3 id="experiments-and-release-dependencies">實驗與 release dependencies</h3>
-<p>Tracking tools 可儲存 runs、parameters、metrics 和 artifacts。在採用 service 前，一份小型 structured JSON record 已足夠學習概念。</p>
-<p>按改變的 dependencies 選擇 checks。Prompt edit 需要 behavioral evaluation；embedding migration 需要 retrieval compatibility 和下游 tests。</p>
-<p>保持 training 與 serving templates 一致。Evaluation 用一個 prompt/chunker，serving 卻用另一個，即使 source model 沒變，仍會產生 mismatch。</p>
-<h3 id="worked-practice-and-a-readiness-check">實例練習與學習檢查</h3>
-<p>執行 local API，驗證 scoped citations，並記錄實際 end-to-end timings。然後整合所選真正 model，再測一次，交代 lengths、concurrency、warm/cold state 和 failures。</p>
-<p>建立 manifest，故意測試 mismatch。從乾淨 directory 重現一次 evaluation。</p>
-<p>當另一個人能識別運行中的 release、按 contract invoke，並區分實測 performance 和建議 deployment plan，就已準備好。</p>
-<h3 id="a-deeper-pass-after-the-worked-introduction">完成引導例子後，再深入一層</h3>
-<p>以下內容適合第二次閱讀。先解釋上面的日常例子，再用以下 equation 和實作細節，把解釋說得更精確。</p>
-<h3 id="further-study-25-intuition">深入學習 25：直觀理解</h3>
-<p>Model 只是 LLM application 的一個 artifact。Corpus、chunker、embedding model、vector index、generator、adapter、prompt、tool schemas 和 evaluation dataset 會一起演變。MLOps 管理 model-dependent systems 的可重現 development 和 operation；LLMOps 特別強調 prompt、retrieval 和 tool dependencies。</p>
-<p>把 pipeline 看成 dependency graph。Chunker 改變會令 chunk IDs 和 embeddings 失效。Embedding 改變會破壞 vector compatibility。Prompt 改變即使不改 weights，也可影響 tool selection。Tool schema 改變可能破壞已儲存 planner prompt。每個 release 應識別預期能一起運作的 versions。</p>
-<h3 id="further-study-25-experiment-records-and-registry">深入學習 25：實驗記錄與 registry</h3>
-<p>Run 儲存 parameters、measured metrics 和 artifacts。Artifact registry 把 immutable outputs 與 provenance 和 evaluation 關聯。MLflow 是這些概念的一種 implementation [R20]；小型 JSON-based record 已足夠學習。Secrets 放在 configs 以外，必要時 redact logged inputs。</p>
-<p>Data lineage 包括 raw source hash、transformation version、time、license 和產生的 chunk IDs。Content hash 偵測 bytes 改變，但不證明 semantic quality 或 authorization。Reproducibility manifest 也需要 environment 和 configuration。若 remote model identifier 默默指向不同 revision，單說 “same code” 並不足夠。</p>
-<h3 id="further-study-25-worked-change-impact-analysis">深入學習 25：變更影響分析實例</h3>
-<p>改 system prompt 通常需要 answer/agent regression tests，但不必為沒變的 source chunks 重新 embedding。改 embedding model 需要 index rebuild 和 retrieval benchmark。改 document access group，即使 text 相同，亦需更新 authorization payloads 和檢查 caches。利用 dependency graph 選 checks，不必每次 edit 都重跑昂貴 training。</p>
-<h3 id="further-study-25-experiment">深入學習 25：實驗</h3>
-<p>notebook 29 建立 manifest，並驗證 source-hash mismatch。為真正 project 的 prompt、tokenizer、tools 和 index 加入 hashes。在乾淨 directory，根據 manifest 重現一次 evaluation。若 GPU computation 並非 deterministic，說明預期 tolerance，檢查 metrics、artifacts 和 configuration，而非承諾 bitwise identity。</p>
-<p>保持 development 和 serving data contracts 一致。Training example 若使用與 serving 不同的 chat template，可造成 deployment regression。Retriever 若 evaluation 用一種 chunker、serving 用另一種，也有類似 mismatch。</p>
-<p><strong>完成標準：</strong> 解釋某項建議 change 會令哪些 artifacts 失效，並重建一次 evaluation run。 <strong>閱讀材料：</strong> R02 和 R20 run/artifact 概念。 <strong>Tutorial：</strong> 29.</p>
-<h3 id="a-deeper-pass-after-the-worked-introduction-2">完成引導例子後，再深入一層</h3>
-<p>以下內容適合第二次閱讀。先解釋上面的日常例子，再用以下 equation 和實作細節，把解釋說得更精確。</p>
-<h3 id="further-study-26-intuition">深入學習 26：直觀理解</h3>
-<p>Offline notebook 在你按 Run 時處理一個 request。Service 要處理 concurrent requests、slow clients、cancellations、unavailable dependencies 和 bounded resources。Performance 要同時在 user boundary 和 model 內部定義。</p>
-<p>Time to first token 包括 queueing、retrieval、prompt processing 和 initial generation。Inter-token latency 衡量後續 output speed。End-to-end latency 包括整個 response。Throughput 計算每單位時間完成的有用工作。單一 request benchmark 很快，不代表負載下 tail latency 可接受。</p>
-<h3 id="further-study-26-prefill-decode-and-batching">深入學習 26：Prefill、decode 與 batching</h3>
-<p>Prefill 處理 prompt tokens；decode 讀取 cached state，逐一產生 tokens。長 prompts 增加 prefill work 和 cache storage。較大 batches 可能提高 throughput，卻增加 waiting time 或 memory use。Continuous batching 和 paged cache management 是值得理解的 serving strategies；課程的簡單 server 沒有實作它們。</p>
-<p>Quantization 可減少 weight memory，有時可加快，但取決於 hardware、kernels、batch size 和 quality。Speculative decoding 由一個 draft proposal，再由另一 model 驗證；效益取決於 acceptance rates 和 system costs。不要只憑方法名稱就推論有 speedup。</p>
-<h3 id="further-study-26-worked-capacity-estimate">深入學習 26：容量估算實例</h3>
-<p>在穩定情況下，若 requests 每秒到達兩個、平均 time in system 三秒，Little's law 表示 system 平均約有六個 requests。這不能指定安全 worker count 或 p95 latency：service-time variation、batching、queueing 和 saturation 仍很重要。把它用作 consistency check，再實測。</p>
-<h3 id="further-study-26-experiment">深入學習 26：實驗</h3>
-<p>notebook 29 呼叫 local API，記錄已定義的 end-to-end latency distribution。附帶 load script 量度的是教學 extraction service，不是 LLM serving throughput。替換 generator 後重測，交代 input/output token lengths、warm/cold state 和 concurrency。Results 要包含 timeouts 和 failed requests。</p>
-<p>使用 request limits、bounded queues、dependency timeouts 和 cancellation。決定如何回傳 partial 或 failed result。Streaming text 不會令 unsupported claims 變得可接受；應考慮能否在正式交出 answer 前 validation citations。Health/readiness checks 要與昂貴完整 model query 分開。</p>
-<p><strong>完成標準：</strong> 區分 TTFT、decode speed、throughput 和 end-to-end latency，再說明 benchmark 的限制。 <strong>閱讀材料：</strong> R01 inference 主題；R19 profiling。 <strong>Tutorial：</strong> 29.</p></article><nav aria-label="前後 lecture" class="chapter-pagination"><a href="28.html"><small>上一週</small>Harness、planning、memory 與有界執行</a><a href="30.html"><small>下一週</small>Monitoring、security、regression test 與 rollback</a></nav></div><footer class="footer"><span>Applied AI · 獨立自學課程</span><span>32 週 · 每週 10 小時</span><a href="../resources.html#about-this-course">關於課程及資料來源</a></footer></main><dialog aria-labelledby="search-title" class="search-dialog"><div class="dialog-head"><h2 id="search-title">尋找概念</h2><button aria-label="關閉搜尋" class="search-close" type="button">關閉</button></div><label class="sr-only" for="course-search">搜尋所有 lecture 和 tutorial</label><input autocomplete="off" id="course-search" placeholder="試試 attention、fine-tuning 或 harness……" type="search"/><p aria-live="polite" class="search-status">搜尋 lecture notes、tutorial、測驗及閱讀材料。</p><div class="search-results"></div></dialog><div aria-live="polite" class="toast" role="status"></div></body></html>
+<html lang="zh-HK">
+ <head>
+  <script src="../../assets/translations-zh-HK.js">
+  </script>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width,initial-scale=1" name="viewport"/>
+  <title>
+   從 notebook 到 MLOps 和 inference serving · Applied AI
+  </title>
+  <meta content="Applied generative AI and LLM systems course material" name="description"/>
+  <meta content="#173c36" name="theme-color"/>
+  <link href="../../assets/favicon.svg" rel="icon" type="image/svg+xml"/>
+  <link href="../../assets/style.css" rel="stylesheet"/>
+  <link href="../../assets/slides.css" rel="stylesheet"/>
+  <script>
+   window.COURSE_BASE="../";
+  </script>
+  <script defer="" src="../../assets/site-config.js">
+  </script>
+  <script defer="" src="../assets/search-index.js">
+  </script>
+  <script defer="" src="../../assets/app.js">
+  </script>
+  <script defer="" src="../../assets/visuals.js">
+  </script>
+  <script defer="" src="../../assets/slides.js">
+  </script>
+  <script defer="" src="../../assets/beginner-visuals.js">
+  </script>
+  <script defer="True" src="../../assets/locale-patterns.js">
+  </script>
+  <script defer="True" src="../../assets/locale.js">
+  </script>
+  <link href="../../assets/bilingual.css" rel="stylesheet"/>
+  <link href="../../lectures/29.html" hreflang="en" rel="alternate"/>
+  <link href="../../assets/reader-v3.css" rel="stylesheet"/>
+  <script defer="True" src="../../assets/reader-v3.js">
+  </script>
+ </head>
+ <body data-page-kind="lecture" data-week="29">
+  <a class="skip-link" href="#main">
+   跳至內容
+  </a>
+  <header class="topbar">
+   <button aria-controls="course-sidebar" aria-expanded="false" class="menu-toggle" type="button">
+    選單
+   </button>
+   <a class="brand" href="../index.html">
+    <span aria-hidden="true" class="brand-mark">
+     a
+     <span>
+      i
+     </span>
+    </span>
+    <span>
+     APPLIED AI
+     <small>
+      從原理到實踐
+     </small>
+    </span>
+   </a>
+   <nav aria-label="主要導覽">
+    <a href="../index.html">
+     課程
+    </a>
+    <a href="../visuals.html">
+     互動圖解
+    </a>
+    <a href="../project.html">
+     專題
+    </a>
+    <a class="language-switch" href="../../lectures/29.html" hreflang="en" lang="en">
+     English
+    </a>
+   </nav>
+   <button class="search-open" type="button">
+    搜尋課程
+    <span aria-hidden="true">
+     /
+    </span>
+   </button>
+  </header>
+  <aside aria-label="課程章節" class="sidebar" id="course-sidebar">
+   <a class="side-home" href="../index.html">
+    課程概覽
+   </a>
+   <details class="semester-nav">
+    <summary>
+     第一學期
+     <span>
+      第 1–16 週
+     </span>
+    </summary>
+    <ol start="1">
+     <li>
+      <a href="../lectures/01.html">
+       <span class="week-number">
+        01
+       </span>
+       <span>
+        Language model 究竟在學甚麼
+       </span>
+       <span class="week-tick" data-week-tick="1">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/02.html">
+       <span class="week-number">
+        02
+       </span>
+       <span>
+        從文字到 token 和數值 ID
+       </span>
+       <span class="week-tick" data-week-tick="2">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/03.html">
+       <span class="week-number">
+        03
+       </span>
+       <span>
+        Word vector 能表達甚麼
+       </span>
+       <span class="week-tick" data-week-tick="3">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/04.html">
+       <span class="week-number">
+        04
+       </span>
+       <span>
+        從 score 到 probability 和學習訊號
+       </span>
+       <span class="week-tick" data-week-tick="4">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/05.html">
+       <span class="week-number">
+        05
+       </span>
+       <span>
+        為甚麼語言需要 context 和次序
+       </span>
+       <span class="week-tick" data-week-tick="5">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/06.html">
+       <span class="week-number">
+        06
+       </span>
+       <span>
+        Attention 由 weighted mixture 開始
+       </span>
+       <span class="week-tick" data-week-tick="6">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/07.html">
+       <span class="week-number">
+        07
+       </span>
+       <span>
+        Query、key 和 value 從何而來
+       </span>
+       <span class="week-tick" data-week-tick="7">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/08.html">
+       <span class="week-number">
+        08
+       </span>
+       <span>
+        正確進行 attention scaling 和 masking
+       </span>
+       <span class="week-tick" data-week-tick="8">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/09.html">
+       <span class="week-number">
+        09
+       </span>
+       <span>
+        多個 attention head 與位置
+       </span>
+       <span class="week-tick" data-week-tick="9">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/10.html">
+       <span class="week-number">
+        10
+       </span>
+       <span>
+        逐步拆解 transformer block
+       </span>
+       <span class="week-tick" data-week-tick="10">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/11.html">
+       <span class="week-number">
+        11
+       </span>
+       <span>
+        Encoder、decoder 與完整 model architecture
+       </span>
+       <span class="week-tick" data-week-tick="11">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/12.html">
+       <span class="week-number">
+        12
+       </span>
+       <span>
+        訓練一個小型 transformer
+       </span>
+       <span class="week-tick" data-week-tick="12">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/13.html">
+       <span class="week-number">
+        13
+       </span>
+       <span>
+        Generation、decoding 與 KV cache
+       </span>
+       <span class="week-tick" data-week-tick="13">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/14.html">
+       <span class="week-number">
+        14
+       </span>
+       <span>
+        從 pretraining 到 instruction following 和 reasoning
+       </span>
+       <span class="week-tick" data-week-tick="14">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/15.html">
+       <span class="week-number">
+        15
+       </span>
+       <span>
+        文字以外的 Generative AI
+       </span>
+       <span class="week-tick" data-week-tick="15">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/16.html">
+       <span class="week-number">
+        16
+       </span>
+       <span>
+        完整 transformer 導覽與第一學期溫習
+       </span>
+       <span class="week-tick" data-week-tick="16">
+       </span>
+      </a>
+     </li>
+    </ol>
+   </details>
+   <details class="semester-nav" open="">
+    <summary>
+     第二學期
+     <span>
+      第 17–32 週
+     </span>
+    </summary>
+    <ol start="17">
+     <li>
+      <a href="../lectures/17.html">
+       <span class="week-number">
+        17
+       </span>
+       <span>
+        從 word vector 到 semantic search
+       </span>
+       <span class="week-tick" data-week-tick="17">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/18.html">
+       <span class="week-number">
+        18
+       </span>
+       <span>
+        從一列 vector 建立 vector database
+       </span>
+       <span class="week-tick" data-week-tick="18">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/19.html">
+       <span class="week-number">
+        19
+       </span>
+       <span>
+        把 RAG 理解為開卷作答
+       </span>
+       <span class="week-tick" data-week-tick="19">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/20.html">
+       <span class="week-number">
+        20
+       </span>
+       <span>
+        在保持基本任務的前提下改善 RAG
+       </span>
+       <span class="week-tick" data-week-tick="20">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/21.html">
+       <span class="week-number">
+        21
+       </span>
+       <span>
+        評估 retrieval、答案與 uncertainty
+       </span>
+       <span class="week-tick" data-week-tick="21">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/22.html">
+       <span class="week-number">
+        22
+       </span>
+       <span>
+        CPU、GPU、memory 與 model 資源計算
+       </span>
+       <span class="week-tick" data-week-tick="22">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/23.html">
+       <span class="week-number">
+        23
+       </span>
+       <span>
+        CUDA kernel 與 profiling
+       </span>
+       <span class="week-tick" data-week-tick="23">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/24.html">
+       <span class="week-number">
+        24
+       </span>
+       <span>
+        Fine-tuning 由教學 dataset 開始
+       </span>
+       <span class="week-tick" data-week-tick="24">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/25.html">
+       <span class="week-number">
+        25
+       </span>
+       <span>
+        從小型 matrix 理解 LoRA 和 QLoRA
+       </span>
+       <span class="week-tick" data-week-tick="25">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/26.html">
+       <span class="week-number">
+        26
+       </span>
+       <span>
+        Fine-tuning 實驗、preference 與 distillation
+       </span>
+       <span class="week-tick" data-week-tick="26">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/27.html">
+       <span class="week-number">
+        27
+       </span>
+       <span>
+        Tool、function、workflow 與 agent
+       </span>
+       <span class="week-tick" data-week-tick="27">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/28.html">
+       <span class="week-number">
+        28
+       </span>
+       <span>
+        Harness、planning、memory 與有界執行
+       </span>
+       <span class="week-tick" data-week-tick="28">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a aria-current="page" href="../lectures/29.html">
+       <span class="week-number">
+        29
+       </span>
+       <span>
+        從 notebook 到 MLOps 和 inference serving
+       </span>
+       <span class="week-tick" data-week-tick="29">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/30.html">
+       <span class="week-number">
+        30
+       </span>
+       <span>
+        Monitoring、security、regression test 與 rollback
+       </span>
+       <span class="week-tick" data-week-tick="30">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/31.html">
+       <span class="week-number">
+        31
+       </span>
+       <span>
+        整合文件助手與進階延伸
+       </span>
+       <span class="week-tick" data-week-tick="31">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/32.html">
+       <span class="week-number">
+        32
+       </span>
+       <span>
+        溫習、答辯與持續學習計劃
+       </span>
+       <span class="week-tick" data-week-tick="32">
+       </span>
+      </a>
+     </li>
+    </ol>
+   </details>
+   <div class="side-links">
+    <a href="../visuals.html">
+     互動圖解實驗室
+     <span>
+      14 個互動課節
+     </span>
+    </a>
+    <a href="../project.html">
+     文件助手
+     <span>
+      你的 capstone project
+     </span>
+    </a>
+    <a href="../resources.html">
+     閱讀材料與環境設定
+    </a>
+   </div>
+   <div class="side-progress">
+    <div>
+     <span>
+      你的進度
+     </span>
+     <strong data-progress-count="">
+      0 / 32
+     </strong>
+    </div>
+    <progress aria-label="已完成 lecture" max="32" value="0">
+    </progress>
+    <small>
+     儲存在這個瀏覽器
+    </small>
+   </div>
+  </aside>
+  <main class="main" id="main">
+   <div class="content">
+    <div class="chapter-header">
+     <div class="eyebrow">
+      第二學期 / 第 29 週
+     </div>
+     <h1>
+      從 notebook 到 MLOps 和 inference serving
+     </h1>
+    </div>
+    <div class="lesson-links">
+     <a href="../tutorials/29.html">
+      練習 29
+     </a>
+     <a href="../tests/29.html">
+      檢查你的理解
+     </a>
+     <button aria-pressed="false" class="mark-complete" data-week="29" type="button">
+      標記為已完成
+     </button>
+    </div>
+    <div aria-label="課堂檢視" class="lesson-mode" role="tablist">
+     <button aria-controls="full-notes" aria-selected="true" data-mode="read" id="mode-read" role="tab" type="button">
+      閱讀講義
+     </button>
+     <button aria-controls="lecture-slides" aria-selected="false" data-mode="slides" id="mode-slides" role="tab" type="button">
+      課堂 slides
+     </button>
+    </div>
+    <section aria-label="Lecture slides" class="lecture-deck" hidden="" id="lecture-slides" role="tabpanel">
+     <div class="deck-top">
+      <div>
+       <div class="eyebrow">
+        課堂投影片 · 第 29 週
+       </div>
+       <h2>
+        重點步驟與圖解
+       </h2>
+      </div>
+      <button class="deck-present" type="button">
+       簡報模式
+      </button>
+     </div>
+     <p class="deck-help">
+      用 slides 溫習機制；按「閱讀完整解說」可開啟完整講義及程式碼。
+     </p>
+     <div aria-label="簡報：使用左右方向鍵" class="slide-viewport" tabindex="0">
+      <section class="lecture-slide" data-slide="">
+       <div class="slide-stage">
+        第 29 週 · 課節 1
+       </div>
+       <h3>
+        儲存的 model 與運行中的 service
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Notebook 在你執行 cells 時運作。
+         </li>
+         <li>
+          Documentation assistant 的 request 需要 question 和 scope；response 需要 answer/status、citations 和 release identity。
+         </li>
+         <li>
+          先從 local loopback API 開始。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#a-saved-model-and-a-running-service">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 29 週 · 課節 2
+       </div>
+       <h3>
+        定義 release 的 artifacts
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Release 依賴 sources、chunker、embedding model、index、generator、tokenizer、adapter（如有使用）、prompt、tool schemas 和 environment。
+         </li>
+         <li>
+          Prompt 改變即使不改 weights，也可改變 behavior。
+         </li>
+         <li>
+          MLOps 管理 model-dependent systems 的 development、provenance、evaluation 和 operation。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#the-artifacts-that-define-a-release">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 29 週 · 課節 3
+       </div>
+       <h3>
+        Run manifest
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          記錄 source hashes、model/tokenizer revisions、index identity、prompt hash、tool version、decoding settings、code/environment、seed（如適用），以及 raw outputs。
+         </li>
+         <li>
+          Manifest 協助其他人重現 evaluation 過的 configuration。
+         </li>
+         <li>
+          不要把 secret values 放入 manifest 或 source repository。
+         </li>
+        </ul>
+        <figure class="mechanism-figure">
+         <figcaption>
+          Continuous batching：重用空出的 slot
+         </figcaption>
+         <ol class="mechanism-flow">
+          <li>
+           <span class="mechanism-number">
+            01
+           </span>
+           <strong>
+            Step 1
+           </strong>
+           <small>
+            requests A and B decode
+           </small>
+          </li>
+          <li>
+           <span class="mechanism-number">
+            02
+           </span>
+           <strong>
+            Step 2
+           </strong>
+           <small>
+            A completes; B continues
+           </small>
+          </li>
+          <li>
+           <span class="mechanism-number">
+            03
+           </span>
+           <strong>
+            Step 3
+           </strong>
+           <small>
+            C enters; B and C decode
+           </small>
+          </li>
+         </ol>
+         <p>
+          這是教學 timeline；實際 scheduler 亦需管理 prefill、KV memory 和 latency limits。
+         </p>
+        </figure>
+        <a class="slide-section-link" href="#a-run-manifest">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 29 週 · 課節 4
+       </div>
+       <h3>
+        Request handling
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Validate input size 和 schema、apply scope controls、在 limits 下執行 retrieval 和 generation、validate result，再回傳受控 status。
+         </li>
+         <li>
+          使用 bounded queues，以及適當 dependency timeouts/cancellation。
+         </li>
+         <li>
+          教學 API 是一個起始 contract，不是 multi-tenant authentication 或 production capacity 的證據。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#request-handling">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 29 週 · 課節 5
+       </div>
+       <h3>
+        Prefill 與 decode
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Prompt processing 通常稱為 prefill。
+         </li>
+         <li>
+          Time to first token 包括 queueing、retrieval、prompt work 和 initial generation。
+         </li>
+         <li>
+          Throughput 衡量每單位時間完成的有用工作。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#prefill-and-decode">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 29 週 · 課節 6
+       </div>
+       <h3>
+        Continuous batching 的時間表
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Static batching 會等待選定 batch 完成，才開始下一個 batch。
+         </li>
+         <li>
+          PagedAttention 把 request 的 KV cache 儲存在固定大小的 physical blocks，再把 logical token positions 對應到這些 blocks；它們不必在 GPU memory 中連續排列。
+         </li>
+         <li>
+          Prefix caching 與儲存完整答案的 cache 是兩回事。
+         </li>
+        </ul>
+        <div class="table-wrap">
+         <table>
+          <thead>
+           <tr>
+            <th>
+             Iteration
+            </th>
+            <th>
+             正在產生 token 的 requests
+            </th>
+            <th>
+             下一步變化
+            </th>
+           </tr>
+          </thead>
+          <tbody>
+           <tr>
+            <td>
+             1
+            </td>
+            <td>
+             A, B
+            </td>
+            <td>
+             A 和 B 繼續。
+            </td>
+           </tr>
+           <tr>
+            <td>
+             2
+            </td>
+            <td>
+             A, B
+            </td>
+            <td>
+             A 完成；它的 slot 可以重用。
+            </td>
+           </tr>
+           <tr>
+            <td>
+             3
+            </td>
+            <td>
+             B, C
+            </td>
+            <td>
+             C 在 prefill 完成後加入。
+            </td>
+           </tr>
+           <tr>
+            <td>
+             4
+            </td>
+            <td>
+             B, C
+            </td>
+            <td>
+             B 完成；其他 requests 繼續。
+            </td>
+           </tr>
+          </tbody>
+         </table>
+        </div>
+        <a class="slide-section-link" href="#a-timeline-for-continuous-batching">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 29 週 · 課節 7
+       </div>
+       <h3>
+        兩個需要認識的 serving runtime
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          vLLM 是為有效率的 batched model execution 和 KV-cache management 設計的 serving engine。
+         </li>
+         <li>
+          兩個 commands 都提供 local model service。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#two-serving-runtimes-you-can-recognize">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 29 週 · 課節 8
+       </div>
+       <h3>
+        一個簡單 capacity consistency check
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          在穩定情況下，若平均 arrival rate 為每秒兩個 requests，平均 time in system 為三秒，Little's law 表示 system 內平均有六個 requests。
+         </li>
+         <li>
+          這不會決定安全 worker count，也不能預測 p95 latency。
+         </li>
+         <li>
+          把 arithmetic 當作 consistency check，然後以有代表性的 input/output lengths 執行實測 load experiment。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#a-simple-capacity-consistency-check">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 29 週 · 課節 9
+       </div>
+       <h3>
+        實驗與 release dependencies
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Tracking tools 可儲存 runs、parameters、metrics 和 artifacts。
+         </li>
+         <li>
+          按改變的 dependencies 選擇 checks。
+         </li>
+         <li>
+          保持 training 與 serving templates 一致。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#experiments-and-release-dependencies">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 29 週 · 課節 10
+       </div>
+       <h3>
+        實例練習與學習檢查
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          執行 local API，驗證 scoped citations，並記錄實際 end-to-end timings。
+         </li>
+         <li>
+          建立 manifest，故意測試 mismatch。
+         </li>
+         <li>
+          當另一個人能識別運行中的 release、按 contract invoke，並區分實測 performance 和建議 deployment plan，就已準備好。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#worked-practice-and-a-readiness-check">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+     </div>
+     <div class="deck-controls">
+      <button class="slide-prev" type="button">
+       ← 上一頁
+      </button>
+      <span aria-live="polite" class="slide-counter">
+       1 / 10
+      </span>
+      <button class="slide-next" type="button">
+       下一頁 →
+      </button>
+     </div>
+     <label class="slide-jump-label">
+      前往 slide
+      <select aria-label="跳至 slide" class="slide-jump">
+       <option value="0">
+        1. 儲存的 model 與運行中的 service
+       </option>
+       <option value="1">
+        2. 定義 release 的 artifacts
+       </option>
+       <option value="2">
+        3. Run manifest
+       </option>
+       <option value="3">
+        4. Request handling
+       </option>
+       <option value="4">
+        5. Prefill 與 decode
+       </option>
+       <option value="5">
+        6. Continuous batching 的時間表
+       </option>
+       <option value="6">
+        7. 兩個需要認識的 serving runtime
+       </option>
+       <option value="7">
+        8. 一個簡單 capacity consistency check
+       </option>
+       <option value="8">
+        9. 實驗與 release dependencies
+       </option>
+       <option value="9">
+        10. 實例練習與學習檢查
+       </option>
+      </select>
+     </label>
+     <button aria-pressed="false" class="deck-all" type="button">
+      顯示全部 slides
+     </button>
+    </section>
+    <nav aria-label="本課內容" class="reader-toc">
+     <strong>
+      本課內容
+     </strong>
+     <ol>
+      <li>
+       <a href="#a-saved-model-and-a-running-service">
+        儲存的 model 與運行中的 service
+       </a>
+      </li>
+      <li>
+       <a href="#the-artifacts-that-define-a-release">
+        定義 release 的 artifacts
+       </a>
+      </li>
+      <li>
+       <a href="#a-run-manifest">
+        Run manifest
+       </a>
+      </li>
+      <li>
+       <a href="#request-handling">
+        Request handling
+       </a>
+      </li>
+      <li>
+       <a href="#prefill-and-decode">
+        Prefill 與 decode
+       </a>
+      </li>
+      <li>
+       <a href="#a-timeline-for-continuous-batching">
+        Continuous batching 的時間表
+       </a>
+      </li>
+      <li>
+       <a href="#two-serving-runtimes-you-can-recognize">
+        兩個需要認識的 serving runtime
+       </a>
+      </li>
+      <li>
+       <a href="#a-simple-capacity-consistency-check">
+        一個簡單 capacity consistency check
+       </a>
+      </li>
+      <li>
+       <a href="#experiments-and-release-dependencies">
+        實驗與 release dependencies
+       </a>
+      </li>
+      <li>
+       <a href="#worked-practice-and-a-readiness-check">
+        實例練習與學習檢查
+       </a>
+      </li>
+     </ol>
+    </nav>
+    <article class="prose full-notes" id="full-notes" role="tabpanel">
+     <div class="eyebrow">
+      完整講義
+     </div>
+     <h2>
+      閱讀完整解說
+     </h2>
+     <h3 id="a-saved-model-and-a-running-service">
+      儲存的 model 與運行中的 service
+     </h3>
+     <p>
+      Notebook 在你執行 cells 時運作。Service 則接受 callers 的 requests、管理 resources，並在失敗時仍回傳已定義 responses。
+     </p>
+     <p>
+      Documentation assistant 的 request 需要 question 和 scope；response 需要 answer/status、citations 和 release identity。所選 model 只是 service 內的一項 dependency。
+     </p>
+     <p>
+      先從 local loopback API 開始。Public hosting 帶來額外 access、resource 和 infrastructure requirements，應明確實作和描述。
+     </p>
+     <h3 id="the-artifacts-that-define-a-release">
+      定義 release 的 artifacts
+     </h3>
+     <p>
+      Release 依賴 sources、chunker、embedding model、index、generator、tokenizer、adapter（如有使用）、prompt、tool schemas 和 environment。
+     </p>
+     <p>
+      Prompt 改變即使不改 weights，也可改變 behavior。Embedding 改變通常需要相容的新 vectors/index。Source deletion 會影響下游 evidence，亦可能影響 caches。
+     </p>
+     <p>
+      MLOps 管理 model-dependent systems 的 development、provenance、evaluation 和 operation。LLMOps 則強調這個場景中特有的 prompt、retrieval 和 tool dependencies。
+     </p>
+     <h3 id="a-run-manifest">
+      Run manifest
+     </h3>
+     <figure class="mechanism-figure">
+      <figcaption>
+       Continuous batching：重用空出的 slot
+      </figcaption>
+      <ol class="mechanism-flow">
+       <li>
+        <span class="mechanism-number">
+         01
+        </span>
+        <strong>
+         Step 1
+        </strong>
+        <small>
+         requests A and B decode
+        </small>
+       </li>
+       <li>
+        <span class="mechanism-number">
+         02
+        </span>
+        <strong>
+         Step 2
+        </strong>
+        <small>
+         A completes; B continues
+        </small>
+       </li>
+       <li>
+        <span class="mechanism-number">
+         03
+        </span>
+        <strong>
+         Step 3
+        </strong>
+        <small>
+         C enters; B and C decode
+        </small>
+       </li>
+      </ol>
+      <p>
+       這是教學 timeline；實際 scheduler 亦需管理 prefill、KV memory 和 latency limits。
+      </p>
+     </figure>
+     <p>
+      記錄 source hashes、model/tokenizer revisions、index identity、prompt hash、tool version、decoding settings、code/environment、seed（如適用），以及 raw outputs。
+     </p>
+     <p>
+      Manifest 協助其他人重現 evaluation 過的 configuration。Content hash 識別 bytes，但不證明 quality 或 permissions。
+     </p>
+     <p>
+      不要把 secret values 放入 manifest 或 source repository。另行記錄所需 secret names 和 environment setup。
+     </p>
+     <h3 id="request-handling">
+      Request handling
+     </h3>
+     <p>
+      Validate input size 和 schema、apply scope controls、在 limits 下執行 retrieval 和 generation、validate result，再回傳受控 status。
+     </p>
+     <p>
+      使用 bounded queues，以及適當 dependency timeouts/cancellation。Health check 不應要求完整昂貴 model query；readiness 則可能需要確認 required artifacts 可用。
+     </p>
+     <p>
+      教學 API 是一個起始 contract，不是 multi-tenant authentication 或 production capacity 的證據。
+     </p>
+     <h3 id="prefill-and-decode">
+      Prefill 與 decode
+     </h3>
+     <p>
+      Prompt processing 通常稱為 prefill。之後的 autoregressive steps 利用 cached state，decode 新 tokens。
+     </p>
+     <p>
+      Time to first token 包括 queueing、retrieval、prompt work 和 initial generation。End-to-end time 一直計至 response 結束。Inter-token timing 描述後續 output speed。
+     </p>
+     <p>
+      Throughput 衡量每單位時間完成的有用工作。透過 batching 改善 throughput，可能改變 latency 和 memory use；因此聲稱 serving 改善前，要先定義 workload。
+     </p>
+     <h3 id="a-timeline-for-continuous-batching">
+      Continuous batching 的時間表
+     </h3>
+     <p>
+      Static batching 會等待選定 batch 完成，才開始下一個 batch。Continuous batching 則可以在某個 request 完成後加入已準備好的 request，減少空置 slot。假設 A 需要兩個 output tokens，B 需要四個，而 C 已完成 prefill、準備就緒。下表是一個示範 decode schedule。每個 row 是一次 scheduling iteration，不代表每次 iteration 的時間都相同。
+     </p>
+     <div class="table-wrap">
+      <table>
+       <thead>
+        <tr>
+         <th>
+          Iteration
+         </th>
+         <th>
+          正在產生 token 的 requests
+         </th>
+         <th>
+          下一步變化
+         </th>
+        </tr>
+       </thead>
+       <tbody>
+        <tr>
+         <td>
+          1
+         </td>
+         <td>
+          A, B
+         </td>
+         <td>
+          A 和 B 繼續。
+         </td>
+        </tr>
+        <tr>
+         <td>
+          2
+         </td>
+         <td>
+          A, B
+         </td>
+         <td>
+          A 完成；它的 slot 可以重用。
+         </td>
+        </tr>
+        <tr>
+         <td>
+          3
+         </td>
+         <td>
+          B, C
+         </td>
+         <td>
+          C 在 prefill 完成後加入。
+         </td>
+        </tr>
+        <tr>
+         <td>
+          4
+         </td>
+         <td>
+          B, C
+         </td>
+         <td>
+          B 完成；其他 requests 繼續。
+         </td>
+        </tr>
+       </tbody>
+      </table>
+     </div>
+     <p>
+      PagedAttention 把 request 的 KV cache 儲存在固定大小的 physical blocks，再把 logical token positions 對應到這些 blocks；它們不必在 GPU memory 中連續排列。重用 blocks 能減少 allocation 浪費，支援較靈活的 scheduling，但並沒有移除 active context 所需的 KV values。Prefix cache 在 model 和相關 configuration 相容時，重用完全相同 token prefix 的 KV states。它節省重複 prefill work，而新答案仍需要 decode work。
+     </p>
+     <p>
+      Prefix caching 與儲存完整答案的 cache 是兩回事。兩者都不應繞過 source permissions 或 tenant boundaries。設計時要處理 artifact compatibility 和 isolation，相關變更後使受影響 entries 失效，並考慮使用者之間的 timing 或 content leaks。重複出現相同 prompt，並不自動代表可以重用另一使用者的 private context。
+     </p>
+     <h3 id="two-serving-runtimes-you-can-recognize">
+      兩個需要認識的 serving runtime
+     </h3>
+     <p>
+      vLLM 是為有效率的 batched model execution 和 KV-cache management 設計的 serving engine。llama.cpp 使用 GGUF format，在支援的 CPU 和 accelerator backends 執行 model，並提供 quantization、offloading 等選項。應根據 model support、memory requirements 和平台選擇適合機器的 runtime。以下是安裝相容 release 並取得獲准使用的 model 後的 command 形式；MODEL_ID 或 model.gguf 要換成實際 artifact。這些是閱讀示例，未在本課程 workspace 實際驗證。
+     </p>
+     <div class="code-block">
+      <div class="code-bar">
+       <span>
+        text
+       </span>
+       <button class="copy-code" type="button">
+        複製 code
+       </button>
+      </div>
+      <pre><code>vllm serve MODEL_ID --host 127.0.0.1 --port 8000
+llama-server -m ./model.gguf --host 127.0.0.1 --port 8080 -c 2048</code></pre>
+     </div>
+     <p>
+      兩個 commands 都提供 local model service。Application 仍需處理 retrieval、scope checks、tool control 和 evaluation。分別量度 cold start、prefill、decode、concurrency 和 memory；backend 很快，並不等同 end-to-end assistant quality 已得到驗證。
+     </p>
+     <h3 id="a-simple-capacity-consistency-check">
+      一個簡單 capacity consistency check
+     </h3>
+     <p>
+      在穩定情況下，若平均 arrival rate 為每秒兩個 requests，平均 time in system 為三秒，Little's law 表示 system 內平均有六個 requests。
+     </p>
+     <p>
+      這不會決定安全 worker count，也不能預測 p95 latency。Variation、saturation、scheduling、batching 和 failures 仍很重要。
+     </p>
+     <p>
+      把 arithmetic 當作 consistency check，然後以有代表性的 input/output lengths 執行實測 load experiment。
+     </p>
+     <h3 id="experiments-and-release-dependencies">
+      實驗與 release dependencies
+     </h3>
+     <p>
+      Tracking tools 可儲存 runs、parameters、metrics 和 artifacts。在採用 service 前，一份小型 structured JSON record 已足夠學習概念。
+     </p>
+     <p>
+      按改變的 dependencies 選擇 checks。Prompt edit 需要 behavioral evaluation；embedding migration 需要 retrieval compatibility 和下游 tests。
+     </p>
+     <p>
+      保持 training 與 serving templates 一致。Evaluation 用一個 prompt/chunker，serving 卻用另一個，即使 source model 沒變，仍會產生 mismatch。
+     </p>
+     <h3 id="worked-practice-and-a-readiness-check">
+      實例練習與學習檢查
+     </h3>
+     <p>
+      執行 local API，驗證 scoped citations，並記錄實際 end-to-end timings。然後整合所選真正 model，再測一次，交代 lengths、concurrency、warm/cold state 和 failures。
+     </p>
+     <p>
+      建立 manifest，故意測試 mismatch。從乾淨 directory 重現一次 evaluation。
+     </p>
+     <p>
+      當另一個人能識別運行中的 release、按 contract invoke，並區分實測 performance 和建議 deployment plan，就已準備好。
+     </p>
+     <details class="reference-details" id="reference-details">
+      <summary>
+       參考細節與學習檢查
+      </summary>
+      <h3 id="review-a-intuition">
+       複習 A：直觀理解
+      </h3>
+      <p>
+       Model 只是 LLM application 的一個 artifact。Corpus、chunker、embedding model、vector index、generator、adapter、prompt、tool schemas 和 evaluation dataset 會一起演變。MLOps 管理 model-dependent systems 的可重現 development 和 operation；LLMOps 特別強調 prompt、retrieval 和 tool dependencies。
+      </p>
+      <p>
+       把 pipeline 看成 dependency graph。Chunker 改變會令 chunk IDs 和 embeddings 失效。Embedding 改變會破壞 vector compatibility。Prompt 改變即使不改 weights，也可影響 tool selection。Tool schema 改變可能破壞已儲存 planner prompt。每個 release 應識別預期能一起運作的 versions。
+      </p>
+      <h3 id="review-a-experiment-records-and-registry">
+       複習 A：實驗記錄與 registry
+      </h3>
+      <p>
+       Run 儲存 parameters、measured metrics 和 artifacts。Artifact registry 把 immutable outputs 與 provenance 和 evaluation 關聯。MLflow 是這些概念的一種 implementation [
+       <a class="inline-reading" href="../resources.html#reference-r20">
+        MLflow experiment tracking (R20)
+       </a>
+       ]；小型 JSON-based record 已足夠學習。Secrets 放在 configs 以外，必要時 redact logged inputs。
+      </p>
+      <p>
+       Data lineage 包括 raw source hash、transformation version、time、license 和產生的 chunk IDs。Content hash 偵測 bytes 改變，但不證明 semantic quality 或 authorization。Reproducibility manifest 也需要 environment 和 configuration。若 remote model identifier 默默指向不同 revision，單說 “same code” 並不足夠。
+      </p>
+      <h3 id="review-a-worked-change-impact-analysis">
+       複習 A：變更影響分析實例
+      </h3>
+      <p>
+       改 system prompt 通常需要 answer/agent regression tests，但不必為沒變的 source chunks 重新 embedding。改 embedding model 需要 index rebuild 和 retrieval benchmark。改 document access group，即使 text 相同，亦需更新 authorization payloads 和檢查 caches。利用 dependency graph 選 checks，不必每次 edit 都重跑昂貴 training。
+      </p>
+      <h3 id="review-a-experiment">
+       複習 A：實驗
+      </h3>
+      <p>
+       <a href="../tutorials/29.html">
+        Tutorial 29: 從 notebook 到 MLOps 及 inference serving
+       </a>
+       建立 manifest，並驗證 source-hash mismatch。為真正 project 的 prompt、tokenizer、tools 和 index 加入 hashes。在乾淨 directory，根據 manifest 重現一次 evaluation。若 GPU computation 並非 deterministic，說明預期 tolerance，檢查 metrics、artifacts 和 configuration，而非承諾 bitwise identity。
+      </p>
+      <p>
+       保持 development 和 serving data contracts 一致。Training example 若使用與 serving 不同的 chat template，可造成 deployment regression。Retriever 若 evaluation 用一種 chunker、serving 用另一種，也有類似 mismatch。
+      </p>
+      <p>
+       <strong>
+        完成標準：
+       </strong>
+       解釋某項建議 change 會令哪些 artifacts 失效，並重建一次 evaluation run。
+       <strong>
+        閱讀材料：
+       </strong>
+       <a class="inline-reading" href="../resources.html#reference-r02">
+        Stanford CS329S Machine Learning Systems Design (R02)
+       </a>
+       和
+       <a class="inline-reading" href="../resources.html#reference-r20">
+        MLflow experiment tracking (R20)
+       </a>
+       run/artifact 概念。
+       <strong>
+        Tutorial：
+       </strong>
+       29.
+      </p>
+      <h3 id="review-b-intuition">
+       複習 B：直觀理解
+      </h3>
+      <p>
+       Offline notebook 在你按 Run 時處理一個 request。Service 要處理 concurrent requests、slow clients、cancellations、unavailable dependencies 和 bounded resources。Performance 要同時在 user boundary 和 model 內部定義。
+      </p>
+      <p>
+       Time to first token 包括 queueing、retrieval、prompt processing 和 initial generation。Inter-token latency 衡量後續 output speed。End-to-end latency 包括整個 response。Throughput 計算每單位時間完成的有用工作。單一 request benchmark 很快，不代表負載下 tail latency 可接受。
+      </p>
+      <h3 id="review-b-prefill-decode-and-batching">
+       複習 B：Prefill、decode 與 batching
+      </h3>
+      <p>
+       Prefill 處理 prompt tokens；decode 讀取 cached state，逐一產生 tokens。長 prompts 增加 prefill work 和 cache storage。較大 batches 可能提高 throughput，卻增加 waiting time 或 memory use。Continuous batching 和 paged cache management 是值得理解的 serving strategies；課程的簡單 server 沒有實作它們。
+      </p>
+      <p>
+       Quantization 可減少 weight memory，有時可加快，但取決於 hardware、kernels、batch size 和 quality。Speculative decoding 由一個 draft proposal，再由另一 model 驗證；效益取決於 acceptance rates 和 system costs。不要只憑方法名稱就推論有 speedup。
+      </p>
+      <h3 id="review-b-worked-capacity-estimate">
+       複習 B：容量估算實例
+      </h3>
+      <p>
+       在穩定情況下，若 requests 每秒到達兩個、平均 time in system 三秒，Little's law 表示 system 平均約有六個 requests。這不能指定安全 worker count 或 p95 latency：service-time variation、batching、queueing 和 saturation 仍很重要。把它用作 consistency check，再實測。
+      </p>
+      <h3 id="review-b-experiment">
+       複習 B：實驗
+      </h3>
+      <p>
+       <a href="../tutorials/29.html">
+        Tutorial 29: 從 notebook 到 MLOps 及 inference serving
+       </a>
+       呼叫 local API，記錄已定義的 end-to-end latency distribution。附帶 load script 量度的是教學 extraction service，不是 LLM serving throughput。替換 generator 後重測，交代 input/output token lengths、warm/cold state 和 concurrency。Results 要包含 timeouts 和 failed requests。
+      </p>
+      <p>
+       使用 request limits、bounded queues、dependency timeouts 和 cancellation。決定如何回傳 partial 或 failed result。Streaming text 不會令 unsupported claims 變得可接受；應考慮能否在正式交出 answer 前 validation citations。Health/readiness checks 要與昂貴完整 model query 分開。
+      </p>
+      <p>
+       <strong>
+        完成標準：
+       </strong>
+       區分 TTFT、decode speed、throughput 和 end-to-end latency，再說明 benchmark 的限制。
+       <strong>
+        閱讀材料：
+       </strong>
+       <a class="inline-reading" href="../resources.html#reference-r01">
+        Stanford CS336 Language Modeling from Scratch (R01)
+       </a>
+       inference 主題；
+       <a class="inline-reading" href="../resources.html#reference-r19">
+        PyTorch profiler recipe (R19)
+       </a>
+       profiling。
+       <strong>
+        Tutorial：
+       </strong>
+       29.
+      </p>
+     </details>
+    </article>
+    <nav aria-label="前後 lecture" class="chapter-pagination">
+     <a href="28.html">
+      <small>
+       上一週
+      </small>
+      Harness、planning、memory 與有界執行
+     </a>
+     <a href="30.html">
+      <small>
+       下一週
+      </small>
+      Monitoring、security、regression test 與 rollback
+     </a>
+    </nav>
+   </div>
+   <footer class="footer">
+    <span>
+     Applied AI · 獨立自學課程
+    </span>
+    <span>
+     32 週 · 每週 10 小時
+    </span>
+    <a href="../resources.html#about-this-course">
+     關於課程及資料來源
+    </a>
+   </footer>
+  </main>
+  <dialog aria-labelledby="search-title" class="search-dialog">
+   <div class="dialog-head">
+    <h2 id="search-title">
+     尋找概念
+    </h2>
+    <button aria-label="關閉搜尋" class="search-close" type="button">
+     關閉
+    </button>
+   </div>
+   <label class="sr-only" for="course-search">
+    搜尋所有 lecture 和 tutorial
+   </label>
+   <input autocomplete="off" id="course-search" placeholder="試試 attention、fine-tuning 或 harness……" type="search"/>
+   <p aria-live="polite" class="search-status">
+    搜尋 lecture notes、tutorial、測驗及閱讀材料。
+   </p>
+   <div class="search-results">
+   </div>
+  </dialog>
+  <div aria-live="polite" class="toast" role="status">
+  </div>
+ </body>
+</html>

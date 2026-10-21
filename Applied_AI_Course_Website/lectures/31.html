@@ -1,83 +1,1213 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/><title>Integrating the documentation assistant and advanced extensions · Applied AI</title><meta content="Applied generative AI and LLM systems course material" name="description"/><meta content="#173c36" name="theme-color"/><link href="../assets/favicon.svg" rel="icon" type="image/svg+xml"/><link href="../assets/style.css" rel="stylesheet"/><link href="../assets/slides.css" rel="stylesheet"/><script>window.COURSE_BASE="../";</script><script defer="" src="../assets/site-config.js"></script><script defer="" src="../assets/search-index.js"></script><script defer="" src="../assets/app.js"></script><script defer="" src="../assets/visuals.js"></script><script defer="" src="../assets/slides.js"></script><script defer="" src="../assets/beginner-visuals.js"></script><link href="../zh-HK/lectures/31.html" hreflang="zh-HK" rel="alternate"/><link href="../assets/bilingual.css" rel="stylesheet"/></head><body data-page-kind="lecture" data-week="31"><a class="skip-link" href="#main">Skip to content</a><header class="topbar"><button aria-controls="course-sidebar" aria-expanded="false" class="menu-toggle" type="button">Menu</button><a class="brand" href="../index.html"><span aria-hidden="true" class="brand-mark">a<span>i</span></span><span>APPLIED AI<small>Principles into practice</small></span></a><nav aria-label="Main navigation"><a href="../index.html">The course</a><a href="../visuals.html">Visual lab</a><a href="../project.html">Project</a><a class="language-switch" href="../zh-HK/lectures/31.html" hreflang="zh-HK" lang="zh-HK">繁體中文</a></nav><button class="search-open" type="button">Search the course <span aria-hidden="true">/</span></button></header><aside aria-label="Course chapters" class="sidebar" id="course-sidebar"><a class="side-home" href="../index.html">Course overview</a><details class="semester-nav"><summary>Semester 1<span>Weeks 1–16</span></summary><ol start="1"><li><a href="../lectures/01.html"><span class="week-number">01</span><span>What a language model is trying to learn</span><span class="week-tick" data-week-tick="1"></span></a></li><li><a href="../lectures/02.html"><span class="week-number">02</span><span>From text to tokens and numerical IDs</span><span class="week-tick" data-week-tick="2"></span></a></li><li><a href="../lectures/03.html"><span class="week-number">03</span><span>What word vectors can represent</span><span class="week-tick" data-week-tick="3"></span></a></li><li><a href="../lectures/04.html"><span class="week-number">04</span><span>From scores to probabilities and learning signals</span><span class="week-tick" data-week-tick="4"></span></a></li><li><a href="../lectures/05.html"><span class="week-number">05</span><span>Why language needs context and order</span><span class="week-tick" data-week-tick="5"></span></a></li><li><a href="../lectures/06.html"><span class="week-number">06</span><span>Attention begins as a weighted mixture</span><span class="week-tick" data-week-tick="6"></span></a></li><li><a href="../lectures/07.html"><span class="week-number">07</span><span>Where queries keys and values come from</span><span class="week-tick" data-week-tick="7"></span></a></li><li><a href="../lectures/08.html"><span class="week-number">08</span><span>Scaling and masking attention correctly</span><span class="week-tick" data-week-tick="8"></span></a></li><li><a href="../lectures/09.html"><span class="week-number">09</span><span>Multiple attention heads and position</span><span class="week-tick" data-week-tick="9"></span></a></li><li><a href="../lectures/10.html"><span class="week-number">10</span><span>The transformer block step by step</span><span class="week-tick" data-week-tick="10"></span></a></li><li><a href="../lectures/11.html"><span class="week-number">11</span><span>Encoders decoders and complete model architectures</span><span class="week-tick" data-week-tick="11"></span></a></li><li><a href="../lectures/12.html"><span class="week-number">12</span><span>Training a small transformer</span><span class="week-tick" data-week-tick="12"></span></a></li><li><a href="../lectures/13.html"><span class="week-number">13</span><span>Generation decoding and the KV cache</span><span class="week-tick" data-week-tick="13"></span></a></li><li><a href="../lectures/14.html"><span class="week-number">14</span><span>From pretraining to instruction following and reasoning</span><span class="week-tick" data-week-tick="14"></span></a></li><li><a href="../lectures/15.html"><span class="week-number">15</span><span>Generative AI beyond text</span><span class="week-tick" data-week-tick="15"></span></a></li><li><a href="../lectures/16.html"><span class="week-number">16</span><span>A complete transformer walkthrough and first semester review</span><span class="week-tick" data-week-tick="16"></span></a></li></ol></details><details class="semester-nav" open=""><summary>Semester 2<span>Weeks 17–32</span></summary><ol start="17"><li><a href="../lectures/17.html"><span class="week-number">17</span><span>From word vectors to semantic search</span><span class="week-tick" data-week-tick="17"></span></a></li><li><a href="../lectures/18.html"><span class="week-number">18</span><span>A vector database from a list of vectors</span><span class="week-tick" data-week-tick="18"></span></a></li><li><a href="../lectures/19.html"><span class="week-number">19</span><span>RAG as an open book question</span><span class="week-tick" data-week-tick="19"></span></a></li><li><a href="../lectures/20.html"><span class="week-number">20</span><span>Improving RAG without losing the basic task</span><span class="week-tick" data-week-tick="20"></span></a></li><li><a href="../lectures/21.html"><span class="week-number">21</span><span>Evaluating retrieval answers and uncertainty</span><span class="week-tick" data-week-tick="21"></span></a></li><li><a href="../lectures/22.html"><span class="week-number">22</span><span>CPU GPU memory and model resource accounting</span><span class="week-tick" data-week-tick="22"></span></a></li><li><a href="../lectures/23.html"><span class="week-number">23</span><span>CUDA kernels and profiling</span><span class="week-tick" data-week-tick="23"></span></a></li><li><a href="../lectures/24.html"><span class="week-number">24</span><span>Fine tuning starts with a teaching dataset</span><span class="week-tick" data-week-tick="24"></span></a></li><li><a href="../lectures/25.html"><span class="week-number">25</span><span>LoRA and QLoRA from a small matrix</span><span class="week-tick" data-week-tick="25"></span></a></li><li><a href="../lectures/26.html"><span class="week-number">26</span><span>Fine tuning experiments preferences and distillation</span><span class="week-tick" data-week-tick="26"></span></a></li><li><a href="../lectures/27.html"><span class="week-number">27</span><span>Tools functions workflows and agents</span><span class="week-tick" data-week-tick="27"></span></a></li><li><a href="../lectures/28.html"><span class="week-number">28</span><span>Harnesses planning memory and bounded execution</span><span class="week-tick" data-week-tick="28"></span></a></li><li><a href="../lectures/29.html"><span class="week-number">29</span><span>From a notebook to MLOps and inference serving</span><span class="week-tick" data-week-tick="29"></span></a></li><li><a href="../lectures/30.html"><span class="week-number">30</span><span>Monitoring security regression tests and rollback</span><span class="week-tick" data-week-tick="30"></span></a></li><li><a aria-current="page" href="../lectures/31.html"><span class="week-number">31</span><span>Integrating the documentation assistant and advanced extensions</span><span class="week-tick" data-week-tick="31"></span></a></li><li><a href="../lectures/32.html"><span class="week-number">32</span><span>Review defense and a continuing learning plan</span><span class="week-tick" data-week-tick="32"></span></a></li></ol></details><div class="side-links"><a href="../visuals.html">Visual laboratory <span>14 interactive lessons</span></a><a href="../project.html">Documentation assistant <span>Your capstone project</span></a><a href="../resources.html">Readings and setup</a></div><div class="side-progress"><div><span>Your progress</span><strong data-progress-count="">0 / 32</strong></div><progress aria-label="Completed lectures" max="32" value="0"></progress><small>Saved in this browser</small></div></aside><main class="main" id="main"><div class="content"><div class="chapter-header"><div class="eyebrow">Semester 2 / Week 31</div><h1>Integrating the documentation assistant and advanced extensions</h1></div><div class="lesson-links"><a href="../tutorials/31.html">Tutorial 31</a><a href="../tests/31.html">Test your understanding</a><button aria-pressed="false" class="mark-complete" data-week="31" type="button">Mark as complete</button></div><section aria-label="Lecture slides" class="lecture-deck" id="lecture-slides"><div class="deck-top"><div><div class="eyebrow">Lecture slides · Week 31</div><h2>Learn one step at a time.</h2></div><button class="deck-present" type="button">Present</button></div><p class="deck-help">Read each explanation, pause to predict the result, then continue. Use the arrow keys while the presentation is focused. The complete lecture reader is below.</p><div aria-label="Presentation: use left and right arrow keys" class="slide-viewport" tabindex="0"><section class="lecture-slide" data-slide=""><div class="slide-stage">Start with an example</div><h3>The project now has understood components</h3><div class="slide-prose"><p>You have learned the model before using it in retrieval and tool systems. The project combines a focused public documentation corpus, semantic search, source-labeled answers, bounded executable tools, evaluation, and a reproducible API release.</p>
-<p>Begin integration by stating the user tasks. Exact lookup, paraphrase, version comparison, troubleshooting, calculation, and insufficient-evidence requests need different success checks.</p>
-<p>The architecture should make evidence and action boundaries visible rather than hiding every component behind one framework invocation.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Start with an example</div><h3>A documentation question from end to end</h3><div class="slide-prose"><p>A user asks how retry waiting changes across two versions. Preserve comparison scope, retrieve both relevant rules, select coherent context, calculate if needed with a validated tool, and form a source-supported answer.</p>
-<p>If one rule is absent, the full comparison is unresolved. If a model proposes an invalid call, the controller rejects it. If generation adds an unsupported caveat, the answer rubric catches a different failure.</p>
-<p>This trace connects the ordinary school examples with a harder but structurally similar technical task.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Build the mechanism</div><h3>Baselines make integration claims defensible</h3><div class="slide-prose"><p>Compare lexical and dense retrieval, a basic and improved context pipeline, base and adapted models for the narrow task, and a fixed workflow against adaptive planning.</p>
-<p>Keep the relevant controls fixed and report all calls, failures, and costs. The default release may omit the agent or adapter if neither shows useful improvement.</p>
-<p>A negative experiment can demonstrate competent reasoning when its data, configuration, raw outputs, and limitations are available.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Build the mechanism</div><h3>Data and final evaluation</h3><div class="slide-prose"><p>Use reviewed task records with expected sources, required facts, allowed tools, group labels, and success predicates. Keep final evaluation separate from adaptation and configuration choices.</p>
-<p>Aim for a manageable focused collection rather than an indiscriminate crawl. Preserve source revisions and redistribution terms.</p>
-<p>Report task slices, counts, uncertainty, new failures, and resource measurements. A small project cannot justify claims about every documentation domain or high-scale production usage.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Build the mechanism</div><h3>Tables images and lost structure</h3><div class="slide-prose"><p>Technical pages contain tables, diagrams, code, and screenshots. A text parser may preserve values while losing their row/column association.</p>
-<p>If a table's product-tier labels disappear, retrieval can find the correct page while the answer assigns a number to the wrong tier. Evaluate extraction separately from reasoning over extracted evidence.</p>
-<p>A multimodal extension should preserve coordinates/provenance and use an independent small test set. Adding a vision model does not automatically recover every detail.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Build the mechanism</div><h3>Scaling as an optional engineering decision</h3><div class="slide-prose"><p>If a real bottleneck appears, identify the resource before choosing parallelism. Data parallelism replicates a model over different batches. Tensor parallelism partitions layer computation. Pipeline parallelism partitions layers and schedules microbatches.</p>
-<p>State sharding can reduce replicated optimizer/gradient/parameter state with communication costs. Activation checkpointing addresses a different memory component.</p>
-<p>With 70% perfectly scalable work and 30% serial, ideal four-way speedup is 1/(0.3+0.7/4)≈2.105 before communication. A theoretical memo is acceptable when multiple GPUs were not actually measured.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Build the mechanism</div><h3>The final release candidate</h3><div class="slide-prose"><p>Identify all artifacts, run invariant and integration checks, execute the planned task evaluation, and inspect representative traces. Record quality and latency gates before deciding.</p>
-<p>Reproduce in a clean directory using the documented downloads and environment. Cached notebook variables should not be an undocumented dependency.</p>
-<p>Prepare a demo that includes a correct lookup, a comparison, a tool task, a genuine absence, and a controlled failure.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Build the mechanism</div><h3>Worked practice and a readiness check</h3><div class="slide-prose"><p>Use the capstone rubric to identify the weakest evidence in your project. Run one focused improvement experiment or document why the simpler qualifying system remains preferable.</p>
-<p>Write a capacity/extension memo only if it addresses an observed need. Distinguish actual implementation, measured results, and future proposals.</p>
-<p>You are ready when the integrated system's claims can be traced to artifacts, examples, and tests you understand.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Optional deeper study</div><h3>A deeper pass after the worked introduction</h3><div class="slide-prose"><p>The following reference treatment is for a second pass. First explain the ordinary example above, then use the equations and implementation details below to make the explanation more precise.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Optional deeper study</div><h3>Further study 30 Intuition</h3><div class="slide-prose"><p>One GPU may run out of memory or take too long. Distributed techniques divide data, parameters or computation, but communication becomes part of the cost. This week develops the decision framework; it does not require access to multiple GPUs.</p>
-<p>Data parallelism replicates the model, processes different batches and synchronizes gradients. It improves throughput when enough work amortizes communication, but each replica still needs the model state. Sharding optimizer state, gradients or parameters reduces per-device memory with additional communication. Tensor parallelism partitions operations within layers. Pipeline parallelism partitions layers and schedules microbatches, introducing bubbles and coordination.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Optional deeper study</div><h3>Further study 30 Efficiency mechanisms</h3><div class="slide-prose"><p>Activation checkpointing recomputes selected forward work during backward to save activation memory. Gradient accumulation reduces the required microbatch for an effective batch, but does not reduce all optimizer/model state. Mixed precision changes storage and arithmetic where supported; float16 may need gradient scaling and bfloat16 availability is hardware-dependent. Quantization and adapters address different parts of the resource budget.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Optional deeper study</div><h3>Further study 30 Worked scaling estimate</h3><div class="slide-prose"><p>For the same global batch, a step taking 100 ms on one device and 60 ms on two has speedup 100/60 approximately 1.67 and two-device scaling efficiency about 83%. If the global batch changes, report examples or tokens per second and the changed optimization conditions. Comparing step times alone would mix different amounts of work.</p>
-<p>For another example, if 70% of time can scale perfectly and 30% cannot, four-way ideal speedup is <code>1/(0.3+0.7/4) ≈ 2.11</code>. Real communication can reduce it further. These estimates are planning aids, not measured predictions.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Optional deeper study</div><h3>Further study 30 Experiment</h3><div class="slide-prose"><p>notebook 30 computes memory and scaling estimates and compares them with the one-GPU measurements from week 23 or 19. Write a capacity memo: what bottleneck would a second GPU address, what remains replicated, what communication is introduced, and what experiment would validate the plan? Distinguish inference model parallelism from training-state sharding.</p>
-<p><strong>Exit criterion:</strong> choose a plausible technique for a named memory/throughput bottleneck and state its costs. <strong>Reading:</strong> R01 parallelism topics; R18. <strong>Tutorial:</strong> 31.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Optional deeper study</div><h3>A deeper pass after the worked introduction</h3><div class="slide-prose"><p>The following reference treatment is for a second pass. First explain the ordinary example above, then use the equations and implementation details below to make the explanation more precise.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Optional deeper study</div><h3>Further study 31 Intuition</h3><div class="slide-prose"><p>Technical documentation contains tables, diagrams, screenshots and code. A text-only parser may discard the information needed for an answer. Multimodal support begins with preserving evidence and evaluating extraction, not merely swapping in a vision-language model.</p>
-<p>OCR extracts text from images but can misread symbols, units and indentation. Table extraction must preserve row/column relationships. A vision-language model can combine visual and textual inputs, but small screenshots or dense diagrams can still be difficult. Store page/image coordinates and source references so citations point to the right region. Evaluate extraction separately from reasoning over the extracted material.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Optional deeper study</div><h3>Further study 31 Generative families revisited</h3><div class="slide-prose"><p>For diffusion, a forward step can be written <code>xt = sqrt(alpha_bar_t)*x0 + sqrt(1-alpha_bar_t)*epsilon</code> with standard Gaussian epsilon. Training often teaches a network to predict noise or a related target; sampling repeatedly denoises from noise under a schedule. This differs from next-token autoregression, though real systems may combine architectures and representations.</p>
-<p>A VAE learns a latent variable model with a reconstruction/regularization objective. GANs use adversarial learning. Flow matching learns a vector field connecting distributions. These survey concepts help read image/audio generation documentation; implementing a high-quality image generator is outside the core capstone.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Optional deeper study</div><h3>Further study 31 Other adjacent topics</h3><div class="slide-prose"><p>Mixture-of-experts architectures route tokens to subsets of expert networks, affecting active compute, total parameters and communication. Longer-context models can accept more evidence but still need retrieval selection, latency control and evaluation. Model-context and agent communication protocols standardize interfaces; they do not automatically provide authorization, correct tool semantics or reliable planning. Treat new frameworks as replaceable implementations of contracts you already understand.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Optional deeper study</div><h3>Further study 31 Worked evidence problem</h3><div class="slide-prose"><p>A screenshot table lists timeout defaults by product tier. Flattened OCR returns the numbers but loses the tier labels. Retrieval finds the page, yet the generator associates the wrong number with the requested tier. The error belongs to extraction/structure before language generation. A page-level citation does not repair the false association.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Optional deeper study</div><h3>Further study 31 Experiment</h3><div class="slide-prose"><p>notebook 32 includes a reproducibility audit; revisit the numerical noising illustration in tutorial 15. For the project, choose one optional extension: preserve and evaluate a documentation table, retrieve a diagram with coordinates, or add a reviewed multilingual subset. Define a small independent test set and compare against the text-only baseline. Keep the extension within the week's existing time allocation.</p>
-<p><strong>Exit criterion:</strong> explain diffusion versus autoregression and diagnose a multimodal evidence-loss failure. <strong>Reading:</strong> R21 overview; R03 image/audio generation topics. <strong>Tutorial:</strong> 31.</p></div></section></div><div class="deck-controls"><button class="slide-prev" type="button">← Previous</button><span aria-live="polite" class="slide-counter">1 / 19</span><button class="slide-next" type="button">Next →</button></div><label class="slide-jump-label">Go to slide <select aria-label="Go to slide" class="slide-jump"><option value="0">1</option><option value="1">2</option><option value="2">3</option><option value="3">4</option><option value="4">5</option><option value="5">6</option><option value="6">7</option><option value="7">8</option><option value="8">9</option><option value="9">10</option><option value="10">11</option><option value="11">12</option><option value="12">13</option><option value="13">14</option><option value="14">15</option><option value="15">16</option><option value="16">17</option><option value="17">18</option><option value="18">19</option></select></label><button aria-pressed="false" class="deck-all" type="button">Show all slides</button><a class="reader-link" href="#full-notes">Read the complete lecture ↓</a></section><article class="prose full-notes" id="full-notes"><div class="eyebrow">Complete lecture reader</div><h2>Read the full explanation</h2><h3 id="the-project-now-has-understood-components">The project now has understood components</h3>
-<p>You have learned the model before using it in retrieval and tool systems. The project combines a focused public documentation corpus, semantic search, source-labeled answers, bounded executable tools, evaluation, and a reproducible API release.</p>
-<p>Begin integration by stating the user tasks. Exact lookup, paraphrase, version comparison, troubleshooting, calculation, and insufficient-evidence requests need different success checks.</p>
-<p>The architecture should make evidence and action boundaries visible rather than hiding every component behind one framework invocation.</p>
-<h3 id="a-documentation-question-from-end-to-end">A documentation question from end to end</h3>
-<p>A user asks how retry waiting changes across two versions. Preserve comparison scope, retrieve both relevant rules, select coherent context, calculate if needed with a validated tool, and form a source-supported answer.</p>
-<p>If one rule is absent, the full comparison is unresolved. If a model proposes an invalid call, the controller rejects it. If generation adds an unsupported caveat, the answer rubric catches a different failure.</p>
-<p>This trace connects the ordinary school examples with a harder but structurally similar technical task.</p>
-<h3 id="baselines-make-integration-claims-defensible">Baselines make integration claims defensible</h3>
-<p>Compare lexical and dense retrieval, a basic and improved context pipeline, base and adapted models for the narrow task, and a fixed workflow against adaptive planning.</p>
-<p>Keep the relevant controls fixed and report all calls, failures, and costs. The default release may omit the agent or adapter if neither shows useful improvement.</p>
-<p>A negative experiment can demonstrate competent reasoning when its data, configuration, raw outputs, and limitations are available.</p>
-<h3 id="data-and-final-evaluation">Data and final evaluation</h3>
-<p>Use reviewed task records with expected sources, required facts, allowed tools, group labels, and success predicates. Keep final evaluation separate from adaptation and configuration choices.</p>
-<p>Aim for a manageable focused collection rather than an indiscriminate crawl. Preserve source revisions and redistribution terms.</p>
-<p>Report task slices, counts, uncertainty, new failures, and resource measurements. A small project cannot justify claims about every documentation domain or high-scale production usage.</p>
-<h3 id="tables-images-and-lost-structure">Tables images and lost structure</h3>
-<p>Technical pages contain tables, diagrams, code, and screenshots. A text parser may preserve values while losing their row/column association.</p>
-<p>If a table's product-tier labels disappear, retrieval can find the correct page while the answer assigns a number to the wrong tier. Evaluate extraction separately from reasoning over extracted evidence.</p>
-<p>A multimodal extension should preserve coordinates/provenance and use an independent small test set. Adding a vision model does not automatically recover every detail.</p>
-<h3 id="scaling-as-an-optional-engineering-decision">Scaling as an optional engineering decision</h3>
-<p>If a real bottleneck appears, identify the resource before choosing parallelism. Data parallelism replicates a model over different batches. Tensor parallelism partitions layer computation. Pipeline parallelism partitions layers and schedules microbatches.</p>
-<p>State sharding can reduce replicated optimizer/gradient/parameter state with communication costs. Activation checkpointing addresses a different memory component.</p>
-<p>With 70% perfectly scalable work and 30% serial, ideal four-way speedup is 1/(0.3+0.7/4)≈2.105 before communication. A theoretical memo is acceptable when multiple GPUs were not actually measured.</p>
-<h3 id="the-final-release-candidate">The final release candidate</h3>
-<p>Identify all artifacts, run invariant and integration checks, execute the planned task evaluation, and inspect representative traces. Record quality and latency gates before deciding.</p>
-<p>Reproduce in a clean directory using the documented downloads and environment. Cached notebook variables should not be an undocumented dependency.</p>
-<p>Prepare a demo that includes a correct lookup, a comparison, a tool task, a genuine absence, and a controlled failure.</p>
-<h3 id="worked-practice-and-a-readiness-check">Worked practice and a readiness check</h3>
-<p>Use the capstone rubric to identify the weakest evidence in your project. Run one focused improvement experiment or document why the simpler qualifying system remains preferable.</p>
-<p>Write a capacity/extension memo only if it addresses an observed need. Distinguish actual implementation, measured results, and future proposals.</p>
-<p>You are ready when the integrated system's claims can be traced to artifacts, examples, and tests you understand.</p>
-<h3 id="a-deeper-pass-after-the-worked-introduction">A deeper pass after the worked introduction</h3>
-<p>The following reference treatment is for a second pass. First explain the ordinary example above, then use the equations and implementation details below to make the explanation more precise.</p>
-<h3 id="further-study-30-intuition">Further study 30 Intuition</h3>
-<p>One GPU may run out of memory or take too long. Distributed techniques divide data, parameters or computation, but communication becomes part of the cost. This week develops the decision framework; it does not require access to multiple GPUs.</p>
-<p>Data parallelism replicates the model, processes different batches and synchronizes gradients. It improves throughput when enough work amortizes communication, but each replica still needs the model state. Sharding optimizer state, gradients or parameters reduces per-device memory with additional communication. Tensor parallelism partitions operations within layers. Pipeline parallelism partitions layers and schedules microbatches, introducing bubbles and coordination.</p>
-<h3 id="further-study-30-efficiency-mechanisms">Further study 30 Efficiency mechanisms</h3>
-<p>Activation checkpointing recomputes selected forward work during backward to save activation memory. Gradient accumulation reduces the required microbatch for an effective batch, but does not reduce all optimizer/model state. Mixed precision changes storage and arithmetic where supported; float16 may need gradient scaling and bfloat16 availability is hardware-dependent. Quantization and adapters address different parts of the resource budget.</p>
-<h3 id="further-study-30-worked-scaling-estimate">Further study 30 Worked scaling estimate</h3>
-<p>For the same global batch, a step taking 100 ms on one device and 60 ms on two has speedup 100/60 approximately 1.67 and two-device scaling efficiency about 83%. If the global batch changes, report examples or tokens per second and the changed optimization conditions. Comparing step times alone would mix different amounts of work.</p>
-<p>For another example, if 70% of time can scale perfectly and 30% cannot, four-way ideal speedup is <code>1/(0.3+0.7/4) ≈ 2.11</code>. Real communication can reduce it further. These estimates are planning aids, not measured predictions.</p>
-<h3 id="further-study-30-experiment">Further study 30 Experiment</h3>
-<p>notebook 30 computes memory and scaling estimates and compares them with the one-GPU measurements from week 23 or 19. Write a capacity memo: what bottleneck would a second GPU address, what remains replicated, what communication is introduced, and what experiment would validate the plan? Distinguish inference model parallelism from training-state sharding.</p>
-<p><strong>Exit criterion:</strong> choose a plausible technique for a named memory/throughput bottleneck and state its costs. <strong>Reading:</strong> R01 parallelism topics; R18. <strong>Tutorial:</strong> 31.</p>
-<h3 id="a-deeper-pass-after-the-worked-introduction-2">A deeper pass after the worked introduction</h3>
-<p>The following reference treatment is for a second pass. First explain the ordinary example above, then use the equations and implementation details below to make the explanation more precise.</p>
-<h3 id="further-study-31-intuition">Further study 31 Intuition</h3>
-<p>Technical documentation contains tables, diagrams, screenshots and code. A text-only parser may discard the information needed for an answer. Multimodal support begins with preserving evidence and evaluating extraction, not merely swapping in a vision-language model.</p>
-<p>OCR extracts text from images but can misread symbols, units and indentation. Table extraction must preserve row/column relationships. A vision-language model can combine visual and textual inputs, but small screenshots or dense diagrams can still be difficult. Store page/image coordinates and source references so citations point to the right region. Evaluate extraction separately from reasoning over the extracted material.</p>
-<h3 id="further-study-31-generative-families-revisited">Further study 31 Generative families revisited</h3>
-<p>For diffusion, a forward step can be written <code>xt = sqrt(alpha_bar_t)*x0 + sqrt(1-alpha_bar_t)*epsilon</code> with standard Gaussian epsilon. Training often teaches a network to predict noise or a related target; sampling repeatedly denoises from noise under a schedule. This differs from next-token autoregression, though real systems may combine architectures and representations.</p>
-<p>A VAE learns a latent variable model with a reconstruction/regularization objective. GANs use adversarial learning. Flow matching learns a vector field connecting distributions. These survey concepts help read image/audio generation documentation; implementing a high-quality image generator is outside the core capstone.</p>
-<h3 id="further-study-31-other-adjacent-topics">Further study 31 Other adjacent topics</h3>
-<p>Mixture-of-experts architectures route tokens to subsets of expert networks, affecting active compute, total parameters and communication. Longer-context models can accept more evidence but still need retrieval selection, latency control and evaluation. Model-context and agent communication protocols standardize interfaces; they do not automatically provide authorization, correct tool semantics or reliable planning. Treat new frameworks as replaceable implementations of contracts you already understand.</p>
-<h3 id="further-study-31-worked-evidence-problem">Further study 31 Worked evidence problem</h3>
-<p>A screenshot table lists timeout defaults by product tier. Flattened OCR returns the numbers but loses the tier labels. Retrieval finds the page, yet the generator associates the wrong number with the requested tier. The error belongs to extraction/structure before language generation. A page-level citation does not repair the false association.</p>
-<h3 id="further-study-31-experiment">Further study 31 Experiment</h3>
-<p>notebook 32 includes a reproducibility audit; revisit the numerical noising illustration in tutorial 15. For the project, choose one optional extension: preserve and evaluate a documentation table, retrieve a diagram with coordinates, or add a reviewed multilingual subset. Define a small independent test set and compare against the text-only baseline. Keep the extension within the week's existing time allocation.</p>
-<p><strong>Exit criterion:</strong> explain diffusion versus autoregression and diagnose a multimodal evidence-loss failure. <strong>Reading:</strong> R21 overview; R03 image/audio generation topics. <strong>Tutorial:</strong> 31.</p></article><nav aria-label="Adjacent lectures" class="chapter-pagination"><a href="30.html"><small>Previous week</small>Monitoring security regression tests and rollback</a><a href="32.html"><small>Next week</small>Review defense and a continuing learning plan</a></nav></div><footer class="footer"><span>Applied AI · An independent self-study course</span><span>32 weeks · 10 hours per week</span><a href="../resources.html#about-this-course">About and sources</a></footer></main><dialog aria-labelledby="search-title" class="search-dialog"><div class="dialog-head"><h2 id="search-title">Find a concept</h2><button aria-label="Close search" class="search-close" type="button">Close</button></div><label class="sr-only" for="course-search">Search all lectures and tutorials</label><input autocomplete="off" id="course-search" placeholder="Try attention, fine-tuning, or harness…" type="search"/><p aria-live="polite" class="search-status">Search lecture notes, tutorials, tests and readings.</p><div class="search-results"></div></dialog><div aria-live="polite" class="toast" role="status"></div></body></html>
+<html lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width,initial-scale=1" name="viewport"/>
+  <title>
+   Integrating the documentation assistant and advanced extensions · Applied AI
+  </title>
+  <meta content="Applied generative AI and LLM systems course material" name="description"/>
+  <meta content="#173c36" name="theme-color"/>
+  <link href="../assets/favicon.svg" rel="icon" type="image/svg+xml"/>
+  <link href="../assets/style.css" rel="stylesheet"/>
+  <link href="../assets/slides.css" rel="stylesheet"/>
+  <script>
+   window.COURSE_BASE="../";
+  </script>
+  <script defer="" src="../assets/site-config.js">
+  </script>
+  <script defer="" src="../assets/search-index.js">
+  </script>
+  <script defer="" src="../assets/app.js">
+  </script>
+  <script defer="" src="../assets/visuals.js">
+  </script>
+  <script defer="" src="../assets/slides.js">
+  </script>
+  <script defer="" src="../assets/beginner-visuals.js">
+  </script>
+  <link href="../zh-HK/lectures/31.html" hreflang="zh-HK" rel="alternate"/>
+  <link href="../assets/bilingual.css" rel="stylesheet"/>
+  <link href="../assets/reader-v3.css" rel="stylesheet"/>
+  <script defer="True" src="../assets/reader-v3.js">
+  </script>
+ </head>
+ <body data-page-kind="lecture" data-week="31">
+  <a class="skip-link" href="#main">
+   Skip to content
+  </a>
+  <header class="topbar">
+   <button aria-controls="course-sidebar" aria-expanded="false" class="menu-toggle" type="button">
+    Menu
+   </button>
+   <a class="brand" href="../index.html">
+    <span aria-hidden="true" class="brand-mark">
+     a
+     <span>
+      i
+     </span>
+    </span>
+    <span>
+     APPLIED AI
+     <small>
+      Principles into practice
+     </small>
+    </span>
+   </a>
+   <nav aria-label="Main navigation">
+    <a href="../index.html">
+     The course
+    </a>
+    <a href="../visuals.html">
+     Visual lab
+    </a>
+    <a href="../project.html">
+     Project
+    </a>
+    <a class="language-switch" href="../zh-HK/lectures/31.html" hreflang="zh-HK" lang="zh-HK">
+     繁體中文
+    </a>
+   </nav>
+   <button class="search-open" type="button">
+    Search the course
+    <span aria-hidden="true">
+     /
+    </span>
+   </button>
+  </header>
+  <aside aria-label="Course chapters" class="sidebar" id="course-sidebar">
+   <a class="side-home" href="../index.html">
+    Course overview
+   </a>
+   <details class="semester-nav">
+    <summary>
+     Semester 1
+     <span>
+      Weeks 1–16
+     </span>
+    </summary>
+    <ol start="1">
+     <li>
+      <a href="../lectures/01.html">
+       <span class="week-number">
+        01
+       </span>
+       <span>
+        What a language model is trying to learn
+       </span>
+       <span class="week-tick" data-week-tick="1">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/02.html">
+       <span class="week-number">
+        02
+       </span>
+       <span>
+        From text to tokens and numerical IDs
+       </span>
+       <span class="week-tick" data-week-tick="2">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/03.html">
+       <span class="week-number">
+        03
+       </span>
+       <span>
+        What word vectors can represent
+       </span>
+       <span class="week-tick" data-week-tick="3">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/04.html">
+       <span class="week-number">
+        04
+       </span>
+       <span>
+        From scores to probabilities and learning signals
+       </span>
+       <span class="week-tick" data-week-tick="4">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/05.html">
+       <span class="week-number">
+        05
+       </span>
+       <span>
+        Why language needs context and order
+       </span>
+       <span class="week-tick" data-week-tick="5">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/06.html">
+       <span class="week-number">
+        06
+       </span>
+       <span>
+        Attention begins as a weighted mixture
+       </span>
+       <span class="week-tick" data-week-tick="6">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/07.html">
+       <span class="week-number">
+        07
+       </span>
+       <span>
+        Where queries keys and values come from
+       </span>
+       <span class="week-tick" data-week-tick="7">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/08.html">
+       <span class="week-number">
+        08
+       </span>
+       <span>
+        Scaling and masking attention correctly
+       </span>
+       <span class="week-tick" data-week-tick="8">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/09.html">
+       <span class="week-number">
+        09
+       </span>
+       <span>
+        Multiple attention heads and position
+       </span>
+       <span class="week-tick" data-week-tick="9">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/10.html">
+       <span class="week-number">
+        10
+       </span>
+       <span>
+        The transformer block step by step
+       </span>
+       <span class="week-tick" data-week-tick="10">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/11.html">
+       <span class="week-number">
+        11
+       </span>
+       <span>
+        Encoders decoders and complete model architectures
+       </span>
+       <span class="week-tick" data-week-tick="11">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/12.html">
+       <span class="week-number">
+        12
+       </span>
+       <span>
+        Training a small transformer
+       </span>
+       <span class="week-tick" data-week-tick="12">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/13.html">
+       <span class="week-number">
+        13
+       </span>
+       <span>
+        Generation decoding and the KV cache
+       </span>
+       <span class="week-tick" data-week-tick="13">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/14.html">
+       <span class="week-number">
+        14
+       </span>
+       <span>
+        From pretraining to instruction following and reasoning
+       </span>
+       <span class="week-tick" data-week-tick="14">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/15.html">
+       <span class="week-number">
+        15
+       </span>
+       <span>
+        Generative AI beyond text
+       </span>
+       <span class="week-tick" data-week-tick="15">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/16.html">
+       <span class="week-number">
+        16
+       </span>
+       <span>
+        A complete transformer walkthrough and first semester review
+       </span>
+       <span class="week-tick" data-week-tick="16">
+       </span>
+      </a>
+     </li>
+    </ol>
+   </details>
+   <details class="semester-nav" open="">
+    <summary>
+     Semester 2
+     <span>
+      Weeks 17–32
+     </span>
+    </summary>
+    <ol start="17">
+     <li>
+      <a href="../lectures/17.html">
+       <span class="week-number">
+        17
+       </span>
+       <span>
+        From word vectors to semantic search
+       </span>
+       <span class="week-tick" data-week-tick="17">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/18.html">
+       <span class="week-number">
+        18
+       </span>
+       <span>
+        A vector database from a list of vectors
+       </span>
+       <span class="week-tick" data-week-tick="18">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/19.html">
+       <span class="week-number">
+        19
+       </span>
+       <span>
+        RAG as an open book question
+       </span>
+       <span class="week-tick" data-week-tick="19">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/20.html">
+       <span class="week-number">
+        20
+       </span>
+       <span>
+        Improving RAG without losing the basic task
+       </span>
+       <span class="week-tick" data-week-tick="20">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/21.html">
+       <span class="week-number">
+        21
+       </span>
+       <span>
+        Evaluating retrieval answers and uncertainty
+       </span>
+       <span class="week-tick" data-week-tick="21">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/22.html">
+       <span class="week-number">
+        22
+       </span>
+       <span>
+        CPU GPU memory and model resource accounting
+       </span>
+       <span class="week-tick" data-week-tick="22">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/23.html">
+       <span class="week-number">
+        23
+       </span>
+       <span>
+        CUDA kernels and profiling
+       </span>
+       <span class="week-tick" data-week-tick="23">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/24.html">
+       <span class="week-number">
+        24
+       </span>
+       <span>
+        Fine tuning starts with a teaching dataset
+       </span>
+       <span class="week-tick" data-week-tick="24">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/25.html">
+       <span class="week-number">
+        25
+       </span>
+       <span>
+        LoRA and QLoRA from a small matrix
+       </span>
+       <span class="week-tick" data-week-tick="25">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/26.html">
+       <span class="week-number">
+        26
+       </span>
+       <span>
+        Fine tuning experiments preferences and distillation
+       </span>
+       <span class="week-tick" data-week-tick="26">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/27.html">
+       <span class="week-number">
+        27
+       </span>
+       <span>
+        Tools functions workflows and agents
+       </span>
+       <span class="week-tick" data-week-tick="27">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/28.html">
+       <span class="week-number">
+        28
+       </span>
+       <span>
+        Harnesses planning memory and bounded execution
+       </span>
+       <span class="week-tick" data-week-tick="28">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/29.html">
+       <span class="week-number">
+        29
+       </span>
+       <span>
+        From a notebook to MLOps and inference serving
+       </span>
+       <span class="week-tick" data-week-tick="29">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/30.html">
+       <span class="week-number">
+        30
+       </span>
+       <span>
+        Monitoring security regression tests and rollback
+       </span>
+       <span class="week-tick" data-week-tick="30">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a aria-current="page" href="../lectures/31.html">
+       <span class="week-number">
+        31
+       </span>
+       <span>
+        Integrating the documentation assistant and advanced extensions
+       </span>
+       <span class="week-tick" data-week-tick="31">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/32.html">
+       <span class="week-number">
+        32
+       </span>
+       <span>
+        Review defense and a continuing learning plan
+       </span>
+       <span class="week-tick" data-week-tick="32">
+       </span>
+      </a>
+     </li>
+    </ol>
+   </details>
+   <div class="side-links">
+    <a href="../visuals.html">
+     Visual laboratory
+     <span>
+      14 interactive lessons
+     </span>
+    </a>
+    <a href="../project.html">
+     Documentation assistant
+     <span>
+      Your capstone project
+     </span>
+    </a>
+    <a href="../resources.html">
+     Readings and setup
+    </a>
+   </div>
+   <div class="side-progress">
+    <div>
+     <span>
+      Your progress
+     </span>
+     <strong data-progress-count="">
+      0 / 32
+     </strong>
+    </div>
+    <progress aria-label="Completed lectures" max="32" value="0">
+    </progress>
+    <small>
+     Saved in this browser
+    </small>
+   </div>
+  </aside>
+  <main class="main" id="main">
+   <div class="content">
+    <div class="chapter-header">
+     <div class="eyebrow">
+      Semester 2 / Week 31
+     </div>
+     <h1>
+      Integrating the documentation assistant and advanced extensions
+     </h1>
+    </div>
+    <div class="lesson-links">
+     <a href="../tutorials/31.html">
+      Tutorial 31
+     </a>
+     <a href="../tests/31.html">
+      Test your understanding
+     </a>
+     <button aria-pressed="false" class="mark-complete" data-week="31" type="button">
+      Mark as complete
+     </button>
+    </div>
+    <div aria-label="Lesson view" class="lesson-mode" role="tablist">
+     <button aria-controls="full-notes" aria-selected="true" data-mode="read" id="mode-read" role="tab" type="button">
+      Read lesson
+     </button>
+     <button aria-controls="lecture-slides" aria-selected="false" data-mode="slides" id="mode-slides" role="tab" type="button">
+      Lesson slides
+     </button>
+    </div>
+    <section aria-label="Lecture slides" class="lecture-deck" hidden="" id="lecture-slides" role="tabpanel">
+     <div class="deck-top">
+      <div>
+       <div class="eyebrow">
+        Lecture slides · Week 31
+       </div>
+       <h2>
+        Key steps and worked visuals
+       </h2>
+      </div>
+      <button class="deck-present" type="button">
+       Present
+      </button>
+     </div>
+     <p class="deck-help">
+      Use these slides to review the mechanism. Open “Read the worked explanation” for the complete notes and code.
+     </p>
+     <div aria-label="Presentation: use left and right arrow keys" class="slide-viewport" tabindex="0">
+      <section class="lecture-slide" data-slide="">
+       <div class="slide-stage">
+        Week 31 · Section 1
+       </div>
+       <h3>
+        The project now has understood components
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          You have learned the model before using it in retrieval and tool systems.
+         </li>
+         <li>
+          Begin integration by stating the user tasks.
+         </li>
+         <li>
+          The architecture should make evidence and action boundaries visible rather than hiding every component behind one framework invocation.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#the-project-now-has-understood-components">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 31 · Section 2
+       </div>
+       <h3>
+        A documentation question from end to end
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          A user asks how retry waiting changes across two versions.
+         </li>
+         <li>
+          If one rule is absent, the full comparison is unresolved.
+         </li>
+         <li>
+          This trace connects the ordinary school examples with a harder but structurally similar technical task.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#a-documentation-question-from-end-to-end">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 31 · Section 3
+       </div>
+       <h3>
+        Baselines make integration claims defensible
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Compare lexical and dense retrieval, a basic and improved context pipeline, base and adapted models for the narrow task, and a fixed workflow against adaptive planning.
+         </li>
+         <li>
+          Keep the relevant controls fixed and report all calls, failures, and costs.
+         </li>
+         <li>
+          A negative experiment can demonstrate competent reasoning when its data, configuration, raw outputs, and limitations are available.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#baselines-make-integration-claims-defensible">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 31 · Section 4
+       </div>
+       <h3>
+        Data and final evaluation
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Use reviewed task records with expected sources, required facts, allowed tools, group labels, and success predicates.
+         </li>
+         <li>
+          Aim for a manageable focused collection rather than an indiscriminate crawl.
+         </li>
+         <li>
+          Report task slices, counts, uncertainty, new failures, and resource measurements.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#data-and-final-evaluation">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 31 · Section 5
+       </div>
+       <h3>
+        Tables images and lost structure
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Technical pages contain tables, diagrams, code, and screenshots.
+         </li>
+         <li>
+          If a table's product-tier labels disappear, retrieval can find the correct page while the answer assigns a number to the wrong tier.
+         </li>
+         <li>
+          A multimodal extension should preserve coordinates/provenance and use an independent small test set.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#tables-images-and-lost-structure">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 31 · Section 6
+       </div>
+       <h3>
+        Scaling as an optional engineering decision
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          If a real bottleneck appears, identify the resource before choosing parallelism.
+         </li>
+         <li>
+          State sharding can reduce replicated optimizer/gradient/parameter state with communication costs.
+         </li>
+         <li>
+          With 70% perfectly scalable work and 30% serial, ideal four-way speedup is 1/(0.3+0.7/4)≈2.105 before communication.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#scaling-as-an-optional-engineering-decision">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 31 · Section 7
+       </div>
+       <h3>
+        An ethics and governance check before release
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          A correct-looking assistant can still serve groups unequally.
+         </li>
+         <li>
+          Maintain separate license records for model weights, source code, training data, retrieved documents, and redistributed outputs.
+         </li>
+         <li>
+          Energy is another measurable resource.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#an-ethics-and-governance-check-before-release">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 31 · Section 8
+       </div>
+       <h3>
+        An ethics and governance check before release · continued
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Regulation depends on the place, activity, and role of the organization.
+         </li>
+         <li>
+          Before the final release, answer five concrete questions: which user groups were tested; which personal data are necessary; which licenses permit the intended use; which person owns incident response; and which resource and regulatory assumptions were recorded.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#an-ethics-and-governance-check-before-release">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 31 · Section 9
+       </div>
+       <h3>
+        The final release candidate
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Identify all artifacts, run invariant and integration checks, execute the planned task evaluation, and inspect representative traces.
+         </li>
+         <li>
+          Reproduce in a clean directory using the documented downloads and environment.
+         </li>
+         <li>
+          Prepare a demo that includes a correct lookup, a comparison, a tool task, a genuine absence, and a controlled failure.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#the-final-release-candidate">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 31 · Section 10
+       </div>
+       <h3>
+        Worked practice and a readiness check
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Use the capstone rubric to identify the weakest evidence in your project.
+         </li>
+         <li>
+          Write a capacity/extension memo only if it addresses an observed need.
+         </li>
+         <li>
+          You are ready when the integrated system's claims can be traced to artifacts, examples, and tests you understand.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#worked-practice-and-a-readiness-check">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+     </div>
+     <div class="deck-controls">
+      <button class="slide-prev" type="button">
+       ← Previous
+      </button>
+      <span aria-live="polite" class="slide-counter">
+       1 / 10
+      </span>
+      <button class="slide-next" type="button">
+       Next →
+      </button>
+     </div>
+     <label class="slide-jump-label">
+      Go to slide
+      <select aria-label="Go to slide" class="slide-jump">
+       <option value="0">
+        1. The project now has understood components
+       </option>
+       <option value="1">
+        2. A documentation question from end to end
+       </option>
+       <option value="2">
+        3. Baselines make integration claims defensible
+       </option>
+       <option value="3">
+        4. Data and final evaluation
+       </option>
+       <option value="4">
+        5. Tables images and lost structure
+       </option>
+       <option value="5">
+        6. Scaling as an optional engineering decision
+       </option>
+       <option value="6">
+        7. An ethics and governance check before release
+       </option>
+       <option value="7">
+        8. An ethics and governance check before release · continued
+       </option>
+       <option value="8">
+        9. The final release candidate
+       </option>
+       <option value="9">
+        10. Worked practice and a readiness check
+       </option>
+      </select>
+     </label>
+     <button aria-pressed="false" class="deck-all" type="button">
+      Show all slides
+     </button>
+    </section>
+    <nav aria-label="In this lesson" class="reader-toc">
+     <strong>
+      In this lesson
+     </strong>
+     <ol>
+      <li>
+       <a href="#the-project-now-has-understood-components">
+        The project now has understood components
+       </a>
+      </li>
+      <li>
+       <a href="#a-documentation-question-from-end-to-end">
+        A documentation question from end to end
+       </a>
+      </li>
+      <li>
+       <a href="#baselines-make-integration-claims-defensible">
+        Baselines make integration claims defensible
+       </a>
+      </li>
+      <li>
+       <a href="#data-and-final-evaluation">
+        Data and final evaluation
+       </a>
+      </li>
+      <li>
+       <a href="#tables-images-and-lost-structure">
+        Tables images and lost structure
+       </a>
+      </li>
+      <li>
+       <a href="#scaling-as-an-optional-engineering-decision">
+        Scaling as an optional engineering decision
+       </a>
+      </li>
+      <li>
+       <a href="#an-ethics-and-governance-check-before-release">
+        An ethics and governance check before release
+       </a>
+      </li>
+      <li>
+       <a href="#the-final-release-candidate">
+        The final release candidate
+       </a>
+      </li>
+      <li>
+       <a href="#worked-practice-and-a-readiness-check">
+        Worked practice and a readiness check
+       </a>
+      </li>
+     </ol>
+    </nav>
+    <article class="prose full-notes" id="full-notes" role="tabpanel">
+     <div class="eyebrow">
+      Complete lecture reader
+     </div>
+     <h2>
+      Read the full explanation
+     </h2>
+     <h3 id="the-project-now-has-understood-components">
+      The project now has understood components
+     </h3>
+     <p>
+      You have learned the model before using it in retrieval and tool systems. The project combines a focused public documentation corpus, semantic search, source-labeled answers, bounded executable tools, evaluation, and a reproducible API release.
+     </p>
+     <p>
+      Begin integration by stating the user tasks. Exact lookup, paraphrase, version comparison, troubleshooting, calculation, and insufficient-evidence requests need different success checks.
+     </p>
+     <p>
+      The architecture should make evidence and action boundaries visible rather than hiding every component behind one framework invocation.
+     </p>
+     <h3 id="a-documentation-question-from-end-to-end">
+      A documentation question from end to end
+     </h3>
+     <p>
+      A user asks how retry waiting changes across two versions. Preserve comparison scope, retrieve both relevant rules, select coherent context, calculate if needed with a validated tool, and form a source-supported answer.
+     </p>
+     <p>
+      If one rule is absent, the full comparison is unresolved. If a model proposes an invalid call, the controller rejects it. If generation adds an unsupported caveat, the answer rubric catches a different failure.
+     </p>
+     <p>
+      This trace connects the ordinary school examples with a harder but structurally similar technical task.
+     </p>
+     <h3 id="baselines-make-integration-claims-defensible">
+      Baselines make integration claims defensible
+     </h3>
+     <p>
+      Compare lexical and dense retrieval, a basic and improved context pipeline, base and adapted models for the narrow task, and a fixed workflow against adaptive planning.
+     </p>
+     <p>
+      Keep the relevant controls fixed and report all calls, failures, and costs. The default release may omit the agent or adapter if neither shows useful improvement.
+     </p>
+     <p>
+      A negative experiment can demonstrate competent reasoning when its data, configuration, raw outputs, and limitations are available.
+     </p>
+     <h3 id="data-and-final-evaluation">
+      Data and final evaluation
+     </h3>
+     <p>
+      Use reviewed task records with expected sources, required facts, allowed tools, group labels, and success predicates. Keep final evaluation separate from adaptation and configuration choices.
+     </p>
+     <p>
+      Aim for a manageable focused collection rather than an indiscriminate crawl. Preserve source revisions and redistribution terms.
+     </p>
+     <p>
+      Report task slices, counts, uncertainty, new failures, and resource measurements. A small project cannot justify claims about every documentation domain or high-scale production usage.
+     </p>
+     <h3 id="tables-images-and-lost-structure">
+      Tables images and lost structure
+     </h3>
+     <p>
+      Technical pages contain tables, diagrams, code, and screenshots. A text parser may preserve values while losing their row/column association.
+     </p>
+     <p>
+      If a table's product-tier labels disappear, retrieval can find the correct page while the answer assigns a number to the wrong tier. Evaluate extraction separately from reasoning over extracted evidence.
+     </p>
+     <p>
+      A multimodal extension should preserve coordinates/provenance and use an independent small test set. Adding a vision model does not automatically recover every detail.
+     </p>
+     <h3 id="scaling-as-an-optional-engineering-decision">
+      Scaling as an optional engineering decision
+     </h3>
+     <p>
+      If a real bottleneck appears, identify the resource before choosing parallelism. Data parallelism replicates a model over different batches. Tensor parallelism partitions layer computation. Pipeline parallelism partitions layers and schedules microbatches.
+     </p>
+     <p>
+      State sharding can reduce replicated optimizer/gradient/parameter state with communication costs. Activation checkpointing addresses a different memory component.
+     </p>
+     <p>
+      With 70% perfectly scalable work and 30% serial, ideal four-way speedup is 1/(0.3+0.7/4)≈2.105 before communication. A theoretical memo is acceptable when multiple GPUs were not actually measured.
+     </p>
+     <h3 id="an-ethics-and-governance-check-before-release">
+      An ethics and governance check before release
+     </h3>
+     <p>
+      A correct-looking assistant can still serve groups unequally. Compare performance on English and Hong Kong Chinese questions, different phrasing, missing answers, and accessibility needs. Report slice sizes and errors. A bilingual interface is not evidence of equal answer quality. Tell users when an answer is generated, preserve a way to challenge a consequential error, and keep human responsibility clear for decisions affecting people.
+     </p>
+     <p>
+      Maintain separate license records for model weights, source code, training data, retrieved documents, and redistributed outputs. “Open weights” does not mean every use is unrestricted. A page being publicly readable does not by itself establish permission to redistribute its full contents or use it in every training context. Check license terms, permitted use, attribution, and the applicable copyright rules; document unclear permissions instead of inventing a blanket research or AI exception.
+     </p>
+     <p>
+      Energy is another measurable resource. A hypothetical device averaging 100 watts for 2 hours uses 0.2 kWh of device energy. Account for CPU, GPU, utilization, duration, and the system boundary; carbon emissions additionally depend on electricity carbon intensity and other assumptions. Reuse compatible cached computation and stop unhelpful experiments. Record estimates as estimates, not as a universal emissions-per-token value.
+     </p>
+     <p>
+      Regulation depends on the place, activity, and role of the organization. Hong Kong personal-data obligations, model and data licenses, consumer-facing representations, and rules in a destination market can apply to different parts of one system. The EU AI Act, for example, distinguishes roles and risk categories and has phased obligations. Keep a dated applicability record using official regulator guidance. The purpose here is to recognize questions requiring review, not to memorize a worldwide legal checklist.
+     </p>
+     <p>
+      Before the final release, answer five concrete questions: which user groups were tested; which personal data are necessary; which licenses permit the intended use; which person owns incident response; and which resource and regulatory assumptions were recorded. Attach the answers to the existing release checklist rather than treating ethics as an unrelated essay.
+     </p>
+     <h3 id="the-final-release-candidate">
+      The final release candidate
+     </h3>
+     <p>
+      Identify all artifacts, run invariant and integration checks, execute the planned task evaluation, and inspect representative traces. Record quality and latency gates before deciding.
+     </p>
+     <p>
+      Reproduce in a clean directory using the documented downloads and environment. Cached notebook variables should not be an undocumented dependency.
+     </p>
+     <p>
+      Prepare a demo that includes a correct lookup, a comparison, a tool task, a genuine absence, and a controlled failure.
+     </p>
+     <h3 id="worked-practice-and-a-readiness-check">
+      Worked practice and a readiness check
+     </h3>
+     <p>
+      Use the capstone rubric to identify the weakest evidence in your project. Run one focused improvement experiment or document why the simpler qualifying system remains preferable.
+     </p>
+     <p>
+      Write a capacity/extension memo only if it addresses an observed need. Distinguish actual implementation, measured results, and future proposals.
+     </p>
+     <p>
+      You are ready when the integrated system's claims can be traced to artifacts, examples, and tests you understand.
+     </p>
+     <details class="reference-details" id="reference-details">
+      <summary>
+       Reference details and checks
+      </summary>
+      <h3 id="review-a-intuition">
+       Review A: Intuition
+      </h3>
+      <p>
+       One GPU may run out of memory or take too long. Distributed techniques divide data, parameters or computation, but communication becomes part of the cost. This week develops the decision framework; it does not require access to multiple GPUs.
+      </p>
+      <p>
+       Data parallelism replicates the model, processes different batches and synchronizes gradients. It improves throughput when enough work amortizes communication, but each replica still needs the model state. Sharding optimizer state, gradients or parameters reduces per-device memory with additional communication. Tensor parallelism partitions operations within layers. Pipeline parallelism partitions layers and schedules microbatches, introducing bubbles and coordination.
+      </p>
+      <h3 id="review-a-efficiency-mechanisms">
+       Review A: Efficiency mechanisms
+      </h3>
+      <p>
+       Activation checkpointing recomputes selected forward work during backward to save activation memory. Gradient accumulation reduces the required microbatch for an effective batch, but does not reduce all optimizer/model state. Mixed precision changes storage and arithmetic where supported; float16 may need gradient scaling and bfloat16 availability is hardware-dependent. Quantization and adapters address different parts of the resource budget.
+      </p>
+      <h3 id="review-a-worked-scaling-estimate">
+       Review A: Worked scaling estimate
+      </h3>
+      <p>
+       For the same global batch, a step taking 100 ms on one device and 60 ms on two has speedup 100/60 approximately 1.67 and two-device scaling efficiency about 83%. If the global batch changes, report examples or tokens per second and the changed optimization conditions. Comparing step times alone would mix different amounts of work.
+      </p>
+      <p>
+       For another example, if 70% of time can scale perfectly and 30% cannot, four-way ideal speedup is
+       <code>
+        1/(0.3+0.7/4) ≈ 2.11
+       </code>
+       . Real communication can reduce it further. These estimates are planning aids, not measured predictions.
+      </p>
+      <h3 id="review-a-experiment">
+       Review A: Experiment
+      </h3>
+      <p>
+       Use the memory estimates in
+       <a href="../tutorials/22.html">
+        Tutorial 22: Cpu gpu memory and model resource accounting
+       </a>
+       and the profiling measurements in
+       <a href="../tutorials/23.html">
+        Tutorial 23: Cuda kernels and profiling
+       </a>
+       to write a capacity memo: what bottleneck would a second GPU address, what remains replicated, what communication is introduced, and what experiment would validate the plan? Distinguish inference model parallelism from training-state sharding.
+       <a href="../tutorials/31.html">
+        Tutorial 31: Integrating the documentation assistant and advanced extensions
+       </a>
+       audits the release artifacts; it does not measure multi-GPU scaling.
+      </p>
+      <p>
+       <strong>
+        Exit criterion:
+       </strong>
+       choose a plausible technique for a named memory/throughput bottleneck and state its costs.
+       <strong>
+        Reading:
+       </strong>
+       <a class="inline-reading" href="../resources.html#reference-r01">
+        Stanford CS336 Language Modeling from Scratch (R01)
+       </a>
+       parallelism topics;
+       <a class="inline-reading" href="../resources.html#reference-r18">
+        PyTorch automatic mixed precision recipe (R18)
+       </a>
+       .
+       <strong>
+        Tutorial:
+       </strong>
+       31.
+      </p>
+      <h3 id="review-b-intuition">
+       Review B: Intuition
+      </h3>
+      <p>
+       Technical documentation contains tables, diagrams, screenshots and code. A text-only parser may discard the information needed for an answer. Multimodal support begins with preserving evidence and evaluating extraction, not merely swapping in a vision-language model.
+      </p>
+      <p>
+       OCR extracts text from images but can misread symbols, units and indentation. Table extraction must preserve row/column relationships. A vision-language model can combine visual and textual inputs, but small screenshots or dense diagrams can still be difficult. Store page/image coordinates and source references so citations point to the right region. Evaluate extraction separately from reasoning over the extracted material.
+      </p>
+      <h3 id="review-b-generative-families-revisited">
+       Review B: Generative families revisited
+      </h3>
+      <p>
+       For diffusion, a forward step can be written
+       <code>
+        xt = sqrt(alpha_bar_t)*x0 + sqrt(1-alpha_bar_t)*epsilon
+       </code>
+       with standard Gaussian epsilon. Training often teaches a network to predict noise or a related target; sampling repeatedly denoises from noise under a schedule. This differs from next-token autoregression, though real systems may combine architectures and representations.
+      </p>
+      <p>
+       A VAE learns a latent variable model with a reconstruction/regularization objective. GANs use adversarial learning. Flow matching learns a vector field connecting distributions. These survey concepts help read image/audio generation documentation; implementing a high-quality image generator is outside the core capstone.
+      </p>
+      <h3 id="review-b-other-adjacent-topics">
+       Review B: Other adjacent topics
+      </h3>
+      <p>
+       Mixture-of-experts architectures route tokens to subsets of expert networks, affecting active compute, total parameters and communication. Longer-context models can accept more evidence but still need retrieval selection, latency control and evaluation. Model-context and agent communication protocols standardize interfaces; they do not automatically provide authorization, correct tool semantics or reliable planning. Treat new frameworks as replaceable implementations of contracts you already understand.
+      </p>
+      <h3 id="review-b-worked-evidence-problem">
+       Review B: Worked evidence problem
+      </h3>
+      <p>
+       A screenshot table lists timeout defaults by product tier. Flattened OCR returns the numbers but loses the tier labels. Retrieval finds the page, yet the generator associates the wrong number with the requested tier. The error belongs to extraction/structure before language generation. A page-level citation does not repair the false association.
+      </p>
+      <h3 id="review-b-experiment">
+       Review B: Experiment
+      </h3>
+      <p>
+       <a href="../tutorials/32.html">
+        Tutorial 32: Review defense and a continuing learning plan
+       </a>
+       includes a reproducibility audit; revisit the numerical noising illustration in tutorial 15. For the project, choose one optional extension: preserve and evaluate a documentation table, retrieve a diagram with coordinates, or add a reviewed multilingual subset. Define a small independent test set and compare against the text-only baseline. Keep the extension within the week's existing time allocation.
+      </p>
+      <p>
+       <strong>
+        Exit criterion:
+       </strong>
+       explain diffusion versus autoregression and diagnose a multimodal evidence-loss failure.
+       <strong>
+        Reading:
+       </strong>
+       <a class="inline-reading" href="../resources.html#reference-r21">
+        Ho et al. Denoising Diffusion Probabilistic Models (R21)
+       </a>
+       overview;
+       <a class="inline-reading" href="../resources.html#reference-r03">
+        Hung-yi Lee Introduction to GenAI and ML 2025 (R03)
+       </a>
+       image/audio generation topics.
+       <strong>
+        Tutorial:
+       </strong>
+       31.
+      </p>
+     </details>
+    </article>
+    <nav aria-label="Adjacent lectures" class="chapter-pagination">
+     <a href="30.html">
+      <small>
+       Previous week
+      </small>
+      Monitoring security regression tests and rollback
+     </a>
+     <a href="32.html">
+      <small>
+       Next week
+      </small>
+      Review defense and a continuing learning plan
+     </a>
+    </nav>
+   </div>
+   <footer class="footer">
+    <span>
+     Applied AI · An independent self-study course
+    </span>
+    <span>
+     32 weeks · 10 hours per week
+    </span>
+    <a href="../resources.html#about-this-course">
+     About and sources
+    </a>
+   </footer>
+  </main>
+  <dialog aria-labelledby="search-title" class="search-dialog">
+   <div class="dialog-head">
+    <h2 id="search-title">
+     Find a concept
+    </h2>
+    <button aria-label="Close search" class="search-close" type="button">
+     Close
+    </button>
+   </div>
+   <label class="sr-only" for="course-search">
+    Search all lectures and tutorials
+   </label>
+   <input autocomplete="off" id="course-search" placeholder="Try attention, fine-tuning, or harness…" type="search"/>
+   <p aria-live="polite" class="search-status">
+    Search lecture notes, tutorials, tests and readings.
+   </p>
+   <div class="search-results">
+   </div>
+  </dialog>
+  <div aria-live="polite" class="toast" role="status">
+  </div>
+ </body>
+</html>

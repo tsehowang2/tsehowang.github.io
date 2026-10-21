@@ -1,18 +1,646 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/><title>Semester 1 examination · Applied AI</title><meta content="Applied generative AI and LLM systems course material" name="description"/><meta content="#173c36" name="theme-color"/><link href="../assets/favicon.svg" rel="icon" type="image/svg+xml"/><link href="../assets/style.css" rel="stylesheet"/><link href="../assets/slides.css" rel="stylesheet"/><script>window.COURSE_BASE="../";</script><script defer="" src="../assets/site-config.js"></script><script defer="" src="../assets/search-index.js"></script><script defer="" src="../assets/app.js"></script><script defer="" src="../assets/visuals.js"></script><script defer="" src="../assets/slides.js"></script><script defer="" src="../assets/beginner-visuals.js"></script><link href="../zh-HK/tests/semester-1.html" hreflang="zh-HK" rel="alternate"/><link href="../assets/bilingual.css" rel="stylesheet"/></head><body data-page-kind="exam" data-week="16"><a class="skip-link" href="#main">Skip to content</a><header class="topbar"><button aria-controls="course-sidebar" aria-expanded="false" class="menu-toggle" type="button">Menu</button><a class="brand" href="../index.html"><span aria-hidden="true" class="brand-mark">a<span>i</span></span><span>APPLIED AI<small>Principles into practice</small></span></a><nav aria-label="Main navigation"><a href="../index.html">The course</a><a href="../visuals.html">Visual lab</a><a href="../project.html">Project</a><a class="language-switch" href="../zh-HK/tests/semester-1.html" hreflang="zh-HK" lang="zh-HK">繁體中文</a></nav><button class="search-open" type="button">Search the course <span aria-hidden="true">/</span></button></header><aside aria-label="Course chapters" class="sidebar" id="course-sidebar"><a class="side-home" href="../index.html">Course overview</a><details class="semester-nav" open=""><summary>Semester 1<span>Weeks 1–16</span></summary><ol start="1"><li><a href="../lectures/01.html"><span class="week-number">01</span><span>What a language model is trying to learn</span><span class="week-tick" data-week-tick="1"></span></a></li><li><a href="../lectures/02.html"><span class="week-number">02</span><span>From text to tokens and numerical IDs</span><span class="week-tick" data-week-tick="2"></span></a></li><li><a href="../lectures/03.html"><span class="week-number">03</span><span>What word vectors can represent</span><span class="week-tick" data-week-tick="3"></span></a></li><li><a href="../lectures/04.html"><span class="week-number">04</span><span>From scores to probabilities and learning signals</span><span class="week-tick" data-week-tick="4"></span></a></li><li><a href="../lectures/05.html"><span class="week-number">05</span><span>Why language needs context and order</span><span class="week-tick" data-week-tick="5"></span></a></li><li><a href="../lectures/06.html"><span class="week-number">06</span><span>Attention begins as a weighted mixture</span><span class="week-tick" data-week-tick="6"></span></a></li><li><a href="../lectures/07.html"><span class="week-number">07</span><span>Where queries keys and values come from</span><span class="week-tick" data-week-tick="7"></span></a></li><li><a href="../lectures/08.html"><span class="week-number">08</span><span>Scaling and masking attention correctly</span><span class="week-tick" data-week-tick="8"></span></a></li><li><a href="../lectures/09.html"><span class="week-number">09</span><span>Multiple attention heads and position</span><span class="week-tick" data-week-tick="9"></span></a></li><li><a href="../lectures/10.html"><span class="week-number">10</span><span>The transformer block step by step</span><span class="week-tick" data-week-tick="10"></span></a></li><li><a href="../lectures/11.html"><span class="week-number">11</span><span>Encoders decoders and complete model architectures</span><span class="week-tick" data-week-tick="11"></span></a></li><li><a href="../lectures/12.html"><span class="week-number">12</span><span>Training a small transformer</span><span class="week-tick" data-week-tick="12"></span></a></li><li><a href="../lectures/13.html"><span class="week-number">13</span><span>Generation decoding and the KV cache</span><span class="week-tick" data-week-tick="13"></span></a></li><li><a href="../lectures/14.html"><span class="week-number">14</span><span>From pretraining to instruction following and reasoning</span><span class="week-tick" data-week-tick="14"></span></a></li><li><a href="../lectures/15.html"><span class="week-number">15</span><span>Generative AI beyond text</span><span class="week-tick" data-week-tick="15"></span></a></li><li><a aria-current="page" href="../lectures/16.html"><span class="week-number">16</span><span>A complete transformer walkthrough and first semester review</span><span class="week-tick" data-week-tick="16"></span></a></li></ol></details><details class="semester-nav"><summary>Semester 2<span>Weeks 17–32</span></summary><ol start="17"><li><a href="../lectures/17.html"><span class="week-number">17</span><span>From word vectors to semantic search</span><span class="week-tick" data-week-tick="17"></span></a></li><li><a href="../lectures/18.html"><span class="week-number">18</span><span>A vector database from a list of vectors</span><span class="week-tick" data-week-tick="18"></span></a></li><li><a href="../lectures/19.html"><span class="week-number">19</span><span>RAG as an open book question</span><span class="week-tick" data-week-tick="19"></span></a></li><li><a href="../lectures/20.html"><span class="week-number">20</span><span>Improving RAG without losing the basic task</span><span class="week-tick" data-week-tick="20"></span></a></li><li><a href="../lectures/21.html"><span class="week-number">21</span><span>Evaluating retrieval answers and uncertainty</span><span class="week-tick" data-week-tick="21"></span></a></li><li><a href="../lectures/22.html"><span class="week-number">22</span><span>CPU GPU memory and model resource accounting</span><span class="week-tick" data-week-tick="22"></span></a></li><li><a href="../lectures/23.html"><span class="week-number">23</span><span>CUDA kernels and profiling</span><span class="week-tick" data-week-tick="23"></span></a></li><li><a href="../lectures/24.html"><span class="week-number">24</span><span>Fine tuning starts with a teaching dataset</span><span class="week-tick" data-week-tick="24"></span></a></li><li><a href="../lectures/25.html"><span class="week-number">25</span><span>LoRA and QLoRA from a small matrix</span><span class="week-tick" data-week-tick="25"></span></a></li><li><a href="../lectures/26.html"><span class="week-number">26</span><span>Fine tuning experiments preferences and distillation</span><span class="week-tick" data-week-tick="26"></span></a></li><li><a href="../lectures/27.html"><span class="week-number">27</span><span>Tools functions workflows and agents</span><span class="week-tick" data-week-tick="27"></span></a></li><li><a href="../lectures/28.html"><span class="week-number">28</span><span>Harnesses planning memory and bounded execution</span><span class="week-tick" data-week-tick="28"></span></a></li><li><a href="../lectures/29.html"><span class="week-number">29</span><span>From a notebook to MLOps and inference serving</span><span class="week-tick" data-week-tick="29"></span></a></li><li><a href="../lectures/30.html"><span class="week-number">30</span><span>Monitoring security regression tests and rollback</span><span class="week-tick" data-week-tick="30"></span></a></li><li><a href="../lectures/31.html"><span class="week-number">31</span><span>Integrating the documentation assistant and advanced extensions</span><span class="week-tick" data-week-tick="31"></span></a></li><li><a href="../lectures/32.html"><span class="week-number">32</span><span>Review defense and a continuing learning plan</span><span class="week-tick" data-week-tick="32"></span></a></li></ol></details><div class="side-links"><a href="../visuals.html">Visual laboratory <span>14 interactive lessons</span></a><a href="../project.html">Documentation assistant <span>Your capstone project</span></a><a href="../resources.html">Readings and setup</a></div><div class="side-progress"><div><span>Your progress</span><strong data-progress-count="">0 / 32</strong></div><progress aria-label="Completed lectures" max="32" value="0"></progress><small>Saved in this browser</small></div></aside><main class="main" id="main"><div class="content"><div class="chapter-header"><div class="eyebrow">Semester 1 / Examination</div><h1>Semester 1 examination</h1><p class="deck">Two hours · 100 points · Attempt without notes or an LLM.</p></div><article class="prose"><h3 id="question-1-language-modeling-and-representations-15-points">Question 1 Language modeling and representations 15 points</h3>
-<p>Using “I go to school by bus,” explain next-token training and give shifted inputs/targets (5). Distinguish token IDs from embedding vectors and explain why IDs cannot be averaged as meanings (5). For probabilities [.6,.2,.2], calculate negative log likelihood when train is the target and interpret lower loss (5).</p>
-<h3 id="question-2-attention-by-hand-20-points">Question 2 Attention by hand 20 points</h3>
-<p>A query produces unscaled scores [2,0] with d_head=4 and values [2,0] and [0,4]. Calculate scaled scores, stable softmax and the mixed output (10). Mask the second key as a future position and recalculate (6). Explain the different roles of Q, K and V even when they come from the same input (4).</p>
-<h3 id="question-3-transformer-architecture-20-points">Question 3 Transformer architecture 20 points</h3>
-<p>For B=2,T=128,D=256,H=8 give split Q/K/V, score, per-head output and merged output shapes (8). Compute explicitly stored float32 score memory in bytes and MiB (4). Explain residual, normalization and positionwise MLP paths in a pre-normalized block (4). Explain why position information and a causal mask solve different problems (4).</p>
-<h3 id="question-4-training-a-tiny-transformer-20-points">Question 4 Training a tiny transformer 20 points</h3>
-<p>Give training-loop pseudocode with shifted labels, causal masking, cross entropy, backward pass and optimizer update (8). Describe a future-token perturbation check and a one-batch overfit diagnostic (6). Explain grouped train/dev splitting and why lower training loss does not prove generalization (6).</p>
-<h3 id="question-5-generation-and-instruction-following-15-points">Question 5 Generation and instruction following 15 points</h3>
-<p>Compare greedy decoding and sampling, including temperature (5). Explain what a KV cache stores and why it speeds decoding without learning new facts (4). Distinguish pretraining from instruction SFT (3). Explain why fluent chain-of-thought text does not establish correctness (3).</p>
-<h3 id="question-6-beyond-text-and-experimental-reasoning-10-points">Question 6 Beyond text and experimental reasoning 10 points</h3>
-<p>Compare autoregressive image-token generation with diffusion generation (4). Describe one transformer limitation and a controlled tiny-model experiment to investigate it (6).</p><details class="solution exam-solution"><summary>Open the complete marking guide after your attempt</summary><p><strong>Q1 (15).</strong> Inputs I/go/to/school/by, targets go/to/school/by/bus. Each prefix predicts the following token (5). IDs are arbitrary row indices; vectors are learned representations. Renumbering IDs with corresponding table-row permutation must preserve meaning (5). -ln(.2)=1.6094 nats. Lower loss means more probability on the observed target, not proof of factual truth (5).</p>
-<p><strong>Q2 (20).</strong> Divide by sqrt(4)=2: [1,0]. Stable exponents [1,.367879], normalized [.731059,.268941]. Output [1.462118,1.075764]. Scaling 2, weights 4, output 4 (10 total). Masked scores [1,-infinity], probabilities [1,0], output [2,0] (6). Q asks what is needed, K is scored for compatibility, V supplies the mixed payload; distinct projections enable the roles (4).</p>
-<p><strong>Q3 (20).</strong> Q/K/V [2,8,128,32], scores [2,8,128,128], head output [2,8,128,32], merged [2,128,256] (8). 262144 elements times four =1048576 bytes=1 MiB (4). x becomes x+Attention(LN(x)), then x+MLP(LN(x)); MLP acts per position and residual preserves a direct path (4). Position supplies order/location; masking prevents future leakage. Neither generally replaces the other (4).</p>
-<p><strong>Q4 (20).</strong> Shift batches; forward with causal mask; flatten position/vocabulary logits against aligned target IDs; cross entropy; zero gradients; backward; optional clipping; optimizer step (8). Future perturbation must preserve earlier logits with fixed parameters/eval mode; a tiny one-batch dataset should be overfittable as a wiring diagnostic (6). Split source groups before making overlapping windows. Memorization and leakage can lower training loss without useful generalization (6).</p>
-<p><strong>Q5 (15).</strong> Greedy selects the maximum; sampling draws from a distribution. Divide logits by positive temperature: lower sharpens, higher flattens. Neither guarantees a globally best sequence (5). The cache stores prior keys/values, avoiding recomputation; parameters remain fixed (4). Pretraining learns continuation; instruction SFT updates parameters from desired responses, commonly applying loss to response tokens (3). A rationale is generated text; verify answers independently with controlled comparisons (3).</p>
-<p><strong>Q6 (10).</strong> Autoregression predicts discrete image tokens sequentially; diffusion learns a reverse/denoising process with a noise schedule (4). One investigation: move a synthetic dependency to increasing distances, holding architecture, data count and training budget fixed. Report held-out accuracy, context constraints and limits of a tiny synthetic task. Limitation 2, controls/design 3, interpretation 1 (6).</p></details></article></div><footer class="footer"><span>Applied AI · An independent self-study course</span><span>32 weeks · 10 hours per week</span><a href="../resources.html#about-this-course">About and sources</a></footer></main><dialog aria-labelledby="search-title" class="search-dialog"><div class="dialog-head"><h2 id="search-title">Find a concept</h2><button aria-label="Close search" class="search-close" type="button">Close</button></div><label class="sr-only" for="course-search">Search all lectures and tutorials</label><input autocomplete="off" id="course-search" placeholder="Try attention, fine-tuning, or harness…" type="search"/><p aria-live="polite" class="search-status">Search lecture notes, tutorials, tests and readings.</p><div class="search-results"></div></dialog><div aria-live="polite" class="toast" role="status"></div></body></html>
+<html lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width,initial-scale=1" name="viewport"/>
+  <title>
+   Semester 1 examination · Applied AI
+  </title>
+  <meta content="Applied generative AI and LLM systems course material" name="description"/>
+  <meta content="#173c36" name="theme-color"/>
+  <link href="../assets/favicon.svg" rel="icon" type="image/svg+xml"/>
+  <link href="../assets/style.css" rel="stylesheet"/>
+  <link href="../assets/slides.css" rel="stylesheet"/>
+  <script>
+   window.COURSE_BASE="../";
+  </script>
+  <script defer="" src="../assets/site-config.js">
+  </script>
+  <script defer="" src="../assets/search-index.js">
+  </script>
+  <script defer="" src="../assets/app.js">
+  </script>
+  <script defer="" src="../assets/visuals.js">
+  </script>
+  <script defer="" src="../assets/slides.js">
+  </script>
+  <script defer="" src="../assets/beginner-visuals.js">
+  </script>
+  <link href="../zh-HK/tests/semester-1.html" hreflang="zh-HK" rel="alternate"/>
+  <link href="../assets/bilingual.css" rel="stylesheet"/>
+  <link href="../assets/reader-v3.css" rel="stylesheet"/>
+  <script defer="True" src="../assets/reader-v3.js">
+  </script>
+ </head>
+ <body data-page-kind="exam" data-week="16">
+  <a class="skip-link" href="#main">
+   Skip to content
+  </a>
+  <header class="topbar">
+   <button aria-controls="course-sidebar" aria-expanded="false" class="menu-toggle" type="button">
+    Menu
+   </button>
+   <a class="brand" href="../index.html">
+    <span aria-hidden="true" class="brand-mark">
+     a
+     <span>
+      i
+     </span>
+    </span>
+    <span>
+     APPLIED AI
+     <small>
+      Principles into practice
+     </small>
+    </span>
+   </a>
+   <nav aria-label="Main navigation">
+    <a href="../index.html">
+     The course
+    </a>
+    <a href="../visuals.html">
+     Visual lab
+    </a>
+    <a href="../project.html">
+     Project
+    </a>
+    <a class="language-switch" href="../zh-HK/tests/semester-1.html" hreflang="zh-HK" lang="zh-HK">
+     繁體中文
+    </a>
+   </nav>
+   <button class="search-open" type="button">
+    Search the course
+    <span aria-hidden="true">
+     /
+    </span>
+   </button>
+  </header>
+  <aside aria-label="Course chapters" class="sidebar" id="course-sidebar">
+   <a class="side-home" href="../index.html">
+    Course overview
+   </a>
+   <details class="semester-nav" open="">
+    <summary>
+     Semester 1
+     <span>
+      Weeks 1–16
+     </span>
+    </summary>
+    <ol start="1">
+     <li>
+      <a href="../lectures/01.html">
+       <span class="week-number">
+        01
+       </span>
+       <span>
+        What a language model is trying to learn
+       </span>
+       <span class="week-tick" data-week-tick="1">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/02.html">
+       <span class="week-number">
+        02
+       </span>
+       <span>
+        From text to tokens and numerical IDs
+       </span>
+       <span class="week-tick" data-week-tick="2">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/03.html">
+       <span class="week-number">
+        03
+       </span>
+       <span>
+        What word vectors can represent
+       </span>
+       <span class="week-tick" data-week-tick="3">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/04.html">
+       <span class="week-number">
+        04
+       </span>
+       <span>
+        From scores to probabilities and learning signals
+       </span>
+       <span class="week-tick" data-week-tick="4">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/05.html">
+       <span class="week-number">
+        05
+       </span>
+       <span>
+        Why language needs context and order
+       </span>
+       <span class="week-tick" data-week-tick="5">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/06.html">
+       <span class="week-number">
+        06
+       </span>
+       <span>
+        Attention begins as a weighted mixture
+       </span>
+       <span class="week-tick" data-week-tick="6">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/07.html">
+       <span class="week-number">
+        07
+       </span>
+       <span>
+        Where queries keys and values come from
+       </span>
+       <span class="week-tick" data-week-tick="7">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/08.html">
+       <span class="week-number">
+        08
+       </span>
+       <span>
+        Scaling and masking attention correctly
+       </span>
+       <span class="week-tick" data-week-tick="8">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/09.html">
+       <span class="week-number">
+        09
+       </span>
+       <span>
+        Multiple attention heads and position
+       </span>
+       <span class="week-tick" data-week-tick="9">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/10.html">
+       <span class="week-number">
+        10
+       </span>
+       <span>
+        The transformer block step by step
+       </span>
+       <span class="week-tick" data-week-tick="10">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/11.html">
+       <span class="week-number">
+        11
+       </span>
+       <span>
+        Encoders decoders and complete model architectures
+       </span>
+       <span class="week-tick" data-week-tick="11">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/12.html">
+       <span class="week-number">
+        12
+       </span>
+       <span>
+        Training a small transformer
+       </span>
+       <span class="week-tick" data-week-tick="12">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/13.html">
+       <span class="week-number">
+        13
+       </span>
+       <span>
+        Generation decoding and the KV cache
+       </span>
+       <span class="week-tick" data-week-tick="13">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/14.html">
+       <span class="week-number">
+        14
+       </span>
+       <span>
+        From pretraining to instruction following and reasoning
+       </span>
+       <span class="week-tick" data-week-tick="14">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/15.html">
+       <span class="week-number">
+        15
+       </span>
+       <span>
+        Generative AI beyond text
+       </span>
+       <span class="week-tick" data-week-tick="15">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a aria-current="page" href="../lectures/16.html">
+       <span class="week-number">
+        16
+       </span>
+       <span>
+        A complete transformer walkthrough and first semester review
+       </span>
+       <span class="week-tick" data-week-tick="16">
+       </span>
+      </a>
+     </li>
+    </ol>
+   </details>
+   <details class="semester-nav">
+    <summary>
+     Semester 2
+     <span>
+      Weeks 17–32
+     </span>
+    </summary>
+    <ol start="17">
+     <li>
+      <a href="../lectures/17.html">
+       <span class="week-number">
+        17
+       </span>
+       <span>
+        From word vectors to semantic search
+       </span>
+       <span class="week-tick" data-week-tick="17">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/18.html">
+       <span class="week-number">
+        18
+       </span>
+       <span>
+        A vector database from a list of vectors
+       </span>
+       <span class="week-tick" data-week-tick="18">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/19.html">
+       <span class="week-number">
+        19
+       </span>
+       <span>
+        RAG as an open book question
+       </span>
+       <span class="week-tick" data-week-tick="19">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/20.html">
+       <span class="week-number">
+        20
+       </span>
+       <span>
+        Improving RAG without losing the basic task
+       </span>
+       <span class="week-tick" data-week-tick="20">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/21.html">
+       <span class="week-number">
+        21
+       </span>
+       <span>
+        Evaluating retrieval answers and uncertainty
+       </span>
+       <span class="week-tick" data-week-tick="21">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/22.html">
+       <span class="week-number">
+        22
+       </span>
+       <span>
+        CPU GPU memory and model resource accounting
+       </span>
+       <span class="week-tick" data-week-tick="22">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/23.html">
+       <span class="week-number">
+        23
+       </span>
+       <span>
+        CUDA kernels and profiling
+       </span>
+       <span class="week-tick" data-week-tick="23">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/24.html">
+       <span class="week-number">
+        24
+       </span>
+       <span>
+        Fine tuning starts with a teaching dataset
+       </span>
+       <span class="week-tick" data-week-tick="24">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/25.html">
+       <span class="week-number">
+        25
+       </span>
+       <span>
+        LoRA and QLoRA from a small matrix
+       </span>
+       <span class="week-tick" data-week-tick="25">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/26.html">
+       <span class="week-number">
+        26
+       </span>
+       <span>
+        Fine tuning experiments preferences and distillation
+       </span>
+       <span class="week-tick" data-week-tick="26">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/27.html">
+       <span class="week-number">
+        27
+       </span>
+       <span>
+        Tools functions workflows and agents
+       </span>
+       <span class="week-tick" data-week-tick="27">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/28.html">
+       <span class="week-number">
+        28
+       </span>
+       <span>
+        Harnesses planning memory and bounded execution
+       </span>
+       <span class="week-tick" data-week-tick="28">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/29.html">
+       <span class="week-number">
+        29
+       </span>
+       <span>
+        From a notebook to MLOps and inference serving
+       </span>
+       <span class="week-tick" data-week-tick="29">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/30.html">
+       <span class="week-number">
+        30
+       </span>
+       <span>
+        Monitoring security regression tests and rollback
+       </span>
+       <span class="week-tick" data-week-tick="30">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/31.html">
+       <span class="week-number">
+        31
+       </span>
+       <span>
+        Integrating the documentation assistant and advanced extensions
+       </span>
+       <span class="week-tick" data-week-tick="31">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/32.html">
+       <span class="week-number">
+        32
+       </span>
+       <span>
+        Review defense and a continuing learning plan
+       </span>
+       <span class="week-tick" data-week-tick="32">
+       </span>
+      </a>
+     </li>
+    </ol>
+   </details>
+   <div class="side-links">
+    <a href="../visuals.html">
+     Visual laboratory
+     <span>
+      14 interactive lessons
+     </span>
+    </a>
+    <a href="../project.html">
+     Documentation assistant
+     <span>
+      Your capstone project
+     </span>
+    </a>
+    <a href="../resources.html">
+     Readings and setup
+    </a>
+   </div>
+   <div class="side-progress">
+    <div>
+     <span>
+      Your progress
+     </span>
+     <strong data-progress-count="">
+      0 / 32
+     </strong>
+    </div>
+    <progress aria-label="Completed lectures" max="32" value="0">
+    </progress>
+    <small>
+     Saved in this browser
+    </small>
+   </div>
+  </aside>
+  <main class="main" id="main">
+   <div class="content">
+    <div class="chapter-header">
+     <div class="eyebrow">
+      Semester 1 / Examination
+     </div>
+     <h1>
+      Semester 1 examination
+     </h1>
+     <p class="deck">
+      Two hours · 100 points · Attempt without notes or an LLM.
+     </p>
+    </div>
+    <article class="prose">
+     <h3 id="question-1-language-modeling-and-representations-15-points">
+      Question 1 Language modeling and representations 15 points
+     </h3>
+     <p>
+      Using “I go to school by bus,” explain next-token training and give shifted inputs/targets (5). Distinguish token IDs from embedding vectors and explain why IDs cannot be averaged as meanings (5). For probabilities [.6,.2,.2], calculate negative log likelihood when train is the target and interpret lower loss (5).
+     </p>
+     <h3 id="question-2-attention-by-hand-20-points">
+      Question 2 Attention by hand 20 points
+     </h3>
+     <p>
+      A query produces unscaled scores [2,0] with d_head=4 and values [2,0] and [0,4]. Calculate scaled scores, stable softmax and the mixed output (10). Mask the second key as a future position and recalculate (6). Explain the different roles of Q, K and V even when they come from the same input (4).
+     </p>
+     <h3 id="question-3-transformer-architecture-20-points">
+      Question 3 Transformer architecture 20 points
+     </h3>
+     <p>
+      For B=2,T=128,d_model=256,H=8 give split Q/K/V, score, per-head output and merged output shapes (8). Compute explicitly stored float32 score memory in bytes and MiB (4). Explain residual, normalization and positionwise MLP paths in a pre-normalized block (4). Explain why position information and a causal mask solve different problems (4).
+     </p>
+     <h3 id="question-4-training-a-tiny-transformer-20-points">
+      Question 4 Training a tiny transformer 20 points
+     </h3>
+     <p>
+      Give training-loop pseudocode with shifted labels, causal masking, cross entropy, backward pass and optimizer update (8). Describe a future-token perturbation check and a one-batch overfit diagnostic (6). Explain grouped train/dev splitting and why lower training loss does not prove generalization (6).
+     </p>
+     <h3 id="question-5-generation-and-instruction-following-15-points">
+      Question 5 Generation and instruction following 15 points
+     </h3>
+     <p>
+      Compare greedy decoding and sampling, including temperature (5). Explain what a KV cache stores and why it speeds decoding without learning new facts (4). Distinguish pretraining from instruction SFT (3). Explain why fluent chain-of-thought text does not establish correctness (3).
+     </p>
+     <h3 id="question-6-beyond-text-and-experimental-reasoning-10-points">
+      Question 6 Beyond text and experimental reasoning 10 points
+     </h3>
+     <p>
+      Compare autoregressive image-token generation with diffusion generation (4). Describe one transformer limitation and a controlled tiny-model experiment to investigate it (6).
+     </p>
+     <details class="solution exam-solution">
+      <summary>
+       Open the complete marking guide after your attempt
+      </summary>
+      <p>
+       <strong>
+        Q1 (15).
+       </strong>
+       Inputs I/go/to/school/by, targets go/to/school/by/bus. Each prefix predicts the following token (5). IDs are arbitrary row indices; vectors are learned representations. Renumbering IDs with corresponding table-row permutation must preserve meaning (5). -ln(.2)=1.6094 nats. Lower loss means more probability on the observed target, not proof of factual truth (5).
+      </p>
+      <p>
+       <strong>
+        Q2 (20).
+       </strong>
+       Divide by sqrt(4)=2: [1,0]. Stable exponents [1,.367879], normalized [.731059,.268941]. Output [1.462118,1.075764]. Scaling 2, weights 4, output 4 (10 total). Masked scores [1,-infinity], probabilities [1,0], output [2,0] (6). Q asks what is needed, K is scored for compatibility, V supplies the mixed payload; distinct projections enable the roles (4).
+      </p>
+      <p>
+       <strong>
+        Q3 (20).
+       </strong>
+       Q/K/V [2,8,128,32], scores [2,8,128,128], head output [2,8,128,32], merged [2,128,256] (8). 262144 elements times four =1048576 bytes=1 MiB (4). x becomes x+Attention(LN(x)), then x+MLP(LN(x)); MLP acts per position and residual preserves a direct path (4). Position supplies order/location; masking prevents future leakage. Neither generally replaces the other (4).
+      </p>
+      <p>
+       <strong>
+        Q4 (20).
+       </strong>
+       Shift batches; forward with causal mask; flatten position/vocabulary logits against aligned target IDs; cross entropy; zero gradients; backward; optional clipping; optimizer step (8). Future perturbation must preserve earlier logits with fixed parameters/eval mode; a tiny one-batch dataset should be overfittable as a wiring diagnostic (6). Split source groups before making overlapping windows. Memorization and leakage can lower training loss without useful generalization (6).
+      </p>
+      <p>
+       <strong>
+        Q5 (15).
+       </strong>
+       Greedy selects the maximum; sampling draws from a distribution. Divide logits by positive temperature: lower sharpens, higher flattens. Neither guarantees a globally best sequence (5). The cache stores prior keys/values, avoiding recomputation; parameters remain fixed (4). Pretraining learns continuation; instruction SFT updates parameters from desired responses, commonly applying loss to response tokens (3). A rationale is generated text; verify answers independently with controlled comparisons (3).
+      </p>
+      <p>
+       <strong>
+        Q6 (10).
+       </strong>
+       Autoregression predicts discrete image tokens sequentially; diffusion learns a reverse/denoising process with a noise schedule (4). One investigation: move a synthetic dependency to increasing distances, holding architecture, data count and training budget fixed. Report held-out accuracy, context constraints and limits of a tiny synthetic task. Limitation 2, controls/design 3, interpretation 1 (6).
+      </p>
+     </details>
+    </article>
+   </div>
+   <footer class="footer">
+    <span>
+     Applied AI · An independent self-study course
+    </span>
+    <span>
+     32 weeks · 10 hours per week
+    </span>
+    <a href="../resources.html#about-this-course">
+     About and sources
+    </a>
+   </footer>
+  </main>
+  <dialog aria-labelledby="search-title" class="search-dialog">
+   <div class="dialog-head">
+    <h2 id="search-title">
+     Find a concept
+    </h2>
+    <button aria-label="Close search" class="search-close" type="button">
+     Close
+    </button>
+   </div>
+   <label class="sr-only" for="course-search">
+    Search all lectures and tutorials
+   </label>
+   <input autocomplete="off" id="course-search" placeholder="Try attention, fine-tuning, or harness…" type="search"/>
+   <p aria-live="polite" class="search-status">
+    Search lecture notes, tutorials, tests and readings.
+   </p>
+   <div class="search-results">
+   </div>
+  </dialog>
+  <div aria-live="polite" class="toast" role="status">
+  </div>
+ </body>
+</html>

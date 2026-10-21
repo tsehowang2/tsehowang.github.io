@@ -1,45 +1,1973 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/><title>Readings and setup · Applied AI</title><meta content="Applied generative AI and LLM systems course material" name="description"/><meta content="#173c36" name="theme-color"/><link href="assets/favicon.svg" rel="icon" type="image/svg+xml"/><link href="assets/style.css" rel="stylesheet"/><link href="assets/slides.css" rel="stylesheet"/><script>window.COURSE_BASE="";</script><script defer="" src="assets/site-config.js"></script><script defer="" src="assets/search-index.js"></script><script defer="" src="assets/app.js"></script><script defer="" src="assets/visuals.js"></script><script defer="" src="assets/slides.js"></script><script defer="" src="assets/beginner-visuals.js"></script><link href="zh-HK/resources.html" hreflang="zh-HK" rel="alternate"/><link href="assets/bilingual.css" rel="stylesheet"/></head><body data-page-kind="resources" data-week="0"><a class="skip-link" href="#main">Skip to content</a><header class="topbar"><button aria-controls="course-sidebar" aria-expanded="false" class="menu-toggle" type="button">Menu</button><a class="brand" href="index.html"><span aria-hidden="true" class="brand-mark">a<span>i</span></span><span>APPLIED AI<small>Principles into practice</small></span></a><nav aria-label="Main navigation"><a href="index.html">The course</a><a href="visuals.html">Visual lab</a><a href="project.html">Project</a><a class="language-switch" href="zh-HK/resources.html" hreflang="zh-HK" lang="zh-HK">繁體中文</a></nav><button class="search-open" type="button">Search the course <span aria-hidden="true">/</span></button></header><aside aria-label="Course chapters" class="sidebar" id="course-sidebar"><a class="side-home" href="index.html">Course overview</a><details class="semester-nav" open=""><summary>Semester 1<span>Weeks 1–16</span></summary><ol start="1"><li><a href="lectures/01.html"><span class="week-number">01</span><span>What a language model is trying to learn</span><span class="week-tick" data-week-tick="1"></span></a></li><li><a href="lectures/02.html"><span class="week-number">02</span><span>From text to tokens and numerical IDs</span><span class="week-tick" data-week-tick="2"></span></a></li><li><a href="lectures/03.html"><span class="week-number">03</span><span>What word vectors can represent</span><span class="week-tick" data-week-tick="3"></span></a></li><li><a href="lectures/04.html"><span class="week-number">04</span><span>From scores to probabilities and learning signals</span><span class="week-tick" data-week-tick="4"></span></a></li><li><a href="lectures/05.html"><span class="week-number">05</span><span>Why language needs context and order</span><span class="week-tick" data-week-tick="5"></span></a></li><li><a href="lectures/06.html"><span class="week-number">06</span><span>Attention begins as a weighted mixture</span><span class="week-tick" data-week-tick="6"></span></a></li><li><a href="lectures/07.html"><span class="week-number">07</span><span>Where queries keys and values come from</span><span class="week-tick" data-week-tick="7"></span></a></li><li><a href="lectures/08.html"><span class="week-number">08</span><span>Scaling and masking attention correctly</span><span class="week-tick" data-week-tick="8"></span></a></li><li><a href="lectures/09.html"><span class="week-number">09</span><span>Multiple attention heads and position</span><span class="week-tick" data-week-tick="9"></span></a></li><li><a href="lectures/10.html"><span class="week-number">10</span><span>The transformer block step by step</span><span class="week-tick" data-week-tick="10"></span></a></li><li><a href="lectures/11.html"><span class="week-number">11</span><span>Encoders decoders and complete model architectures</span><span class="week-tick" data-week-tick="11"></span></a></li><li><a href="lectures/12.html"><span class="week-number">12</span><span>Training a small transformer</span><span class="week-tick" data-week-tick="12"></span></a></li><li><a href="lectures/13.html"><span class="week-number">13</span><span>Generation decoding and the KV cache</span><span class="week-tick" data-week-tick="13"></span></a></li><li><a href="lectures/14.html"><span class="week-number">14</span><span>From pretraining to instruction following and reasoning</span><span class="week-tick" data-week-tick="14"></span></a></li><li><a href="lectures/15.html"><span class="week-number">15</span><span>Generative AI beyond text</span><span class="week-tick" data-week-tick="15"></span></a></li><li><a href="lectures/16.html"><span class="week-number">16</span><span>A complete transformer walkthrough and first semester review</span><span class="week-tick" data-week-tick="16"></span></a></li></ol></details><details class="semester-nav"><summary>Semester 2<span>Weeks 17–32</span></summary><ol start="17"><li><a href="lectures/17.html"><span class="week-number">17</span><span>From word vectors to semantic search</span><span class="week-tick" data-week-tick="17"></span></a></li><li><a href="lectures/18.html"><span class="week-number">18</span><span>A vector database from a list of vectors</span><span class="week-tick" data-week-tick="18"></span></a></li><li><a href="lectures/19.html"><span class="week-number">19</span><span>RAG as an open book question</span><span class="week-tick" data-week-tick="19"></span></a></li><li><a href="lectures/20.html"><span class="week-number">20</span><span>Improving RAG without losing the basic task</span><span class="week-tick" data-week-tick="20"></span></a></li><li><a href="lectures/21.html"><span class="week-number">21</span><span>Evaluating retrieval answers and uncertainty</span><span class="week-tick" data-week-tick="21"></span></a></li><li><a href="lectures/22.html"><span class="week-number">22</span><span>CPU GPU memory and model resource accounting</span><span class="week-tick" data-week-tick="22"></span></a></li><li><a href="lectures/23.html"><span class="week-number">23</span><span>CUDA kernels and profiling</span><span class="week-tick" data-week-tick="23"></span></a></li><li><a href="lectures/24.html"><span class="week-number">24</span><span>Fine tuning starts with a teaching dataset</span><span class="week-tick" data-week-tick="24"></span></a></li><li><a href="lectures/25.html"><span class="week-number">25</span><span>LoRA and QLoRA from a small matrix</span><span class="week-tick" data-week-tick="25"></span></a></li><li><a href="lectures/26.html"><span class="week-number">26</span><span>Fine tuning experiments preferences and distillation</span><span class="week-tick" data-week-tick="26"></span></a></li><li><a href="lectures/27.html"><span class="week-number">27</span><span>Tools functions workflows and agents</span><span class="week-tick" data-week-tick="27"></span></a></li><li><a href="lectures/28.html"><span class="week-number">28</span><span>Harnesses planning memory and bounded execution</span><span class="week-tick" data-week-tick="28"></span></a></li><li><a href="lectures/29.html"><span class="week-number">29</span><span>From a notebook to MLOps and inference serving</span><span class="week-tick" data-week-tick="29"></span></a></li><li><a href="lectures/30.html"><span class="week-number">30</span><span>Monitoring security regression tests and rollback</span><span class="week-tick" data-week-tick="30"></span></a></li><li><a href="lectures/31.html"><span class="week-number">31</span><span>Integrating the documentation assistant and advanced extensions</span><span class="week-tick" data-week-tick="31"></span></a></li><li><a href="lectures/32.html"><span class="week-number">32</span><span>Review defense and a continuing learning plan</span><span class="week-tick" data-week-tick="32"></span></a></li></ol></details><div class="side-links"><a href="visuals.html">Visual laboratory <span>14 interactive lessons</span></a><a href="project.html">Documentation assistant <span>Your capstone project</span></a><a href="resources.html">Readings and setup</a></div><div class="side-progress"><div><span>Your progress</span><strong data-progress-count="">0 / 32</strong></div><progress aria-label="Completed lectures" max="32" value="0"></progress><small>Saved in this browser</small></div></aside><main class="main" id="main"><div class="content"><div class="chapter-header"><div class="eyebrow">Keep the sources close</div><h1>Readings, setup and course information</h1></div><div class="lesson-links"><a download="" href="downloads/Applied_Generative_AI_Course.zip">Download the full course pack</a><a href="supplement.html">Worked supplement</a><a href="schedule.html">Full syllabus</a><a href="tests/checkpoints.html">Checkpoint quizzes</a><a href="implementation.html">Reference code</a></div><article class="prose"><h2>Setup and compute plan</h2><h2 id="read-first">Read first</h2>
-<p>The website uses static HTML, CSS and JavaScript. Reading, slides, search, worked solutions, diagrams and progress tracking require no Python installation or paid service. Code runs separately on your computer or Colab.</p>
-<h2 id="cpu-foundation-route">CPU foundation route</h2>
-<p>Use Python 3.10–3.12 in a virtual environment for broad package compatibility. Install NumPy for numerical lessons. Most early notebooks and controller/evaluation exercises need only the standard library and NumPy. Colab normally includes them.</p>
-<p>Extract the full course ZIP. Its root contains coursekit, data, notebooks and tests. From that root run python -m unittest discover -s tests -v. In Colab, upload the ZIP, unzip it into /content/llm_course, and run the bootstrap cell. The cell also searches for an extracted llm_course_v2 folder. Do not upload a lone notebook without its support files.</p>
-<h2 id="model-downloads-and-free-gpus">Model downloads and free GPUs</h2>
-<p>Week 12 introduces a small PyTorch transformer. A short CPU run checks the training path; Colab allows longer experiments when a GPU is available. Later notebooks have explicit installation/download cells. Free GPU availability varies; inspect the assigned device. Save checkpoints and reports outside a temporary runtime before disconnecting.</p>
-<p>Your GTX 1650 Super is optional. Inspect actual free VRAM with nvidia-smi. Use CPU for numerical lessons and Colab for larger model experiments. Do not assume BF16, large batches or QLoRA kernels work on every GPU. Start with float32 CPU correctness or supported float16 GPU execution.</p>
-<h2 id="reproducible-model-work">Reproducible model work</h2>
-<p>Package ranges in notebooks are starting constraints, not immutable lockfiles. Record resolved Python, torch, transformers and accelerator versions, model/tokenizer commits, data hashes, seeds and configurations. Save a lockfile for a working environment. Check current official documentation if installation APIs differ.</p>
-<p>Model labs download a small Qwen model and/or a sentence embedding model. QLoRA is explained but the guided LoRA pilot does not require a four-bit kernel. Week 23 CUDA compilation requires nvcc. If unavailable, inspect the kernel and record that limitation.</p>
-<h2 id="outputs">Outputs</h2>
-<p>The bootstrap creates a runs directory. Use run IDs and keep actual outputs. The fictional teaching fixtures are tiny and cannot establish production quality or broad model capability.</p><h2>Primary references</h2><p>Links checked on 20 October 2026. Course pages are references for teaching structure and optional study; the written chapters and exercises are original. Software documentation changes: save the versions you actually run. Read the named section, not the whole source, unless marked optional.</p>
-<div class="table-wrap"><table><thead><tr><th>ID</th><th>Primary source</th><th>Use</th></tr></thead><tbody>
-<tr><td>R01</td><td><a href="https://cs336.stanford.edu/">Stanford CS336 Language Modeling from Scratch</a></td><td>Architecture, resource accounting, data, alignment; optional deeper assignments</td></tr>
-<tr><td>R02</td><td><a href="https://stanford-cs329s.github.io/">Stanford CS329S Machine Learning Systems Design</a></td><td>Lifecycle, stakeholder requirements, deployment and monitoring</td></tr>
-<tr><td>R03</td><td><a href="https://speech.ee.ntu.edu.tw/~hylee/GenAI-ML/2025-fall.php">Hung-yi Lee Introduction to GenAI and ML 2025</a></td><td>Optional intuition-first videos: context engineering, model internals, evaluation, post-training</td></tr>
-<tr><td>R04</td><td><a href="https://arxiv.org/abs/1706.03762">Vaswani et al. Attention Is All You Need</a></td><td>Scaled dot-product attention and multi-head architecture</td></tr>
-<tr><td>R05</td><td><a href="https://research.google.com/colaboratory/faq.html">Google Colab FAQ</a></td><td>Resource availability, session limits and persistence</td></tr>
-<tr><td>R06</td><td><a href="https://arxiv.org/abs/2005.11401">Lewis et al. Retrieval Augmented Generation</a></td><td>Parametric and retrieved information; historical RAG formulation</td></tr>
-<tr><td>R07</td><td><a href="https://www.sbert.net/docs/sentence_transformer/usage/semantic_textual_similarity.html">Sentence Transformers semantic similarity</a></td><td>Embedding encoding and similarity</td></tr>
-<tr><td>R08</td><td><a href="https://qdrant.tech/documentation/quickstart/">Qdrant local quickstart</a></td><td>Collections, points and payloads</td></tr>
-<tr><td>R09</td><td><a href="https://huggingface.co/docs/transformers/chat_templating">Hugging Face Transformers chat templates</a></td><td>Message serialization and generation prompts</td></tr>
-<tr><td>R10</td><td><a href="https://arxiv.org/abs/2201.11903">Wei et al. Chain of Thought Prompting</a></td><td>Intermediate-step prompting and task-dependent evaluation</td></tr>
-<tr><td>R11</td><td><a href="https://arxiv.org/abs/2210.03629">Yao et al. ReAct</a></td><td>Interleaving observations and actions</td></tr>
-<tr><td>R12</td><td><a href="https://arxiv.org/abs/2106.09685">Hu et al. LoRA</a></td><td>Low-rank trainable updates</td></tr>
-<tr><td>R13</td><td><a href="https://arxiv.org/abs/2305.14314">Dettmers et al. QLoRA</a></td><td>Quantized frozen base plus adapters</td></tr>
-<tr><td>R14</td><td><a href="https://huggingface.co/docs/peft/main/en/conceptual_guides/lora">Hugging Face PEFT LoRA guide</a></td><td>Configurations and adapter operations; select installed version in docs</td></tr>
-<tr><td>R15</td><td><a href="https://arxiv.org/abs/2305.18290">Rafailov et al. Direct Preference Optimization</a></td><td>Preference learning objective</td></tr>
-<tr><td>R16</td><td><a href="https://docs.nvidia.com/cuda/cuda-programming-guide/">NVIDIA CUDA programming guide</a></td><td>Thread hierarchy, memory and synchronization</td></tr>
-<tr><td>R17</td><td><a href="https://developer.nvidia.com/blog/easy-introduction-cuda-c-and-c/">NVIDIA CUDA introduction</a></td><td>A minimal CUDA C++ program</td></tr>
-<tr><td>R18</td><td><a href="https://docs.pytorch.org/tutorials/recipes/recipes/amp_recipe.html">PyTorch automatic mixed precision recipe</a></td><td>Autocast and gradient scaling</td></tr>
-<tr><td>R19</td><td><a href="https://docs.pytorch.org/tutorials/recipes/recipes/profiler_recipe.html">PyTorch profiler recipe</a></td><td>CPU/GPU activity, operator timing and memory</td></tr>
-<tr><td>R20</td><td><a href="https://mlflow.org/docs/latest/ml/tracking/">MLflow experiment tracking</a></td><td>Runs, parameters, metrics and artifacts</td></tr>
-<tr><td>R21</td><td><a href="https://arxiv.org/abs/2006.11239">Ho et al. Denoising Diffusion Probabilistic Models</a></td><td>Forward noising and learned denoising</td></tr>
-<tr><td>R22</td><td><a href="https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2">MiniLM L6 model card</a></td><td>Embedding model use and limits</td></tr>
-<tr><td>R23</td><td><a href="https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct">Qwen2.5 0.5B Instruct model card</a></td><td>Small generator setup and chat format</td></tr>
-<tr><td>R24</td><td><a href="https://arxiv.org/abs/1603.09320">Malkov and Yashunin HNSW</a></td><td>Hierarchical approximate nearest-neighbor graph</td></tr>
-<tr><td>R25</td><td><a href="https://doi.org/10.1561/1500000019">Robertson and Zaragoza Probabilistic Relevance Framework</a></td><td>BM25 term saturation and length normalization</td></tr>
-<tr><td>R26</td><td><a href="https://arxiv.org/abs/2205.14135">Dao et al. FlashAttention</a></td><td>Exact attention with reduced memory traffic</td></tr>
-</tbody></table></div>
-<h2 id="readings-by-phase">Readings by phase</h2>
-<p>Weeks 1–5: ordinary-sentence examples and mathematical prerequisites in the notes; external readings are optional. Weeks 6–11: R04 attention and transformer diagrams, and the official Stanford CS224N materials at https://web.stanford.edu/class/cs224n/. Weeks 12–16: R04 training/architecture, R09 instruction/reasoning examples, R10 controlled reasoning studies, R21 generative-model intuition. Weeks 17–21: R06 RAG, R07 embeddings, R08 vector database, R24 ANN, R25 lexical retrieval. Weeks 22–23: R16 CUDA thread hierarchy, R19 profiling, R26 memory-aware attention. Weeks 24–26: R12 LoRA, R13 QLoRA, R14 adapter configuration, R15 preferences. Weeks 27–32: R11 actions/observations, R20 tracking, R18 delivery recipe and the relevant model/runtime documentation. Readings extend the lectures; do not read research papers before the prerequisite example is clear.</p><h2 id="about-this-course">About this course</h2><p>Independent original self-study material. There is no Stanford or NTU affiliation or certificate. The teaching approach combines intuitive explanations, mechanisms, implementation and controlled experiments. Links to the instructors’ public materials are optional references, not copied lecture content.</p><h2>Validation and limits</h2><p>All 32 notebooks and companion scripts were syntax checked. Twenty-seven CPU-capable tutorial paths executed successfully with Python 3.13 and NumPy 2.5.4 where needed. Twenty-three support contract tests passed. Optional actual-model blocks were disabled for those CPU runs. The extraction API smoke test and controller fixtures were executed; these are not LLM inference benchmarks.</p>
-<p>Actual tiny-transformer training (week 12), embedding/Qdrant execution (week 18), CUDA compilation/profiling (week 23), LoRA training (week 26) and actual model planning (week 28) were not executed in this revision environment. Optional model paths in weeks 13, 17 and 20 were not executed. Their code is syntax checked; package/device/model compatibility and model quality require your runtime. No fixture result is presented as a trained-model result. Distributed notebook outputs are empty. Verification runs and checkpoints are excluded.</p></article></div><footer class="footer"><span>Applied AI · An independent self-study course</span><span>32 weeks · 10 hours per week</span><a href="resources.html#about-this-course">About and sources</a></footer></main><dialog aria-labelledby="search-title" class="search-dialog"><div class="dialog-head"><h2 id="search-title">Find a concept</h2><button aria-label="Close search" class="search-close" type="button">Close</button></div><label class="sr-only" for="course-search">Search all lectures and tutorials</label><input autocomplete="off" id="course-search" placeholder="Try attention, fine-tuning, or harness…" type="search"/><p aria-live="polite" class="search-status">Search lecture notes, tutorials, tests and readings.</p><div class="search-results"></div></dialog><div aria-live="polite" class="toast" role="status"></div></body></html>
+<html lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width,initial-scale=1" name="viewport"/>
+  <title>
+   Readings and setup · Applied AI
+  </title>
+  <meta content="Applied generative AI and LLM systems course material" name="description"/>
+  <meta content="#173c36" name="theme-color"/>
+  <link href="assets/favicon.svg" rel="icon" type="image/svg+xml"/>
+  <link href="assets/style.css" rel="stylesheet"/>
+  <link href="assets/slides.css" rel="stylesheet"/>
+  <script>
+   window.COURSE_BASE="";
+  </script>
+  <script defer="" src="assets/site-config.js">
+  </script>
+  <script defer="" src="assets/search-index.js">
+  </script>
+  <script defer="" src="assets/app.js">
+  </script>
+  <script defer="" src="assets/visuals.js">
+  </script>
+  <script defer="" src="assets/slides.js">
+  </script>
+  <script defer="" src="assets/beginner-visuals.js">
+  </script>
+  <link href="zh-HK/resources.html" hreflang="zh-HK" rel="alternate"/>
+  <link href="assets/bilingual.css" rel="stylesheet"/>
+  <link href="assets/reader-v3.css" rel="stylesheet"/>
+  <script defer="True" src="assets/reader-v3.js">
+  </script>
+ </head>
+ <body data-page-kind="resources" data-week="0">
+  <a class="skip-link" href="#main">
+   Skip to content
+  </a>
+  <header class="topbar">
+   <button aria-controls="course-sidebar" aria-expanded="false" class="menu-toggle" type="button">
+    Menu
+   </button>
+   <a class="brand" href="index.html">
+    <span aria-hidden="true" class="brand-mark">
+     a
+     <span>
+      i
+     </span>
+    </span>
+    <span>
+     APPLIED AI
+     <small>
+      Principles into practice
+     </small>
+    </span>
+   </a>
+   <nav aria-label="Main navigation">
+    <a href="index.html">
+     The course
+    </a>
+    <a href="visuals.html">
+     Visual lab
+    </a>
+    <a href="project.html">
+     Project
+    </a>
+    <a class="language-switch" href="zh-HK/resources.html" hreflang="zh-HK" lang="zh-HK">
+     繁體中文
+    </a>
+   </nav>
+   <button class="search-open" type="button">
+    Search the course
+    <span aria-hidden="true">
+     /
+    </span>
+   </button>
+  </header>
+  <aside aria-label="Course chapters" class="sidebar" id="course-sidebar">
+   <a class="side-home" href="index.html">
+    Course overview
+   </a>
+   <details class="semester-nav" open="">
+    <summary>
+     Semester 1
+     <span>
+      Weeks 1–16
+     </span>
+    </summary>
+    <ol start="1">
+     <li>
+      <a href="lectures/01.html">
+       <span class="week-number">
+        01
+       </span>
+       <span>
+        What a language model is trying to learn
+       </span>
+       <span class="week-tick" data-week-tick="1">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="lectures/02.html">
+       <span class="week-number">
+        02
+       </span>
+       <span>
+        From text to tokens and numerical IDs
+       </span>
+       <span class="week-tick" data-week-tick="2">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="lectures/03.html">
+       <span class="week-number">
+        03
+       </span>
+       <span>
+        What word vectors can represent
+       </span>
+       <span class="week-tick" data-week-tick="3">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="lectures/04.html">
+       <span class="week-number">
+        04
+       </span>
+       <span>
+        From scores to probabilities and learning signals
+       </span>
+       <span class="week-tick" data-week-tick="4">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="lectures/05.html">
+       <span class="week-number">
+        05
+       </span>
+       <span>
+        Why language needs context and order
+       </span>
+       <span class="week-tick" data-week-tick="5">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="lectures/06.html">
+       <span class="week-number">
+        06
+       </span>
+       <span>
+        Attention begins as a weighted mixture
+       </span>
+       <span class="week-tick" data-week-tick="6">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="lectures/07.html">
+       <span class="week-number">
+        07
+       </span>
+       <span>
+        Where queries keys and values come from
+       </span>
+       <span class="week-tick" data-week-tick="7">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="lectures/08.html">
+       <span class="week-number">
+        08
+       </span>
+       <span>
+        Scaling and masking attention correctly
+       </span>
+       <span class="week-tick" data-week-tick="8">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="lectures/09.html">
+       <span class="week-number">
+        09
+       </span>
+       <span>
+        Multiple attention heads and position
+       </span>
+       <span class="week-tick" data-week-tick="9">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="lectures/10.html">
+       <span class="week-number">
+        10
+       </span>
+       <span>
+        The transformer block step by step
+       </span>
+       <span class="week-tick" data-week-tick="10">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="lectures/11.html">
+       <span class="week-number">
+        11
+       </span>
+       <span>
+        Encoders decoders and complete model architectures
+       </span>
+       <span class="week-tick" data-week-tick="11">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="lectures/12.html">
+       <span class="week-number">
+        12
+       </span>
+       <span>
+        Training a small transformer
+       </span>
+       <span class="week-tick" data-week-tick="12">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="lectures/13.html">
+       <span class="week-number">
+        13
+       </span>
+       <span>
+        Generation decoding and the KV cache
+       </span>
+       <span class="week-tick" data-week-tick="13">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="lectures/14.html">
+       <span class="week-number">
+        14
+       </span>
+       <span>
+        From pretraining to instruction following and reasoning
+       </span>
+       <span class="week-tick" data-week-tick="14">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="lectures/15.html">
+       <span class="week-number">
+        15
+       </span>
+       <span>
+        Generative AI beyond text
+       </span>
+       <span class="week-tick" data-week-tick="15">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="lectures/16.html">
+       <span class="week-number">
+        16
+       </span>
+       <span>
+        A complete transformer walkthrough and first semester review
+       </span>
+       <span class="week-tick" data-week-tick="16">
+       </span>
+      </a>
+     </li>
+    </ol>
+   </details>
+   <details class="semester-nav">
+    <summary>
+     Semester 2
+     <span>
+      Weeks 17–32
+     </span>
+    </summary>
+    <ol start="17">
+     <li>
+      <a href="lectures/17.html">
+       <span class="week-number">
+        17
+       </span>
+       <span>
+        From word vectors to semantic search
+       </span>
+       <span class="week-tick" data-week-tick="17">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="lectures/18.html">
+       <span class="week-number">
+        18
+       </span>
+       <span>
+        A vector database from a list of vectors
+       </span>
+       <span class="week-tick" data-week-tick="18">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="lectures/19.html">
+       <span class="week-number">
+        19
+       </span>
+       <span>
+        RAG as an open book question
+       </span>
+       <span class="week-tick" data-week-tick="19">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="lectures/20.html">
+       <span class="week-number">
+        20
+       </span>
+       <span>
+        Improving RAG without losing the basic task
+       </span>
+       <span class="week-tick" data-week-tick="20">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="lectures/21.html">
+       <span class="week-number">
+        21
+       </span>
+       <span>
+        Evaluating retrieval answers and uncertainty
+       </span>
+       <span class="week-tick" data-week-tick="21">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="lectures/22.html">
+       <span class="week-number">
+        22
+       </span>
+       <span>
+        CPU GPU memory and model resource accounting
+       </span>
+       <span class="week-tick" data-week-tick="22">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="lectures/23.html">
+       <span class="week-number">
+        23
+       </span>
+       <span>
+        CUDA kernels and profiling
+       </span>
+       <span class="week-tick" data-week-tick="23">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="lectures/24.html">
+       <span class="week-number">
+        24
+       </span>
+       <span>
+        Fine tuning starts with a teaching dataset
+       </span>
+       <span class="week-tick" data-week-tick="24">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="lectures/25.html">
+       <span class="week-number">
+        25
+       </span>
+       <span>
+        LoRA and QLoRA from a small matrix
+       </span>
+       <span class="week-tick" data-week-tick="25">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="lectures/26.html">
+       <span class="week-number">
+        26
+       </span>
+       <span>
+        Fine tuning experiments preferences and distillation
+       </span>
+       <span class="week-tick" data-week-tick="26">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="lectures/27.html">
+       <span class="week-number">
+        27
+       </span>
+       <span>
+        Tools functions workflows and agents
+       </span>
+       <span class="week-tick" data-week-tick="27">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="lectures/28.html">
+       <span class="week-number">
+        28
+       </span>
+       <span>
+        Harnesses planning memory and bounded execution
+       </span>
+       <span class="week-tick" data-week-tick="28">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="lectures/29.html">
+       <span class="week-number">
+        29
+       </span>
+       <span>
+        From a notebook to MLOps and inference serving
+       </span>
+       <span class="week-tick" data-week-tick="29">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="lectures/30.html">
+       <span class="week-number">
+        30
+       </span>
+       <span>
+        Monitoring security regression tests and rollback
+       </span>
+       <span class="week-tick" data-week-tick="30">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="lectures/31.html">
+       <span class="week-number">
+        31
+       </span>
+       <span>
+        Integrating the documentation assistant and advanced extensions
+       </span>
+       <span class="week-tick" data-week-tick="31">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="lectures/32.html">
+       <span class="week-number">
+        32
+       </span>
+       <span>
+        Review defense and a continuing learning plan
+       </span>
+       <span class="week-tick" data-week-tick="32">
+       </span>
+      </a>
+     </li>
+    </ol>
+   </details>
+   <div class="side-links">
+    <a href="visuals.html">
+     Visual laboratory
+     <span>
+      14 interactive lessons
+     </span>
+    </a>
+    <a href="project.html">
+     Documentation assistant
+     <span>
+      Your capstone project
+     </span>
+    </a>
+    <a href="resources.html">
+     Readings and setup
+    </a>
+   </div>
+   <div class="side-progress">
+    <div>
+     <span>
+      Your progress
+     </span>
+     <strong data-progress-count="">
+      0 / 32
+     </strong>
+    </div>
+    <progress aria-label="Completed lectures" max="32" value="0">
+    </progress>
+    <small>
+     Saved in this browser
+    </small>
+   </div>
+  </aside>
+  <main class="main" id="main">
+   <div class="content">
+    <div class="chapter-header">
+     <div class="eyebrow">
+      Keep the sources close
+     </div>
+     <h1>
+      Readings, setup and course information
+     </h1>
+    </div>
+    <div class="lesson-links">
+     <a download="" href="downloads/Applied_Generative_AI_Course.zip">
+      Download the full course pack
+     </a>
+     <a href="supplement.html">
+      Worked supplement
+     </a>
+     <a href="schedule.html">
+      Full syllabus
+     </a>
+     <a href="tests/checkpoints.html">
+      Checkpoint quizzes
+     </a>
+     <a href="implementation.html">
+      Reference code
+     </a>
+     <a class="source-download" href="downloads/Course_Website_Source.zip">
+      Download editable website source and rebuild instructions
+     </a>
+    </div>
+    <article class="prose">
+     <h2>
+      Setup and compute plan
+     </h2>
+     <h2 id="read-first">
+      Read first
+     </h2>
+     <p>
+      The website uses static HTML, CSS and JavaScript. Reading, slides, search, worked solutions, diagrams and progress tracking require no Python installation or paid service. Code runs separately on your computer or Colab.
+     </p>
+     <h2 id="choose-a-supported-python-environment">
+      Choose a supported Python environment
+     </h2>
+     <p>
+      For a new course environment, start with Python 3.12 or 3.13 in a virtual environment. Python 3.11 remains a supported fallback for a dependency that needs it. Python 3.10 reached end of life on 1 October 2026, so it is no longer the recommendation for a new installation [
+      <a class="inline-reading" href="resources.html#reference-r31">
+       Python version status (R31)
+      </a>
+      ].
+     </p>
+     <p>
+      Python 3.14 is supported by the current PyTorch installation documentation. Check that NumPy, Transformers, Sentence Transformers, PEFT, Qdrant and any accelerator package used by the selected lab all provide compatible versions before choosing it. Python 3.15 is a newer Python release, but a language release does not itself establish compatibility with a machine-learning environment [
+      <a class="inline-reading" href="resources.html#reference-r31">
+       Python version status (R31)
+      </a>
+      ,
+      <a class="inline-reading" href="resources.html#reference-r32">
+       PyTorch installation selector (R32)
+      </a>
+      ].
+     </p>
+     <p>
+      Install NumPy for numerical lessons. Use the PyTorch installation selector for your operating system and CPU or CUDA runtime, then run a small tensor operation and check torch.cuda.is_available() when using a GPU. A successful import is the first environment check; the lab result is a separate check. Colab normally includes NumPy and PyTorch, but record the versions in the assigned session [
+      <a class="inline-reading" href="resources.html#reference-r32">
+       PyTorch installation selector (R32)
+      </a>
+      ].
+     </p>
+     <p>
+      Extract the full course ZIP. Its root contains coursekit, data, notebooks and tests. From that root run python -m unittest discover -s tests -v. In Colab, upload the ZIP, unzip it into /content/llm_course, and run the bootstrap cell. The cell also searches for an extracted llm_course_v2 folder. A lone notebook still needs its support files.
+     </p>
+     <h2 id="models-for-english-and-hong-kong-chinese-examples">
+      Models for English and Hong Kong Chinese examples
+     </h2>
+     <p>
+      The default bilingual retrieval route uses intfloat/multilingual-e5-small: 384-dimensional vectors and an input limit of 512 tokens. Prefix retrieval questions with “query: ” and passages with “passage: ”, including Chinese text, then normalize embeddings for cosine or equivalent dot-product ranking. These prefixes belong to this model, not to every embedding model. Include English, Traditional Chinese and cross-language question-passage pairs in your own evaluation [
+      <a class="inline-reading" href="resources.html#reference-r33">
+       Multilingual E5 small model card (R33)
+      </a>
+      ].
+     </p>
+     <p>
+      The newer small generator route uses Qwen/Qwen3-0.6B. It requires Transformers 4.51.0 or later. For the ordinary answer and JSON-tool exercises, pass enable_thinking=False to apply_chat_template, because this model otherwise enables thinking by default. Keep the model ID, model revision and chat-template settings together in the run record [
+      <a class="inline-reading" href="resources.html#reference-r34">
+       Qwen3 0.6B model card (R34)
+      </a>
+      ].
+     </p>
+     <div class="table-wrap">
+      <table>
+       <thead>
+        <tr>
+         <th>
+          Model route
+         </th>
+         <th>
+          Role and limit
+         </th>
+        </tr>
+       </thead>
+       <tbody>
+        <tr>
+         <td>
+          intfloat/multilingual-e5-small
+         </td>
+         <td>
+          Bilingual retrieval default; 384 dimensions; at most 512 input tokens; model-specific query and passage prefixes.
+         </td>
+        </tr>
+        <tr>
+         <td>
+          Qwen/Qwen3-0.6B
+         </td>
+         <td>
+          Small generator; explicit non-thinking mode for the ordinary tool and answer route.
+         </td>
+        </tr>
+        <tr>
+         <td>
+          sentence-transformers/all-MiniLM-L6-v2
+         </td>
+         <td>
+          Legacy English baseline; 384 dimensions; default truncation beyond 256 word pieces.
+         </td>
+        </tr>
+        <tr>
+         <td>
+          Qwen/Qwen2.5-0.5B-Instruct
+         </td>
+         <td>
+          Legacy small-generator baseline retained for reproducing earlier course runs.
+         </td>
+        </tr>
+       </tbody>
+      </table>
+     </div>
+     <p>
+      The legacy models remain useful controls: age alone does not invalidate a baseline. They are labeled explicitly so a bilingual experiment is not accidentally judged only with an English embedding model. A model change normally requires new embeddings, a compatible index and a fresh evaluation; it is not a filename substitution [
+      <a class="inline-reading" href="resources.html#reference-r22">
+       MiniLM L6 legacy English model card (R22)
+      </a>
+      ,
+      <a class="inline-reading" href="resources.html#reference-r23">
+       Qwen2.5 0.5B Instruct legacy model card (R23)
+      </a>
+      ,
+      <a class="inline-reading" href="resources.html#reference-r33">
+       Multilingual E5 small model card (R33)
+      </a>
+      ,
+      <a class="inline-reading" href="resources.html#reference-r34">
+       Qwen3 0.6B model card (R34)
+      </a>
+      ].
+     </p>
+     <h2 id="match-the-lab-to-available-hardware">
+      Match the lab to available hardware
+     </h2>
+     <p>
+      Use CPU for hand-calculation checks, metric arithmetic, small vector searches and controller tests. For model inference, start with a short input, a small output limit and one request. An entry-level GPU with about 4 GiB of VRAM may support short small-model inference; free cloud GPUs with more VRAM can support larger experiments. These are planning routes, not memory guarantees: measure the model, cache, activations and temporary allocations used by your actual configuration.
+     </p>
+     <p>
+      Free Colab GPU availability varies. Inspect the assigned device and free VRAM with nvidia-smi, and save checkpoints and reports outside the temporary runtime. Select a supported dtype: float32 is a useful CPU correctness starting point; float16, bfloat16 and quantized kernels depend on the hardware and software. Week 23 CUDA compilation needs nvcc. If it is absent, complete the numerical and code-reading parts and record that runtime limitation.
+     </p>
+     <h2 id="flashattention-versions-and-generative-model-references">
+      FlashAttention versions and generative-model references
+     </h2>
+     <p>
+      The original FlashAttention paper explains IO-aware exact attention. FlashAttention-2 improves work partitioning and parallelism; FlashAttention-3 targets Hopper execution, including asynchronous scheduling and low-precision paths. They are related implementation generations, not different probability definitions. Read the algorithm pictures in weeks 22–23 before considering an installation [
+      <a class="inline-reading" href="resources.html#reference-r26">
+       Dao et al. FlashAttention (R26)
+      </a>
+      ,
+      <a class="inline-reading" href="resources.html#reference-r35">
+       Dao FlashAttention-2 (R35)
+      </a>
+      ,
+      <a class="inline-reading" href="resources.html#reference-r36">
+       Shah et al. FlashAttention-3 (R36)
+      </a>
+      ].
+     </p>
+     <p>
+      Kernel support is hardware-specific. The standard CUDA FlashAttention-2 path targets Ampere, Ada and Hopper GPUs; FlashAttention-3 targets Hopper GPUs such as H100/H800. The official implementation lists current requirements and newer kernels. The course does not require a FlashAttention package to learn or test ordinary attention; use the supported backend available in your environment [
+      <a class="inline-reading" href="resources.html#reference-r37">
+       Official FlashAttention implementation (R37)
+      </a>
+      ].
+     </p>
+     <p>
+      DDPM remains a foundational description of diffusion rather than a current model recommendation. Week 15 connects it to learned reverse denoising, latent diffusion and flow matching, so the forward-noising formula is not presented as the whole generation process [
+      <a class="inline-reading" href="resources.html#reference-r21">
+       Ho et al. Denoising Diffusion Probabilistic Models (R21)
+      </a>
+      ,
+      <a class="inline-reading" href="resources.html#reference-r38">
+       Rombach et al. Latent Diffusion Models (R38)
+      </a>
+      ,
+      <a class="inline-reading" href="resources.html#reference-r39">
+       Lipman et al. Flow Matching (R39)
+      </a>
+      ].
+     </p>
+     <h2 id="reproduce-the-environment-you-actually-ran">
+      Reproduce the environment you actually ran
+     </h2>
+     <p>
+      Package ranges in notebooks are starting constraints, not lockfiles. In particular, the Qwen3 route needs the newer Transformers lower bound; an older saved environment may still be needed to reproduce a legacy run. Record resolved Python, torch, transformers, sentence-transformers, PEFT and accelerator versions, model/tokenizer commits, data hashes, seeds and configuration. Save a lockfile after the selected lab works.
+     </p>
+     <p>
+      The source and numerical checks reported with the course are separate from model-download, GPU-training and kernel checks. A model card or successful syntax check is not evidence that the complete workload ran on your device. Keep the execution status with every report.
+     </p>
+     <h2 id="outputs">
+      Outputs
+     </h2>
+     <p>
+      The bootstrap creates a runs directory. Use run IDs and keep actual outputs. The fictional teaching fixtures are deliberately small, so report them as teaching examples rather than production benchmarks.
+     </p>
+     <h2>
+      Primary references
+     </h2>
+     <p>
+      Links checked on 20 October 2026. Course pages are references for teaching structure and optional study; the written chapters and exercises are original. Software documentation changes: save the versions you actually run. Read the named section, not the whole source, unless marked optional.
+     </p>
+     <div class="table-wrap">
+      <table>
+       <thead>
+        <tr>
+         <th>
+          ID
+         </th>
+         <th>
+          Primary source
+         </th>
+         <th>
+          Use
+         </th>
+        </tr>
+       </thead>
+       <tbody>
+        <tr id="reference-r01">
+         <td>
+          R01
+         </td>
+         <td>
+          <a href="https://cs336.stanford.edu/">
+           Stanford CS336 Language Modeling from Scratch
+          </a>
+         </td>
+         <td>
+          Architecture, resource accounting, data, alignment; optional deeper assignments
+         </td>
+        </tr>
+        <tr id="reference-r02">
+         <td>
+          R02
+         </td>
+         <td>
+          <a href="https://stanford-cs329s.github.io/">
+           Stanford CS329S Machine Learning Systems Design
+          </a>
+         </td>
+         <td>
+          Lifecycle, stakeholder requirements, deployment and monitoring
+         </td>
+        </tr>
+        <tr id="reference-r03">
+         <td>
+          R03
+         </td>
+         <td>
+          <a href="https://speech.ee.ntu.edu.tw/~hylee/GenAI-ML/2025-fall.php">
+           Hung-yi Lee Introduction to GenAI and ML 2025
+          </a>
+         </td>
+         <td>
+          Optional intuition-first videos: context engineering, model internals, evaluation, post-training
+         </td>
+        </tr>
+        <tr id="reference-r04">
+         <td>
+          R04
+         </td>
+         <td>
+          <a href="https://arxiv.org/abs/1706.03762">
+           Vaswani et al. Attention Is All You Need
+          </a>
+         </td>
+         <td>
+          Scaled dot-product attention and multi-head architecture
+         </td>
+        </tr>
+        <tr id="reference-r05">
+         <td>
+          R05
+         </td>
+         <td>
+          <a href="https://research.google.com/colaboratory/faq.html">
+           Google Colab FAQ
+          </a>
+         </td>
+         <td>
+          Resource availability, session limits and persistence
+         </td>
+        </tr>
+        <tr id="reference-r06">
+         <td>
+          R06
+         </td>
+         <td>
+          <a href="https://arxiv.org/abs/2005.11401">
+           Lewis et al. Retrieval Augmented Generation
+          </a>
+         </td>
+         <td>
+          Parametric and retrieved information; historical RAG formulation
+         </td>
+        </tr>
+        <tr id="reference-r07">
+         <td>
+          R07
+         </td>
+         <td>
+          <a href="https://www.sbert.net/docs/sentence_transformer/usage/semantic_textual_similarity.html">
+           Sentence Transformers semantic similarity
+          </a>
+         </td>
+         <td>
+          Embedding encoding and similarity
+         </td>
+        </tr>
+        <tr id="reference-r08">
+         <td>
+          R08
+         </td>
+         <td>
+          <a href="https://qdrant.tech/documentation/quickstart/">
+           Qdrant local quickstart
+          </a>
+         </td>
+         <td>
+          Collections, points and payloads
+         </td>
+        </tr>
+        <tr id="reference-r09">
+         <td>
+          R09
+         </td>
+         <td>
+          <a href="https://huggingface.co/docs/transformers/chat_templating">
+           Hugging Face Transformers chat templates
+          </a>
+         </td>
+         <td>
+          Message serialization and generation prompts
+         </td>
+        </tr>
+        <tr id="reference-r10">
+         <td>
+          R10
+         </td>
+         <td>
+          <a href="https://arxiv.org/abs/2201.11903">
+           Wei et al. Chain of Thought Prompting
+          </a>
+         </td>
+         <td>
+          Intermediate-step prompting and task-dependent evaluation
+         </td>
+        </tr>
+        <tr id="reference-r11">
+         <td>
+          R11
+         </td>
+         <td>
+          <a href="https://arxiv.org/abs/2210.03629">
+           Yao et al. ReAct
+          </a>
+         </td>
+         <td>
+          Interleaving observations and actions
+         </td>
+        </tr>
+        <tr id="reference-r12">
+         <td>
+          R12
+         </td>
+         <td>
+          <a href="https://arxiv.org/abs/2106.09685">
+           Hu et al. LoRA
+          </a>
+         </td>
+         <td>
+          Low-rank trainable updates
+         </td>
+        </tr>
+        <tr id="reference-r13">
+         <td>
+          R13
+         </td>
+         <td>
+          <a href="https://arxiv.org/abs/2305.14314">
+           Dettmers et al. QLoRA
+          </a>
+         </td>
+         <td>
+          Quantized frozen base plus adapters
+         </td>
+        </tr>
+        <tr id="reference-r14">
+         <td>
+          R14
+         </td>
+         <td>
+          <a href="https://huggingface.co/docs/peft/main/en/conceptual_guides/lora">
+           Hugging Face PEFT LoRA guide
+          </a>
+         </td>
+         <td>
+          Configurations and adapter operations; select installed version in docs
+         </td>
+        </tr>
+        <tr id="reference-r15">
+         <td>
+          R15
+         </td>
+         <td>
+          <a href="https://arxiv.org/abs/2305.18290">
+           Rafailov et al. Direct Preference Optimization
+          </a>
+         </td>
+         <td>
+          Preference learning objective
+         </td>
+        </tr>
+        <tr id="reference-r16">
+         <td>
+          R16
+         </td>
+         <td>
+          <a href="https://docs.nvidia.com/cuda/cuda-programming-guide/">
+           NVIDIA CUDA programming guide
+          </a>
+         </td>
+         <td>
+          Thread hierarchy, memory and synchronization
+         </td>
+        </tr>
+        <tr id="reference-r17">
+         <td>
+          R17
+         </td>
+         <td>
+          <a href="https://developer.nvidia.com/blog/easy-introduction-cuda-c-and-c/">
+           NVIDIA CUDA introduction
+          </a>
+         </td>
+         <td>
+          A minimal CUDA C++ program
+         </td>
+        </tr>
+        <tr id="reference-r18">
+         <td>
+          R18
+         </td>
+         <td>
+          <a href="https://docs.pytorch.org/tutorials/recipes/recipes/amp_recipe.html">
+           PyTorch automatic mixed precision recipe
+          </a>
+         </td>
+         <td>
+          Autocast and gradient scaling
+         </td>
+        </tr>
+        <tr id="reference-r19">
+         <td>
+          R19
+         </td>
+         <td>
+          <a href="https://docs.pytorch.org/tutorials/recipes/recipes/profiler_recipe.html">
+           PyTorch profiler recipe
+          </a>
+         </td>
+         <td>
+          CPU/GPU activity, operator timing and memory
+         </td>
+        </tr>
+        <tr id="reference-r20">
+         <td>
+          R20
+         </td>
+         <td>
+          <a href="https://mlflow.org/docs/latest/ml/tracking/">
+           MLflow experiment tracking
+          </a>
+         </td>
+         <td>
+          Runs, parameters, metrics and artifacts
+         </td>
+        </tr>
+        <tr id="reference-r21">
+         <td>
+          R21
+         </td>
+         <td>
+          <a href="https://arxiv.org/abs/2006.11239">
+           Ho et al. Denoising Diffusion Probabilistic Models
+          </a>
+         </td>
+         <td>
+          Foundational forward and learned reverse diffusion; connect with latent diffusion and flow matching
+         </td>
+        </tr>
+        <tr id="reference-r22">
+         <td>
+          R22
+         </td>
+         <td>
+          <a href="https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2">
+           MiniLM L6 legacy English model card
+          </a>
+         </td>
+         <td>
+          Historical English baseline; default 256-word-piece truncation
+         </td>
+        </tr>
+        <tr id="reference-r23">
+         <td>
+          R23
+         </td>
+         <td>
+          <a href="https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct">
+           Qwen2.5 0.5B Instruct legacy model card
+          </a>
+         </td>
+         <td>
+          Historical generator baseline for reproducible comparisons
+         </td>
+        </tr>
+        <tr id="reference-r24">
+         <td>
+          R24
+         </td>
+         <td>
+          <a href="https://arxiv.org/abs/1603.09320">
+           Malkov and Yashunin HNSW
+          </a>
+         </td>
+         <td>
+          Hierarchical approximate nearest-neighbor graph
+         </td>
+        </tr>
+        <tr id="reference-r25">
+         <td>
+          R25
+         </td>
+         <td>
+          <a href="https://doi.org/10.1561/1500000019">
+           Robertson and Zaragoza Probabilistic Relevance Framework
+          </a>
+         </td>
+         <td>
+          BM25 term saturation and length normalization
+         </td>
+        </tr>
+        <tr id="reference-r26">
+         <td>
+          R26
+         </td>
+         <td>
+          <a href="https://arxiv.org/abs/2205.14135">
+           Dao et al. FlashAttention
+          </a>
+         </td>
+         <td>
+          Foundational IO-aware exact attention; compare later implementation generations
+         </td>
+        </tr>
+        <tr id="reference-r27">
+         <td>
+          R27
+         </td>
+         <td>
+          <a href="https://sbert.net/docs/package_reference/sentence_transformer/losses.html">
+           Sentence Transformers contrastive losses
+          </a>
+         </td>
+         <td>
+          Contrastive training and assumptions about negative pairs
+         </td>
+        </tr>
+        <tr id="reference-r28">
+         <td>
+          R28
+         </td>
+         <td>
+          <a href="https://sbert.net/examples/sentence_transformer/applications/retrieve_rerank/README.html">
+           Sentence Transformers retrieve and rerank
+          </a>
+         </td>
+         <td>
+          Bi-encoder and cross-encoder roles
+         </td>
+        </tr>
+        <tr id="reference-r29">
+         <td>
+          R29
+         </td>
+         <td>
+          <a href="https://modelcontextprotocol.io/docs/learn/architecture">
+           Model Context Protocol architecture
+          </a>
+         </td>
+         <td>
+          Host, client, server, tools, resources and prompts
+         </td>
+        </tr>
+        <tr id="reference-r30">
+         <td>
+          R30
+         </td>
+         <td>
+          <a href="https://modelcontextprotocol.io/specification/2026-07-28/server/tools">
+           Model Context Protocol tools
+          </a>
+         </td>
+         <td>
+          Tool discovery and tool calls; conceptual reference
+         </td>
+        </tr>
+        <tr id="reference-r31">
+         <td>
+          R31
+         </td>
+         <td>
+          <a href="https://devguide.python.org/versions/">
+           Python version status
+          </a>
+         </td>
+         <td>
+          Supported releases and Python 3.10 end of life
+         </td>
+        </tr>
+        <tr id="reference-r32">
+         <td>
+          R32
+         </td>
+         <td>
+          <a href="https://pytorch.org/get-started/locally/">
+           PyTorch installation selector
+          </a>
+         </td>
+         <td>
+          Match Python, operating system and accelerator installation
+         </td>
+        </tr>
+        <tr id="reference-r33">
+         <td>
+          R33
+         </td>
+         <td>
+          <a href="https://huggingface.co/intfloat/multilingual-e5-small">
+           Multilingual E5 small model card
+          </a>
+         </td>
+         <td>
+          Bilingual retrieval route; 384 dimensions, 512 tokens and query/passage prefixes
+         </td>
+        </tr>
+        <tr id="reference-r34">
+         <td>
+          R34
+         </td>
+         <td>
+          <a href="https://huggingface.co/Qwen/Qwen3-0.6B">
+           Qwen3 0.6B model card
+          </a>
+         </td>
+         <td>
+          Newer small generator; Transformers requirement and thinking-mode control
+         </td>
+        </tr>
+        <tr id="reference-r35">
+         <td>
+          R35
+         </td>
+         <td>
+          <a href="https://arxiv.org/abs/2307.08691">
+           Dao FlashAttention-2
+          </a>
+         </td>
+         <td>
+          Work partitioning and parallelism
+         </td>
+        </tr>
+        <tr id="reference-r36">
+         <td>
+          R36
+         </td>
+         <td>
+          <a href="https://arxiv.org/abs/2407.08608">
+           Shah et al. FlashAttention-3
+          </a>
+         </td>
+         <td>
+          Hopper-oriented asynchronous and low-precision execution
+         </td>
+        </tr>
+        <tr id="reference-r37">
+         <td>
+          R37
+         </td>
+         <td>
+          <a href="https://github.com/Dao-AILab/flash-attention">
+           Official FlashAttention implementation
+          </a>
+         </td>
+         <td>
+          Current kernel and hardware support
+         </td>
+        </tr>
+        <tr id="reference-r38">
+         <td>
+          R38
+         </td>
+         <td>
+          <a href="https://arxiv.org/abs/2112.10752">
+           Rombach et al. Latent Diffusion Models
+          </a>
+         </td>
+         <td>
+          Generation in an autoencoder latent space
+         </td>
+        </tr>
+        <tr id="reference-r39">
+         <td>
+          R39
+         </td>
+         <td>
+          <a href="https://arxiv.org/abs/2210.02747">
+           Lipman et al. Flow Matching
+          </a>
+         </td>
+         <td>
+          Learning a vector field for generative modeling
+         </td>
+        </tr>
+        <tr id="reference-r40">
+         <td>
+          R40
+         </td>
+         <td>
+          <a href="https://huggingface.co/docs/peft/package_reference/lora">
+           PEFT LoRA documentation
+          </a>
+         </td>
+         <td>
+          A random/B zero initialization and runtime configuration
+         </td>
+        </tr>
+        <tr id="reference-r41">
+         <td>
+          R41
+         </td>
+         <td>
+          <a href="https://arxiv.org/abs/2402.09353">
+           DoRA: Weight-Decomposed Low-Rank Adaptation
+          </a>
+         </td>
+         <td>
+          Magnitude and direction parameterization
+         </td>
+        </tr>
+        <tr id="reference-r42">
+         <td>
+          R42
+         </td>
+         <td>
+          <a href="https://arxiv.org/abs/2312.03732">
+           A Rank Stabilization Scaling Factor for Fine-Tuning with LoRA
+          </a>
+         </td>
+         <td>
+          alpha/sqrt(r) scaling
+         </td>
+        </tr>
+        <tr id="reference-r43">
+         <td>
+          R43
+         </td>
+         <td>
+          <a href="https://huggingface.co/docs/trl/dpo_trainer">
+           TRL DPO Trainer
+          </a>
+         </td>
+         <td>
+          beta default 0.1 and configuration-specific choice
+         </td>
+        </tr>
+        <tr id="reference-r44">
+         <td>
+          R44
+         </td>
+         <td>
+          <a href="https://huggingface.co/docs/transformers/chat_extras">
+           Hugging Face Transformers tool use
+          </a>
+         </td>
+         <td>
+          Model/template-dependent native tool calling
+         </td>
+        </tr>
+        <tr id="reference-r45">
+         <td>
+          R45
+         </td>
+         <td>
+          <a href="https://www.swebench.com/">
+           SWE-bench official benchmark
+          </a>
+         </td>
+         <td>
+          Issue, patch, environment and test-based task success
+         </td>
+        </tr>
+        <tr id="reference-r46">
+         <td>
+          R46
+         </td>
+         <td>
+          <a href="https://docs.vllm.ai/en/stable/getting_started/quickstart/">
+           vLLM quickstart
+          </a>
+         </td>
+         <td>
+          Local serving command and supported installation
+         </td>
+        </tr>
+        <tr id="reference-r47">
+         <td>
+          R47
+         </td>
+         <td>
+          <a href="https://github.com/ggml-org/llama.cpp/blob/master/tools/server/README.md">
+           llama.cpp server
+          </a>
+         </td>
+         <td>
+          GGUF serving command shape
+         </td>
+        </tr>
+        <tr id="reference-r48">
+         <td>
+          R48
+         </td>
+         <td>
+          <a href="https://arxiv.org/abs/2309.06180">
+           PagedAttention
+          </a>
+         </td>
+         <td>
+          Logical KV blocks and physical allocation
+         </td>
+        </tr>
+        <tr id="reference-r49">
+         <td>
+          R49
+         </td>
+         <td>
+          <a href="https://genai.owasp.org/llm-top-10/">
+           OWASP 2025 LLM Top 10
+          </a>
+         </td>
+         <td>
+          Current risk categories mapped to course controls
+         </td>
+        </tr>
+        <tr id="reference-r50">
+         <td>
+          R50
+         </td>
+         <td>
+          <a href="https://www.pcpd.org.hk/english/data_privacy_law/6_data_protection_principles/principles.html">
+           PCPD Six Data Protection Principles
+          </a>
+         </td>
+         <td>
+          Hong Kong PDPO basic design questions
+         </td>
+        </tr>
+        <tr id="reference-r51">
+         <td>
+          R51
+         </td>
+         <td>
+          <a href="https://www.pcpd.org.hk/english/resources_centre/publications/files/ai_protection_framework.pdf">
+           PCPD AI Model Personal Data Protection Framework
+          </a>
+         </td>
+         <td>
+          AI governance, data protection and applicability review
+         </td>
+        </tr>
+        <tr id="reference-r52">
+         <td>
+          R52
+         </td>
+         <td>
+          <a href="https://www.ipd.gov.hk/en/copyright/index.html">
+           Hong Kong Intellectual Property Department copyright
+          </a>
+         </td>
+         <td>
+          Copyright applicability and rights checks
+         </td>
+        </tr>
+        <tr id="reference-r53">
+         <td>
+          R53
+         </td>
+         <td>
+          <a href="https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai">
+           European Commission AI Act
+          </a>
+         </td>
+         <td>
+          Roles, risk-based regulation and phased obligations
+         </td>
+        </tr>
+        <tr id="reference-r54">
+         <td>
+          R54
+         </td>
+         <td>
+          <a href="https://huggingface.co/learn/llm-course/en/chapter6/5">
+           Hugging Face BPE tokenization
+          </a>
+         </td>
+         <td>
+          BPE frequency counting, byte alphabet and saved merge order
+         </td>
+        </tr>
+        <tr id="reference-r55">
+         <td>
+          R55
+         </td>
+         <td>
+          <a href="https://huggingface.co/learn/llm-course/en/chapter6/6">
+           Hugging Face WordPiece tokenization
+          </a>
+         </td>
+         <td>
+          WordPiece distinction
+         </td>
+        </tr>
+        <tr id="reference-r56">
+         <td>
+          R56
+         </td>
+         <td>
+          <a href="https://huggingface.co/learn/llm-course/en/chapter6/7">
+           Hugging Face Unigram tokenization
+          </a>
+         </td>
+         <td>
+          Unigram vocabulary and probabilistic segmentation
+         </td>
+        </tr>
+        <tr id="reference-r57">
+         <td>
+          R57
+         </td>
+         <td>
+          <a href="https://arxiv.org/abs/1808.06226">
+           SentencePiece
+          </a>
+         </td>
+         <td>
+          Tokenizer toolkit, raw text and BPE/Unigram distinction
+         </td>
+        </tr>
+        <tr id="reference-r58">
+         <td>
+          R58
+         </td>
+         <td>
+          <a href="https://arxiv.org/abs/1909.00512">
+           How Contextual are Contextualized Word Representations?
+          </a>
+         </td>
+         <td>
+          Contextual geometry and anisotropy
+         </td>
+        </tr>
+        <tr id="reference-r59">
+         <td>
+          R59
+         </td>
+         <td>
+          <a href="https://docs.pytorch.org/docs/2.14/generated/torch.nn.functional.log_softmax.html">
+           PyTorch log_softmax
+          </a>
+         </td>
+         <td>
+          Stable log probability computation
+         </td>
+        </tr>
+        <tr id="reference-r60">
+         <td>
+          R60
+         </td>
+         <td>
+          <a href="https://docs.pytorch.org/docs/2.14/generated/torch.nn.CrossEntropyLoss.html">
+           PyTorch CrossEntropyLoss
+          </a>
+         </td>
+         <td>
+          Raw logits, class labels and log_softmax equivalence
+         </td>
+        </tr>
+        <tr id="reference-r61">
+         <td>
+          R61
+         </td>
+         <td>
+          <a href="https://huggingface.co/docs/transformers/perplexity">
+           Perplexity of fixed-length models
+          </a>
+         </td>
+         <td>
+          Exponentiated mean negative log likelihood and tokenizer dependence
+         </td>
+        </tr>
+        <tr id="reference-r62">
+         <td>
+          R62
+         </td>
+         <td>
+          <a href="https://arxiv.org/abs/2104.09864">
+           RoFormer
+          </a>
+         </td>
+         <td>
+          Position-dependent rotations and relative offsets
+         </td>
+        </tr>
+        <tr id="reference-r63">
+         <td>
+          R63
+         </td>
+         <td>
+          <a href="https://arxiv.org/abs/2203.16634">
+           NoPE causal language models
+          </a>
+         </td>
+         <td>
+          Qualify explicit-position necessity
+         </td>
+        </tr>
+        <tr id="reference-r64">
+         <td>
+          R64
+         </td>
+         <td>
+          <a href="https://arxiv.org/abs/2305.13245">
+           GQA
+          </a>
+         </td>
+         <td>
+          Shared key/value heads
+         </td>
+        </tr>
+        <tr id="reference-r65">
+         <td>
+          R65
+         </td>
+         <td>
+          <a href="https://arxiv.org/abs/2002.05202">
+           GLU variants
+          </a>
+         </td>
+         <td>
+          Three-matrix SwiGLU count
+         </td>
+        </tr>
+        <tr id="reference-r66">
+         <td>
+          R66
+         </td>
+         <td>
+          <a href="https://arxiv.org/abs/2405.04434">
+           DeepSeek-V2
+          </a>
+         </td>
+         <td>
+          MLA and MoE
+         </td>
+        </tr>
+        <tr id="reference-r67">
+         <td>
+          R67
+         </td>
+         <td>
+          <a href="https://arxiv.org/abs/2312.00752">
+           Mamba
+          </a>
+         </td>
+         <td>
+          Selective state-space model
+         </td>
+        </tr>
+        <tr id="reference-r68">
+         <td>
+          R68
+         </td>
+         <td>
+          <a href="https://arxiv.org/abs/2203.15556">
+           Compute-optimal language models
+          </a>
+         </td>
+         <td>
+          Scaling laws
+         </td>
+        </tr>
+        <tr id="reference-r69">
+         <td>
+          R69
+         </td>
+         <td>
+          <a href="https://docs.pytorch.org/docs/stable/generated/torch.optim.AdamW.html">
+           AdamW
+          </a>
+         </td>
+         <td>
+          Decoupled weight decay
+         </td>
+        </tr>
+        <tr id="reference-r70">
+         <td>
+          R70
+         </td>
+         <td>
+          <a href="https://huggingface.co/docs/transformers/main_classes/text_generation">
+           Transformers generation parameters
+          </a>
+         </td>
+         <td>
+          Min-p and repetition penalties
+         </td>
+        </tr>
+        <tr id="reference-r71">
+         <td>
+          R71
+         </td>
+         <td>
+          <a href="https://arxiv.org/abs/2302.01318">
+           Speculative sampling
+          </a>
+         </td>
+         <td>
+          Distribution-preserving verification
+         </td>
+        </tr>
+        <tr id="reference-r72">
+         <td>
+          R72
+         </td>
+         <td>
+          <a href="https://arxiv.org/abs/1707.06347">
+           PPO
+          </a>
+         </td>
+         <td>
+          Policy update clipping
+         </td>
+        </tr>
+        <tr id="reference-r73">
+         <td>
+          R73
+         </td>
+         <td>
+          <a href="https://arxiv.org/abs/2402.03300">
+           DeepSeekMath
+          </a>
+         </td>
+         <td>
+          GRPO
+         </td>
+        </tr>
+        <tr id="reference-r74">
+         <td>
+          R74
+         </td>
+         <td>
+          <a href="https://arxiv.org/abs/2212.08073">
+           Constitutional AI
+          </a>
+         </td>
+         <td>
+          Principle-based feedback
+         </td>
+        </tr>
+        <tr id="reference-r75">
+         <td>
+          R75
+         </td>
+         <td>
+          <a href="https://arxiv.org/abs/2212.09748">
+           DiT
+          </a>
+         </td>
+         <td>
+          Transformer denoising backbone
+         </td>
+        </tr>
+        <tr id="reference-r76">
+         <td>
+          R76
+         </td>
+         <td>
+          <a href="https://arxiv.org/abs/2207.12598">
+           Classifier-free guidance
+          </a>
+         </td>
+         <td>
+          Conditional/unconditional combination
+         </td>
+        </tr>
+        <tr id="reference-r77">
+         <td>
+          R77
+         </td>
+         <td>
+          <a href="https://arxiv.org/abs/2304.08485">
+           Visual instruction tuning
+          </a>
+         </td>
+         <td>
+          Image-language connector
+         </td>
+        </tr>
+        <tr id="reference-r78">
+         <td>
+          R78
+         </td>
+         <td>
+          <a href="https://sbert.net/docs/sentence_transformer/pretrained_models.html">
+           Sentence Transformers pretrained models
+          </a>
+         </td>
+         <td>
+          Model-specific similarity and input recipes
+         </td>
+        </tr>
+        <tr id="reference-r79">
+         <td>
+          R79
+         </td>
+         <td>
+          <a href="https://arxiv.org/abs/2205.13147">
+           Matryoshka Representation Learning
+          </a>
+         </td>
+         <td>
+          Nested vector prefixes require training
+         </td>
+        </tr>
+        <tr id="reference-r80">
+         <td>
+          R80
+         </td>
+         <td>
+          <a href="https://arxiv.org/abs/2004.12832">
+           ColBERT
+          </a>
+         </td>
+         <td>
+          Contextual token vectors and late interaction
+         </td>
+        </tr>
+        <tr id="reference-r81">
+         <td>
+          R81
+         </td>
+         <td>
+          <a href="https://arxiv.org/abs/2107.05720">
+           SPLADE
+          </a>
+         </td>
+         <td>
+          Learned sparse term representations
+         </td>
+        </tr>
+        <tr id="reference-r82">
+         <td>
+          R82
+         </td>
+         <td>
+          <a href="https://github.com/nmslib/hnswlib/blob/master/ALGO_PARAMS.md">
+           HNSW parameters
+          </a>
+         </td>
+         <td>
+          M, construction breadth, query ef
+         </td>
+        </tr>
+        <tr id="reference-r83">
+         <td>
+          R83
+         </td>
+         <td>
+          <a href="https://github.com/facebookresearch/faiss/wiki/Faiss-indexes">
+           Faiss indexes
+          </a>
+         </td>
+         <td>
+          IVF and scalar/product quantization
+         </td>
+        </tr>
+        <tr id="reference-r84">
+         <td>
+          R84
+         </td>
+         <td>
+          <a href="https://github.com/microsoft/DiskANN">
+           DiskANN
+          </a>
+         </td>
+         <td>
+          SSD-aware graph vector search
+         </td>
+        </tr>
+        <tr id="reference-r85">
+         <td>
+          R85
+         </td>
+         <td>
+          <a href="https://triton-lang.org/main/getting-started/tutorials/01-vector-add.html">
+           Triton vector addition
+          </a>
+         </td>
+         <td>
+          Masked block indexing
+         </td>
+        </tr>
+        <tr id="reference-r86">
+         <td>
+          R86
+         </td>
+         <td>
+          <a href="https://docs.pytorch.org/tutorials/intermediate/torch_compile_tutorial.html">
+           torch.compile introduction
+          </a>
+         </td>
+         <td>
+          Graph capture, optimization, timing
+         </td>
+        </tr>
+        <tr id="reference-r87">
+         <td>
+          R87
+         </td>
+         <td>
+          <a href="https://docs.pytorch.org/tutorials/intermediate/FSDP1_tutorial.html">
+           FSDP tutorial
+          </a>
+         </td>
+         <td>
+          Sharding and temporary gathers
+         </td>
+        </tr>
+        <tr id="reference-r88">
+         <td>
+          R88
+         </td>
+         <td>
+          <a href="https://www.deepspeed.ai/tutorials/zero/">
+           DeepSpeed ZeRO tutorial
+          </a>
+         </td>
+         <td>
+          State sharding stages
+         </td>
+        </tr>
+       </tbody>
+      </table>
+     </div>
+     <h2 id="readings-by-phase">
+      Readings by phase
+     </h2>
+     <p>
+      Read the explanation and worked example in the course first. Source links at the point of use let you inspect the original definition or the exact software behavior. Research papers and full external courses are optional references, not additional assignments.
+     </p>
+     <p>
+      Weeks 1–5 use the notes and tokenization/model-card examples; weeks 6–11 connect attention and architecture to the original transformer and modern variants. Weeks 12–16 connect training, chat templates, reasoning and generative families. Weeks 17–21 use retrieval, embedding and evaluation documentation. Weeks 22–23 use memory, kernels and profiling sources. Weeks 24–26 use adaptation and preference-learning sources. Weeks 27–32 use tool, protocol, serving, safety and lifecycle documentation. Follow the named lesson section rather than reading every linked source in full.
+     </p>
+     <h2 id="historical-foundations-and-current-tools">
+      Historical foundations and current tools
+     </h2>
+     <p>
+      A foundational paper is not obsolete merely because its publication year is old. Keep the original definition for attention, diffusion or low-rank adaptation, and use current implementation documentation when installing a tool. The legacy models are controls for reproducibility; the multilingual embedding and newer small-generator routes are the recommended starting points for the revised model labs.
+     </p>
+     <h2 id="about-this-course">
+      About this course
+     </h2>
+     <p>
+      Independent original self-study material. There is no Stanford or NTU affiliation or certificate. The teaching approach combines intuitive explanations, mechanisms, implementation and controlled experiments. Links to the instructors’ public materials are optional references, not copied lecture content.
+     </p>
+     <h2>
+      Validation and limits
+     </h2>
+     <p>
+      All 32 notebooks and companion scripts passed syntax checks. In this revision, 13 CPU-safe complete tutorial paths and a separate DPO arithmetic check passed. The tutorial-30 run also passed all 23 support contract tests. Optional model-download blocks were disabled for these CPU checks. Hand calculations for attention, RoPE, parameter counts, contrastive loss, nDCG, McNemar, memory, bandwidth, DPO and energy were independently recomputed.
+     </p>
+     <p>
+      Model downloads, actual transformer/adapter training, Qdrant model execution, CUDA compilation/profiling, production serving and actual model-agent runs were not executed in this revision environment. Their updated recipes are syntax checked. Hardware, package and model compatibility must still be verified in the runtime used for the exercise. Fixture results and paper calculations are labeled separately from trained-model measurements. Notebook outputs are distributed empty.
+     </p>
+    </article>
+   </div>
+   <footer class="footer">
+    <span>
+     Applied AI · An independent self-study course
+    </span>
+    <span>
+     32 weeks · 10 hours per week
+    </span>
+    <a href="resources.html#about-this-course">
+     About and sources
+    </a>
+   </footer>
+  </main>
+  <dialog aria-labelledby="search-title" class="search-dialog">
+   <div class="dialog-head">
+    <h2 id="search-title">
+     Find a concept
+    </h2>
+    <button aria-label="Close search" class="search-close" type="button">
+     Close
+    </button>
+   </div>
+   <label class="sr-only" for="course-search">
+    Search all lectures and tutorials
+   </label>
+   <input autocomplete="off" id="course-search" placeholder="Try attention, fine-tuning, or harness…" type="search"/>
+   <p aria-live="polite" class="search-status">
+    Search lecture notes, tutorials, tests and readings.
+   </p>
+   <div class="search-results">
+   </div>
+  </dialog>
+  <div aria-live="polite" class="toast" role="status">
+  </div>
+ </body>
+</html>

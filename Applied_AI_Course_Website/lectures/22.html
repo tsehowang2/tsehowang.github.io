@@ -1,67 +1,1301 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/><title>CPU GPU memory and model resource accounting · Applied AI</title><meta content="Applied generative AI and LLM systems course material" name="description"/><meta content="#173c36" name="theme-color"/><link href="../assets/favicon.svg" rel="icon" type="image/svg+xml"/><link href="../assets/style.css" rel="stylesheet"/><link href="../assets/slides.css" rel="stylesheet"/><script>window.COURSE_BASE="../";</script><script defer="" src="../assets/site-config.js"></script><script defer="" src="../assets/search-index.js"></script><script defer="" src="../assets/app.js"></script><script defer="" src="../assets/visuals.js"></script><script defer="" src="../assets/slides.js"></script><script defer="" src="../assets/beginner-visuals.js"></script><link href="../zh-HK/lectures/22.html" hreflang="zh-HK" rel="alternate"/><link href="../assets/bilingual.css" rel="stylesheet"/></head><body data-page-kind="lecture" data-week="22"><a class="skip-link" href="#main">Skip to content</a><header class="topbar"><button aria-controls="course-sidebar" aria-expanded="false" class="menu-toggle" type="button">Menu</button><a class="brand" href="../index.html"><span aria-hidden="true" class="brand-mark">a<span>i</span></span><span>APPLIED AI<small>Principles into practice</small></span></a><nav aria-label="Main navigation"><a href="../index.html">The course</a><a href="../visuals.html">Visual lab</a><a href="../project.html">Project</a><a class="language-switch" href="../zh-HK/lectures/22.html" hreflang="zh-HK" lang="zh-HK">繁體中文</a></nav><button class="search-open" type="button">Search the course <span aria-hidden="true">/</span></button></header><aside aria-label="Course chapters" class="sidebar" id="course-sidebar"><a class="side-home" href="../index.html">Course overview</a><details class="semester-nav"><summary>Semester 1<span>Weeks 1–16</span></summary><ol start="1"><li><a href="../lectures/01.html"><span class="week-number">01</span><span>What a language model is trying to learn</span><span class="week-tick" data-week-tick="1"></span></a></li><li><a href="../lectures/02.html"><span class="week-number">02</span><span>From text to tokens and numerical IDs</span><span class="week-tick" data-week-tick="2"></span></a></li><li><a href="../lectures/03.html"><span class="week-number">03</span><span>What word vectors can represent</span><span class="week-tick" data-week-tick="3"></span></a></li><li><a href="../lectures/04.html"><span class="week-number">04</span><span>From scores to probabilities and learning signals</span><span class="week-tick" data-week-tick="4"></span></a></li><li><a href="../lectures/05.html"><span class="week-number">05</span><span>Why language needs context and order</span><span class="week-tick" data-week-tick="5"></span></a></li><li><a href="../lectures/06.html"><span class="week-number">06</span><span>Attention begins as a weighted mixture</span><span class="week-tick" data-week-tick="6"></span></a></li><li><a href="../lectures/07.html"><span class="week-number">07</span><span>Where queries keys and values come from</span><span class="week-tick" data-week-tick="7"></span></a></li><li><a href="../lectures/08.html"><span class="week-number">08</span><span>Scaling and masking attention correctly</span><span class="week-tick" data-week-tick="8"></span></a></li><li><a href="../lectures/09.html"><span class="week-number">09</span><span>Multiple attention heads and position</span><span class="week-tick" data-week-tick="9"></span></a></li><li><a href="../lectures/10.html"><span class="week-number">10</span><span>The transformer block step by step</span><span class="week-tick" data-week-tick="10"></span></a></li><li><a href="../lectures/11.html"><span class="week-number">11</span><span>Encoders decoders and complete model architectures</span><span class="week-tick" data-week-tick="11"></span></a></li><li><a href="../lectures/12.html"><span class="week-number">12</span><span>Training a small transformer</span><span class="week-tick" data-week-tick="12"></span></a></li><li><a href="../lectures/13.html"><span class="week-number">13</span><span>Generation decoding and the KV cache</span><span class="week-tick" data-week-tick="13"></span></a></li><li><a href="../lectures/14.html"><span class="week-number">14</span><span>From pretraining to instruction following and reasoning</span><span class="week-tick" data-week-tick="14"></span></a></li><li><a href="../lectures/15.html"><span class="week-number">15</span><span>Generative AI beyond text</span><span class="week-tick" data-week-tick="15"></span></a></li><li><a href="../lectures/16.html"><span class="week-number">16</span><span>A complete transformer walkthrough and first semester review</span><span class="week-tick" data-week-tick="16"></span></a></li></ol></details><details class="semester-nav" open=""><summary>Semester 2<span>Weeks 17–32</span></summary><ol start="17"><li><a href="../lectures/17.html"><span class="week-number">17</span><span>From word vectors to semantic search</span><span class="week-tick" data-week-tick="17"></span></a></li><li><a href="../lectures/18.html"><span class="week-number">18</span><span>A vector database from a list of vectors</span><span class="week-tick" data-week-tick="18"></span></a></li><li><a href="../lectures/19.html"><span class="week-number">19</span><span>RAG as an open book question</span><span class="week-tick" data-week-tick="19"></span></a></li><li><a href="../lectures/20.html"><span class="week-number">20</span><span>Improving RAG without losing the basic task</span><span class="week-tick" data-week-tick="20"></span></a></li><li><a href="../lectures/21.html"><span class="week-number">21</span><span>Evaluating retrieval answers and uncertainty</span><span class="week-tick" data-week-tick="21"></span></a></li><li><a aria-current="page" href="../lectures/22.html"><span class="week-number">22</span><span>CPU GPU memory and model resource accounting</span><span class="week-tick" data-week-tick="22"></span></a></li><li><a href="../lectures/23.html"><span class="week-number">23</span><span>CUDA kernels and profiling</span><span class="week-tick" data-week-tick="23"></span></a></li><li><a href="../lectures/24.html"><span class="week-number">24</span><span>Fine tuning starts with a teaching dataset</span><span class="week-tick" data-week-tick="24"></span></a></li><li><a href="../lectures/25.html"><span class="week-number">25</span><span>LoRA and QLoRA from a small matrix</span><span class="week-tick" data-week-tick="25"></span></a></li><li><a href="../lectures/26.html"><span class="week-number">26</span><span>Fine tuning experiments preferences and distillation</span><span class="week-tick" data-week-tick="26"></span></a></li><li><a href="../lectures/27.html"><span class="week-number">27</span><span>Tools functions workflows and agents</span><span class="week-tick" data-week-tick="27"></span></a></li><li><a href="../lectures/28.html"><span class="week-number">28</span><span>Harnesses planning memory and bounded execution</span><span class="week-tick" data-week-tick="28"></span></a></li><li><a href="../lectures/29.html"><span class="week-number">29</span><span>From a notebook to MLOps and inference serving</span><span class="week-tick" data-week-tick="29"></span></a></li><li><a href="../lectures/30.html"><span class="week-number">30</span><span>Monitoring security regression tests and rollback</span><span class="week-tick" data-week-tick="30"></span></a></li><li><a href="../lectures/31.html"><span class="week-number">31</span><span>Integrating the documentation assistant and advanced extensions</span><span class="week-tick" data-week-tick="31"></span></a></li><li><a href="../lectures/32.html"><span class="week-number">32</span><span>Review defense and a continuing learning plan</span><span class="week-tick" data-week-tick="32"></span></a></li></ol></details><div class="side-links"><a href="../visuals.html">Visual laboratory <span>14 interactive lessons</span></a><a href="../project.html">Documentation assistant <span>Your capstone project</span></a><a href="../resources.html">Readings and setup</a></div><div class="side-progress"><div><span>Your progress</span><strong data-progress-count="">0 / 32</strong></div><progress aria-label="Completed lectures" max="32" value="0"></progress><small>Saved in this browser</small></div></aside><main class="main" id="main"><div class="content"><div class="chapter-header"><div class="eyebrow">Semester 2 / Week 22</div><h1>CPU GPU memory and model resource accounting</h1></div><div class="lesson-links"><a href="../tutorials/22.html">Tutorial 22</a><a href="../tests/22.html">Test your understanding</a><button aria-pressed="false" class="mark-complete" data-week="22" type="button">Mark as complete</button></div><section aria-label="Lecture slides" class="lecture-deck" id="lecture-slides"><div class="deck-top"><div><div class="eyebrow">Lecture slides · Week 22</div><h2>Learn one step at a time.</h2></div><button class="deck-present" type="button">Present</button></div><p class="deck-help">Read each explanation, pause to predict the result, then continue. Use the arrow keys while the presentation is focused. The complete lecture reader is below.</p><div aria-label="Presentation: use left and right arrow keys" class="slide-viewport" tabindex="0"><section class="lecture-slide" data-slide=""><div class="slide-stage">Start with an example</div><h3>Numerical work happens on physical hardware</h3><div class="slide-prose"><p>A transformer contains matrix multiplications, elementwise operations, and memory access. A CPU can run a small model. A GPU can execute many suitable operations in parallel, but performance also depends on data movement and memory capacity.</p>
-<p>Separate host RAM from GPU VRAM. A model downloaded to disk does not automatically fit in either. A tensor copied between CPU and GPU incurs movement and coordination.</p>
-<p>We study the hardware now that you can identify the tensors it stores and operations it executes.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Start with an example</div><h3>Parameters are only the first memory item</h3><div class="slide-prose"><p>If a model has P parameters stored with b bytes each, weight memory is P×b. For 500 million parameters at two bytes, that is one billion bytes, about 0.93 GiB.</p>
-<p>During training, gradients, optimizer moments, optional master weights, activations, and temporary buffers add memory. During generation, a KV cache can be large.</p>
-<p>An inference weight estimate therefore does not answer whether the model can train or handle a long batched context.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Build the mechanism</div><h3>A worked training state estimate</h3><div class="slide-prose"><p>An illustrative mixed-precision Adam arrangement uses 2 bytes of weights, 2 of gradients, 4 of master weights, and 8 for two optimizer moments per parameter. That totals 16 bytes before activations and overhead.</p>
-<p>At 500 million parameters, counted state is 8 billion bytes, about 7.45 GiB. Different implementations and precision choices change the accounting.</p>
-<p>The interactive worksheet explicitly reports partial estimates. Being below a VRAM line in that worksheet is not proof that a real runtime will fit.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Build the mechanism</div><h3>A KV cache calculation</h3><div class="slide-prose"><p>Approximate cache bytes equal 2×layers×batch×tokens×KVheads×head_dimension×bytes. The factor two accounts for keys and values.</p>
-<p>With 24 layers, batch 1, 2048 tokens, eight KV heads, dimension 64, and two-byte values, the result is 100663296 bytes, or 96 MiB.</p>
-<p>Longer context and larger batch multiply this quantity. Grouped-query attention uses fewer KV heads than query heads; inspect the architecture rather than substituting the query-head count automatically.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Build the mechanism</div><h3>Memory hierarchy and movement</h3><div class="slide-prose"><p>GPU execution uses registers, shared memory within blocks, caches, and device DRAM under hardware-specific arrangements. Large tensors live in device memory; moving and re-reading them can dominate an operation.</p>
-<p>A high advertised arithmetic rate does not guarantee a fast application. A low-arithmetic-intensity operation can spend much of its time moving values.</p>
-<p>Next week's kernel makes this visible with vector addition. The operation is simple enough that indexing and transfer boundaries can be checked independently.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Build the mechanism</div><h3>Smaller microbatches and checkpointing</h3><div class="slide-prose"><p>Gradient accumulation lets several small microbatches contribute to one effective update. It can reduce the batch portion of activation memory, but persistent model/optimizer state remains.</p>
-<p>If one sequence already causes OOM, accumulation alone cannot shrink that sequence's footprint. Shorter context, activation checkpointing, a smaller model, or state sharding may address different components.</p>
-<p>Activation checkpointing saves some intermediate storage by recomputing work during backward. The tradeoff is extra computation, not free memory removal.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Build the mechanism</div><h3>Choosing precision and measuring reality</h3><div class="slide-prose"><p>Float32, float16, bfloat16, and quantized representations have different numerical ranges, memory costs, and support. Do not assume your GTX 1650 Super supports every optimized dtype or kernel.</p>
-<p>Use actual device properties and compatible software. A free Colab session may offer a different GPU or no GPU, so save checkpoints and measured metadata.</p>
-<p>Record allocated and peak memory under a defined workload. Allocator reservation and warmup can make a simplistic reading misleading.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Build the mechanism</div><h3>Worked practice and a readiness check</h3><div class="slide-prose"><p>Calculate weight-only memory for 300 million two-byte parameters and compare with a 16-byte training-state estimate. List omitted components in both.</p>
-<p>Change context length from 2048 to 4096 in the cache formula and explain the doubling. Then identify a memory issue that accumulation can help and one it cannot.</p>
-<p>You are ready when you can link resource costs to particular tensors and distinguish an estimate, an actual measurement, and a hardware capability assumption.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Optional deeper study</div><h3>A deeper pass after the worked introduction</h3><div class="slide-prose"><p>The following reference treatment is for a second pass. First explain the ordinary example above, then use the equations and implementation details below to make the explanation more precise.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Optional deeper study</div><h3>Further study 9 Intuition</h3><div class="slide-prose"><p>A GPU accelerates many similar arithmetic operations, but a model must also move data and fit its working state into memory. “More FLOPs” alone does not predict whether your experiment will run or be fast. Distinguish CPU RAM, GPU VRAM, device memory bandwidth, host-to-device transfers and compute throughput.</p>
-<p>The CPU schedules work and launches kernels. GPU execution groups threads across streaming multiprocessors. Registers are close to individual execution contexts, shared memory is visible within a block, caches serve broader access, and device DRAM stores large tensors. A tensor moving repeatedly between CPU and GPU can dominate a short computation even if the arithmetic is fast.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Optional deeper study</div><h3>Further study 9 Training versus inference</h3><div class="slide-prose"><p>Parameter storage is <code>parameter_count * bytes_per_parameter</code>. Training may additionally store gradients, optimizer moments, master weights and activations. For an illustrative mixed-precision Adam configuration, 2 bytes of model weights + 2 bytes of gradients + 4 bytes of master weights + 8 bytes of two moments gives 16 bytes per parameter before activations and overhead. This is an example configuration, not a universal rule; frameworks and precision choices differ.</p>
-<p>For 500 million parameters, that illustrative state is 8 GB decimal. A 2-byte inference weight copy alone is 1 GB decimal. A model that fits for inference can therefore fail in training. LoRA reduces trainable parameter state, but activations and frozen base weights still occupy memory.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Optional deeper study</div><h3>Further study 9 KV cache worked example</h3><div class="slide-prose"><p>During autoregressive inference, cached keys and values avoid recomputing earlier projections. An approximate KV-cache size is <code>2 * layers * batch * tokens * kv_heads * head_dim * bytes</code>. For 24 layers, batch 1, 2,048 tokens, 8 KV heads, dimension 64 and 2-byte values, the cache is 100,663,296 bytes, or 96 MiB. Increasing batch or context multiplies this. Grouped-query attention can use fewer KV heads than query heads.</p>
-<p>The original full attention score tensor also scales quadratically in sequence length when explicitly materialized. Memory-efficient attention implementations avoid storing all those intermediate scores in device DRAM, while retaining the operation's mathematical meaning subject to numerical precision differences.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Optional deeper study</div><h3>Further study 9 Experiment</h3><div class="slide-prose"><p>notebook 23 measures the device rather than assuming its capabilities. Calculate weight, optimizer and KV-cache estimates on paper, then compare allocated and peak memory. Account for warmup and allocator reservations. When an out-of-memory error occurs, reduce sequence length and microbatch before reaching for a different framework. Gradient accumulation changes effective batch but does not shrink the memory required by a single microbatch.</p>
-<p><strong>Exit criterion:</strong> explain why a model fits inference but not training, and estimate a context-dependent cache. <strong>Reading:</strong> R01 resource-accounting topic; R16 memory hierarchy. <strong>Tutorial:</strong> 22.</p></div></section></div><div class="deck-controls"><button class="slide-prev" type="button">← Previous</button><span aria-live="polite" class="slide-counter">1 / 13</span><button class="slide-next" type="button">Next →</button></div><label class="slide-jump-label">Go to slide <select aria-label="Go to slide" class="slide-jump"><option value="0">1</option><option value="1">2</option><option value="2">3</option><option value="3">4</option><option value="4">5</option><option value="5">6</option><option value="6">7</option><option value="7">8</option><option value="8">9</option><option value="9">10</option><option value="10">11</option><option value="11">12</option><option value="12">13</option></select></label><button aria-pressed="false" class="deck-all" type="button">Show all slides</button><a class="reader-link" href="#full-notes">Read the complete lecture ↓</a></section><section aria-label="Where GPU memory goes" class="visual-lesson"><div class="eyebrow">Explore the mechanism</div><h2>Where GPU memory goes</h2><p class="visual-intro">Compare parameter state and context-dependent cache estimates.</p><div data-widget="memory"><p>Enable JavaScript to use this illustration. The lecture notes below explain the same mechanism.</p></div></section><article class="prose full-notes" id="full-notes"><div class="eyebrow">Complete lecture reader</div><h2>Read the full explanation</h2><h3 id="numerical-work-happens-on-physical-hardware">Numerical work happens on physical hardware</h3>
-<p>A transformer contains matrix multiplications, elementwise operations, and memory access. A CPU can run a small model. A GPU can execute many suitable operations in parallel, but performance also depends on data movement and memory capacity.</p>
-<p>Separate host RAM from GPU VRAM. A model downloaded to disk does not automatically fit in either. A tensor copied between CPU and GPU incurs movement and coordination.</p>
-<p>We study the hardware now that you can identify the tensors it stores and operations it executes.</p>
-<h3 id="parameters-are-only-the-first-memory-item">Parameters are only the first memory item</h3>
-<p>If a model has P parameters stored with b bytes each, weight memory is P×b. For 500 million parameters at two bytes, that is one billion bytes, about 0.93 GiB.</p>
-<p>During training, gradients, optimizer moments, optional master weights, activations, and temporary buffers add memory. During generation, a KV cache can be large.</p>
-<p>An inference weight estimate therefore does not answer whether the model can train or handle a long batched context.</p>
-<h3 id="a-worked-training-state-estimate">A worked training state estimate</h3>
-<p>An illustrative mixed-precision Adam arrangement uses 2 bytes of weights, 2 of gradients, 4 of master weights, and 8 for two optimizer moments per parameter. That totals 16 bytes before activations and overhead.</p>
-<p>At 500 million parameters, counted state is 8 billion bytes, about 7.45 GiB. Different implementations and precision choices change the accounting.</p>
-<p>The interactive worksheet explicitly reports partial estimates. Being below a VRAM line in that worksheet is not proof that a real runtime will fit.</p>
-<h3 id="a-kv-cache-calculation">A KV cache calculation</h3>
-<p>Approximate cache bytes equal 2×layers×batch×tokens×KVheads×head_dimension×bytes. The factor two accounts for keys and values.</p>
-<p>With 24 layers, batch 1, 2048 tokens, eight KV heads, dimension 64, and two-byte values, the result is 100663296 bytes, or 96 MiB.</p>
-<p>Longer context and larger batch multiply this quantity. Grouped-query attention uses fewer KV heads than query heads; inspect the architecture rather than substituting the query-head count automatically.</p>
-<h3 id="memory-hierarchy-and-movement">Memory hierarchy and movement</h3>
-<p>GPU execution uses registers, shared memory within blocks, caches, and device DRAM under hardware-specific arrangements. Large tensors live in device memory; moving and re-reading them can dominate an operation.</p>
-<p>A high advertised arithmetic rate does not guarantee a fast application. A low-arithmetic-intensity operation can spend much of its time moving values.</p>
-<p>Next week's kernel makes this visible with vector addition. The operation is simple enough that indexing and transfer boundaries can be checked independently.</p>
-<h3 id="smaller-microbatches-and-checkpointing">Smaller microbatches and checkpointing</h3>
-<p>Gradient accumulation lets several small microbatches contribute to one effective update. It can reduce the batch portion of activation memory, but persistent model/optimizer state remains.</p>
-<p>If one sequence already causes OOM, accumulation alone cannot shrink that sequence's footprint. Shorter context, activation checkpointing, a smaller model, or state sharding may address different components.</p>
-<p>Activation checkpointing saves some intermediate storage by recomputing work during backward. The tradeoff is extra computation, not free memory removal.</p>
-<h3 id="choosing-precision-and-measuring-reality">Choosing precision and measuring reality</h3>
-<p>Float32, float16, bfloat16, and quantized representations have different numerical ranges, memory costs, and support. Do not assume your GTX 1650 Super supports every optimized dtype or kernel.</p>
-<p>Use actual device properties and compatible software. A free Colab session may offer a different GPU or no GPU, so save checkpoints and measured metadata.</p>
-<p>Record allocated and peak memory under a defined workload. Allocator reservation and warmup can make a simplistic reading misleading.</p>
-<h3 id="worked-practice-and-a-readiness-check">Worked practice and a readiness check</h3>
-<p>Calculate weight-only memory for 300 million two-byte parameters and compare with a 16-byte training-state estimate. List omitted components in both.</p>
-<p>Change context length from 2048 to 4096 in the cache formula and explain the doubling. Then identify a memory issue that accumulation can help and one it cannot.</p>
-<p>You are ready when you can link resource costs to particular tensors and distinguish an estimate, an actual measurement, and a hardware capability assumption.</p>
-<h3 id="a-deeper-pass-after-the-worked-introduction">A deeper pass after the worked introduction</h3>
-<p>The following reference treatment is for a second pass. First explain the ordinary example above, then use the equations and implementation details below to make the explanation more precise.</p>
-<h3 id="further-study-9-intuition">Further study 9 Intuition</h3>
-<p>A GPU accelerates many similar arithmetic operations, but a model must also move data and fit its working state into memory. “More FLOPs” alone does not predict whether your experiment will run or be fast. Distinguish CPU RAM, GPU VRAM, device memory bandwidth, host-to-device transfers and compute throughput.</p>
-<p>The CPU schedules work and launches kernels. GPU execution groups threads across streaming multiprocessors. Registers are close to individual execution contexts, shared memory is visible within a block, caches serve broader access, and device DRAM stores large tensors. A tensor moving repeatedly between CPU and GPU can dominate a short computation even if the arithmetic is fast.</p>
-<h3 id="further-study-9-training-versus-inference">Further study 9 Training versus inference</h3>
-<p>Parameter storage is <code>parameter_count * bytes_per_parameter</code>. Training may additionally store gradients, optimizer moments, master weights and activations. For an illustrative mixed-precision Adam configuration, 2 bytes of model weights + 2 bytes of gradients + 4 bytes of master weights + 8 bytes of two moments gives 16 bytes per parameter before activations and overhead. This is an example configuration, not a universal rule; frameworks and precision choices differ.</p>
-<p>For 500 million parameters, that illustrative state is 8 GB decimal. A 2-byte inference weight copy alone is 1 GB decimal. A model that fits for inference can therefore fail in training. LoRA reduces trainable parameter state, but activations and frozen base weights still occupy memory.</p>
-<h3 id="further-study-9-kv-cache-worked-example">Further study 9 KV cache worked example</h3>
-<p>During autoregressive inference, cached keys and values avoid recomputing earlier projections. An approximate KV-cache size is <code>2 * layers * batch * tokens * kv_heads * head_dim * bytes</code>. For 24 layers, batch 1, 2,048 tokens, 8 KV heads, dimension 64 and 2-byte values, the cache is 100,663,296 bytes, or 96 MiB. Increasing batch or context multiplies this. Grouped-query attention can use fewer KV heads than query heads.</p>
-<p>The original full attention score tensor also scales quadratically in sequence length when explicitly materialized. Memory-efficient attention implementations avoid storing all those intermediate scores in device DRAM, while retaining the operation's mathematical meaning subject to numerical precision differences.</p>
-<h3 id="further-study-9-experiment">Further study 9 Experiment</h3>
-<p>notebook 23 measures the device rather than assuming its capabilities. Calculate weight, optimizer and KV-cache estimates on paper, then compare allocated and peak memory. Account for warmup and allocator reservations. When an out-of-memory error occurs, reduce sequence length and microbatch before reaching for a different framework. Gradient accumulation changes effective batch but does not shrink the memory required by a single microbatch.</p>
-<p><strong>Exit criterion:</strong> explain why a model fits inference but not training, and estimate a context-dependent cache. <strong>Reading:</strong> R01 resource-accounting topic; R16 memory hierarchy. <strong>Tutorial:</strong> 22.</p></article><nav aria-label="Adjacent lectures" class="chapter-pagination"><a href="21.html"><small>Previous week</small>Evaluating retrieval answers and uncertainty</a><a href="23.html"><small>Next week</small>CUDA kernels and profiling</a></nav></div><footer class="footer"><span>Applied AI · An independent self-study course</span><span>32 weeks · 10 hours per week</span><a href="../resources.html#about-this-course">About and sources</a></footer></main><dialog aria-labelledby="search-title" class="search-dialog"><div class="dialog-head"><h2 id="search-title">Find a concept</h2><button aria-label="Close search" class="search-close" type="button">Close</button></div><label class="sr-only" for="course-search">Search all lectures and tutorials</label><input autocomplete="off" id="course-search" placeholder="Try attention, fine-tuning, or harness…" type="search"/><p aria-live="polite" class="search-status">Search lecture notes, tutorials, tests and readings.</p><div class="search-results"></div></dialog><div aria-live="polite" class="toast" role="status"></div></body></html>
+<html lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width,initial-scale=1" name="viewport"/>
+  <title>
+   CPU GPU memory and model resource accounting · Applied AI
+  </title>
+  <meta content="Applied generative AI and LLM systems course material" name="description"/>
+  <meta content="#173c36" name="theme-color"/>
+  <link href="../assets/favicon.svg" rel="icon" type="image/svg+xml"/>
+  <link href="../assets/style.css" rel="stylesheet"/>
+  <link href="../assets/slides.css" rel="stylesheet"/>
+  <script>
+   window.COURSE_BASE="../";
+  </script>
+  <script defer="" src="../assets/site-config.js">
+  </script>
+  <script defer="" src="../assets/search-index.js">
+  </script>
+  <script defer="" src="../assets/app.js">
+  </script>
+  <script defer="" src="../assets/visuals.js">
+  </script>
+  <script defer="" src="../assets/slides.js">
+  </script>
+  <script defer="" src="../assets/beginner-visuals.js">
+  </script>
+  <link href="../zh-HK/lectures/22.html" hreflang="zh-HK" rel="alternate"/>
+  <link href="../assets/bilingual.css" rel="stylesheet"/>
+  <link href="../assets/reader-v3.css" rel="stylesheet"/>
+  <script defer="True" src="../assets/reader-v3.js">
+  </script>
+ </head>
+ <body data-page-kind="lecture" data-week="22">
+  <a class="skip-link" href="#main">
+   Skip to content
+  </a>
+  <header class="topbar">
+   <button aria-controls="course-sidebar" aria-expanded="false" class="menu-toggle" type="button">
+    Menu
+   </button>
+   <a class="brand" href="../index.html">
+    <span aria-hidden="true" class="brand-mark">
+     a
+     <span>
+      i
+     </span>
+    </span>
+    <span>
+     APPLIED AI
+     <small>
+      Principles into practice
+     </small>
+    </span>
+   </a>
+   <nav aria-label="Main navigation">
+    <a href="../index.html">
+     The course
+    </a>
+    <a href="../visuals.html">
+     Visual lab
+    </a>
+    <a href="../project.html">
+     Project
+    </a>
+    <a class="language-switch" href="../zh-HK/lectures/22.html" hreflang="zh-HK" lang="zh-HK">
+     繁體中文
+    </a>
+   </nav>
+   <button class="search-open" type="button">
+    Search the course
+    <span aria-hidden="true">
+     /
+    </span>
+   </button>
+  </header>
+  <aside aria-label="Course chapters" class="sidebar" id="course-sidebar">
+   <a class="side-home" href="../index.html">
+    Course overview
+   </a>
+   <details class="semester-nav">
+    <summary>
+     Semester 1
+     <span>
+      Weeks 1–16
+     </span>
+    </summary>
+    <ol start="1">
+     <li>
+      <a href="../lectures/01.html">
+       <span class="week-number">
+        01
+       </span>
+       <span>
+        What a language model is trying to learn
+       </span>
+       <span class="week-tick" data-week-tick="1">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/02.html">
+       <span class="week-number">
+        02
+       </span>
+       <span>
+        From text to tokens and numerical IDs
+       </span>
+       <span class="week-tick" data-week-tick="2">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/03.html">
+       <span class="week-number">
+        03
+       </span>
+       <span>
+        What word vectors can represent
+       </span>
+       <span class="week-tick" data-week-tick="3">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/04.html">
+       <span class="week-number">
+        04
+       </span>
+       <span>
+        From scores to probabilities and learning signals
+       </span>
+       <span class="week-tick" data-week-tick="4">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/05.html">
+       <span class="week-number">
+        05
+       </span>
+       <span>
+        Why language needs context and order
+       </span>
+       <span class="week-tick" data-week-tick="5">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/06.html">
+       <span class="week-number">
+        06
+       </span>
+       <span>
+        Attention begins as a weighted mixture
+       </span>
+       <span class="week-tick" data-week-tick="6">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/07.html">
+       <span class="week-number">
+        07
+       </span>
+       <span>
+        Where queries keys and values come from
+       </span>
+       <span class="week-tick" data-week-tick="7">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/08.html">
+       <span class="week-number">
+        08
+       </span>
+       <span>
+        Scaling and masking attention correctly
+       </span>
+       <span class="week-tick" data-week-tick="8">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/09.html">
+       <span class="week-number">
+        09
+       </span>
+       <span>
+        Multiple attention heads and position
+       </span>
+       <span class="week-tick" data-week-tick="9">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/10.html">
+       <span class="week-number">
+        10
+       </span>
+       <span>
+        The transformer block step by step
+       </span>
+       <span class="week-tick" data-week-tick="10">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/11.html">
+       <span class="week-number">
+        11
+       </span>
+       <span>
+        Encoders decoders and complete model architectures
+       </span>
+       <span class="week-tick" data-week-tick="11">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/12.html">
+       <span class="week-number">
+        12
+       </span>
+       <span>
+        Training a small transformer
+       </span>
+       <span class="week-tick" data-week-tick="12">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/13.html">
+       <span class="week-number">
+        13
+       </span>
+       <span>
+        Generation decoding and the KV cache
+       </span>
+       <span class="week-tick" data-week-tick="13">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/14.html">
+       <span class="week-number">
+        14
+       </span>
+       <span>
+        From pretraining to instruction following and reasoning
+       </span>
+       <span class="week-tick" data-week-tick="14">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/15.html">
+       <span class="week-number">
+        15
+       </span>
+       <span>
+        Generative AI beyond text
+       </span>
+       <span class="week-tick" data-week-tick="15">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/16.html">
+       <span class="week-number">
+        16
+       </span>
+       <span>
+        A complete transformer walkthrough and first semester review
+       </span>
+       <span class="week-tick" data-week-tick="16">
+       </span>
+      </a>
+     </li>
+    </ol>
+   </details>
+   <details class="semester-nav" open="">
+    <summary>
+     Semester 2
+     <span>
+      Weeks 17–32
+     </span>
+    </summary>
+    <ol start="17">
+     <li>
+      <a href="../lectures/17.html">
+       <span class="week-number">
+        17
+       </span>
+       <span>
+        From word vectors to semantic search
+       </span>
+       <span class="week-tick" data-week-tick="17">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/18.html">
+       <span class="week-number">
+        18
+       </span>
+       <span>
+        A vector database from a list of vectors
+       </span>
+       <span class="week-tick" data-week-tick="18">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/19.html">
+       <span class="week-number">
+        19
+       </span>
+       <span>
+        RAG as an open book question
+       </span>
+       <span class="week-tick" data-week-tick="19">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/20.html">
+       <span class="week-number">
+        20
+       </span>
+       <span>
+        Improving RAG without losing the basic task
+       </span>
+       <span class="week-tick" data-week-tick="20">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/21.html">
+       <span class="week-number">
+        21
+       </span>
+       <span>
+        Evaluating retrieval answers and uncertainty
+       </span>
+       <span class="week-tick" data-week-tick="21">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a aria-current="page" href="../lectures/22.html">
+       <span class="week-number">
+        22
+       </span>
+       <span>
+        CPU GPU memory and model resource accounting
+       </span>
+       <span class="week-tick" data-week-tick="22">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/23.html">
+       <span class="week-number">
+        23
+       </span>
+       <span>
+        CUDA kernels and profiling
+       </span>
+       <span class="week-tick" data-week-tick="23">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/24.html">
+       <span class="week-number">
+        24
+       </span>
+       <span>
+        Fine tuning starts with a teaching dataset
+       </span>
+       <span class="week-tick" data-week-tick="24">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/25.html">
+       <span class="week-number">
+        25
+       </span>
+       <span>
+        LoRA and QLoRA from a small matrix
+       </span>
+       <span class="week-tick" data-week-tick="25">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/26.html">
+       <span class="week-number">
+        26
+       </span>
+       <span>
+        Fine tuning experiments preferences and distillation
+       </span>
+       <span class="week-tick" data-week-tick="26">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/27.html">
+       <span class="week-number">
+        27
+       </span>
+       <span>
+        Tools functions workflows and agents
+       </span>
+       <span class="week-tick" data-week-tick="27">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/28.html">
+       <span class="week-number">
+        28
+       </span>
+       <span>
+        Harnesses planning memory and bounded execution
+       </span>
+       <span class="week-tick" data-week-tick="28">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/29.html">
+       <span class="week-number">
+        29
+       </span>
+       <span>
+        From a notebook to MLOps and inference serving
+       </span>
+       <span class="week-tick" data-week-tick="29">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/30.html">
+       <span class="week-number">
+        30
+       </span>
+       <span>
+        Monitoring security regression tests and rollback
+       </span>
+       <span class="week-tick" data-week-tick="30">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/31.html">
+       <span class="week-number">
+        31
+       </span>
+       <span>
+        Integrating the documentation assistant and advanced extensions
+       </span>
+       <span class="week-tick" data-week-tick="31">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/32.html">
+       <span class="week-number">
+        32
+       </span>
+       <span>
+        Review defense and a continuing learning plan
+       </span>
+       <span class="week-tick" data-week-tick="32">
+       </span>
+      </a>
+     </li>
+    </ol>
+   </details>
+   <div class="side-links">
+    <a href="../visuals.html">
+     Visual laboratory
+     <span>
+      14 interactive lessons
+     </span>
+    </a>
+    <a href="../project.html">
+     Documentation assistant
+     <span>
+      Your capstone project
+     </span>
+    </a>
+    <a href="../resources.html">
+     Readings and setup
+    </a>
+   </div>
+   <div class="side-progress">
+    <div>
+     <span>
+      Your progress
+     </span>
+     <strong data-progress-count="">
+      0 / 32
+     </strong>
+    </div>
+    <progress aria-label="Completed lectures" max="32" value="0">
+    </progress>
+    <small>
+     Saved in this browser
+    </small>
+   </div>
+  </aside>
+  <main class="main" id="main">
+   <div class="content">
+    <div class="chapter-header">
+     <div class="eyebrow">
+      Semester 2 / Week 22
+     </div>
+     <h1>
+      CPU GPU memory and model resource accounting
+     </h1>
+    </div>
+    <div class="lesson-links">
+     <a href="../tutorials/22.html">
+      Tutorial 22
+     </a>
+     <a href="../tests/22.html">
+      Test your understanding
+     </a>
+     <button aria-pressed="false" class="mark-complete" data-week="22" type="button">
+      Mark as complete
+     </button>
+    </div>
+    <div aria-label="Lesson view" class="lesson-mode" role="tablist">
+     <button aria-controls="full-notes" aria-selected="true" data-mode="read" id="mode-read" role="tab" type="button">
+      Read lesson
+     </button>
+     <button aria-controls="lecture-slides" aria-selected="false" data-mode="slides" id="mode-slides" role="tab" type="button">
+      Lesson slides
+     </button>
+    </div>
+    <section aria-label="Lecture slides" class="lecture-deck" hidden="" id="lecture-slides" role="tabpanel">
+     <div class="deck-top">
+      <div>
+       <div class="eyebrow">
+        Lecture slides · Week 22
+       </div>
+       <h2>
+        Key steps and worked visuals
+       </h2>
+      </div>
+      <button class="deck-present" type="button">
+       Present
+      </button>
+     </div>
+     <p class="deck-help">
+      Use these slides to review the mechanism. Open “Read the worked explanation” for the complete notes and code.
+     </p>
+     <div aria-label="Presentation: use left and right arrow keys" class="slide-viewport" tabindex="0">
+      <section class="lecture-slide" data-slide="">
+       <div class="slide-stage">
+        Week 22 · Section 1
+       </div>
+       <h3>
+        Numerical work happens on physical hardware
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          A transformer contains matrix multiplications, elementwise operations, and memory access.
+         </li>
+         <li>
+          Separate host RAM from GPU VRAM.
+         </li>
+         <li>
+          We study the hardware now that you can identify the tensors it stores and operations it executes.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#numerical-work-happens-on-physical-hardware">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 22 · Section 2
+       </div>
+       <h3>
+        Parameters are only the first memory item
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          If a model has P parameters stored with b bytes each, weight memory is P×b.
+         </li>
+         <li>
+          During training, gradients, optimizer moments, optional master weights, activations, and temporary buffers add memory.
+         </li>
+         <li>
+          An inference weight estimate therefore does not answer whether the model can train or handle a long batched context.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#parameters-are-only-the-first-memory-item">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 22 · Section 3
+       </div>
+       <h3>
+        A worked training state estimate
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          An illustrative mixed-precision Adam arrangement uses 2 bytes of weights, 2 of gradients, 4 of master weights, and 8 for two optimizer moments per parameter.
+         </li>
+         <li>
+          At 500 million parameters, counted state is 8 billion bytes, about 7.45 GiB.
+         </li>
+         <li>
+          The interactive worksheet explicitly reports partial estimates.
+         </li>
+        </ul>
+        <figure class="mechanism-figure">
+         <figcaption>
+          What occupies device memory
+         </figcaption>
+         <ol class="mechanism-flow">
+          <li>
+           <span class="mechanism-number">
+            01
+           </span>
+           <strong>
+            Weights
+           </strong>
+           <small>
+            parameters + quantization metadata
+           </small>
+          </li>
+          <li>
+           <span class="mechanism-number">
+            02
+           </span>
+           <strong>
+            State
+           </strong>
+           <small>
+            KV cache or training states
+           </small>
+          </li>
+          <li>
+           <span class="mechanism-number">
+            03
+           </span>
+           <strong>
+            Transient
+           </strong>
+           <small>
+            activations + workspace
+           </small>
+          </li>
+          <li>
+           <span class="mechanism-number">
+            04
+           </span>
+           <strong>
+            Runtime
+           </strong>
+           <small>
+            allocator + framework overhead
+           </small>
+          </li>
+         </ol>
+         <p>
+          Use one unit consistently. 1 GiB = 2³⁰ bytes; 1 GB = 10⁹ bytes.
+         </p>
+        </figure>
+        <a class="slide-section-link" href="#a-worked-training-state-estimate">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 22 · Section 4
+       </div>
+       <h3>
+        A KV cache calculation
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Use L layers, batch B, cached length T, H_kv key/value heads, head width d_head, and b bytes per cached element.
+         </li>
+         <li>
+          With 24 layers, batch 1, 2048 tokens, eight KV heads, dimension 64, and two-byte values, the result is 100663296 bytes, or 96 MiB.
+         </li>
+         <li>
+          Longer context and larger batch multiply this quantity.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#a-kv-cache-calculation">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 22 · Section 5
+       </div>
+       <h3>
+        Memory hierarchy and movement
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          GPU execution uses registers, shared memory within blocks, caches, and device DRAM under hardware-specific arrangements.
+         </li>
+         <li>
+          A high advertised arithmetic rate does not guarantee a fast application.
+         </li>
+         <li>
+          Next week's kernel makes this visible with vector addition.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#memory-hierarchy-and-movement">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 22 · Section 6
+       </div>
+       <h3>
+        Smaller microbatches and checkpointing
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Gradient accumulation lets several small microbatches contribute to one effective update.
+         </li>
+         <li>
+          If one sequence already causes OOM, accumulation alone cannot shrink that sequence's footprint.
+         </li>
+         <li>
+          Activation checkpointing saves some intermediate storage by recomputing work during backward.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#smaller-microbatches-and-checkpointing">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 22 · Section 7
+       </div>
+       <h3>
+        Choosing precision and measuring reality
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Float32, float16, bfloat16, and quantized representations have different numerical ranges, memory costs, and hardware support.
+         </li>
+         <li>
+          Use actual device properties and compatible software.
+         </li>
+         <li>
+          Record allocated and peak memory under a defined workload.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#choosing-precision-and-measuring-reality">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 22 · Section 8
+       </div>
+       <h3>
+        Quantized inference still has several memory components
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          A billion four-bit weights have a packed payload of 500,000,000 bytes, about 0.466 GiB, before scales, zero-points or codebooks, padding, and modules kept at higher precision.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#quantized-inference-still-has-several-memory-components">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 22 · Section 9
+       </div>
+       <h3>
+        A bandwidth estimate explains slow single-request decode
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          For an idealized batch-one decode step, suppose dense weights are read once per generated token and weight traffic dominates. tokens/s≈sustained memory bandwidth divided by bytes of weights read per token.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#a-bandwidth-estimate-explains-slow-single-request-decode">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 22 · Section 10
+       </div>
+       <h3>
+        FSDP and ZeRO divide training state across devices
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Data parallelism normally replicates model weights and computes gradients from different batches.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#fsdp-and-zero-divide-training-state-across-devices">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 22 · Section 11
+       </div>
+       <h3>
+        Worked practice and a readiness check
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Calculate weight-only memory for 300 million two-byte parameters and compare with a 16-byte training-state estimate.
+         </li>
+         <li>
+          Change context length from 2048 to 4096 in the cache formula and explain the doubling.
+         </li>
+         <li>
+          You are ready when you can link resource costs to particular tensors and distinguish an estimate, an actual measurement, and a hardware capability assumption.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#worked-practice-and-a-readiness-check">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+     </div>
+     <div class="deck-controls">
+      <button class="slide-prev" type="button">
+       ← Previous
+      </button>
+      <span aria-live="polite" class="slide-counter">
+       1 / 11
+      </span>
+      <button class="slide-next" type="button">
+       Next →
+      </button>
+     </div>
+     <label class="slide-jump-label">
+      Go to slide
+      <select aria-label="Go to slide" class="slide-jump">
+       <option value="0">
+        1. Numerical work happens on physical hardware
+       </option>
+       <option value="1">
+        2. Parameters are only the first memory item
+       </option>
+       <option value="2">
+        3. A worked training state estimate
+       </option>
+       <option value="3">
+        4. A KV cache calculation
+       </option>
+       <option value="4">
+        5. Memory hierarchy and movement
+       </option>
+       <option value="5">
+        6. Smaller microbatches and checkpointing
+       </option>
+       <option value="6">
+        7. Choosing precision and measuring reality
+       </option>
+       <option value="7">
+        8. Quantized inference still has several memory components
+       </option>
+       <option value="8">
+        9. A bandwidth estimate explains slow single-request decode
+       </option>
+       <option value="9">
+        10. FSDP and ZeRO divide training state across devices
+       </option>
+       <option value="10">
+        11. Worked practice and a readiness check
+       </option>
+      </select>
+     </label>
+     <button aria-pressed="false" class="deck-all" type="button">
+      Show all slides
+     </button>
+    </section>
+    <section aria-label="Where GPU memory goes" class="visual-lesson">
+     <div class="eyebrow">
+      Explore the mechanism
+     </div>
+     <h2>
+      Where GPU memory goes
+     </h2>
+     <p class="visual-intro">
+      Compare parameter state and context-dependent cache estimates.
+     </p>
+     <div data-widget="memory">
+      <p>
+       Enable JavaScript to use this illustration. The lecture notes below explain the same mechanism.
+      </p>
+     </div>
+    </section>
+    <nav aria-label="In this lesson" class="reader-toc">
+     <strong>
+      In this lesson
+     </strong>
+     <ol>
+      <li>
+       <a href="#numerical-work-happens-on-physical-hardware">
+        Numerical work happens on physical hardware
+       </a>
+      </li>
+      <li>
+       <a href="#parameters-are-only-the-first-memory-item">
+        Parameters are only the first memory item
+       </a>
+      </li>
+      <li>
+       <a href="#a-worked-training-state-estimate">
+        A worked training state estimate
+       </a>
+      </li>
+      <li>
+       <a href="#a-kv-cache-calculation">
+        A KV cache calculation
+       </a>
+      </li>
+      <li>
+       <a href="#memory-hierarchy-and-movement">
+        Memory hierarchy and movement
+       </a>
+      </li>
+      <li>
+       <a href="#smaller-microbatches-and-checkpointing">
+        Smaller microbatches and checkpointing
+       </a>
+      </li>
+      <li>
+       <a href="#choosing-precision-and-measuring-reality">
+        Choosing precision and measuring reality
+       </a>
+      </li>
+      <li>
+       <a href="#quantized-inference-still-has-several-memory-components">
+        Quantized inference still has several memory components
+       </a>
+      </li>
+      <li>
+       <a href="#a-bandwidth-estimate-explains-slow-single-request-decode">
+        A bandwidth estimate explains slow single-request decode
+       </a>
+      </li>
+      <li>
+       <a href="#fsdp-and-zero-divide-training-state-across-devices">
+        FSDP and ZeRO divide training state across devices
+       </a>
+      </li>
+      <li>
+       <a href="#worked-practice-and-a-readiness-check">
+        Worked practice and a readiness check
+       </a>
+      </li>
+     </ol>
+    </nav>
+    <article class="prose full-notes" id="full-notes" role="tabpanel">
+     <div class="eyebrow">
+      Complete lecture reader
+     </div>
+     <h2>
+      Read the full explanation
+     </h2>
+     <aside class="notation-key">
+      <strong>
+       Notation in this lesson
+      </strong>
+      <p>
+       B: batch · T: tokens · d_model: model width · H: query heads · H_kv: key/value heads · d_head: query/key width per head · d_value: value width per head
+      </p>
+     </aside>
+     <h3 id="numerical-work-happens-on-physical-hardware">
+      Numerical work happens on physical hardware
+     </h3>
+     <p>
+      A transformer contains matrix multiplications, elementwise operations, and memory access. A CPU can run a small model. A GPU can execute many suitable operations in parallel, but performance also depends on data movement and memory capacity.
+     </p>
+     <p>
+      Separate host RAM from GPU VRAM. A model downloaded to disk does not automatically fit in either. A tensor copied between CPU and GPU incurs movement and coordination.
+     </p>
+     <p>
+      We study the hardware now that you can identify the tensors it stores and operations it executes.
+     </p>
+     <h3 id="parameters-are-only-the-first-memory-item">
+      Parameters are only the first memory item
+     </h3>
+     <p>
+      If a model has P parameters stored with b bytes each, weight memory is P×b. For 500 million parameters at two bytes, that is one billion bytes, about 0.93 GiB.
+     </p>
+     <p>
+      During training, gradients, optimizer moments, optional master weights, activations, and temporary buffers add memory. During generation, a KV cache can be large.
+     </p>
+     <p>
+      An inference weight estimate therefore does not answer whether the model can train or handle a long batched context.
+     </p>
+     <h3 id="a-worked-training-state-estimate">
+      A worked training state estimate
+     </h3>
+     <figure class="mechanism-figure">
+      <figcaption>
+       What occupies device memory
+      </figcaption>
+      <ol class="mechanism-flow">
+       <li>
+        <span class="mechanism-number">
+         01
+        </span>
+        <strong>
+         Weights
+        </strong>
+        <small>
+         parameters + quantization metadata
+        </small>
+       </li>
+       <li>
+        <span class="mechanism-number">
+         02
+        </span>
+        <strong>
+         State
+        </strong>
+        <small>
+         KV cache or training states
+        </small>
+       </li>
+       <li>
+        <span class="mechanism-number">
+         03
+        </span>
+        <strong>
+         Transient
+        </strong>
+        <small>
+         activations + workspace
+        </small>
+       </li>
+       <li>
+        <span class="mechanism-number">
+         04
+        </span>
+        <strong>
+         Runtime
+        </strong>
+        <small>
+         allocator + framework overhead
+        </small>
+       </li>
+      </ol>
+      <p>
+       Use one unit consistently. 1 GiB = 2³⁰ bytes; 1 GB = 10⁹ bytes.
+      </p>
+     </figure>
+     <p>
+      An illustrative mixed-precision Adam arrangement uses 2 bytes of weights, 2 of gradients, 4 of master weights, and 8 for two optimizer moments per parameter. That totals 16 bytes before activations and overhead.
+     </p>
+     <p>
+      At 500 million parameters, counted state is 8 billion bytes, about 7.45 GiB. Different implementations and precision choices change the accounting.
+     </p>
+     <p>
+      The interactive worksheet explicitly reports partial estimates. Being below a VRAM line in that worksheet is not proof that a real runtime will fit.
+     </p>
+     <h3 id="a-kv-cache-calculation">
+      A KV cache calculation
+     </h3>
+     <p>
+      Use L layers, batch B, cached length T, H_kv key/value heads, head width d_head, and b bytes per cached element. Approximate KV-cache bytes equal 2×L×B×T×H_kv×d_head×b. The factor two accounts for keys and values. d_model is the residual-stream width; H is the query-head count. In ordinary equal-width multi-head attention d_model=H×d_head. GQA has H_kv smaller than H. This simplified expression assumes each key and value head has the same width d_head. If value width differs, replace 2×d_head by d_head+d_value.
+     </p>
+     <p>
+      With 24 layers, batch 1, 2048 tokens, eight KV heads, dimension 64, and two-byte values, the result is 100663296 bytes, or 96 MiB.
+     </p>
+     <p>
+      Longer context and larger batch multiply this quantity. Grouped-query attention uses fewer KV heads than query heads; inspect the architecture rather than substituting the query-head count automatically.
+     </p>
+     <h3 id="memory-hierarchy-and-movement">
+      Memory hierarchy and movement
+     </h3>
+     <p>
+      GPU execution uses registers, shared memory within blocks, caches, and device DRAM under hardware-specific arrangements. Large tensors live in device memory; moving and re-reading them can dominate an operation.
+     </p>
+     <p>
+      A high advertised arithmetic rate does not guarantee a fast application. A low-arithmetic-intensity operation can spend much of its time moving values.
+     </p>
+     <p>
+      Next week's kernel makes this visible with vector addition. The operation is simple enough that indexing and transfer boundaries can be checked independently.
+     </p>
+     <h3 id="smaller-microbatches-and-checkpointing">
+      Smaller microbatches and checkpointing
+     </h3>
+     <p>
+      Gradient accumulation lets several small microbatches contribute to one effective update. It can reduce the batch portion of activation memory, but persistent model/optimizer state remains.
+     </p>
+     <p>
+      If one sequence already causes OOM, accumulation alone cannot shrink that sequence's footprint. Shorter context, activation checkpointing, a smaller model, or state sharding may address different components.
+     </p>
+     <p>
+      Activation checkpointing saves some intermediate storage by recomputing work during backward. The tradeoff is extra computation, not free memory removal.
+     </p>
+     <h3 id="choosing-precision-and-measuring-reality">
+      Choosing precision and measuring reality
+     </h3>
+     <p>
+      Float32, float16, bfloat16, and quantized representations have different numerical ranges, memory costs, and hardware support. Check the actual GPU and installed software before selecting a compute dtype or optimized kernel.
+     </p>
+     <p>
+      Use actual device properties and compatible software. A free Colab session may offer a different GPU or no GPU, so save checkpoints and measured metadata.
+     </p>
+     <p>
+      Record allocated and peak memory under a defined workload. Allocator reservation and warmup can make a simplistic reading misleading.
+     </p>
+     <h3 id="quantized-inference-still-has-several-memory-components">
+      Quantized inference still has several memory components
+     </h3>
+     <p>
+      A billion four-bit weights have a packed payload of 500,000,000 bytes, about 0.466 GiB, before scales, zero-points or codebooks, padding, and modules kept at higher precision. Add KV cache, temporary activations, workspaces, and runtime allocation. Weight precision and compute precision can differ: a kernel may unpack low-bit weights and accumulate in a wider type. A “4-bit model” is not a promise that every tensor uses four bits.
+     </p>
+     <h3 id="a-bandwidth-estimate-explains-slow-single-request-decode">
+      A bandwidth estimate explains slow single-request decode
+     </h3>
+     <p>
+      For an idealized batch-one decode step, suppose dense weights are read once per generated token and weight traffic dominates. tokens/s≈sustained memory bandwidth divided by bytes of weights read per token. At 200 GiB/s and 4 GiB of weight reads, the ideal ceiling is about 50 tokens/s. At 2 GiB it would be 100 tokens/s under the same assumptions. Real throughput is lower when cache traffic, dequantization, compute, and launch overhead matter. Batching can reuse weights across requests, so this batch-one estimate is not a general serving-throughput formula.
+     </p>
+     <h3 id="fsdp-and-zero-divide-training-state-across-devices">
+      FSDP and ZeRO divide training state across devices
+     </h3>
+     <p>
+      Data parallelism normally replicates model weights and computes gradients from different batches. ZeRO stage 1 shards optimizer state, stage 2 also shards gradients, and stage 3 also shards parameters. FSDP similarly shards parameters and associated training state, gathering needed parameter groups for computation and redistributing results. If an idealized 16-GiB counted state is evenly sharded over four devices, its persistent shard can approach 4 GiB per device; activations, communication buffers, and temporarily gathered weights still add memory. Sharding saves per-device state by adding communication and scheduling work.
+     </p>
+     <h3 id="worked-practice-and-a-readiness-check">
+      Worked practice and a readiness check
+     </h3>
+     <p>
+      Calculate weight-only memory for 300 million two-byte parameters and compare with a 16-byte training-state estimate. List omitted components in both.
+     </p>
+     <p>
+      Change context length from 2048 to 4096 in the cache formula and explain the doubling. Then identify a memory issue that accumulation can help and one it cannot.
+     </p>
+     <p>
+      You are ready when you can link resource costs to particular tensors and distinguish an estimate, an actual measurement, and a hardware capability assumption.
+     </p>
+     <details class="reference-details" id="reference-details">
+      <summary>
+       Reference details and checks
+      </summary>
+      <h3 id="review-a-intuition">
+       Review A: Intuition
+      </h3>
+      <p>
+       A GPU accelerates many similar arithmetic operations, but a model must also move data and fit its working state into memory. “More FLOPs” alone does not predict whether your experiment will run or be fast. Distinguish CPU RAM, GPU VRAM, device memory bandwidth, host-to-device transfers and compute throughput.
+      </p>
+      <p>
+       The CPU schedules work and launches kernels. GPU execution groups threads across streaming multiprocessors. Registers are close to individual execution contexts, shared memory is visible within a block, caches serve broader access, and device DRAM stores large tensors. A tensor moving repeatedly between CPU and GPU can dominate a short computation even if the arithmetic is fast.
+      </p>
+      <h3 id="review-a-training-versus-inference">
+       Review A: Training versus inference
+      </h3>
+      <p>
+       Parameter storage is
+       <code>
+        parameter_count * bytes_per_parameter
+       </code>
+       . Training may additionally store gradients, optimizer moments, master weights and activations. For an illustrative mixed-precision Adam configuration, 2 bytes of model weights + 2 bytes of gradients + 4 bytes of master weights + 8 bytes of two moments gives 16 bytes per parameter before activations and overhead. This is an example configuration, not a universal rule; frameworks and precision choices differ.
+      </p>
+      <p>
+       For 500 million parameters, that illustrative training state is about 7.45 GiB. A two-byte inference weight copy alone is about 0.93 GiB. Both use the same binary unit as the earlier estimate: 1 GiB=2^30 bytes. For conversion, 1 GB=10^9 bytes≈0.93132 GiB. LoRA reduces trainable parameter state, while activations and frozen base weights remain in the budget.
+      </p>
+      <h3 id="review-a-kv-cache-worked-example">
+       Review A: KV cache worked example
+      </h3>
+      <p>
+       During autoregressive inference, cache bytes≈2×L×B×T×H_kv×d_head×b. For L=24, B=1, T=2048, H_kv=8, d_head=64, and b=2, this is 100,663,296 bytes=96 MiB. Increasing B or T multiplies the cache. Use H_kv, not the query-head count H, for a GQA model.
+      </p>
+      <p>
+       The original full attention score tensor also scales quadratically in sequence length when explicitly materialized. Memory-efficient attention implementations avoid storing all those intermediate scores in device DRAM, while retaining the operation's mathematical meaning subject to numerical precision differences.
+      </p>
+      <h3 id="review-a-experiment">
+       Review A: Experiment
+      </h3>
+      <p>
+       <a href="../tutorials/22.html">
+        Tutorial 22: Cpu gpu memory and model resource accounting
+       </a>
+       calculates weight, optimizer, and KV-cache estimates.
+       <a href="../tutorials/23.html">
+        Tutorial 23: Cuda kernels and profiling
+       </a>
+       provides the device profiling exercise for comparing estimates with allocated and peak memory. Account for warmup and allocator reservations. When an out-of-memory error occurs, reduce sequence length and microbatch before reaching for a different framework. Gradient accumulation changes effective batch but does not shrink the memory required by a single microbatch.
+      </p>
+      <p>
+       <strong>
+        Exit criterion:
+       </strong>
+       explain why a model fits inference but not training, and estimate a context-dependent cache.
+       <strong>
+        Reading:
+       </strong>
+       <a class="inline-reading" href="../resources.html#reference-r01">
+        Stanford CS336 Language Modeling from Scratch (R01)
+       </a>
+       resource-accounting topic;
+       <a class="inline-reading" href="../resources.html#reference-r16">
+        NVIDIA CUDA programming guide (R16)
+       </a>
+       memory hierarchy.
+       <strong>
+        Tutorial:
+       </strong>
+       22.
+      </p>
+     </details>
+    </article>
+    <nav aria-label="Adjacent lectures" class="chapter-pagination">
+     <a href="21.html">
+      <small>
+       Previous week
+      </small>
+      Evaluating retrieval answers and uncertainty
+     </a>
+     <a href="23.html">
+      <small>
+       Next week
+      </small>
+      CUDA kernels and profiling
+     </a>
+    </nav>
+   </div>
+   <footer class="footer">
+    <span>
+     Applied AI · An independent self-study course
+    </span>
+    <span>
+     32 weeks · 10 hours per week
+    </span>
+    <a href="../resources.html#about-this-course">
+     About and sources
+    </a>
+   </footer>
+  </main>
+  <dialog aria-labelledby="search-title" class="search-dialog">
+   <div class="dialog-head">
+    <h2 id="search-title">
+     Find a concept
+    </h2>
+    <button aria-label="Close search" class="search-close" type="button">
+     Close
+    </button>
+   </div>
+   <label class="sr-only" for="course-search">
+    Search all lectures and tutorials
+   </label>
+   <input autocomplete="off" id="course-search" placeholder="Try attention, fine-tuning, or harness…" type="search"/>
+   <p aria-live="polite" class="search-status">
+    Search lecture notes, tutorials, tests and readings.
+   </p>
+   <div class="search-results">
+   </div>
+  </dialog>
+  <div aria-live="polite" class="toast" role="status">
+  </div>
+ </body>
+</html>

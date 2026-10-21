@@ -1,103 +1,1462 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/><title>Harnesses planning memory and bounded execution · Applied AI</title><meta content="Applied generative AI and LLM systems course material" name="description"/><meta content="#173c36" name="theme-color"/><link href="../assets/favicon.svg" rel="icon" type="image/svg+xml"/><link href="../assets/style.css" rel="stylesheet"/><link href="../assets/slides.css" rel="stylesheet"/><script>window.COURSE_BASE="../";</script><script defer="" src="../assets/site-config.js"></script><script defer="" src="../assets/search-index.js"></script><script defer="" src="../assets/app.js"></script><script defer="" src="../assets/visuals.js"></script><script defer="" src="../assets/slides.js"></script><script defer="" src="../assets/beginner-visuals.js"></script><link href="../zh-HK/lectures/28.html" hreflang="zh-HK" rel="alternate"/><link href="../assets/bilingual.css" rel="stylesheet"/></head><body data-page-kind="lecture" data-week="28"><a class="skip-link" href="#main">Skip to content</a><header class="topbar"><button aria-controls="course-sidebar" aria-expanded="false" class="menu-toggle" type="button">Menu</button><a class="brand" href="../index.html"><span aria-hidden="true" class="brand-mark">a<span>i</span></span><span>APPLIED AI<small>Principles into practice</small></span></a><nav aria-label="Main navigation"><a href="../index.html">The course</a><a href="../visuals.html">Visual lab</a><a href="../project.html">Project</a><a class="language-switch" href="../zh-HK/lectures/28.html" hreflang="zh-HK" lang="zh-HK">繁體中文</a></nav><button class="search-open" type="button">Search the course <span aria-hidden="true">/</span></button></header><aside aria-label="Course chapters" class="sidebar" id="course-sidebar"><a class="side-home" href="../index.html">Course overview</a><details class="semester-nav"><summary>Semester 1<span>Weeks 1–16</span></summary><ol start="1"><li><a href="../lectures/01.html"><span class="week-number">01</span><span>What a language model is trying to learn</span><span class="week-tick" data-week-tick="1"></span></a></li><li><a href="../lectures/02.html"><span class="week-number">02</span><span>From text to tokens and numerical IDs</span><span class="week-tick" data-week-tick="2"></span></a></li><li><a href="../lectures/03.html"><span class="week-number">03</span><span>What word vectors can represent</span><span class="week-tick" data-week-tick="3"></span></a></li><li><a href="../lectures/04.html"><span class="week-number">04</span><span>From scores to probabilities and learning signals</span><span class="week-tick" data-week-tick="4"></span></a></li><li><a href="../lectures/05.html"><span class="week-number">05</span><span>Why language needs context and order</span><span class="week-tick" data-week-tick="5"></span></a></li><li><a href="../lectures/06.html"><span class="week-number">06</span><span>Attention begins as a weighted mixture</span><span class="week-tick" data-week-tick="6"></span></a></li><li><a href="../lectures/07.html"><span class="week-number">07</span><span>Where queries keys and values come from</span><span class="week-tick" data-week-tick="7"></span></a></li><li><a href="../lectures/08.html"><span class="week-number">08</span><span>Scaling and masking attention correctly</span><span class="week-tick" data-week-tick="8"></span></a></li><li><a href="../lectures/09.html"><span class="week-number">09</span><span>Multiple attention heads and position</span><span class="week-tick" data-week-tick="9"></span></a></li><li><a href="../lectures/10.html"><span class="week-number">10</span><span>The transformer block step by step</span><span class="week-tick" data-week-tick="10"></span></a></li><li><a href="../lectures/11.html"><span class="week-number">11</span><span>Encoders decoders and complete model architectures</span><span class="week-tick" data-week-tick="11"></span></a></li><li><a href="../lectures/12.html"><span class="week-number">12</span><span>Training a small transformer</span><span class="week-tick" data-week-tick="12"></span></a></li><li><a href="../lectures/13.html"><span class="week-number">13</span><span>Generation decoding and the KV cache</span><span class="week-tick" data-week-tick="13"></span></a></li><li><a href="../lectures/14.html"><span class="week-number">14</span><span>From pretraining to instruction following and reasoning</span><span class="week-tick" data-week-tick="14"></span></a></li><li><a href="../lectures/15.html"><span class="week-number">15</span><span>Generative AI beyond text</span><span class="week-tick" data-week-tick="15"></span></a></li><li><a href="../lectures/16.html"><span class="week-number">16</span><span>A complete transformer walkthrough and first semester review</span><span class="week-tick" data-week-tick="16"></span></a></li></ol></details><details class="semester-nav" open=""><summary>Semester 2<span>Weeks 17–32</span></summary><ol start="17"><li><a href="../lectures/17.html"><span class="week-number">17</span><span>From word vectors to semantic search</span><span class="week-tick" data-week-tick="17"></span></a></li><li><a href="../lectures/18.html"><span class="week-number">18</span><span>A vector database from a list of vectors</span><span class="week-tick" data-week-tick="18"></span></a></li><li><a href="../lectures/19.html"><span class="week-number">19</span><span>RAG as an open book question</span><span class="week-tick" data-week-tick="19"></span></a></li><li><a href="../lectures/20.html"><span class="week-number">20</span><span>Improving RAG without losing the basic task</span><span class="week-tick" data-week-tick="20"></span></a></li><li><a href="../lectures/21.html"><span class="week-number">21</span><span>Evaluating retrieval answers and uncertainty</span><span class="week-tick" data-week-tick="21"></span></a></li><li><a href="../lectures/22.html"><span class="week-number">22</span><span>CPU GPU memory and model resource accounting</span><span class="week-tick" data-week-tick="22"></span></a></li><li><a href="../lectures/23.html"><span class="week-number">23</span><span>CUDA kernels and profiling</span><span class="week-tick" data-week-tick="23"></span></a></li><li><a href="../lectures/24.html"><span class="week-number">24</span><span>Fine tuning starts with a teaching dataset</span><span class="week-tick" data-week-tick="24"></span></a></li><li><a href="../lectures/25.html"><span class="week-number">25</span><span>LoRA and QLoRA from a small matrix</span><span class="week-tick" data-week-tick="25"></span></a></li><li><a href="../lectures/26.html"><span class="week-number">26</span><span>Fine tuning experiments preferences and distillation</span><span class="week-tick" data-week-tick="26"></span></a></li><li><a href="../lectures/27.html"><span class="week-number">27</span><span>Tools functions workflows and agents</span><span class="week-tick" data-week-tick="27"></span></a></li><li><a aria-current="page" href="../lectures/28.html"><span class="week-number">28</span><span>Harnesses planning memory and bounded execution</span><span class="week-tick" data-week-tick="28"></span></a></li><li><a href="../lectures/29.html"><span class="week-number">29</span><span>From a notebook to MLOps and inference serving</span><span class="week-tick" data-week-tick="29"></span></a></li><li><a href="../lectures/30.html"><span class="week-number">30</span><span>Monitoring security regression tests and rollback</span><span class="week-tick" data-week-tick="30"></span></a></li><li><a href="../lectures/31.html"><span class="week-number">31</span><span>Integrating the documentation assistant and advanced extensions</span><span class="week-tick" data-week-tick="31"></span></a></li><li><a href="../lectures/32.html"><span class="week-number">32</span><span>Review defense and a continuing learning plan</span><span class="week-tick" data-week-tick="32"></span></a></li></ol></details><div class="side-links"><a href="../visuals.html">Visual laboratory <span>14 interactive lessons</span></a><a href="../project.html">Documentation assistant <span>Your capstone project</span></a><a href="../resources.html">Readings and setup</a></div><div class="side-progress"><div><span>Your progress</span><strong data-progress-count="">0 / 32</strong></div><progress aria-label="Completed lectures" max="32" value="0"></progress><small>Saved in this browser</small></div></aside><main class="main" id="main"><div class="content"><div class="chapter-header"><div class="eyebrow">Semester 2 / Week 28</div><h1>Harnesses planning memory and bounded execution</h1></div><div class="lesson-links"><a href="../tutorials/28.html">Tutorial 28</a><a href="../tests/28.html">Test your understanding</a><button aria-pressed="false" class="mark-complete" data-week="28" type="button">Mark as complete</button></div><section aria-label="Lecture slides" class="lecture-deck" id="lecture-slides"><div class="deck-top"><div><div class="eyebrow">Lecture slides · Week 28</div><h2>Learn one step at a time.</h2></div><button class="deck-present" type="button">Present</button></div><p class="deck-help">Read each explanation, pause to predict the result, then continue. Use the arrow keys while the presentation is focused. The complete lecture reader is below.</p><div aria-label="Presentation: use left and right arrow keys" class="slide-viewport" tabindex="0"><section class="lecture-slide" data-slide=""><div class="slide-stage">Start with an example</div><h3>The controller makes the agent a runnable system</h3><div class="slide-prose"><p>Imagine supervising a school trip. A list of possible tasks is not enough; someone must track what has happened and decide when to stop. An agent execution harness serves that coordination role in code.</p>
-<p>Its state can contain the question, allowed version, observations, evidence IDs, step count, and status. The model proposes an action; the harness validates and executes it.</p>
-<p>An evaluation harness has a different role: load tasks, run a specified system, check outcomes, and collect metrics. Both need versioned configuration, but they are not interchangeable.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Start with an example</div><h3>A complete small loop</h3><div class="slide-prose"><p>Initialize state. Ask the planner for a typed proposal. If it is a final answer, validate the response contract and stop. If it is a tool action, validate name, schema, scope, and bounds before executing.</p>
-<p>Record the normalized observation, update state, and repeat within the budget. Terminate explicitly on invalid proposals, failures, exhaustion, timeout, or cancellation under the implemented policy.</p>
-<p>Every path should leave a trace. An exception or repeated tool request should not silently turn into an invented successful answer.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Build the mechanism</div><h3>A three proposal trace</h3><div class="slide-prose"><p>Proposal one retrieves the retry rule. Proposal two calculates the cumulative delay. Proposal three returns the result with observed source IDs.</p>
-<p>If instead the planner keeps requesting another calculation, a three-proposal budget eventually returns budget_exhausted. The controller does not keep going simply because the model asks politely.</p>
-<p>Checking a citation ID against previously retrieved evidence establishes a structural boundary. Whether that passage supports the final claim remains an evaluation question.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Build the mechanism</div><h3>Time and resource limits</h3><div class="slide-prose"><p>A step cap bounds loop iterations but cannot interrupt a blocking network call. Checking elapsed time after a call returns does not impose a real call deadline.</p>
-<p>Use client timeouts and cancellation for appropriate dependencies, and process/container controls for execution that needs isolation. Bound tool output and model context as well.</p>
-<p>The synchronous reference controller demonstrates step limits and narrow arithmetic safety. It does not claim to be a complete arbitrary-code sandbox.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Build the mechanism</div><h3>Planning methods</h3><div class="slide-prose"><p>ReAct-style interaction alternates actions and observations. Plan-and-execute creates a proposed plan and then performs or revises it. Routing chooses a specialized workflow.</p>
-<p>These patterns can be implemented with different libraries, but the same questions apply: what state is authoritative, what actions are permitted, what observation changes the plan, and what terminates execution?</p>
-<p>Multiple agents add coordination, duplicated context, cost, and new failure modes. They are an optional advanced direction rather than a prerequisite for this single-controller project.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Build the mechanism</div><h3>Memory has several meanings</h3><div class="slide-prose"><p>Current chat history, structured task state, retrieved documents, and persistent user memory have different lifetimes and trust properties.</p>
-<p>A summary can compress text but omit a condition. If a user switches from version 1 to a comparison with version 2, preserve that intent explicitly instead of trusting a summary saying “user uses version 1.”</p>
-<p>Authorization must come from authenticated application state, not model-written memory. Keep critical constraints and source provenance in structured fields.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Build the mechanism</div><h3>Task evaluation inspects traces</h3><div class="slide-prose"><p>A final sentence can look correct while hiding a forbidden action or missed required calculation. Measure task success, call validity, forbidden calls, failures, budgets, latency, and total model work.</p>
-<p>An agent that never uses a required tool should not receive credit for an empty “valid-call” denominator. Define success predicates and audit traces.</p>
-<p>Retries need bounded, operation-specific behavior. Invalid arguments and non-idempotent side effects cannot be retried blindly as though they were transient read timeouts.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Build the mechanism</div><h3>Worked practice and a readiness check</h3><div class="slide-prose"><p>Use the visual harness for success, unknown tool, wrong version, and endless planner scenarios. Then run an actual model planner and compare with the deterministic workflow.</p>
-<p>Prepare at least 20 independently checked tasks and preserve both successful and failed traces. Explain one useful adaptive choice and one unnecessary action.</p>
-<p>You are ready when your agent is a bounded state machine with observable behavior rather than an unexamined prompt-to-framework call.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Optional deeper study</div><h3>A deeper pass after the worked introduction</h3><div class="slide-prose"><p>The following reference treatment is for a second pass. First explain the ordinary example above, then use the equations and implementation details below to make the explanation more precise.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Optional deeper study</div><h3>Further study 22 Intuition</h3><div class="slide-prose"><p>A workflow has a largely predetermined control path. An agent lets model outputs influence which action happens next. Both need orchestration code. Agentic behavior is useful when tasks require adapting to observations; it can be unnecessary overhead for a fixed lookup.</p>
-<p>The word harness has two relevant meanings. An <strong>agent execution harness</strong> manages state, model calls, tools, budgets, observation limits, cancellation and termination. An <strong>evaluation harness</strong> loads tasks, runs a specified system, records results and computes metrics. They may integrate, but they have different responsibilities. Naming both prevents the vague claim “we have a harness” from hiding missing controls.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Optional deeper study</div><h3>Further study 22 State and transitions</h3><div class="slide-prose"><p>Represent state explicitly: question, allowed version, evidence IDs, observations, step count, token/cost budget, status and error. A planner proposes either a tool action or a final response. A controller validates it, executes allowed actions and updates state. Termination reasons include success, invalid proposal, tool failure, step exhaustion, timeout and cancellation. Every path must be observable.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Optional deeper study</div><h3>Further study 22 Worked trace</h3><div class="slide-prose"><p>Step 1 retrieves retry rules. Step 2 calls a calculator with a bounded expression. Step 3 answers with the numerical result and source IDs. A repeated failed calculator call should not run forever. With a maximum of three planner steps, a proposal on the final step that still requires another observation should end with an explicit budget-exhausted status rather than a fabricated final answer.</p>
-<p>Wall-clock limits require real enforcement. Checking elapsed time only after a blocking call returns cannot interrupt that call. Use client timeouts for network tools and process/container limits for untrusted execution. Our synchronous starter enforces step limits and arithmetic bounds; its deployment extension requires per-call timeout/cancellation implementations.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Optional deeper study</div><h3>Further study 22 Experiment</h3><div class="slide-prose"><p>notebook 27 runs a deterministic planner through the controller to test the execution contract. This is a controller fixture, not evidence of LLM planning. notebook 28 connects a real model planner. Inject a planner that never stops, one that returns malformed JSON and one that invents a tool. Verify explicit terminal states and a finite number of tool calls.</p>
-<p>For each trace, ask whether the information shown to the model is necessary. Large tool outputs can overflow context or carry adversarial instructions. Bound and label observations, preserve authoritative metadata separately, and avoid treating tool text as new policy.</p>
-<p><strong>Exit criterion:</strong> implement a bounded state machine and distinguish execution from evaluation harnesses. <strong>Reading:</strong> R11; R03 context engineering topic. <strong>Tutorial:</strong> 28.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Optional deeper study</div><h3>A deeper pass after the worked introduction</h3><div class="slide-prose"><p>The following reference treatment is for a second pass. First explain the ordinary example above, then use the equations and implementation details below to make the explanation more precise.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Optional deeper study</div><h3>Further study 23 Intuition</h3><div class="slide-prose"><p>An agent's “memory” can mean its current prompt, a task scratch state, retrieved documents, or a persistent store of previous interactions. These have different retention and trust properties. More remembered text is not automatically more useful context.</p>
-<p>Maintain a typed task state for facts such as requested version, selected source IDs and tool outcomes. Summaries can compress long histories, but they can omit an exception or turn an uncertain observation into a confident assertion. Preserve critical constraints in structured fields and retain source provenance.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Optional deeper study</div><h3>Further study 23 Planning patterns</h3><div class="slide-prose"><p>ReAct-style systems interleave action selection and observations. Plan-and-execute generates a plan and then performs it, potentially revising it when observations disagree. Routing chooses a specialized workflow. Multi-agent systems distribute roles but add coordination, duplicated context, cost and evaluation complexity. A single bounded controller is the core path here; multi-agent implementation is not required.</p>
-<p>A fixed workflow for versioned lookup may be retrieve, pack, answer and validate. A troubleshooting task may benefit from conditional actions: inspect version, retrieve a rule, validate a config, then explain the first violated requirement. The latter supplies a concrete reason for adaptive planning.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Optional deeper study</div><h3>Further study 23 Worked memory failure</h3><div class="slide-prose"><p>A user first asks about v1, then says “now compare that with v2.” A summary storing only “user uses v1” can cause the next retrieval to filter out v2. Keep the task's allowed versions and comparison intent explicit. Authorization should come from authenticated application state, never from conversational memory or model-generated summaries.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Optional deeper study</div><h3>Further study 23 Experiment</h3><div class="slide-prose"><p>notebook 28 converts a small model's JSON proposal into a controller action. Compare it with a fixed workflow on the same set of lookups, calculations and troubleshooting tasks. Count invalid proposals, unnecessary tool calls, missed required actions, completion, latency and total model tokens. A small model may fail often; use those traces to decide where a deterministic route is preferable.</p>
-<p>Test a long irrelevant observation and a misleading instruction embedded in a retrieved page. Verify that policy fields stay outside the model's authority. A failed model proposal must produce a controlled result, not fall back to executing guessed arguments.</p>
-<p><strong>Exit criterion:</strong> justify adaptive planning for a specific task and identify which state belongs in structured memory. <strong>Reading:</strong> R11; R03 context engineering. <strong>Tutorial:</strong> 28.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Optional deeper study</div><h3>A deeper pass after the worked introduction</h3><div class="slide-prose"><p>The following reference treatment is for a second pass. First explain the ordinary example above, then use the equations and implementation details below to make the explanation more precise.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Optional deeper study</div><h3>Further study 24 Intuition</h3><div class="slide-prose"><p>A convincing final sentence can hide a failed or forbidden action. Agent evaluation must inspect the environment and trace, not merely score final text. For read-only tools, correctness includes choosing the right evidence and calculation. For side effects in a future extension, it also includes the final state and the absence of unintended changes.</p>
-<p>Define tasks with initial state, allowed actions, expected results and success predicates. Compare a model-only answer, a fixed tool workflow and the adaptive controller. Keep the tool affordances and budgets comparable. An agent given ten attempts should not be compared with a workflow allowed only one without reporting that difference.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Optional deeper study</div><h3>Further study 24 Metrics and recovery</h3><div class="slide-prose"><p>Task success, valid-call rate, forbidden-action rate, tool failures, step count, budget exhaustion and cost are complementary. A system that never calls a tool can have a perfect valid-call rate on an empty denominator; report how often it used tools and whether tasks required them. Failure should be typed so analysis can separate planning, validation, execution and answer errors.</p>
-<p>Retries must be bounded and appropriate. A transient read timeout may merit one backoff/retry. Repeating invalid arguments does not repair the schema. A non-idempotent side effect cannot be retried blindly. A circuit breaker limits repeated calls to a failing dependency; it does not replace correct per-request handling.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Optional deeper study</div><h3>Further study 24 Worked audit</h3><div class="slide-prose"><p>An agent completes 18/20 tasks, but one successful task includes an unauthorized call that happened to return harmless data. Under a zero-forbidden-action release gate, it fails. Another system completes 17/20 with no violations and clearly reports three controlled failures. Depending on requirements, the latter may be the deployable candidate. State the gate before evaluating.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Optional deeper study</div><h3>Further study 24 Experiment</h3><div class="slide-prose"><p>Create at least 20 tool tasks with deterministic checkers, including division by zero, unknown tool, wrong version, invalid config, misleading documentation and a forced step-limit failure. Run notebook 28, preserve full action/observation traces, and hand-audit a sample. Report failure counts even when the final answer looks reasonable.</p>
-<p>For open-ended troubleshooting, use a rubric plus manual review rather than pretending one exact string captures success. Your project report should include one case where the agent adds value and one where the fixed workflow is simpler and equally effective. If the agent never improves your tasks, it can remain an evaluated experimental branch rather than the default product.</p>
-<p><strong>Exit criterion:</strong> defend an agent release decision using trace-level evidence and recovery behavior. <strong>Reading:</strong> R02 stakeholder requirements; R11 task/action evaluation. <strong>Tutorial:</strong> 28.</p></div></section></div><div class="deck-controls"><button class="slide-prev" type="button">← Previous</button><span aria-live="polite" class="slide-counter">1 / 23</span><button class="slide-next" type="button">Next →</button></div><label class="slide-jump-label">Go to slide <select aria-label="Go to slide" class="slide-jump"><option value="0">1</option><option value="1">2</option><option value="2">3</option><option value="3">4</option><option value="4">5</option><option value="5">6</option><option value="6">7</option><option value="7">8</option><option value="8">9</option><option value="9">10</option><option value="10">11</option><option value="11">12</option><option value="12">13</option><option value="13">14</option><option value="14">15</option><option value="15">16</option><option value="16">17</option><option value="17">18</option><option value="18">19</option><option value="19">20</option><option value="20">21</option><option value="21">22</option><option value="22">23</option></select></label><button aria-pressed="false" class="deck-all" type="button">Show all slides</button><a class="reader-link" href="#full-notes">Read the complete lecture ↓</a></section><section aria-label="The agent and its controller" class="visual-lesson"><div class="eyebrow">Explore the mechanism</div><h2>The agent and its controller</h2><p class="visual-intro">Inspect typed proposals, validators, observations and bounded termination.</p><div data-widget="agent"><p>Enable JavaScript to use this illustration. The lecture notes below explain the same mechanism.</p></div></section><article class="prose full-notes" id="full-notes"><div class="eyebrow">Complete lecture reader</div><h2>Read the full explanation</h2><h3 id="the-controller-makes-the-agent-a-runnable-system">The controller makes the agent a runnable system</h3>
-<p>Imagine supervising a school trip. A list of possible tasks is not enough; someone must track what has happened and decide when to stop. An agent execution harness serves that coordination role in code.</p>
-<p>Its state can contain the question, allowed version, observations, evidence IDs, step count, and status. The model proposes an action; the harness validates and executes it.</p>
-<p>An evaluation harness has a different role: load tasks, run a specified system, check outcomes, and collect metrics. Both need versioned configuration, but they are not interchangeable.</p>
-<h3 id="a-complete-small-loop">A complete small loop</h3>
-<p>Initialize state. Ask the planner for a typed proposal. If it is a final answer, validate the response contract and stop. If it is a tool action, validate name, schema, scope, and bounds before executing.</p>
-<p>Record the normalized observation, update state, and repeat within the budget. Terminate explicitly on invalid proposals, failures, exhaustion, timeout, or cancellation under the implemented policy.</p>
-<p>Every path should leave a trace. An exception or repeated tool request should not silently turn into an invented successful answer.</p>
-<h3 id="a-three-proposal-trace">A three proposal trace</h3>
-<p>Proposal one retrieves the retry rule. Proposal two calculates the cumulative delay. Proposal three returns the result with observed source IDs.</p>
-<p>If instead the planner keeps requesting another calculation, a three-proposal budget eventually returns budget_exhausted. The controller does not keep going simply because the model asks politely.</p>
-<p>Checking a citation ID against previously retrieved evidence establishes a structural boundary. Whether that passage supports the final claim remains an evaluation question.</p>
-<h3 id="time-and-resource-limits">Time and resource limits</h3>
-<p>A step cap bounds loop iterations but cannot interrupt a blocking network call. Checking elapsed time after a call returns does not impose a real call deadline.</p>
-<p>Use client timeouts and cancellation for appropriate dependencies, and process/container controls for execution that needs isolation. Bound tool output and model context as well.</p>
-<p>The synchronous reference controller demonstrates step limits and narrow arithmetic safety. It does not claim to be a complete arbitrary-code sandbox.</p>
-<h3 id="planning-methods">Planning methods</h3>
-<p>ReAct-style interaction alternates actions and observations. Plan-and-execute creates a proposed plan and then performs or revises it. Routing chooses a specialized workflow.</p>
-<p>These patterns can be implemented with different libraries, but the same questions apply: what state is authoritative, what actions are permitted, what observation changes the plan, and what terminates execution?</p>
-<p>Multiple agents add coordination, duplicated context, cost, and new failure modes. They are an optional advanced direction rather than a prerequisite for this single-controller project.</p>
-<h3 id="memory-has-several-meanings">Memory has several meanings</h3>
-<p>Current chat history, structured task state, retrieved documents, and persistent user memory have different lifetimes and trust properties.</p>
-<p>A summary can compress text but omit a condition. If a user switches from version 1 to a comparison with version 2, preserve that intent explicitly instead of trusting a summary saying “user uses version 1.”</p>
-<p>Authorization must come from authenticated application state, not model-written memory. Keep critical constraints and source provenance in structured fields.</p>
-<h3 id="task-evaluation-inspects-traces">Task evaluation inspects traces</h3>
-<p>A final sentence can look correct while hiding a forbidden action or missed required calculation. Measure task success, call validity, forbidden calls, failures, budgets, latency, and total model work.</p>
-<p>An agent that never uses a required tool should not receive credit for an empty “valid-call” denominator. Define success predicates and audit traces.</p>
-<p>Retries need bounded, operation-specific behavior. Invalid arguments and non-idempotent side effects cannot be retried blindly as though they were transient read timeouts.</p>
-<h3 id="worked-practice-and-a-readiness-check">Worked practice and a readiness check</h3>
-<p>Use the visual harness for success, unknown tool, wrong version, and endless planner scenarios. Then run an actual model planner and compare with the deterministic workflow.</p>
-<p>Prepare at least 20 independently checked tasks and preserve both successful and failed traces. Explain one useful adaptive choice and one unnecessary action.</p>
-<p>You are ready when your agent is a bounded state machine with observable behavior rather than an unexamined prompt-to-framework call.</p>
-<h3 id="a-deeper-pass-after-the-worked-introduction">A deeper pass after the worked introduction</h3>
-<p>The following reference treatment is for a second pass. First explain the ordinary example above, then use the equations and implementation details below to make the explanation more precise.</p>
-<h3 id="further-study-22-intuition">Further study 22 Intuition</h3>
-<p>A workflow has a largely predetermined control path. An agent lets model outputs influence which action happens next. Both need orchestration code. Agentic behavior is useful when tasks require adapting to observations; it can be unnecessary overhead for a fixed lookup.</p>
-<p>The word harness has two relevant meanings. An <strong>agent execution harness</strong> manages state, model calls, tools, budgets, observation limits, cancellation and termination. An <strong>evaluation harness</strong> loads tasks, runs a specified system, records results and computes metrics. They may integrate, but they have different responsibilities. Naming both prevents the vague claim “we have a harness” from hiding missing controls.</p>
-<h3 id="further-study-22-state-and-transitions">Further study 22 State and transitions</h3>
-<p>Represent state explicitly: question, allowed version, evidence IDs, observations, step count, token/cost budget, status and error. A planner proposes either a tool action or a final response. A controller validates it, executes allowed actions and updates state. Termination reasons include success, invalid proposal, tool failure, step exhaustion, timeout and cancellation. Every path must be observable.</p>
-<h3 id="further-study-22-worked-trace">Further study 22 Worked trace</h3>
-<p>Step 1 retrieves retry rules. Step 2 calls a calculator with a bounded expression. Step 3 answers with the numerical result and source IDs. A repeated failed calculator call should not run forever. With a maximum of three planner steps, a proposal on the final step that still requires another observation should end with an explicit budget-exhausted status rather than a fabricated final answer.</p>
-<p>Wall-clock limits require real enforcement. Checking elapsed time only after a blocking call returns cannot interrupt that call. Use client timeouts for network tools and process/container limits for untrusted execution. Our synchronous starter enforces step limits and arithmetic bounds; its deployment extension requires per-call timeout/cancellation implementations.</p>
-<h3 id="further-study-22-experiment">Further study 22 Experiment</h3>
-<p>notebook 27 runs a deterministic planner through the controller to test the execution contract. This is a controller fixture, not evidence of LLM planning. notebook 28 connects a real model planner. Inject a planner that never stops, one that returns malformed JSON and one that invents a tool. Verify explicit terminal states and a finite number of tool calls.</p>
-<p>For each trace, ask whether the information shown to the model is necessary. Large tool outputs can overflow context or carry adversarial instructions. Bound and label observations, preserve authoritative metadata separately, and avoid treating tool text as new policy.</p>
-<p><strong>Exit criterion:</strong> implement a bounded state machine and distinguish execution from evaluation harnesses. <strong>Reading:</strong> R11; R03 context engineering topic. <strong>Tutorial:</strong> 28.</p>
-<h3 id="a-deeper-pass-after-the-worked-introduction-2">A deeper pass after the worked introduction</h3>
-<p>The following reference treatment is for a second pass. First explain the ordinary example above, then use the equations and implementation details below to make the explanation more precise.</p>
-<h3 id="further-study-23-intuition">Further study 23 Intuition</h3>
-<p>An agent's “memory” can mean its current prompt, a task scratch state, retrieved documents, or a persistent store of previous interactions. These have different retention and trust properties. More remembered text is not automatically more useful context.</p>
-<p>Maintain a typed task state for facts such as requested version, selected source IDs and tool outcomes. Summaries can compress long histories, but they can omit an exception or turn an uncertain observation into a confident assertion. Preserve critical constraints in structured fields and retain source provenance.</p>
-<h3 id="further-study-23-planning-patterns">Further study 23 Planning patterns</h3>
-<p>ReAct-style systems interleave action selection and observations. Plan-and-execute generates a plan and then performs it, potentially revising it when observations disagree. Routing chooses a specialized workflow. Multi-agent systems distribute roles but add coordination, duplicated context, cost and evaluation complexity. A single bounded controller is the core path here; multi-agent implementation is not required.</p>
-<p>A fixed workflow for versioned lookup may be retrieve, pack, answer and validate. A troubleshooting task may benefit from conditional actions: inspect version, retrieve a rule, validate a config, then explain the first violated requirement. The latter supplies a concrete reason for adaptive planning.</p>
-<h3 id="further-study-23-worked-memory-failure">Further study 23 Worked memory failure</h3>
-<p>A user first asks about v1, then says “now compare that with v2.” A summary storing only “user uses v1” can cause the next retrieval to filter out v2. Keep the task's allowed versions and comparison intent explicit. Authorization should come from authenticated application state, never from conversational memory or model-generated summaries.</p>
-<h3 id="further-study-23-experiment">Further study 23 Experiment</h3>
-<p>notebook 28 converts a small model's JSON proposal into a controller action. Compare it with a fixed workflow on the same set of lookups, calculations and troubleshooting tasks. Count invalid proposals, unnecessary tool calls, missed required actions, completion, latency and total model tokens. A small model may fail often; use those traces to decide where a deterministic route is preferable.</p>
-<p>Test a long irrelevant observation and a misleading instruction embedded in a retrieved page. Verify that policy fields stay outside the model's authority. A failed model proposal must produce a controlled result, not fall back to executing guessed arguments.</p>
-<p><strong>Exit criterion:</strong> justify adaptive planning for a specific task and identify which state belongs in structured memory. <strong>Reading:</strong> R11; R03 context engineering. <strong>Tutorial:</strong> 28.</p>
-<h3 id="a-deeper-pass-after-the-worked-introduction-3">A deeper pass after the worked introduction</h3>
-<p>The following reference treatment is for a second pass. First explain the ordinary example above, then use the equations and implementation details below to make the explanation more precise.</p>
-<h3 id="further-study-24-intuition">Further study 24 Intuition</h3>
-<p>A convincing final sentence can hide a failed or forbidden action. Agent evaluation must inspect the environment and trace, not merely score final text. For read-only tools, correctness includes choosing the right evidence and calculation. For side effects in a future extension, it also includes the final state and the absence of unintended changes.</p>
-<p>Define tasks with initial state, allowed actions, expected results and success predicates. Compare a model-only answer, a fixed tool workflow and the adaptive controller. Keep the tool affordances and budgets comparable. An agent given ten attempts should not be compared with a workflow allowed only one without reporting that difference.</p>
-<h3 id="further-study-24-metrics-and-recovery">Further study 24 Metrics and recovery</h3>
-<p>Task success, valid-call rate, forbidden-action rate, tool failures, step count, budget exhaustion and cost are complementary. A system that never calls a tool can have a perfect valid-call rate on an empty denominator; report how often it used tools and whether tasks required them. Failure should be typed so analysis can separate planning, validation, execution and answer errors.</p>
-<p>Retries must be bounded and appropriate. A transient read timeout may merit one backoff/retry. Repeating invalid arguments does not repair the schema. A non-idempotent side effect cannot be retried blindly. A circuit breaker limits repeated calls to a failing dependency; it does not replace correct per-request handling.</p>
-<h3 id="further-study-24-worked-audit">Further study 24 Worked audit</h3>
-<p>An agent completes 18/20 tasks, but one successful task includes an unauthorized call that happened to return harmless data. Under a zero-forbidden-action release gate, it fails. Another system completes 17/20 with no violations and clearly reports three controlled failures. Depending on requirements, the latter may be the deployable candidate. State the gate before evaluating.</p>
-<h3 id="further-study-24-experiment">Further study 24 Experiment</h3>
-<p>Create at least 20 tool tasks with deterministic checkers, including division by zero, unknown tool, wrong version, invalid config, misleading documentation and a forced step-limit failure. Run notebook 28, preserve full action/observation traces, and hand-audit a sample. Report failure counts even when the final answer looks reasonable.</p>
-<p>For open-ended troubleshooting, use a rubric plus manual review rather than pretending one exact string captures success. Your project report should include one case where the agent adds value and one where the fixed workflow is simpler and equally effective. If the agent never improves your tasks, it can remain an evaluated experimental branch rather than the default product.</p>
-<p><strong>Exit criterion:</strong> defend an agent release decision using trace-level evidence and recovery behavior. <strong>Reading:</strong> R02 stakeholder requirements; R11 task/action evaluation. <strong>Tutorial:</strong> 28.</p></article><nav aria-label="Adjacent lectures" class="chapter-pagination"><a href="27.html"><small>Previous week</small>Tools functions workflows and agents</a><a href="29.html"><small>Next week</small>From a notebook to MLOps and inference serving</a></nav></div><footer class="footer"><span>Applied AI · An independent self-study course</span><span>32 weeks · 10 hours per week</span><a href="../resources.html#about-this-course">About and sources</a></footer></main><dialog aria-labelledby="search-title" class="search-dialog"><div class="dialog-head"><h2 id="search-title">Find a concept</h2><button aria-label="Close search" class="search-close" type="button">Close</button></div><label class="sr-only" for="course-search">Search all lectures and tutorials</label><input autocomplete="off" id="course-search" placeholder="Try attention, fine-tuning, or harness…" type="search"/><p aria-live="polite" class="search-status">Search lecture notes, tutorials, tests and readings.</p><div class="search-results"></div></dialog><div aria-live="polite" class="toast" role="status"></div></body></html>
+<html lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width,initial-scale=1" name="viewport"/>
+  <title>
+   Harnesses planning memory and bounded execution · Applied AI
+  </title>
+  <meta content="Applied generative AI and LLM systems course material" name="description"/>
+  <meta content="#173c36" name="theme-color"/>
+  <link href="../assets/favicon.svg" rel="icon" type="image/svg+xml"/>
+  <link href="../assets/style.css" rel="stylesheet"/>
+  <link href="../assets/slides.css" rel="stylesheet"/>
+  <script>
+   window.COURSE_BASE="../";
+  </script>
+  <script defer="" src="../assets/site-config.js">
+  </script>
+  <script defer="" src="../assets/search-index.js">
+  </script>
+  <script defer="" src="../assets/app.js">
+  </script>
+  <script defer="" src="../assets/visuals.js">
+  </script>
+  <script defer="" src="../assets/slides.js">
+  </script>
+  <script defer="" src="../assets/beginner-visuals.js">
+  </script>
+  <link href="../zh-HK/lectures/28.html" hreflang="zh-HK" rel="alternate"/>
+  <link href="../assets/bilingual.css" rel="stylesheet"/>
+  <link href="../assets/reader-v3.css" rel="stylesheet"/>
+  <script defer="True" src="../assets/reader-v3.js">
+  </script>
+ </head>
+ <body data-page-kind="lecture" data-week="28">
+  <a class="skip-link" href="#main">
+   Skip to content
+  </a>
+  <header class="topbar">
+   <button aria-controls="course-sidebar" aria-expanded="false" class="menu-toggle" type="button">
+    Menu
+   </button>
+   <a class="brand" href="../index.html">
+    <span aria-hidden="true" class="brand-mark">
+     a
+     <span>
+      i
+     </span>
+    </span>
+    <span>
+     APPLIED AI
+     <small>
+      Principles into practice
+     </small>
+    </span>
+   </a>
+   <nav aria-label="Main navigation">
+    <a href="../index.html">
+     The course
+    </a>
+    <a href="../visuals.html">
+     Visual lab
+    </a>
+    <a href="../project.html">
+     Project
+    </a>
+    <a class="language-switch" href="../zh-HK/lectures/28.html" hreflang="zh-HK" lang="zh-HK">
+     繁體中文
+    </a>
+   </nav>
+   <button class="search-open" type="button">
+    Search the course
+    <span aria-hidden="true">
+     /
+    </span>
+   </button>
+  </header>
+  <aside aria-label="Course chapters" class="sidebar" id="course-sidebar">
+   <a class="side-home" href="../index.html">
+    Course overview
+   </a>
+   <details class="semester-nav">
+    <summary>
+     Semester 1
+     <span>
+      Weeks 1–16
+     </span>
+    </summary>
+    <ol start="1">
+     <li>
+      <a href="../lectures/01.html">
+       <span class="week-number">
+        01
+       </span>
+       <span>
+        What a language model is trying to learn
+       </span>
+       <span class="week-tick" data-week-tick="1">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/02.html">
+       <span class="week-number">
+        02
+       </span>
+       <span>
+        From text to tokens and numerical IDs
+       </span>
+       <span class="week-tick" data-week-tick="2">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/03.html">
+       <span class="week-number">
+        03
+       </span>
+       <span>
+        What word vectors can represent
+       </span>
+       <span class="week-tick" data-week-tick="3">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/04.html">
+       <span class="week-number">
+        04
+       </span>
+       <span>
+        From scores to probabilities and learning signals
+       </span>
+       <span class="week-tick" data-week-tick="4">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/05.html">
+       <span class="week-number">
+        05
+       </span>
+       <span>
+        Why language needs context and order
+       </span>
+       <span class="week-tick" data-week-tick="5">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/06.html">
+       <span class="week-number">
+        06
+       </span>
+       <span>
+        Attention begins as a weighted mixture
+       </span>
+       <span class="week-tick" data-week-tick="6">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/07.html">
+       <span class="week-number">
+        07
+       </span>
+       <span>
+        Where queries keys and values come from
+       </span>
+       <span class="week-tick" data-week-tick="7">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/08.html">
+       <span class="week-number">
+        08
+       </span>
+       <span>
+        Scaling and masking attention correctly
+       </span>
+       <span class="week-tick" data-week-tick="8">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/09.html">
+       <span class="week-number">
+        09
+       </span>
+       <span>
+        Multiple attention heads and position
+       </span>
+       <span class="week-tick" data-week-tick="9">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/10.html">
+       <span class="week-number">
+        10
+       </span>
+       <span>
+        The transformer block step by step
+       </span>
+       <span class="week-tick" data-week-tick="10">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/11.html">
+       <span class="week-number">
+        11
+       </span>
+       <span>
+        Encoders decoders and complete model architectures
+       </span>
+       <span class="week-tick" data-week-tick="11">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/12.html">
+       <span class="week-number">
+        12
+       </span>
+       <span>
+        Training a small transformer
+       </span>
+       <span class="week-tick" data-week-tick="12">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/13.html">
+       <span class="week-number">
+        13
+       </span>
+       <span>
+        Generation decoding and the KV cache
+       </span>
+       <span class="week-tick" data-week-tick="13">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/14.html">
+       <span class="week-number">
+        14
+       </span>
+       <span>
+        From pretraining to instruction following and reasoning
+       </span>
+       <span class="week-tick" data-week-tick="14">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/15.html">
+       <span class="week-number">
+        15
+       </span>
+       <span>
+        Generative AI beyond text
+       </span>
+       <span class="week-tick" data-week-tick="15">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/16.html">
+       <span class="week-number">
+        16
+       </span>
+       <span>
+        A complete transformer walkthrough and first semester review
+       </span>
+       <span class="week-tick" data-week-tick="16">
+       </span>
+      </a>
+     </li>
+    </ol>
+   </details>
+   <details class="semester-nav" open="">
+    <summary>
+     Semester 2
+     <span>
+      Weeks 17–32
+     </span>
+    </summary>
+    <ol start="17">
+     <li>
+      <a href="../lectures/17.html">
+       <span class="week-number">
+        17
+       </span>
+       <span>
+        From word vectors to semantic search
+       </span>
+       <span class="week-tick" data-week-tick="17">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/18.html">
+       <span class="week-number">
+        18
+       </span>
+       <span>
+        A vector database from a list of vectors
+       </span>
+       <span class="week-tick" data-week-tick="18">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/19.html">
+       <span class="week-number">
+        19
+       </span>
+       <span>
+        RAG as an open book question
+       </span>
+       <span class="week-tick" data-week-tick="19">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/20.html">
+       <span class="week-number">
+        20
+       </span>
+       <span>
+        Improving RAG without losing the basic task
+       </span>
+       <span class="week-tick" data-week-tick="20">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/21.html">
+       <span class="week-number">
+        21
+       </span>
+       <span>
+        Evaluating retrieval answers and uncertainty
+       </span>
+       <span class="week-tick" data-week-tick="21">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/22.html">
+       <span class="week-number">
+        22
+       </span>
+       <span>
+        CPU GPU memory and model resource accounting
+       </span>
+       <span class="week-tick" data-week-tick="22">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/23.html">
+       <span class="week-number">
+        23
+       </span>
+       <span>
+        CUDA kernels and profiling
+       </span>
+       <span class="week-tick" data-week-tick="23">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/24.html">
+       <span class="week-number">
+        24
+       </span>
+       <span>
+        Fine tuning starts with a teaching dataset
+       </span>
+       <span class="week-tick" data-week-tick="24">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/25.html">
+       <span class="week-number">
+        25
+       </span>
+       <span>
+        LoRA and QLoRA from a small matrix
+       </span>
+       <span class="week-tick" data-week-tick="25">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/26.html">
+       <span class="week-number">
+        26
+       </span>
+       <span>
+        Fine tuning experiments preferences and distillation
+       </span>
+       <span class="week-tick" data-week-tick="26">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/27.html">
+       <span class="week-number">
+        27
+       </span>
+       <span>
+        Tools functions workflows and agents
+       </span>
+       <span class="week-tick" data-week-tick="27">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a aria-current="page" href="../lectures/28.html">
+       <span class="week-number">
+        28
+       </span>
+       <span>
+        Harnesses planning memory and bounded execution
+       </span>
+       <span class="week-tick" data-week-tick="28">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/29.html">
+       <span class="week-number">
+        29
+       </span>
+       <span>
+        From a notebook to MLOps and inference serving
+       </span>
+       <span class="week-tick" data-week-tick="29">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/30.html">
+       <span class="week-number">
+        30
+       </span>
+       <span>
+        Monitoring security regression tests and rollback
+       </span>
+       <span class="week-tick" data-week-tick="30">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/31.html">
+       <span class="week-number">
+        31
+       </span>
+       <span>
+        Integrating the documentation assistant and advanced extensions
+       </span>
+       <span class="week-tick" data-week-tick="31">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/32.html">
+       <span class="week-number">
+        32
+       </span>
+       <span>
+        Review defense and a continuing learning plan
+       </span>
+       <span class="week-tick" data-week-tick="32">
+       </span>
+      </a>
+     </li>
+    </ol>
+   </details>
+   <div class="side-links">
+    <a href="../visuals.html">
+     Visual laboratory
+     <span>
+      14 interactive lessons
+     </span>
+    </a>
+    <a href="../project.html">
+     Documentation assistant
+     <span>
+      Your capstone project
+     </span>
+    </a>
+    <a href="../resources.html">
+     Readings and setup
+    </a>
+   </div>
+   <div class="side-progress">
+    <div>
+     <span>
+      Your progress
+     </span>
+     <strong data-progress-count="">
+      0 / 32
+     </strong>
+    </div>
+    <progress aria-label="Completed lectures" max="32" value="0">
+    </progress>
+    <small>
+     Saved in this browser
+    </small>
+   </div>
+  </aside>
+  <main class="main" id="main">
+   <div class="content">
+    <div class="chapter-header">
+     <div class="eyebrow">
+      Semester 2 / Week 28
+     </div>
+     <h1>
+      Harnesses planning memory and bounded execution
+     </h1>
+    </div>
+    <div class="lesson-links">
+     <a href="../tutorials/28.html">
+      Tutorial 28
+     </a>
+     <a href="../tests/28.html">
+      Test your understanding
+     </a>
+     <button aria-pressed="false" class="mark-complete" data-week="28" type="button">
+      Mark as complete
+     </button>
+    </div>
+    <div aria-label="Lesson view" class="lesson-mode" role="tablist">
+     <button aria-controls="full-notes" aria-selected="true" data-mode="read" id="mode-read" role="tab" type="button">
+      Read lesson
+     </button>
+     <button aria-controls="lecture-slides" aria-selected="false" data-mode="slides" id="mode-slides" role="tab" type="button">
+      Lesson slides
+     </button>
+    </div>
+    <section aria-label="Lecture slides" class="lecture-deck" hidden="" id="lecture-slides" role="tabpanel">
+     <div class="deck-top">
+      <div>
+       <div class="eyebrow">
+        Lecture slides · Week 28
+       </div>
+       <h2>
+        Key steps and worked visuals
+       </h2>
+      </div>
+      <button class="deck-present" type="button">
+       Present
+      </button>
+     </div>
+     <p class="deck-help">
+      Use these slides to review the mechanism. Open “Read the worked explanation” for the complete notes and code.
+     </p>
+     <div aria-label="Presentation: use left and right arrow keys" class="slide-viewport" tabindex="0">
+      <section class="lecture-slide" data-slide="">
+       <div class="slide-stage">
+        Week 28 · Section 1
+       </div>
+       <h3>
+        The controller makes the agent a runnable system
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Imagine supervising a school trip.
+         </li>
+         <li>
+          Its state can contain the question, allowed version, observations, evidence IDs, step count, and status.
+         </li>
+         <li>
+          An evaluation harness has a different role: load tasks, run a specified system, check outcomes, and collect metrics.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#the-controller-makes-the-agent-a-runnable-system">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 28 · Section 2
+       </div>
+       <h3>
+        A complete small loop
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Initialize state. Ask the planner for a typed proposal. If it is a final answer, validate the response contract and stop. If it is a tool action, validate name, schema, scope, and bounds before executing.
+         </li>
+         <li>
+          Record the normalized observation, update state, and repeat within the budget.
+         </li>
+         <li>
+          Every path should leave a trace.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#a-complete-small-loop">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 28 · Section 3
+       </div>
+       <h3>
+        A three proposal trace
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Proposal one retrieves the retry rule.
+         </li>
+         <li>
+          If instead the planner keeps requesting another calculation, a three-proposal budget eventually returns budget_exhausted.
+         </li>
+         <li>
+          Checking a citation ID against previously retrieved evidence establishes a structural boundary.
+         </li>
+        </ul>
+        <figure class="mechanism-figure">
+         <figcaption>
+          The MCP communication boundary
+         </figcaption>
+         <ol class="mechanism-flow">
+          <li>
+           <span class="mechanism-number">
+            01
+           </span>
+           <strong>
+            Host
+           </strong>
+           <small>
+            assistant application + policy
+           </small>
+          </li>
+          <li>
+           <span class="mechanism-number">
+            02
+           </span>
+           <strong>
+            Client
+           </strong>
+           <small>
+            connection to one server
+           </small>
+          </li>
+          <li>
+           <span class="mechanism-number">
+            03
+           </span>
+           <strong>
+            Server
+           </strong>
+           <small>
+            exposed capabilities + execution
+           </small>
+          </li>
+         </ol>
+         <p>
+          MCP standardizes communication. The harness still manages state, permissions, and termination.
+         </p>
+        </figure>
+        <a class="slide-section-link" href="#a-three-proposal-trace">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 28 · Section 4
+       </div>
+       <h3>
+        Time and resource limits
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          A step cap bounds loop iterations but cannot interrupt a blocking network call.
+         </li>
+         <li>
+          Use client timeouts and cancellation for appropriate dependencies, and process/container controls for execution that needs isolation.
+         </li>
+         <li>
+          The synchronous reference controller demonstrates step limits and narrow arithmetic safety.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#time-and-resource-limits">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 28 · Section 5
+       </div>
+       <h3>
+        MCP connects the application to a tool provider
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          MCP means Model Context Protocol.
+         </li>
+         <li>
+          After the connection is set up, the client can request tools/list.
+         </li>
+         <li>
+          The host checks the proposal and sends the permitted request through its MCP client using tools/call.
+         </li>
+        </ul>
+        <div class="table-wrap">
+         <table>
+          <thead>
+           <tr>
+            <th>
+             Role
+            </th>
+            <th>
+             Meaning in our example
+            </th>
+           </tr>
+          </thead>
+          <tbody>
+           <tr>
+            <td>
+             Host
+            </td>
+            <td>
+             The documentation-assistant application that manages the model, user interaction, and tool policy.
+            </td>
+           </tr>
+           <tr>
+            <td>
+             Client
+            </td>
+            <td>
+             The component in the host that communicates with one MCP server.
+            </td>
+           </tr>
+           <tr>
+            <td>
+             Server
+            </td>
+            <td>
+             The program that exposes the calculator and handles its requests; it may run locally or remotely.
+            </td>
+           </tr>
+          </tbody>
+         </table>
+        </div>
+        <a class="slide-section-link" href="#mcp-connects-the-application-to-a-tool-provider">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 28 · Section 6
+       </div>
+       <h3>
+        MCP connects the application to a tool provider · continued
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          MCP also defines resources for contextual data, such as a handbook passage, and prompts for reusable message templates.
+         </li>
+         <li>
+          Compare this with our direct function call.
+         </li>
+         <li>
+          Check your understanding: point to the host, client, server, model proposal, tool result, and harness in this example.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#mcp-connects-the-application-to-a-tool-provider">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 28 · Section 7
+       </div>
+       <h3>
+        Planning methods
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          ReAct-style interaction alternates actions and observations.
+         </li>
+         <li>
+          These patterns can be implemented with different libraries, but the same questions apply: what state is authoritative, what actions are permitted, what observation changes the plan, and what terminates execution?
+         </li>
+         <li>
+          Multiple agents add coordination, duplicated context, cost, and new failure modes.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#planning-methods">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 28 · Section 8
+       </div>
+       <h3>
+        Memory has several meanings
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Current chat history, structured task state, retrieved documents, and persistent user memory have different lifetimes and trust properties.
+         </li>
+         <li>
+          A summary can compress text but omit a condition.
+         </li>
+         <li>
+          Authorization must come from authenticated application state, not model-written memory.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#memory-has-several-meanings">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 28 · Section 9
+       </div>
+       <h3>
+        Task evaluation inspects traces
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          A final sentence can look correct while hiding a forbidden action or missed required calculation.
+         </li>
+         <li>
+          An agent that never uses a required tool should not receive credit for an empty “valid-call” denominator.
+         </li>
+         <li>
+          Retries need bounded, operation-specific behavior.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#task-evaluation-inspects-traces">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 28 · Section 10
+       </div>
+       <h3>
+        Worked practice and a readiness check
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Use the visual harness for success, unknown tool, wrong version, and endless planner scenarios.
+         </li>
+         <li>
+          Prepare at least 20 independently checked tasks and preserve both successful and failed traces.
+         </li>
+         <li>
+          You are ready when your agent is a bounded state machine with observable behavior rather than an unexamined prompt-to-framework call.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#worked-practice-and-a-readiness-check">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+     </div>
+     <div class="deck-controls">
+      <button class="slide-prev" type="button">
+       ← Previous
+      </button>
+      <span aria-live="polite" class="slide-counter">
+       1 / 10
+      </span>
+      <button class="slide-next" type="button">
+       Next →
+      </button>
+     </div>
+     <label class="slide-jump-label">
+      Go to slide
+      <select aria-label="Go to slide" class="slide-jump">
+       <option value="0">
+        1. The controller makes the agent a runnable system
+       </option>
+       <option value="1">
+        2. A complete small loop
+       </option>
+       <option value="2">
+        3. A three proposal trace
+       </option>
+       <option value="3">
+        4. Time and resource limits
+       </option>
+       <option value="4">
+        5. MCP connects the application to a tool provider
+       </option>
+       <option value="5">
+        6. MCP connects the application to a tool provider · continued
+       </option>
+       <option value="6">
+        7. Planning methods
+       </option>
+       <option value="7">
+        8. Memory has several meanings
+       </option>
+       <option value="8">
+        9. Task evaluation inspects traces
+       </option>
+       <option value="9">
+        10. Worked practice and a readiness check
+       </option>
+      </select>
+     </label>
+     <button aria-pressed="false" class="deck-all" type="button">
+      Show all slides
+     </button>
+    </section>
+    <section aria-label="The agent and its controller" class="visual-lesson">
+     <div class="eyebrow">
+      Explore the mechanism
+     </div>
+     <h2>
+      The agent and its controller
+     </h2>
+     <p class="visual-intro">
+      Inspect typed proposals, validators, observations and bounded termination.
+     </p>
+     <div data-widget="agent">
+      <p>
+       Enable JavaScript to use this illustration. The lecture notes below explain the same mechanism.
+      </p>
+     </div>
+    </section>
+    <nav aria-label="In this lesson" class="reader-toc">
+     <strong>
+      In this lesson
+     </strong>
+     <ol>
+      <li>
+       <a href="#the-controller-makes-the-agent-a-runnable-system">
+        The controller makes the agent a runnable system
+       </a>
+      </li>
+      <li>
+       <a href="#a-complete-small-loop">
+        A complete small loop
+       </a>
+      </li>
+      <li>
+       <a href="#a-three-proposal-trace">
+        A three proposal trace
+       </a>
+      </li>
+      <li>
+       <a href="#time-and-resource-limits">
+        Time and resource limits
+       </a>
+      </li>
+      <li>
+       <a href="#mcp-connects-the-application-to-a-tool-provider">
+        MCP connects the application to a tool provider
+       </a>
+      </li>
+      <li>
+       <a href="#planning-methods">
+        Planning methods
+       </a>
+      </li>
+      <li>
+       <a href="#memory-has-several-meanings">
+        Memory has several meanings
+       </a>
+      </li>
+      <li>
+       <a href="#task-evaluation-inspects-traces">
+        Task evaluation inspects traces
+       </a>
+      </li>
+      <li>
+       <a href="#worked-practice-and-a-readiness-check">
+        Worked practice and a readiness check
+       </a>
+      </li>
+     </ol>
+    </nav>
+    <article class="prose full-notes" id="full-notes" role="tabpanel">
+     <div class="eyebrow">
+      Complete lecture reader
+     </div>
+     <h2>
+      Read the full explanation
+     </h2>
+     <h3 id="the-controller-makes-the-agent-a-runnable-system">
+      The controller makes the agent a runnable system
+     </h3>
+     <p>
+      Imagine supervising a school trip. A list of possible tasks is not enough; someone must track what has happened and decide when to stop. An agent execution harness serves that coordination role in code.
+     </p>
+     <p>
+      Its state can contain the question, allowed version, observations, evidence IDs, step count, and status. The model proposes an action; the harness validates and executes it.
+     </p>
+     <p>
+      An evaluation harness has a different role: load tasks, run a specified system, check outcomes, and collect metrics. Both need versioned configuration, but they are not interchangeable.
+     </p>
+     <h3 id="a-complete-small-loop">
+      A complete small loop
+     </h3>
+     <p>
+      Initialize state. Ask the planner for a typed proposal. If it is a final answer, validate the response contract and stop. If it is a tool action, validate name, schema, scope, and bounds before executing.
+     </p>
+     <p>
+      Record the normalized observation, update state, and repeat within the budget. Terminate explicitly on invalid proposals, failures, exhaustion, timeout, or cancellation under the implemented policy.
+     </p>
+     <p>
+      Every path should leave a trace. An exception or repeated tool request should not silently turn into an invented successful answer.
+     </p>
+     <h3 id="a-three-proposal-trace">
+      A three proposal trace
+     </h3>
+     <figure class="mechanism-figure">
+      <figcaption>
+       The MCP communication boundary
+      </figcaption>
+      <ol class="mechanism-flow">
+       <li>
+        <span class="mechanism-number">
+         01
+        </span>
+        <strong>
+         Host
+        </strong>
+        <small>
+         assistant application + policy
+        </small>
+       </li>
+       <li>
+        <span class="mechanism-number">
+         02
+        </span>
+        <strong>
+         Client
+        </strong>
+        <small>
+         connection to one server
+        </small>
+       </li>
+       <li>
+        <span class="mechanism-number">
+         03
+        </span>
+        <strong>
+         Server
+        </strong>
+        <small>
+         exposed capabilities + execution
+        </small>
+       </li>
+      </ol>
+      <p>
+       MCP standardizes communication. The harness still manages state, permissions, and termination.
+      </p>
+     </figure>
+     <p>
+      Proposal one retrieves the retry rule. Proposal two calculates the cumulative delay. Proposal three returns the result with observed source IDs.
+     </p>
+     <p>
+      If instead the planner keeps requesting another calculation, a three-proposal budget eventually returns budget_exhausted. The controller does not keep going simply because the model asks politely.
+     </p>
+     <p>
+      Checking a citation ID against previously retrieved evidence establishes a structural boundary. Whether that passage supports the final claim remains an evaluation question.
+     </p>
+     <h3 id="time-and-resource-limits">
+      Time and resource limits
+     </h3>
+     <p>
+      A step cap bounds loop iterations but cannot interrupt a blocking network call. Checking elapsed time after a call returns does not impose a real call deadline.
+     </p>
+     <p>
+      Use client timeouts and cancellation for appropriate dependencies, and process/container controls for execution that needs isolation. Bound tool output and model context as well.
+     </p>
+     <p>
+      The synchronous reference controller demonstrates step limits and narrow arithmetic safety. It does not claim to be a complete arbitrary-code sandbox.
+     </p>
+     <h3 id="mcp-connects-the-application-to-a-tool-provider">
+      MCP connects the application to a tool provider
+     </h3>
+     <p>
+      MCP means Model Context Protocol. Think about the calculator you already used: the model proposes a calculation, while application code checks the proposal and runs an allowed function. MCP gives an application a standard way to discover and call capabilities supplied by another program. It does not change the arithmetic or the need to validate a request [
+      <a class="inline-reading" href="../resources.html#reference-r29">
+       Model Context Protocol architecture (R29)
+      </a>
+      ].
+     </p>
+     <div class="table-wrap">
+      <table>
+       <thead>
+        <tr>
+         <th>
+          Role
+         </th>
+         <th>
+          Meaning in our example
+         </th>
+        </tr>
+       </thead>
+       <tbody>
+        <tr>
+         <td>
+          Host
+         </td>
+         <td>
+          The documentation-assistant application that manages the model, user interaction, and tool policy.
+         </td>
+        </tr>
+        <tr>
+         <td>
+          Client
+         </td>
+         <td>
+          The component in the host that communicates with one MCP server.
+         </td>
+        </tr>
+        <tr>
+         <td>
+          Server
+         </td>
+         <td>
+          The program that exposes the calculator and handles its requests; it may run locally or remotely.
+         </td>
+        </tr>
+       </tbody>
+      </table>
+     </div>
+     <p>
+      After the connection is set up, the client can request tools/list. The server describes the available tools, including their names and input schemas. The host decides which tools to make available to the model. For the question “A bus ticket costs 4 dollars. What do three tickets cost?”, the model might propose the existing calculator with expression “3*4”.
+     </p>
+     <p>
+      The host checks the proposal and sends the permitted request through its MCP client using tools/call. The server checks the request, performs the allowed calculation, and returns the result 12. The host records the observation and can give it to the model to form the final answer. The model proposal and the protocol request are separate representations; application code connects them [
+      <a class="inline-reading" href="../resources.html#reference-r30">
+       Model Context Protocol tools (R30)
+      </a>
+      ].
+     </p>
+     <p>
+      MCP also defines resources for contextual data, such as a handbook passage, and prompts for reusable message templates. The distinction is simple here: a tool performs a specified operation, a resource supplies context, and a prompt supplies a reusable interaction template. The application still chooses how to use them.
+     </p>
+     <p>
+      Compare this with our direct function call. The direct version calls the calculator in application code. The MCP version adds a standard client/server interface for discovery and execution. The harness still controls state, allowed actions, and stopping. Exposing a tool through MCP does not automatically make its arguments valid or its use authorized.
+     </p>
+     <p>
+      Check your understanding: point to the host, client, server, model proposal, tool result, and harness in this example. A correct explanation of this boundary is enough for this course; you do not need to deploy an MCP server.
+     </p>
+     <h3 id="planning-methods">
+      Planning methods
+     </h3>
+     <p>
+      ReAct-style interaction alternates actions and observations. Plan-and-execute creates a proposed plan and then performs or revises it. Routing chooses a specialized workflow.
+     </p>
+     <p>
+      These patterns can be implemented with different libraries, but the same questions apply: what state is authoritative, what actions are permitted, what observation changes the plan, and what terminates execution?
+     </p>
+     <p>
+      Multiple agents add coordination, duplicated context, cost, and new failure modes. They are an optional advanced direction rather than a prerequisite for this single-controller project.
+     </p>
+     <h3 id="memory-has-several-meanings">
+      Memory has several meanings
+     </h3>
+     <p>
+      Current chat history, structured task state, retrieved documents, and persistent user memory have different lifetimes and trust properties.
+     </p>
+     <p>
+      A summary can compress text but omit a condition. If a user switches from version 1 to a comparison with version 2, preserve that intent explicitly instead of trusting a summary saying “user uses version 1.”
+     </p>
+     <p>
+      Authorization must come from authenticated application state, not model-written memory. Keep critical constraints and source provenance in structured fields.
+     </p>
+     <h3 id="task-evaluation-inspects-traces">
+      Task evaluation inspects traces
+     </h3>
+     <p>
+      A final sentence can look correct while hiding a forbidden action or missed required calculation. Measure task success, call validity, forbidden calls, failures, budgets, latency, and total model work.
+     </p>
+     <p>
+      An agent that never uses a required tool should not receive credit for an empty “valid-call” denominator. Define success predicates and audit traces.
+     </p>
+     <p>
+      Retries need bounded, operation-specific behavior. Invalid arguments and non-idempotent side effects cannot be retried blindly as though they were transient read timeouts.
+     </p>
+     <h3 id="worked-practice-and-a-readiness-check">
+      Worked practice and a readiness check
+     </h3>
+     <p>
+      Use the visual harness for success, unknown tool, wrong version, and endless planner scenarios. Then run an actual model planner and compare with the deterministic workflow.
+     </p>
+     <p>
+      Prepare at least 20 independently checked tasks and preserve both successful and failed traces. Explain one useful adaptive choice and one unnecessary action.
+     </p>
+     <p>
+      You are ready when your agent is a bounded state machine with observable behavior rather than an unexamined prompt-to-framework call.
+     </p>
+     <details class="reference-details" id="reference-details">
+      <summary>
+       Reference details and checks
+      </summary>
+      <h3 id="review-a-intuition">
+       Review A: Intuition
+      </h3>
+      <p>
+       A workflow has a largely predetermined control path. An agent lets model outputs influence which action happens next. Both need orchestration code. Agentic behavior is useful when tasks require adapting to observations; it can be unnecessary overhead for a fixed lookup.
+      </p>
+      <p>
+       The word harness has two relevant meanings. An
+       <strong>
+        agent execution harness
+       </strong>
+       manages state, model calls, tools, budgets, observation limits, cancellation and termination. An
+       <strong>
+        evaluation harness
+       </strong>
+       loads tasks, runs a specified system, records results and computes metrics. They may integrate, but they have different responsibilities. Naming both prevents the vague claim “we have a harness” from hiding missing controls.
+      </p>
+      <h3 id="review-a-state-and-transitions">
+       Review A: State and transitions
+      </h3>
+      <p>
+       Represent state explicitly: question, allowed version, evidence IDs, observations, step count, token/cost budget, status and error. A planner proposes either a tool action or a final response. A controller validates it, executes allowed actions and updates state. Termination reasons include success, invalid proposal, tool failure, step exhaustion, timeout and cancellation. Every path must be observable.
+      </p>
+      <h3 id="review-a-worked-trace">
+       Review A: Worked trace
+      </h3>
+      <p>
+       Step 1 retrieves retry rules. Step 2 calls a calculator with a bounded expression. Step 3 answers with the numerical result and source IDs. A repeated failed calculator call should not run forever. With a maximum of three planner steps, a proposal on the final step that still requires another observation should end with an explicit budget-exhausted status rather than a fabricated final answer.
+      </p>
+      <p>
+       Wall-clock limits require real enforcement. Checking elapsed time only after a blocking call returns cannot interrupt that call. Use client timeouts for network tools and process/container limits for untrusted execution. Our synchronous starter enforces step limits and arithmetic bounds; its deployment extension requires per-call timeout/cancellation implementations.
+      </p>
+      <h3 id="review-a-experiment">
+       Review A: Experiment
+      </h3>
+      <p>
+       <a href="../tutorials/27.html">
+        Tutorial 27: Tools functions workflows and agents
+       </a>
+       runs a deterministic planner through the controller to test the execution contract. This is a controller fixture, not evidence of LLM planning.
+       <a href="../tutorials/28.html">
+        Tutorial 28: Harnesses planning memory and bounded execution
+       </a>
+       connects a real model planner. Inject a planner that never stops, one that returns malformed JSON and one that invents a tool. Verify explicit terminal states and a finite number of tool calls.
+      </p>
+      <p>
+       For each trace, ask whether the information shown to the model is necessary. Large tool outputs can overflow context or carry adversarial instructions. Bound and label observations, preserve authoritative metadata separately, and avoid treating tool text as new policy.
+      </p>
+      <p>
+       <strong>
+        Exit criterion:
+       </strong>
+       implement a bounded state machine and distinguish execution from evaluation harnesses.
+       <strong>
+        Reading:
+       </strong>
+       <a class="inline-reading" href="../resources.html#reference-r11">
+        Yao et al. ReAct (R11)
+       </a>
+       ;
+       <a class="inline-reading" href="../resources.html#reference-r03">
+        Hung-yi Lee Introduction to GenAI and ML 2025 (R03)
+       </a>
+       context engineering topic.
+       <strong>
+        Tutorial:
+       </strong>
+       28.
+      </p>
+      <h3 id="review-b-intuition">
+       Review B: Intuition
+      </h3>
+      <p>
+       An agent's “memory” can mean its current prompt, a task scratch state, retrieved documents, or a persistent store of previous interactions. These have different retention and trust properties. More remembered text is not automatically more useful context.
+      </p>
+      <p>
+       Maintain a typed task state for facts such as requested version, selected source IDs and tool outcomes. Summaries can compress long histories, but they can omit an exception or turn an uncertain observation into a confident assertion. Preserve critical constraints in structured fields and retain source provenance.
+      </p>
+      <h3 id="review-b-planning-patterns">
+       Review B: Planning patterns
+      </h3>
+      <p>
+       ReAct-style systems interleave action selection and observations. Plan-and-execute generates a plan and then performs it, potentially revising it when observations disagree. Routing chooses a specialized workflow. Multi-agent systems distribute roles but add coordination, duplicated context, cost and evaluation complexity. A single bounded controller is the core path here; multi-agent implementation is not required.
+      </p>
+      <p>
+       A fixed workflow for versioned lookup may be retrieve, pack, answer and validate. A troubleshooting task may benefit from conditional actions: inspect version, retrieve a rule, validate a config, then explain the first violated requirement. The latter supplies a concrete reason for adaptive planning.
+      </p>
+      <h3 id="review-b-worked-memory-failure">
+       Review B: Worked memory failure
+      </h3>
+      <p>
+       A user first asks about v1, then says “now compare that with v2.” A summary storing only “user uses v1” can cause the next retrieval to filter out v2. Keep the task's allowed versions and comparison intent explicit. Authorization should come from authenticated application state, never from conversational memory or model-generated summaries.
+      </p>
+      <h3 id="review-b-experiment">
+       Review B: Experiment
+      </h3>
+      <p>
+       <a href="../tutorials/28.html">
+        Tutorial 28: Harnesses planning memory and bounded execution
+       </a>
+       converts a small model's JSON proposal into a controller action. Compare it with a fixed workflow on the same set of lookups, calculations and troubleshooting tasks. Count invalid proposals, unnecessary tool calls, missed required actions, completion, latency and total model tokens. A small model may fail often; use those traces to decide where a deterministic route is preferable.
+      </p>
+      <p>
+       Test a long irrelevant observation and a misleading instruction embedded in a retrieved page. Verify that policy fields stay outside the model's authority. A failed model proposal must produce a controlled result, not fall back to executing guessed arguments.
+      </p>
+      <p>
+       <strong>
+        Exit criterion:
+       </strong>
+       justify adaptive planning for a specific task and identify which state belongs in structured memory.
+       <strong>
+        Reading:
+       </strong>
+       <a class="inline-reading" href="../resources.html#reference-r11">
+        Yao et al. ReAct (R11)
+       </a>
+       ;
+       <a class="inline-reading" href="../resources.html#reference-r03">
+        Hung-yi Lee Introduction to GenAI and ML 2025 (R03)
+       </a>
+       context engineering.
+       <strong>
+        Tutorial:
+       </strong>
+       28.
+      </p>
+      <h3 id="review-c-intuition">
+       Review C: Intuition
+      </h3>
+      <p>
+       A convincing final sentence can hide a failed or forbidden action. Agent evaluation must inspect the environment and trace, not merely score final text. For read-only tools, correctness includes choosing the right evidence and calculation. For side effects in a future extension, it also includes the final state and the absence of unintended changes.
+      </p>
+      <p>
+       Define tasks with initial state, allowed actions, expected results and success predicates. Compare a model-only answer, a fixed tool workflow and the adaptive controller. Keep the tool affordances and budgets comparable. An agent given ten attempts should not be compared with a workflow allowed only one without reporting that difference.
+      </p>
+      <h3 id="review-c-metrics-and-recovery">
+       Review C: Metrics and recovery
+      </h3>
+      <p>
+       Task success, valid-call rate, forbidden-action rate, tool failures, step count, budget exhaustion and cost are complementary. A system that never calls a tool can have a perfect valid-call rate on an empty denominator; report how often it used tools and whether tasks required them. Failure should be typed so analysis can separate planning, validation, execution and answer errors.
+      </p>
+      <p>
+       Retries must be bounded and appropriate. A transient read timeout may merit one backoff/retry. Repeating invalid arguments does not repair the schema. A non-idempotent side effect cannot be retried blindly. A circuit breaker limits repeated calls to a failing dependency; it does not replace correct per-request handling.
+      </p>
+      <h3 id="review-c-worked-audit">
+       Review C: Worked audit
+      </h3>
+      <p>
+       An agent completes 18/20 tasks, but one successful task includes an unauthorized call that happened to return harmless data. Under a zero-forbidden-action release gate, it fails. Another system completes 17/20 with no violations and clearly reports three controlled failures. Depending on requirements, the latter may be the deployable candidate. State the gate before evaluating.
+      </p>
+      <h3 id="review-c-experiment">
+       Review C: Experiment
+      </h3>
+      <p>
+       Create at least 20 tool tasks with deterministic checkers, including division by zero, unknown tool, wrong version, invalid config, misleading documentation and a forced step-limit failure. Run
+       <a href="../tutorials/28.html">
+        Tutorial 28: Harnesses planning memory and bounded execution
+       </a>
+       , preserve full action/observation traces, and hand-audit a sample. Report failure counts even when the final answer looks reasonable.
+      </p>
+      <p>
+       For open-ended troubleshooting, use a rubric plus manual review rather than pretending one exact string captures success. Your project report should include one case where the agent adds value and one where the fixed workflow is simpler and equally effective. If the agent never improves your tasks, it can remain an evaluated experimental branch rather than the default product.
+      </p>
+      <p>
+       <strong>
+        Exit criterion:
+       </strong>
+       defend an agent release decision using trace-level evidence and recovery behavior.
+       <strong>
+        Reading:
+       </strong>
+       <a class="inline-reading" href="../resources.html#reference-r02">
+        Stanford CS329S Machine Learning Systems Design (R02)
+       </a>
+       stakeholder requirements;
+       <a class="inline-reading" href="../resources.html#reference-r11">
+        Yao et al. ReAct (R11)
+       </a>
+       task/action evaluation.
+       <strong>
+        Tutorial:
+       </strong>
+       28.
+      </p>
+     </details>
+    </article>
+    <nav aria-label="Adjacent lectures" class="chapter-pagination">
+     <a href="27.html">
+      <small>
+       Previous week
+      </small>
+      Tools functions workflows and agents
+     </a>
+     <a href="29.html">
+      <small>
+       Next week
+      </small>
+      From a notebook to MLOps and inference serving
+     </a>
+    </nav>
+   </div>
+   <footer class="footer">
+    <span>
+     Applied AI · An independent self-study course
+    </span>
+    <span>
+     32 weeks · 10 hours per week
+    </span>
+    <a href="../resources.html#about-this-course">
+     About and sources
+    </a>
+   </footer>
+  </main>
+  <dialog aria-labelledby="search-title" class="search-dialog">
+   <div class="dialog-head">
+    <h2 id="search-title">
+     Find a concept
+    </h2>
+    <button aria-label="Close search" class="search-close" type="button">
+     Close
+    </button>
+   </div>
+   <label class="sr-only" for="course-search">
+    Search all lectures and tutorials
+   </label>
+   <input autocomplete="off" id="course-search" placeholder="Try attention, fine-tuning, or harness…" type="search"/>
+   <p aria-live="polite" class="search-status">
+    Search lecture notes, tutorials, tests and readings.
+   </p>
+   <div class="search-results">
+   </div>
+  </dialog>
+  <div aria-live="polite" class="toast" role="status">
+  </div>
+ </body>
+</html>

@@ -1,4 +1,3 @@
-# %%
 from pathlib import Path
 import sys,json,time,random,hashlib,math
 if hasattr(sys.stdout,'reconfigure'): sys.stdout.reconfigure(encoding='utf-8')
@@ -11,7 +10,7 @@ from coursekit.core import *
 random.seed(7)
 print('Course root:',COURSE)
 
-# %%
+
 assert calculate('100+200+400')==700
 print(validate_config({'timeout_ms':30000,'retries':3}))
 for expression in ['1/0',"__import__('os')",'2**100']:
@@ -31,3 +30,14 @@ assert run_agent('test',loop,max_steps=3)['status']=='budget_exhausted'
 hostile=lambda state:{'type':'tool','name':'export_secrets','arguments':{}}
 assert run_agent('test',hostile)['status']=='invalid_action'
 
+
+from concurrent.futures import ThreadPoolExecutor
+# Deterministic read-only fixtures: no network access or side effects.
+def fare():return 4
+def count():return 3
+with ThreadPoolExecutor(max_workers=2) as pool:
+    fare_future=pool.submit(fare);count_future=pool.submit(count)
+    price,tickets=fare_future.result(),count_future.result()
+answer=price*tickets
+assert answer==12
+print('Two independent reads, then dependent multiply:',answer)

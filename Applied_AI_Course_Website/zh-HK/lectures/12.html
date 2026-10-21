@@ -1,68 +1,1292 @@
 <!DOCTYPE html>
-
-<html lang="zh-HK"><head><script src="../../assets/translations-zh-HK.js"></script><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/><title>訓練一個小型 transformer · Applied AI</title><meta content="Applied generative AI and LLM systems course material" name="description"/><meta content="#173c36" name="theme-color"/><link href="../../assets/favicon.svg" rel="icon" type="image/svg+xml"/><link href="../../assets/style.css" rel="stylesheet"/><link href="../../assets/slides.css" rel="stylesheet"/><script>window.COURSE_BASE="../";</script><script defer="" src="../../assets/site-config.js"></script><script defer="" src="../assets/search-index.js"></script><script defer="" src="../../assets/app.js"></script><script defer="" src="../../assets/visuals.js"></script><script defer="" src="../../assets/slides.js"></script><script defer="" src="../../assets/beginner-visuals.js"></script><script defer="True" src="../../assets/locale-patterns.js"></script><script defer="True" src="../../assets/locale.js"></script><link href="../../assets/bilingual.css" rel="stylesheet"/><link href="../../lectures/12.html" hreflang="en" rel="alternate"/></head><body data-page-kind="lecture" data-week="12"><a class="skip-link" href="#main">跳至內容</a><header class="topbar"><button aria-controls="course-sidebar" aria-expanded="false" class="menu-toggle" type="button">選單</button><a class="brand" href="../index.html"><span aria-hidden="true" class="brand-mark">a<span>i</span></span><span>APPLIED AI<small>從原理到實踐</small></span></a><nav aria-label="主要導覽"><a href="../index.html">課程</a><a href="../visuals.html">互動圖解</a><a href="../project.html">專題</a><a class="language-switch" href="../../lectures/12.html" hreflang="en" lang="en">English</a></nav><button class="search-open" type="button">搜尋課程 <span aria-hidden="true">/</span></button></header><aside aria-label="課程章節" class="sidebar" id="course-sidebar"><a class="side-home" href="../index.html">課程概覽</a><details class="semester-nav" open=""><summary>第一學期<span>第 1–16 週</span></summary><ol start="1"><li><a href="../lectures/01.html"><span class="week-number">01</span><span>Language model 究竟在學甚麼</span><span class="week-tick" data-week-tick="1"></span></a></li><li><a href="../lectures/02.html"><span class="week-number">02</span><span>從文字到 token 和數值 ID</span><span class="week-tick" data-week-tick="2"></span></a></li><li><a href="../lectures/03.html"><span class="week-number">03</span><span>Word vector 能表達甚麼</span><span class="week-tick" data-week-tick="3"></span></a></li><li><a href="../lectures/04.html"><span class="week-number">04</span><span>從 score 到 probability 和學習訊號</span><span class="week-tick" data-week-tick="4"></span></a></li><li><a href="../lectures/05.html"><span class="week-number">05</span><span>為甚麼語言需要 context 和次序</span><span class="week-tick" data-week-tick="5"></span></a></li><li><a href="../lectures/06.html"><span class="week-number">06</span><span>Attention 由 weighted mixture 開始</span><span class="week-tick" data-week-tick="6"></span></a></li><li><a href="../lectures/07.html"><span class="week-number">07</span><span>Query、key 和 value 從何而來</span><span class="week-tick" data-week-tick="7"></span></a></li><li><a href="../lectures/08.html"><span class="week-number">08</span><span>正確進行 attention scaling 和 masking</span><span class="week-tick" data-week-tick="8"></span></a></li><li><a href="../lectures/09.html"><span class="week-number">09</span><span>多個 attention head 與位置</span><span class="week-tick" data-week-tick="9"></span></a></li><li><a href="../lectures/10.html"><span class="week-number">10</span><span>逐步拆解 transformer block</span><span class="week-tick" data-week-tick="10"></span></a></li><li><a href="../lectures/11.html"><span class="week-number">11</span><span>Encoder、decoder 與完整 model architecture</span><span class="week-tick" data-week-tick="11"></span></a></li><li><a aria-current="page" href="../lectures/12.html"><span class="week-number">12</span><span>訓練一個小型 transformer</span><span class="week-tick" data-week-tick="12"></span></a></li><li><a href="../lectures/13.html"><span class="week-number">13</span><span>Generation、decoding 與 KV cache</span><span class="week-tick" data-week-tick="13"></span></a></li><li><a href="../lectures/14.html"><span class="week-number">14</span><span>從 pretraining 到 instruction following 和 reasoning</span><span class="week-tick" data-week-tick="14"></span></a></li><li><a href="../lectures/15.html"><span class="week-number">15</span><span>文字以外的 Generative AI</span><span class="week-tick" data-week-tick="15"></span></a></li><li><a href="../lectures/16.html"><span class="week-number">16</span><span>完整 transformer 導覽與第一學期溫習</span><span class="week-tick" data-week-tick="16"></span></a></li></ol></details><details class="semester-nav"><summary>第二學期<span>第 17–32 週</span></summary><ol start="17"><li><a href="../lectures/17.html"><span class="week-number">17</span><span>從 word vector 到 semantic search</span><span class="week-tick" data-week-tick="17"></span></a></li><li><a href="../lectures/18.html"><span class="week-number">18</span><span>從一列 vector 建立 vector database</span><span class="week-tick" data-week-tick="18"></span></a></li><li><a href="../lectures/19.html"><span class="week-number">19</span><span>把 RAG 理解為開卷作答</span><span class="week-tick" data-week-tick="19"></span></a></li><li><a href="../lectures/20.html"><span class="week-number">20</span><span>在保持基本任務的前提下改善 RAG</span><span class="week-tick" data-week-tick="20"></span></a></li><li><a href="../lectures/21.html"><span class="week-number">21</span><span>評估 retrieval、答案與 uncertainty</span><span class="week-tick" data-week-tick="21"></span></a></li><li><a href="../lectures/22.html"><span class="week-number">22</span><span>CPU、GPU、memory 與 model 資源計算</span><span class="week-tick" data-week-tick="22"></span></a></li><li><a href="../lectures/23.html"><span class="week-number">23</span><span>CUDA kernel 與 profiling</span><span class="week-tick" data-week-tick="23"></span></a></li><li><a href="../lectures/24.html"><span class="week-number">24</span><span>Fine-tuning 由教學 dataset 開始</span><span class="week-tick" data-week-tick="24"></span></a></li><li><a href="../lectures/25.html"><span class="week-number">25</span><span>從小型 matrix 理解 LoRA 和 QLoRA</span><span class="week-tick" data-week-tick="25"></span></a></li><li><a href="../lectures/26.html"><span class="week-number">26</span><span>Fine-tuning 實驗、preference 與 distillation</span><span class="week-tick" data-week-tick="26"></span></a></li><li><a href="../lectures/27.html"><span class="week-number">27</span><span>Tool、function、workflow 與 agent</span><span class="week-tick" data-week-tick="27"></span></a></li><li><a href="../lectures/28.html"><span class="week-number">28</span><span>Harness、planning、memory 與有界執行</span><span class="week-tick" data-week-tick="28"></span></a></li><li><a href="../lectures/29.html"><span class="week-number">29</span><span>從 notebook 到 MLOps 和 inference serving</span><span class="week-tick" data-week-tick="29"></span></a></li><li><a href="../lectures/30.html"><span class="week-number">30</span><span>Monitoring、security、regression test 與 rollback</span><span class="week-tick" data-week-tick="30"></span></a></li><li><a href="../lectures/31.html"><span class="week-number">31</span><span>整合文件助手與進階延伸</span><span class="week-tick" data-week-tick="31"></span></a></li><li><a href="../lectures/32.html"><span class="week-number">32</span><span>溫習、答辯與持續學習計劃</span><span class="week-tick" data-week-tick="32"></span></a></li></ol></details><div class="side-links"><a href="../visuals.html">互動圖解實驗室 <span>14 個互動課節</span></a><a href="../project.html">文件助手 <span>你的 capstone project</span></a><a href="../resources.html">閱讀材料與環境設定</a></div><div class="side-progress"><div><span>你的進度</span><strong data-progress-count="">0 / 32</strong></div><progress aria-label="已完成 lecture" max="32" value="0"></progress><small>儲存在這個瀏覽器</small></div></aside><main class="main" id="main"><div class="content"><div class="chapter-header"><div class="eyebrow">第一學期 / 第 12 週</div><h1>訓練一個小型 transformer</h1></div><div class="lesson-links"><a href="../tutorials/12.html">練習 12</a><a href="../tests/12.html">檢查你的理解</a><button aria-pressed="false" class="mark-complete" data-week="12" type="button">標記為已完成</button></div><section aria-label="Lecture slides" class="lecture-deck" id="lecture-slides"><div class="deck-top"><div><div class="eyebrow">課堂投影片 · 第 12 週</div><h2>一步一步學習。</h2></div><button class="deck-present" type="button">簡報模式</button></div><p class="deck-help">閱讀每段解說，停下來預測結果，然後繼續。選取簡報後，可用方向鍵操作。完整講義在下方。</p><div aria-label="簡報：使用左右方向鍵" class="slide-viewport" tabindex="0"><section class="lecture-slide" data-slide=""><div class="slide-stage">由例子開始</div><h3>一句話提供多個 supervised prediction</h3><div class="slide-prose"><p>取 token [I,go,to,school,by,bus]。建立 input [I,go,to,school,by] 和 target [go,to,school,by,bus]。在每個 input position，model 都預測下一個 token。</p>
-<p>這個 shift 說起來簡單，實作卻很容易出錯。若 target 等於同一 position 的 token，model 可能學會另一種容易得多的抄寫任務。即使 loss 很低，回答的也是錯誤問題。</p>
-<p>開始長時間 training 前，先印出 ID 和 decode 後的 token 例子。明確檢查第一個和最後一個 supervised position。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">由例子開始</div><h3>forward pass 為每個 position 產生一個 vocabulary row</h3><div class="slide-prose"><p>batch size 為 B、sequence length 為 T、vocabulary size 為 V 時，logit shape 是 [B,T,V]，target shape 是 [B,T]。cross entropy 將每個有效 row 與對應 target ID 比較。</p>
-<p>causal mask 防止未來 input leakage。loss mask 則從平均值移除 padding 或其他不受 supervision 的 target position。兩者作用於不同邊界。</p>
-<p>把 logit flatten 成 [B×T,V]、target flatten 成 [B×T]，只是一種實作上的便利做法，必須保留每個 row 與 target 原來的配對。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">建立對機制的理解</div><h3>一個 training step 是一連串 operation</h3><div class="slide-prose"><p>選一個 batch、運行 model、計算 loss、清除舊 gradient、backpropagate、按需要 clip gradient，再用 optimizer 更新 parameter。之後用更多資料重複。</p>
-<p>AdamW 等 optimizer 會保留額外 state，遵從特定 update rule。要檢查 gradient 有否傳到 embedding table 和 attention projection，並不需要重新推導 optimizer。</p>
-<p>定期儲存簡單紀錄：step、有效 token 數、training loss、validation loss、learning rate，以及任何數值錯誤。單一最終 loss 會掩蓋產生它的過程。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">建立對機制的理解</div><h3>判斷品質前先 debug</h3><div class="slide-prose"><p>one-batch overfit 實驗檢查 model 和 training loop 能否擬合一個極小且固定的 batch。這是有用的實作診斷，並非 generalization 結果。</p>
-<p>然後恢復獨立的 validation set。validation 時關閉 dropout 和 gradient tracking，完成後回到 training mode。不小心讓 model 留在錯誤 mode，可能改變之後的行為。</p>
-<p>檢查 loss 是否有限、gradient 是否非零。繪圖 library 不能修好未經 shift 的 target，也不能修好暴露答案的 attention mask。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">建立對機制的理解</div><h3>學習模式與記住句子的分別</h3><div class="slide-prose"><p>小量 school/travel 句子讓每個例子都容易理解，但重複 string 亦容易被記住。產生重疊 training window 前，先將完整例子分組切開。</p>
-<p>包含一些 held-out sentence pattern，並準確報告它們測試甚麼。tiny model 能產生「I go to school by bus」，不代表它有廣泛 reasoning 或 documentation 專業知識。</p>
-<p>更多資料、更大 model capacity、更多 training step 都可改變結果，但一次全部更改會令診斷困難。先從受控制的小型 configuration 開始。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">建立對機制的理解</div><h3>loss 和 generation 反映不同事情</h3><div class="slide-prose"><p>model 即使降低平均 next-token loss，在某個 decoding 選擇下，仍可能產生差的續寫。generation 會累積決策，亦可能走到與 training 不同的 prefix。</p>
-<p>相反，平均表現差的 model 也可能生成一句漂亮句子。評估多個 input，儲存原始 output，不要只挑最佳示範。</p>
-<p>tokenization 相符時，perplexity 是平均 negative log probability 的 exponential。比較不同 run 時，保持 tokenizer 和有效 token 計數一致。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">建立對機制的理解</div><h3>batch size 與累積 gradient</h3><div class="slide-prose"><p>若 microbatch size 為 2，於同一裝置累積 4 個同樣大小的 microbatch，effective example batch 就是 8。若要取得這些 mean 的平均值，每個 microbatch 的 loss 要先除以 4 才 backward，並只在整組累積後更新。</p>
-<p>sequence length 不同，會令精確的 token-weighted equivalence 更複雜。有效 token 數不同的四個 mean，其平均不會自動等於一個 global token mean。</p>
-<p>GPU memory 和 scaling 留待後面學習。本週先用小型 float32 CPU run 確立正確性，毋須大型 accelerator。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">建立對機制的理解</div><h3>實例練習與學習檢查</h3><div class="slide-prose"><p>寫出 [3,8,2,5] 的 shifted target。若有效 target 的 probability 是 [0.5,0.25,0.25]，計算平均 loss。若某個 target 是 padding，指出應排除哪些 position。</p>
-<p>訓練 tiny 教學 model，儲存 configuration 和 loss history，並檢查至少三個 prefix 的生成結果。用資料、capacity 或實作證據解釋一次失敗。</p>
-<p>當你能重現一次 run、展示真正的 input-target 配對，並分辨 debug overfit test 和 held-out evaluation，就準備好了。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">選讀：深入學習</div><h3>完成引導例子後，再深入一層</h3><div class="slide-prose"><p>以下內容適合第二次閱讀。先解釋上面的日常例子，再用以下 equation 和實作細節，把解釋說得更精確。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">選讀：深入學習</div><h3>深入學習 6：從 prediction 到 loss</h3><div class="slide-prose"><p>給定 token ID <code>x[0:T+1]</code>，input 是 <code>x[0:T]</code>，target 是 <code>x[1:T+1]</code>。對某 position 的 logit z，cross entropy 是 <code>-log softmax(z)[target]</code>。language-model loss 對有效 target position 取平均。若 model 為每個正確 token 分配 probability 0.25，loss 為 <code>-log(0.25)=1.3863</code> nats，perplexity 為 4。只有 tokenization 和 evaluation 條件適當相符時，perplexity 才可比較。</p>
-<p>padding target 應忽略。日後的 SFT 亦可能忽略 prompt position，只讓 answer position 貢獻 loss。混淆 attention mask 和 loss mask 是常見 bug：前者控制資訊存取，後者控制哪些 prediction 接受 supervision。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">選讀：深入學習</div><h3>深入學習 6：data quality 是工程問題</h3><div class="slide-prose"><p>pretraining data pipeline 會 filter、deduplicate、segment 和 tokenize。重複或近似重複的 document 跨越 train/test 邊界，會令 evaluation 虛高。產生重疊 chunk 前，先按有意義的 group 邊界切分。對 documentation，一組相關 page 或 API topic，可能比任意 text span 更適合作 group。保留 version、license、origin、time 和 transformation metadata。</p>
-<p>gradient descent 降低 training loss，但不保證得到期望的應用行為。用 training 和 validation curve 分辨 underfitting、overfitting 和實作 bug。validation 時關閉 dropout 和 gradient，但不要不小心讓 model 在下一個 training batch 仍留在 evaluation mode。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">選讀：深入學習</div><h3>深入學習 6：optimization 計算例子</h3><div class="slide-prose"><p>若 microbatch size 是 2，在同一裝置累積 8 個 microbatch 的 gradient，而且每個大小相同，effective example batch 就是 16。每個 microbatch 的 loss 先除以 8 才 backpropagate，optimizer 只 step 一次，然後清除 gradient。若 sequence length 不同，把 microbatch mean 等權平均，未必等於 global valid-token average。要求精確相等時，要計入 token 數。</p>
-<p>Adam-style optimizer 保留 moment estimate，會增加大量 memory。learning-rate warmup 和 clipping 可穩定某些設定，但首先要驗證 label、mask 和資料。scheduler 不能修好用錯 target 的 training。若要準確 resume，儲存 optimizer state、random state、tokenizer identity 和當前 step。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">選讀：深入學習</div><h3>深入學習 6：實驗</h3><div class="slide-prose"><p>在 notebook 12，比較固定 configuration 的 train/dev loss 隨時間變化。刻意用未經 shift 的 label 訓練一次，解釋任務為何改變。先嘗試 one-batch overfit test，再用真正的 grouped split。starter 的 tiny corpus 太小，不能支持強烈統計結論；報告中應明說。</p>
-<p><strong>完成標準：</strong> 實作 shifted label、解釋 perplexity，並列出 resume training run 所需的 artifact。<strong>閱讀材料：</strong> R01 data 和 optimization 的 lecture 章節。<strong>Tutorial：</strong> 12.</p></div></section></div><div class="deck-controls"><button class="slide-prev" type="button">← 上一頁</button><span aria-live="polite" class="slide-counter">1 / 13</span><button class="slide-next" type="button">下一頁 →</button></div><label class="slide-jump-label">前往 slide <select aria-label="跳至 slide" class="slide-jump"><option value="0">1</option><option value="1">2</option><option value="2">3</option><option value="3">4</option><option value="4">5</option><option value="5">6</option><option value="6">7</option><option value="7">8</option><option value="8">9</option><option value="9">10</option><option value="10">11</option><option value="11">12</option><option value="12">13</option></select></label><button aria-pressed="false" class="deck-all" type="button">顯示全部 slides</button><a class="reader-link" href="#full-notes">閱讀完整講義 ↓</a></section><article class="prose full-notes" id="full-notes"><div class="eyebrow">完整講義</div><h2>閱讀完整解說</h2><h3 id="one-sentence-supplies-several-supervised-predictions">一句話提供多個 supervised prediction</h3>
-<p>取 token [I,go,to,school,by,bus]。建立 input [I,go,to,school,by] 和 target [go,to,school,by,bus]。在每個 input position，model 都預測下一個 token。</p>
-<p>這個 shift 說起來簡單，實作卻很容易出錯。若 target 等於同一 position 的 token，model 可能學會另一種容易得多的抄寫任務。即使 loss 很低，回答的也是錯誤問題。</p>
-<p>開始長時間 training 前，先印出 ID 和 decode 後的 token 例子。明確檢查第一個和最後一個 supervised position。</p>
-<h3 id="the-forward-pass-produces-one-vocabulary-row-per-position">forward pass 為每個 position 產生一個 vocabulary row</h3>
-<p>batch size 為 B、sequence length 為 T、vocabulary size 為 V 時，logit shape 是 [B,T,V]，target shape 是 [B,T]。cross entropy 將每個有效 row 與對應 target ID 比較。</p>
-<p>causal mask 防止未來 input leakage。loss mask 則從平均值移除 padding 或其他不受 supervision 的 target position。兩者作用於不同邊界。</p>
-<p>把 logit flatten 成 [B×T,V]、target flatten 成 [B×T]，只是一種實作上的便利做法，必須保留每個 row 與 target 原來的配對。</p>
-<h3 id="a-training-step-is-a-sequence-of-operations">一個 training step 是一連串 operation</h3>
-<p>選一個 batch、運行 model、計算 loss、清除舊 gradient、backpropagate、按需要 clip gradient，再用 optimizer 更新 parameter。之後用更多資料重複。</p>
-<p>AdamW 等 optimizer 會保留額外 state，遵從特定 update rule。要檢查 gradient 有否傳到 embedding table 和 attention projection，並不需要重新推導 optimizer。</p>
-<p>定期儲存簡單紀錄：step、有效 token 數、training loss、validation loss、learning rate，以及任何數值錯誤。單一最終 loss 會掩蓋產生它的過程。</p>
-<h3 id="debugging-before-judging-quality">判斷品質前先 debug</h3>
-<p>one-batch overfit 實驗檢查 model 和 training loop 能否擬合一個極小且固定的 batch。這是有用的實作診斷，並非 generalization 結果。</p>
-<p>然後恢復獨立的 validation set。validation 時關閉 dropout 和 gradient tracking，完成後回到 training mode。不小心讓 model 留在錯誤 mode，可能改變之後的行為。</p>
-<p>檢查 loss 是否有限、gradient 是否非零。繪圖 library 不能修好未經 shift 的 target，也不能修好暴露答案的 attention mask。</p>
-<h3 id="learning-patterns-versus-memorizing-sentences">學習模式與記住句子的分別</h3>
-<p>小量 school/travel 句子讓每個例子都容易理解，但重複 string 亦容易被記住。產生重疊 training window 前，先將完整例子分組切開。</p>
-<p>包含一些 held-out sentence pattern，並準確報告它們測試甚麼。tiny model 能產生「I go to school by bus」，不代表它有廣泛 reasoning 或 documentation 專業知識。</p>
-<p>更多資料、更大 model capacity、更多 training step 都可改變結果，但一次全部更改會令診斷困難。先從受控制的小型 configuration 開始。</p>
-<h3 id="loss-and-generation-tell-different-stories">loss 和 generation 反映不同事情</h3>
-<p>model 即使降低平均 next-token loss，在某個 decoding 選擇下，仍可能產生差的續寫。generation 會累積決策，亦可能走到與 training 不同的 prefix。</p>
-<p>相反，平均表現差的 model 也可能生成一句漂亮句子。評估多個 input，儲存原始 output，不要只挑最佳示範。</p>
-<p>tokenization 相符時，perplexity 是平均 negative log probability 的 exponential。比較不同 run 時，保持 tokenizer 和有效 token 計數一致。</p>
-<h3 id="batch-size-and-accumulated-gradients">batch size 與累積 gradient</h3>
-<p>若 microbatch size 為 2，於同一裝置累積 4 個同樣大小的 microbatch，effective example batch 就是 8。若要取得這些 mean 的平均值，每個 microbatch 的 loss 要先除以 4 才 backward，並只在整組累積後更新。</p>
-<p>sequence length 不同，會令精確的 token-weighted equivalence 更複雜。有效 token 數不同的四個 mean，其平均不會自動等於一個 global token mean。</p>
-<p>GPU memory 和 scaling 留待後面學習。本週先用小型 float32 CPU run 確立正確性，毋須大型 accelerator。</p>
-<h3 id="worked-practice-and-a-readiness-check">實例練習與學習檢查</h3>
-<p>寫出 [3,8,2,5] 的 shifted target。若有效 target 的 probability 是 [0.5,0.25,0.25]，計算平均 loss。若某個 target 是 padding，指出應排除哪些 position。</p>
-<p>訓練 tiny 教學 model，儲存 configuration 和 loss history，並檢查至少三個 prefix 的生成結果。用資料、capacity 或實作證據解釋一次失敗。</p>
-<p>當你能重現一次 run、展示真正的 input-target 配對，並分辨 debug overfit test 和 held-out evaluation，就準備好了。</p>
-<h3 id="a-deeper-pass-after-the-worked-introduction">完成引導例子後，再深入一層</h3>
-<p>以下內容適合第二次閱讀。先解釋上面的日常例子，再用以下 equation 和實作細節，把解釋說得更精確。</p>
-<h3 id="further-study-6-from-prediction-to-loss">深入學習 6：從 prediction 到 loss</h3>
-<p>給定 token ID <code>x[0:T+1]</code>，input 是 <code>x[0:T]</code>，target 是 <code>x[1:T+1]</code>。對某 position 的 logit z，cross entropy 是 <code>-log softmax(z)[target]</code>。language-model loss 對有效 target position 取平均。若 model 為每個正確 token 分配 probability 0.25，loss 為 <code>-log(0.25)=1.3863</code> nats，perplexity 為 4。只有 tokenization 和 evaluation 條件適當相符時，perplexity 才可比較。</p>
-<p>padding target 應忽略。日後的 SFT 亦可能忽略 prompt position，只讓 answer position 貢獻 loss。混淆 attention mask 和 loss mask 是常見 bug：前者控制資訊存取，後者控制哪些 prediction 接受 supervision。</p>
-<h3 id="further-study-6-data-quality-is-an-engineering-problem">深入學習 6：data quality 是工程問題</h3>
-<p>pretraining data pipeline 會 filter、deduplicate、segment 和 tokenize。重複或近似重複的 document 跨越 train/test 邊界，會令 evaluation 虛高。產生重疊 chunk 前，先按有意義的 group 邊界切分。對 documentation，一組相關 page 或 API topic，可能比任意 text span 更適合作 group。保留 version、license、origin、time 和 transformation metadata。</p>
-<p>gradient descent 降低 training loss，但不保證得到期望的應用行為。用 training 和 validation curve 分辨 underfitting、overfitting 和實作 bug。validation 時關閉 dropout 和 gradient，但不要不小心讓 model 在下一個 training batch 仍留在 evaluation mode。</p>
-<h3 id="further-study-6-worked-optimization-example">深入學習 6：optimization 計算例子</h3>
-<p>若 microbatch size 是 2，在同一裝置累積 8 個 microbatch 的 gradient，而且每個大小相同，effective example batch 就是 16。每個 microbatch 的 loss 先除以 8 才 backpropagate，optimizer 只 step 一次，然後清除 gradient。若 sequence length 不同，把 microbatch mean 等權平均，未必等於 global valid-token average。要求精確相等時，要計入 token 數。</p>
-<p>Adam-style optimizer 保留 moment estimate，會增加大量 memory。learning-rate warmup 和 clipping 可穩定某些設定，但首先要驗證 label、mask 和資料。scheduler 不能修好用錯 target 的 training。若要準確 resume，儲存 optimizer state、random state、tokenizer identity 和當前 step。</p>
-<h3 id="further-study-6-experiment">深入學習 6：實驗</h3>
-<p>在 notebook 12，比較固定 configuration 的 train/dev loss 隨時間變化。刻意用未經 shift 的 label 訓練一次，解釋任務為何改變。先嘗試 one-batch overfit test，再用真正的 grouped split。starter 的 tiny corpus 太小，不能支持強烈統計結論；報告中應明說。</p>
-<p><strong>完成標準：</strong> 實作 shifted label、解釋 perplexity，並列出 resume training run 所需的 artifact。<strong>閱讀材料：</strong> R01 data 和 optimization 的 lecture 章節。<strong>Tutorial：</strong> 12.</p></article><nav aria-label="前後 lecture" class="chapter-pagination"><a href="11.html"><small>上一週</small>Encoder、decoder 與完整 model architecture</a><a href="13.html"><small>下一週</small>Generation、decoding 與 KV cache</a></nav></div><footer class="footer"><span>Applied AI · 獨立自學課程</span><span>32 週 · 每週 10 小時</span><a href="../resources.html#about-this-course">關於課程及資料來源</a></footer></main><dialog aria-labelledby="search-title" class="search-dialog"><div class="dialog-head"><h2 id="search-title">尋找概念</h2><button aria-label="關閉搜尋" class="search-close" type="button">關閉</button></div><label class="sr-only" for="course-search">搜尋所有 lecture 和 tutorial</label><input autocomplete="off" id="course-search" placeholder="試試 attention、fine-tuning 或 harness……" type="search"/><p aria-live="polite" class="search-status">搜尋 lecture notes、tutorial、測驗及閱讀材料。</p><div class="search-results"></div></dialog><div aria-live="polite" class="toast" role="status"></div></body></html>
+<html lang="zh-HK">
+ <head>
+  <script src="../../assets/translations-zh-HK.js">
+  </script>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width,initial-scale=1" name="viewport"/>
+  <title>
+   訓練一個小型 transformer · Applied AI
+  </title>
+  <meta content="Applied generative AI and LLM systems course material" name="description"/>
+  <meta content="#173c36" name="theme-color"/>
+  <link href="../../assets/favicon.svg" rel="icon" type="image/svg+xml"/>
+  <link href="../../assets/style.css" rel="stylesheet"/>
+  <link href="../../assets/slides.css" rel="stylesheet"/>
+  <script>
+   window.COURSE_BASE="../";
+  </script>
+  <script defer="" src="../../assets/site-config.js">
+  </script>
+  <script defer="" src="../assets/search-index.js">
+  </script>
+  <script defer="" src="../../assets/app.js">
+  </script>
+  <script defer="" src="../../assets/visuals.js">
+  </script>
+  <script defer="" src="../../assets/slides.js">
+  </script>
+  <script defer="" src="../../assets/beginner-visuals.js">
+  </script>
+  <script defer="True" src="../../assets/locale-patterns.js">
+  </script>
+  <script defer="True" src="../../assets/locale.js">
+  </script>
+  <link href="../../assets/bilingual.css" rel="stylesheet"/>
+  <link href="../../lectures/12.html" hreflang="en" rel="alternate"/>
+  <link href="../../assets/reader-v3.css" rel="stylesheet"/>
+  <script defer="True" src="../../assets/reader-v3.js">
+  </script>
+ </head>
+ <body data-page-kind="lecture" data-week="12">
+  <a class="skip-link" href="#main">
+   跳至內容
+  </a>
+  <header class="topbar">
+   <button aria-controls="course-sidebar" aria-expanded="false" class="menu-toggle" type="button">
+    選單
+   </button>
+   <a class="brand" href="../index.html">
+    <span aria-hidden="true" class="brand-mark">
+     a
+     <span>
+      i
+     </span>
+    </span>
+    <span>
+     APPLIED AI
+     <small>
+      從原理到實踐
+     </small>
+    </span>
+   </a>
+   <nav aria-label="主要導覽">
+    <a href="../index.html">
+     課程
+    </a>
+    <a href="../visuals.html">
+     互動圖解
+    </a>
+    <a href="../project.html">
+     專題
+    </a>
+    <a class="language-switch" href="../../lectures/12.html" hreflang="en" lang="en">
+     English
+    </a>
+   </nav>
+   <button class="search-open" type="button">
+    搜尋課程
+    <span aria-hidden="true">
+     /
+    </span>
+   </button>
+  </header>
+  <aside aria-label="課程章節" class="sidebar" id="course-sidebar">
+   <a class="side-home" href="../index.html">
+    課程概覽
+   </a>
+   <details class="semester-nav" open="">
+    <summary>
+     第一學期
+     <span>
+      第 1–16 週
+     </span>
+    </summary>
+    <ol start="1">
+     <li>
+      <a href="../lectures/01.html">
+       <span class="week-number">
+        01
+       </span>
+       <span>
+        Language model 究竟在學甚麼
+       </span>
+       <span class="week-tick" data-week-tick="1">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/02.html">
+       <span class="week-number">
+        02
+       </span>
+       <span>
+        從文字到 token 和數值 ID
+       </span>
+       <span class="week-tick" data-week-tick="2">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/03.html">
+       <span class="week-number">
+        03
+       </span>
+       <span>
+        Word vector 能表達甚麼
+       </span>
+       <span class="week-tick" data-week-tick="3">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/04.html">
+       <span class="week-number">
+        04
+       </span>
+       <span>
+        從 score 到 probability 和學習訊號
+       </span>
+       <span class="week-tick" data-week-tick="4">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/05.html">
+       <span class="week-number">
+        05
+       </span>
+       <span>
+        為甚麼語言需要 context 和次序
+       </span>
+       <span class="week-tick" data-week-tick="5">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/06.html">
+       <span class="week-number">
+        06
+       </span>
+       <span>
+        Attention 由 weighted mixture 開始
+       </span>
+       <span class="week-tick" data-week-tick="6">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/07.html">
+       <span class="week-number">
+        07
+       </span>
+       <span>
+        Query、key 和 value 從何而來
+       </span>
+       <span class="week-tick" data-week-tick="7">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/08.html">
+       <span class="week-number">
+        08
+       </span>
+       <span>
+        正確進行 attention scaling 和 masking
+       </span>
+       <span class="week-tick" data-week-tick="8">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/09.html">
+       <span class="week-number">
+        09
+       </span>
+       <span>
+        多個 attention head 與位置
+       </span>
+       <span class="week-tick" data-week-tick="9">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/10.html">
+       <span class="week-number">
+        10
+       </span>
+       <span>
+        逐步拆解 transformer block
+       </span>
+       <span class="week-tick" data-week-tick="10">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/11.html">
+       <span class="week-number">
+        11
+       </span>
+       <span>
+        Encoder、decoder 與完整 model architecture
+       </span>
+       <span class="week-tick" data-week-tick="11">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a aria-current="page" href="../lectures/12.html">
+       <span class="week-number">
+        12
+       </span>
+       <span>
+        訓練一個小型 transformer
+       </span>
+       <span class="week-tick" data-week-tick="12">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/13.html">
+       <span class="week-number">
+        13
+       </span>
+       <span>
+        Generation、decoding 與 KV cache
+       </span>
+       <span class="week-tick" data-week-tick="13">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/14.html">
+       <span class="week-number">
+        14
+       </span>
+       <span>
+        從 pretraining 到 instruction following 和 reasoning
+       </span>
+       <span class="week-tick" data-week-tick="14">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/15.html">
+       <span class="week-number">
+        15
+       </span>
+       <span>
+        文字以外的 Generative AI
+       </span>
+       <span class="week-tick" data-week-tick="15">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/16.html">
+       <span class="week-number">
+        16
+       </span>
+       <span>
+        完整 transformer 導覽與第一學期溫習
+       </span>
+       <span class="week-tick" data-week-tick="16">
+       </span>
+      </a>
+     </li>
+    </ol>
+   </details>
+   <details class="semester-nav">
+    <summary>
+     第二學期
+     <span>
+      第 17–32 週
+     </span>
+    </summary>
+    <ol start="17">
+     <li>
+      <a href="../lectures/17.html">
+       <span class="week-number">
+        17
+       </span>
+       <span>
+        從 word vector 到 semantic search
+       </span>
+       <span class="week-tick" data-week-tick="17">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/18.html">
+       <span class="week-number">
+        18
+       </span>
+       <span>
+        從一列 vector 建立 vector database
+       </span>
+       <span class="week-tick" data-week-tick="18">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/19.html">
+       <span class="week-number">
+        19
+       </span>
+       <span>
+        把 RAG 理解為開卷作答
+       </span>
+       <span class="week-tick" data-week-tick="19">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/20.html">
+       <span class="week-number">
+        20
+       </span>
+       <span>
+        在保持基本任務的前提下改善 RAG
+       </span>
+       <span class="week-tick" data-week-tick="20">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/21.html">
+       <span class="week-number">
+        21
+       </span>
+       <span>
+        評估 retrieval、答案與 uncertainty
+       </span>
+       <span class="week-tick" data-week-tick="21">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/22.html">
+       <span class="week-number">
+        22
+       </span>
+       <span>
+        CPU、GPU、memory 與 model 資源計算
+       </span>
+       <span class="week-tick" data-week-tick="22">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/23.html">
+       <span class="week-number">
+        23
+       </span>
+       <span>
+        CUDA kernel 與 profiling
+       </span>
+       <span class="week-tick" data-week-tick="23">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/24.html">
+       <span class="week-number">
+        24
+       </span>
+       <span>
+        Fine-tuning 由教學 dataset 開始
+       </span>
+       <span class="week-tick" data-week-tick="24">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/25.html">
+       <span class="week-number">
+        25
+       </span>
+       <span>
+        從小型 matrix 理解 LoRA 和 QLoRA
+       </span>
+       <span class="week-tick" data-week-tick="25">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/26.html">
+       <span class="week-number">
+        26
+       </span>
+       <span>
+        Fine-tuning 實驗、preference 與 distillation
+       </span>
+       <span class="week-tick" data-week-tick="26">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/27.html">
+       <span class="week-number">
+        27
+       </span>
+       <span>
+        Tool、function、workflow 與 agent
+       </span>
+       <span class="week-tick" data-week-tick="27">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/28.html">
+       <span class="week-number">
+        28
+       </span>
+       <span>
+        Harness、planning、memory 與有界執行
+       </span>
+       <span class="week-tick" data-week-tick="28">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/29.html">
+       <span class="week-number">
+        29
+       </span>
+       <span>
+        從 notebook 到 MLOps 和 inference serving
+       </span>
+       <span class="week-tick" data-week-tick="29">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/30.html">
+       <span class="week-number">
+        30
+       </span>
+       <span>
+        Monitoring、security、regression test 與 rollback
+       </span>
+       <span class="week-tick" data-week-tick="30">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/31.html">
+       <span class="week-number">
+        31
+       </span>
+       <span>
+        整合文件助手與進階延伸
+       </span>
+       <span class="week-tick" data-week-tick="31">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/32.html">
+       <span class="week-number">
+        32
+       </span>
+       <span>
+        溫習、答辯與持續學習計劃
+       </span>
+       <span class="week-tick" data-week-tick="32">
+       </span>
+      </a>
+     </li>
+    </ol>
+   </details>
+   <div class="side-links">
+    <a href="../visuals.html">
+     互動圖解實驗室
+     <span>
+      14 個互動課節
+     </span>
+    </a>
+    <a href="../project.html">
+     文件助手
+     <span>
+      你的 capstone project
+     </span>
+    </a>
+    <a href="../resources.html">
+     閱讀材料與環境設定
+    </a>
+   </div>
+   <div class="side-progress">
+    <div>
+     <span>
+      你的進度
+     </span>
+     <strong data-progress-count="">
+      0 / 32
+     </strong>
+    </div>
+    <progress aria-label="已完成 lecture" max="32" value="0">
+    </progress>
+    <small>
+     儲存在這個瀏覽器
+    </small>
+   </div>
+  </aside>
+  <main class="main" id="main">
+   <div class="content">
+    <div class="chapter-header">
+     <div class="eyebrow">
+      第一學期 / 第 12 週
+     </div>
+     <h1>
+      訓練一個小型 transformer
+     </h1>
+    </div>
+    <div class="lesson-links">
+     <a href="../tutorials/12.html">
+      練習 12
+     </a>
+     <a href="../tests/12.html">
+      檢查你的理解
+     </a>
+     <button aria-pressed="false" class="mark-complete" data-week="12" type="button">
+      標記為已完成
+     </button>
+    </div>
+    <div aria-label="課堂檢視" class="lesson-mode" role="tablist">
+     <button aria-controls="full-notes" aria-selected="true" data-mode="read" id="mode-read" role="tab" type="button">
+      閱讀講義
+     </button>
+     <button aria-controls="lecture-slides" aria-selected="false" data-mode="slides" id="mode-slides" role="tab" type="button">
+      課堂 slides
+     </button>
+    </div>
+    <section aria-label="Lecture slides" class="lecture-deck" hidden="" id="lecture-slides" role="tabpanel">
+     <div class="deck-top">
+      <div>
+       <div class="eyebrow">
+        課堂投影片 · 第 12 週
+       </div>
+       <h2>
+        重點步驟與圖解
+       </h2>
+      </div>
+      <button class="deck-present" type="button">
+       簡報模式
+      </button>
+     </div>
+     <p class="deck-help">
+      用 slides 溫習機制；按「閱讀完整解說」可開啟完整講義及程式碼。
+     </p>
+     <div aria-label="簡報：使用左右方向鍵" class="slide-viewport" tabindex="0">
+      <section class="lecture-slide" data-slide="">
+       <div class="slide-stage">
+        第 12 週 · 課節 1
+       </div>
+       <h3>
+        一句話提供多個 supervised prediction
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          取 token [I,go,to,school,by,bus]。
+         </li>
+         <li>
+          這個 shift 說起來簡單，實作卻很容易出錯。
+         </li>
+         <li>
+          開始長時間 training 前，先印出 ID 和 decode 後的 token 例子。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#one-sentence-supplies-several-supervised-predictions">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 12 週 · 課節 2
+       </div>
+       <h3>
+        forward pass 為每個 position 產生一個 vocabulary row
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          batch size 為 B、sequence length 為 T、vocabulary size 為 V 時，logit shape 是 [B,T,V]，target shape 是 [B,T]。
+         </li>
+         <li>
+          causal mask 防止未來 input leakage。
+         </li>
+         <li>
+          把 logit flatten 成 [B×T,V]、target flatten 成 [B×T]，只是一種實作上的便利做法，必須保留每個 row 與 target 原來的配對。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#the-forward-pass-produces-one-vocabulary-row-per-position">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 12 週 · 課節 3
+       </div>
+       <h3>
+        一個 training step 是一連串 operation
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          選一個 batch、運行 model、計算 loss、清除舊 gradient、backpropagate、按需要 clip gradient，再用 optimizer 更新 parameter。
+         </li>
+         <li>
+          AdamW 等 optimizer 會保留額外 state，遵從特定 update rule。
+         </li>
+         <li>
+          定期儲存簡單紀錄：step、有效 token 數、training loss、validation loss、learning rate，以及任何數值錯誤。
+         </li>
+        </ul>
+        <figure class="mechanism-figure">
+         <figcaption>
+          一個完整 training step
+         </figcaption>
+         <ol class="mechanism-flow">
+          <li>
+           <span class="mechanism-number">
+            01
+           </span>
+           <strong>
+            Forward
+           </strong>
+           <small>
+            tokens → logits
+           </small>
+          </li>
+          <li>
+           <span class="mechanism-number">
+            02
+           </span>
+           <strong>
+            Objective
+           </strong>
+           <small>
+            shifted target → loss
+           </small>
+          </li>
+          <li>
+           <span class="mechanism-number">
+            03
+           </span>
+           <strong>
+            Backward
+           </strong>
+           <small>
+            loss → gradients
+           </small>
+          </li>
+          <li>
+           <span class="mechanism-number">
+            04
+           </span>
+           <strong>
+            Update
+           </strong>
+           <small>
+            optimizer → parameters
+           </small>
+          </li>
+         </ol>
+         <p>
+          清除或有計劃地累積 gradients。Optimizer update 會改變下一次 forward pass 所用的 model。
+         </p>
+        </figure>
+        <a class="slide-section-link" href="#a-training-step-is-a-sequence-of-operations">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 12 週 · 課節 4
+       </div>
+       <h3>
+        判斷品質前先 debug
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          one-batch overfit 實驗檢查 model 和 training loop 能否擬合一個極小且固定的 batch。
+         </li>
+         <li>
+          然後恢復獨立的 validation set。validation 時關閉 dropout 和 gradient tracking，完成後回到 training mode。不小心讓 model 留在錯誤 mode，可能改變之後的行為。
+         </li>
+         <li>
+          檢查 loss 是否有限、gradient 是否非零。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#debugging-before-judging-quality">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 12 週 · 課節 5
+       </div>
+       <h3>
+        學習模式與記住句子的分別
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          小量 school/travel 句子讓每個例子都容易理解，但重複 string 亦容易被記住。
+         </li>
+         <li>
+          包含一些 held-out sentence pattern，並準確報告它們測試甚麼。
+         </li>
+         <li>
+          更多資料、更大 model capacity、更多 training step 都可改變結果，但一次全部更改會令診斷困難。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#learning-patterns-versus-memorizing-sentences">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 12 週 · 課節 6
+       </div>
+       <h3>
+        loss 和 generation 反映不同事情
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          model 即使降低平均 next-token loss，在某個 decoding 選擇下，仍可能產生差的續寫。
+         </li>
+         <li>
+          相反，平均表現差的 model 也可能生成一句漂亮句子。
+         </li>
+         <li>
+          tokenization 相符時，perplexity 是平均 negative log probability 的 exponential。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#loss-and-generation-tell-different-stories">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 12 週 · 課節 7
+       </div>
+       <h3>
+        batch size 與累積 gradient
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          若 microbatch size 為 2，於同一裝置累積 4 個同樣大小的 microbatch，effective example batch 就是 8。
+         </li>
+         <li>
+          sequence length 不同，會令精確的 token-weighted equivalence 更複雜。
+         </li>
+         <li>
+          GPU memory 和 scaling 留待後面學習。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#batch-size-and-accumulated-gradients">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 12 週 · 課節 8
+       </div>
+       <h3>
+        Learning-rate schedule 控制不同時間的 step size
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Learning rate 是 optimizer update 中控制 step size 的 multiplier。
+         </li>
+         <li>
+          AdamW 保留 gradient moments 的 moving estimates，並使用 decoupled weight decay。
+         </li>
+         <li>
+          Gradient clipping 限制送入 update 的 gradient norm，並不會修正錯誤 labels。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#a-learning-rate-schedule-controls-step-size-over-time">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 12 週 · 課節 9
+       </div>
+       <h3>
+        Data mixture 和 contamination 會改變實驗
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Data mixture 說明 training examples 如何被抽樣。
+         </li>
+         <li>
+          來源： AdamW update rule .
+         </li>
+         <li>
+          來源： PyTorch automatic mixed precision recipe .
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#data-mixture-and-contamination-change-the-experiment">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 12 週 · 課節 10
+       </div>
+       <h3>
+        實例練習與學習檢查
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          寫出 [3,8,2,5] 的 shifted target。
+         </li>
+         <li>
+          訓練 tiny 教學 model，儲存 configuration 和 loss history，並檢查至少三個 prefix 的生成結果。
+         </li>
+         <li>
+          當你能重現一次 run、展示真正的 input-target 配對，並分辨 debug overfit test 和 held-out evaluation，就準備好了。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#worked-practice-and-a-readiness-check">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+     </div>
+     <div class="deck-controls">
+      <button class="slide-prev" type="button">
+       ← 上一頁
+      </button>
+      <span aria-live="polite" class="slide-counter">
+       1 / 10
+      </span>
+      <button class="slide-next" type="button">
+       下一頁 →
+      </button>
+     </div>
+     <label class="slide-jump-label">
+      前往 slide
+      <select aria-label="跳至 slide" class="slide-jump">
+       <option value="0">
+        1. 一句話提供多個 supervised prediction
+       </option>
+       <option value="1">
+        2. forward pass 為每個 position 產生一個 vocabulary row
+       </option>
+       <option value="2">
+        3. 一個 training step 是一連串 operation
+       </option>
+       <option value="3">
+        4. 判斷品質前先 debug
+       </option>
+       <option value="4">
+        5. 學習模式與記住句子的分別
+       </option>
+       <option value="5">
+        6. loss 和 generation 反映不同事情
+       </option>
+       <option value="6">
+        7. batch size 與累積 gradient
+       </option>
+       <option value="7">
+        8. Learning-rate schedule 控制不同時間的 step size
+       </option>
+       <option value="8">
+        9. Data mixture 和 contamination 會改變實驗
+       </option>
+       <option value="9">
+        10. 實例練習與學習檢查
+       </option>
+      </select>
+     </label>
+     <button aria-pressed="false" class="deck-all" type="button">
+      顯示全部 slides
+     </button>
+    </section>
+    <nav aria-label="本課內容" class="reader-toc">
+     <strong>
+      本課內容
+     </strong>
+     <ol>
+      <li>
+       <a href="#one-sentence-supplies-several-supervised-predictions">
+        一句話提供多個 supervised prediction
+       </a>
+      </li>
+      <li>
+       <a href="#the-forward-pass-produces-one-vocabulary-row-per-position">
+        forward pass 為每個 position 產生一個 vocabulary row
+       </a>
+      </li>
+      <li>
+       <a href="#a-training-step-is-a-sequence-of-operations">
+        一個 training step 是一連串 operation
+       </a>
+      </li>
+      <li>
+       <a href="#debugging-before-judging-quality">
+        判斷品質前先 debug
+       </a>
+      </li>
+      <li>
+       <a href="#learning-patterns-versus-memorizing-sentences">
+        學習模式與記住句子的分別
+       </a>
+      </li>
+      <li>
+       <a href="#loss-and-generation-tell-different-stories">
+        loss 和 generation 反映不同事情
+       </a>
+      </li>
+      <li>
+       <a href="#batch-size-and-accumulated-gradients">
+        batch size 與累積 gradient
+       </a>
+      </li>
+      <li>
+       <a href="#a-learning-rate-schedule-controls-step-size-over-time">
+        Learning-rate schedule 控制不同時間的 step size
+       </a>
+      </li>
+      <li>
+       <a href="#data-mixture-and-contamination-change-the-experiment">
+        Data mixture 和 contamination 會改變實驗
+       </a>
+      </li>
+      <li>
+       <a href="#worked-practice-and-a-readiness-check">
+        實例練習與學習檢查
+       </a>
+      </li>
+     </ol>
+    </nav>
+    <article class="prose full-notes" id="full-notes" role="tabpanel">
+     <div class="eyebrow">
+      完整講義
+     </div>
+     <h2>
+      閱讀完整解說
+     </h2>
+     <h3 id="one-sentence-supplies-several-supervised-predictions">
+      一句話提供多個 supervised prediction
+     </h3>
+     <p>
+      取 token [I,go,to,school,by,bus]。建立 input [I,go,to,school,by] 和 target [go,to,school,by,bus]。在每個 input position，model 都預測下一個 token。
+     </p>
+     <p>
+      這個 shift 說起來簡單，實作卻很容易出錯。若 target 等於同一 position 的 token，model 可能學會另一種容易得多的抄寫任務。即使 loss 很低，回答的也是錯誤問題。
+     </p>
+     <p>
+      開始長時間 training 前，先印出 ID 和 decode 後的 token 例子。明確檢查第一個和最後一個 supervised position。
+     </p>
+     <h3 id="the-forward-pass-produces-one-vocabulary-row-per-position">
+      forward pass 為每個 position 產生一個 vocabulary row
+     </h3>
+     <p>
+      batch size 為 B、sequence length 為 T、vocabulary size 為 V 時，logit shape 是 [B,T,V]，target shape 是 [B,T]。cross entropy 將每個有效 row 與對應 target ID 比較。
+     </p>
+     <p>
+      causal mask 防止未來 input leakage。loss mask 則從平均值移除 padding 或其他不受 supervision 的 target position。兩者作用於不同邊界。
+     </p>
+     <p>
+      把 logit flatten 成 [B×T,V]、target flatten 成 [B×T]，只是一種實作上的便利做法，必須保留每個 row 與 target 原來的配對。
+     </p>
+     <h3 id="a-training-step-is-a-sequence-of-operations">
+      一個 training step 是一連串 operation
+     </h3>
+     <figure class="mechanism-figure">
+      <figcaption>
+       一個完整 training step
+      </figcaption>
+      <ol class="mechanism-flow">
+       <li>
+        <span class="mechanism-number">
+         01
+        </span>
+        <strong>
+         Forward
+        </strong>
+        <small>
+         tokens → logits
+        </small>
+       </li>
+       <li>
+        <span class="mechanism-number">
+         02
+        </span>
+        <strong>
+         Objective
+        </strong>
+        <small>
+         shifted target → loss
+        </small>
+       </li>
+       <li>
+        <span class="mechanism-number">
+         03
+        </span>
+        <strong>
+         Backward
+        </strong>
+        <small>
+         loss → gradients
+        </small>
+       </li>
+       <li>
+        <span class="mechanism-number">
+         04
+        </span>
+        <strong>
+         Update
+        </strong>
+        <small>
+         optimizer → parameters
+        </small>
+       </li>
+      </ol>
+      <p>
+       清除或有計劃地累積 gradients。Optimizer update 會改變下一次 forward pass 所用的 model。
+      </p>
+     </figure>
+     <p>
+      選一個 batch、運行 model、計算 loss、清除舊 gradient、backpropagate、按需要 clip gradient，再用 optimizer 更新 parameter。之後用更多資料重複。
+     </p>
+     <p>
+      AdamW 等 optimizer 會保留額外 state，遵從特定 update rule。要檢查 gradient 有否傳到 embedding table 和 attention projection，並不需要重新推導 optimizer。
+     </p>
+     <p>
+      定期儲存簡單紀錄：step、有效 token 數、training loss、validation loss、learning rate，以及任何數值錯誤。單一最終 loss 會掩蓋產生它的過程。
+     </p>
+     <h3 id="debugging-before-judging-quality">
+      判斷品質前先 debug
+     </h3>
+     <p>
+      one-batch overfit 實驗檢查 model 和 training loop 能否擬合一個極小且固定的 batch。這是有用的實作診斷，並非 generalization 結果。
+     </p>
+     <p>
+      然後恢復獨立的 validation set。validation 時關閉 dropout 和 gradient tracking，完成後回到 training mode。不小心讓 model 留在錯誤 mode，可能改變之後的行為。
+     </p>
+     <p>
+      檢查 loss 是否有限、gradient 是否非零。繪圖 library 不能修好未經 shift 的 target，也不能修好暴露答案的 attention mask。
+     </p>
+     <h3 id="learning-patterns-versus-memorizing-sentences">
+      學習模式與記住句子的分別
+     </h3>
+     <p>
+      小量 school/travel 句子讓每個例子都容易理解，但重複 string 亦容易被記住。產生重疊 training window 前，先將完整例子分組切開。
+     </p>
+     <p>
+      包含一些 held-out sentence pattern，並準確報告它們測試甚麼。tiny model 能產生「I go to school by bus」，不代表它有廣泛 reasoning 或 documentation 專業知識。
+     </p>
+     <p>
+      更多資料、更大 model capacity、更多 training step 都可改變結果，但一次全部更改會令診斷困難。先從受控制的小型 configuration 開始。
+     </p>
+     <h3 id="loss-and-generation-tell-different-stories">
+      loss 和 generation 反映不同事情
+     </h3>
+     <p>
+      model 即使降低平均 next-token loss，在某個 decoding 選擇下，仍可能產生差的續寫。generation 會累積決策，亦可能走到與 training 不同的 prefix。
+     </p>
+     <p>
+      相反，平均表現差的 model 也可能生成一句漂亮句子。評估多個 input，儲存原始 output，不要只挑最佳示範。
+     </p>
+     <p>
+      tokenization 相符時，perplexity 是平均 negative log probability 的 exponential。比較不同 run 時，保持 tokenizer 和有效 token 計數一致。
+     </p>
+     <h3 id="batch-size-and-accumulated-gradients">
+      batch size 與累積 gradient
+     </h3>
+     <p>
+      若 microbatch size 為 2，於同一裝置累積 4 個同樣大小的 microbatch，effective example batch 就是 8。若要取得這些 mean 的平均值，每個 microbatch 的 loss 要先除以 4 才 backward，並只在整組累積後更新。
+     </p>
+     <p>
+      sequence length 不同，會令精確的 token-weighted equivalence 更複雜。有效 token 數不同的四個 mean，其平均不會自動等於一個 global token mean。
+     </p>
+     <p>
+      GPU memory 和 scaling 留待後面學習。本週先用小型 float32 CPU run 確立正確性，毋須大型 accelerator。
+     </p>
+     <h3 id="a-learning-rate-schedule-controls-step-size-over-time">
+      Learning-rate schedule 控制不同時間的 step size
+     </h3>
+     <p>
+      Learning rate 是 optimizer update 中控制 step size 的 multiplier。Warmup 以較小 rate 開始，在初期 steps 逐步增加；之後的 cosine decay 再逐漸降低 rate。對一個 100-step 教學 run，可以選 peak 0.001、warmup 10 steps，並在 step 100 降至 0.0001。Linear warmup 下，step 5 是 0.0005；step 10 是 0.001；decay 中點 step 55 是 0.00055。Training 前先畫出 schedule，讓預期變化一目了然。
+     </p>
+     <p>
+      AdamW 保留 gradient moments 的 moving estimates，並使用 decoupled weight decay。Learning rate 為 η、decay 為 λ 時，在計入 adaptive-gradient contribution 前，decay contribution 以 1−ηλ 的 factor 縮小被選中的 weight。若 weight 是 2、η=0.01、λ=0.1，單看 decay 後的結果是 1.998。這與調低 learning rate 是兩回事。Parameter groups 常會把 biases 和 normalization weights 排除於 decay；應記錄實際 grouping。
+     </p>
+     <p>
+      Gradient clipping 限制送入 update 的 gradient norm，並不會修正錯誤 labels。若 gradient vector 的 norm 是 10，而 maximum norm 是 2，就把該 vector 乘以 0.2。應記錄 unclipped norm，讓重複 clipping 的情況可見。Mixed precision 在支援的 operations 使用較低 precision，並在需要時保留較高 precision。FP16 training 常用 gradient scaling 避免 underflow；BF16 的 exponent range 較闊，但仍需合適 hardware 和 kernels。先確保 labels、masks 和 loss computation 正確，再解讀 speedup。
+     </p>
+     <h3 id="data-mixture-and-contamination-change-the-experiment">
+      Data mixture 和 contamination 會改變實驗
+     </h3>
+     <p>
+      Data mixture 說明 training examples 如何被抽樣。若 school corpus 的 90% 是 bus sentences，10% 是 library sentences，validation behavior 便可能偏向交通語言。記錄 sampling weights、deduplication、document sources 和 oversampling。若 held-out question、其答案或 near-duplicate 進入 training，evaluation 便可能受 contamination 影響。先按有意義的 document 或 problem families 分組，再在各 split 內產生 paraphrases；保留一組從不控制 training 或 prompt 選擇的 final set。
+     </p>
+     <p>
+      來源：
+      <a href="https://docs.pytorch.org/docs/stable/generated/torch.optim.AdamW.html">
+       AdamW update rule
+      </a>
+      .
+     </p>
+     <p>
+      來源：
+      <a href="https://docs.pytorch.org/tutorials/recipes/recipes/amp_recipe.html">
+       PyTorch automatic mixed precision recipe
+      </a>
+      .
+     </p>
+     <h3 id="worked-practice-and-a-readiness-check">
+      實例練習與學習檢查
+     </h3>
+     <p>
+      寫出 [3,8,2,5] 的 shifted target。若有效 target 的 probability 是 [0.5,0.25,0.25]，計算平均 loss。若某個 target 是 padding，指出應排除哪些 position。
+     </p>
+     <p>
+      訓練 tiny 教學 model，儲存 configuration 和 loss history，並檢查至少三個 prefix 的生成結果。用資料、capacity 或實作證據解釋一次失敗。
+     </p>
+     <p>
+      當你能重現一次 run、展示真正的 input-target 配對，並分辨 debug overfit test 和 held-out evaluation，就準備好了。
+     </p>
+     <details class="reference-details" id="reference-details">
+      <summary>
+       參考細節與學習檢查
+      </summary>
+      <h3 id="review-a-from-prediction-to-loss">
+       複習 A：從 prediction 到 loss
+      </h3>
+      <p>
+       給定 token ID
+       <code>
+        x[0:T+1]
+       </code>
+       ，input 是
+       <code>
+        x[0:T]
+       </code>
+       ，target 是
+       <code>
+        x[1:T+1]
+       </code>
+       。對某 position 的 logit z，cross entropy 是
+       <code>
+        -log softmax(z)[target]
+       </code>
+       。language-model loss 對有效 target position 取平均。若 model 為每個正確 token 分配 probability 0.25，loss 為
+       <code>
+        -log(0.25)=1.3863
+       </code>
+       nats，perplexity 為 4。只有 tokenization 和 evaluation 條件適當相符時，perplexity 才可比較。
+      </p>
+      <p>
+       padding target 應忽略。日後的 SFT 亦可能忽略 prompt position，只讓 answer position 貢獻 loss。混淆 attention mask 和 loss mask 是常見 bug：前者控制資訊存取，後者控制哪些 prediction 接受 supervision。
+      </p>
+      <h3 id="review-a-data-quality-is-an-engineering-problem">
+       複習 A：data quality 是工程問題
+      </h3>
+      <p>
+       pretraining data pipeline 會 filter、deduplicate、segment 和 tokenize。重複或近似重複的 document 跨越 train/test 邊界，會令 evaluation 虛高。產生重疊 chunk 前，先按有意義的 group 邊界切分。對 documentation，一組相關 page 或 API topic，可能比任意 text span 更適合作 group。保留 version、license、origin、time 和 transformation metadata。
+      </p>
+      <p>
+       gradient descent 降低 training loss，但不保證得到期望的應用行為。用 training 和 validation curve 分辨 underfitting、overfitting 和實作 bug。validation 時關閉 dropout 和 gradient，但不要不小心讓 model 在下一個 training batch 仍留在 evaluation mode。
+      </p>
+      <h3 id="review-a-worked-optimization-example">
+       複習 A：optimization 計算例子
+      </h3>
+      <p>
+       若 microbatch size 是 2，在同一裝置累積 8 個 microbatch 的 gradient，而且每個大小相同，effective example batch 就是 16。每個 microbatch 的 loss 先除以 8 才 backpropagate，optimizer 只 step 一次，然後清除 gradient。若 sequence length 不同，把 microbatch mean 等權平均，未必等於 global valid-token average。要求精確相等時，要計入 token 數。
+      </p>
+      <p>
+       Adam-style optimizer 保留 moment estimate，會增加大量 memory。learning-rate warmup 和 clipping 可穩定某些設定，但首先要驗證 label、mask 和資料。scheduler 不能修好用錯 target 的 training。若要準確 resume，儲存 optimizer state、random state、tokenizer identity 和當前 step。
+      </p>
+      <h3 id="review-a-experiment">
+       複習 A：實驗
+      </h3>
+      <p>
+       在
+       <a href="../tutorials/12.html">
+        Tutorial 12: 訓練一個小型 transformer
+       </a>
+       ，比較固定 configuration 的 train/dev loss 隨時間變化。刻意用未經 shift 的 label 訓練一次，解釋任務為何改變。先嘗試 one-batch overfit test，再用真正的 grouped split。starter 的 tiny corpus 太小，不能支持強烈統計結論；報告中應明說。
+      </p>
+      <p>
+       <strong>
+        完成標準：
+       </strong>
+       實作 shifted label、解釋 perplexity，並列出 resume training run 所需的 artifact。
+       <strong>
+        閱讀材料：
+       </strong>
+       <a class="inline-reading" href="../resources.html#reference-r01">
+        Stanford CS336 Language Modeling from Scratch (R01)
+       </a>
+       data 和 optimization 的 lecture 章節。
+       <strong>
+        Tutorial：
+       </strong>
+       12.
+      </p>
+     </details>
+    </article>
+    <nav aria-label="前後 lecture" class="chapter-pagination">
+     <a href="11.html">
+      <small>
+       上一週
+      </small>
+      Encoder、decoder 與完整 model architecture
+     </a>
+     <a href="13.html">
+      <small>
+       下一週
+      </small>
+      Generation、decoding 與 KV cache
+     </a>
+    </nav>
+   </div>
+   <footer class="footer">
+    <span>
+     Applied AI · 獨立自學課程
+    </span>
+    <span>
+     32 週 · 每週 10 小時
+    </span>
+    <a href="../resources.html#about-this-course">
+     關於課程及資料來源
+    </a>
+   </footer>
+  </main>
+  <dialog aria-labelledby="search-title" class="search-dialog">
+   <div class="dialog-head">
+    <h2 id="search-title">
+     尋找概念
+    </h2>
+    <button aria-label="關閉搜尋" class="search-close" type="button">
+     關閉
+    </button>
+   </div>
+   <label class="sr-only" for="course-search">
+    搜尋所有 lecture 和 tutorial
+   </label>
+   <input autocomplete="off" id="course-search" placeholder="試試 attention、fine-tuning 或 harness……" type="search"/>
+   <p aria-live="polite" class="search-status">
+    搜尋 lecture notes、tutorial、測驗及閱讀材料。
+   </p>
+   <div class="search-results">
+   </div>
+  </dialog>
+  <div aria-live="polite" class="toast" role="status">
+  </div>
+ </body>
+</html>

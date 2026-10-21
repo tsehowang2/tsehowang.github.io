@@ -1,4 +1,3 @@
-# %%
 from pathlib import Path
 import sys,json,time,random,hashlib,math
 if hasattr(sys.stdout,'reconfigure'): sys.stdout.reconfigure(encoding='utf-8')
@@ -11,24 +10,24 @@ from coursekit.core import *
 random.seed(7)
 print('Course root:',COURSE)
 
-# %%
+
 import subprocess
-subprocess.check_call([sys.executable,'-m','pip','install','-q','sentence-transformers>=3,<6','qdrant-client>=1.12,<2','transformers>=4.45,<5'])
+subprocess.check_call([sys.executable,'-m','pip','install','-q','sentence-transformers>=3,<6','qdrant-client>=1.12,<2','transformers>=4.51,<5'])
 import numpy as np
 from sentence_transformers import SentenceTransformer
 from qdrant_client import QdrantClient,models
 docs=load_docs();tasks=json.loads((COURSE/'data/queries.json').read_text())
-EMBED='sentence-transformers/all-MiniLM-L6-v2'
+EMBED='intfloat/multilingual-e5-small'
 encoder=SentenceTransformer(EMBED,device='cpu')
-vectors=encoder.encode([d['title']+'\n'+d['text'] for d in docs],normalize_embeddings=True)
+vectors=encoder.encode(['passage: '+d['title']+'\n'+d['text'] for d in docs],normalize_embeddings=True)
 assert np.allclose(np.linalg.norm(vectors,axis=1),1,atol=1e-4)
 print('Vector shape',vectors.shape,'model max input',encoder.max_seq_length)
-path=RUNS/'week18_qdrant';client=QdrantClient(path=str(path));collection='atlas_minilm'
+path=RUNS/'week18_qdrant_e5';client=QdrantClient(path=str(path));collection='atlas_multilingual_e5_small'
 if client.collection_exists(collection): client.delete_collection(collection)
 client.create_collection(collection,vectors_config=models.VectorParams(size=vectors.shape[1],distance=models.Distance.COSINE))
 client.upsert(collection,points=[models.PointStruct(id=i,vector=vectors[i].tolist(),payload=d) for i,d in enumerate(docs)])
 def semantic_search(question,version='2',k=3):
-    q=encoder.encode(question,normalize_embeddings=True).tolist()
+    q=encoder.encode('query: '+question,normalize_embeddings=True).tolist()
     filt=None if version=='all' else models.Filter(must=[models.FieldCondition(key='version',match=models.MatchValue(value=version))])
     return client.query_points(collection_name=collection,query=q,query_filter=filt,limit=k).points
 rows=[];lexical=LexicalIndex(docs)
@@ -42,4 +41,3 @@ client.close();client=QdrantClient(path=str(path))
 assert all(p.payload['version']=='2' for p in semantic_search('default timeout','2'))
 print('Persist/reopen/filter check passed');client.close()
 (RUNS/'week18_retrieval.json').write_text(json.dumps(rows,indent=2))
-

@@ -1,4 +1,3 @@
-# %%
 from pathlib import Path
 import sys,json,time,random,hashlib,math
 if hasattr(sys.stdout,'reconfigure'): sys.stdout.reconfigure(encoding='utf-8')
@@ -11,7 +10,7 @@ from coursekit.core import *
 random.seed(7)
 print('Course root:',COURSE)
 
-# %%
+
 import numpy as np
 rng=np.random.default_rng(7);din,dout,rank=4,3,2
 W=rng.normal(size=(dout,din));A=rng.normal(size=(rank,din));B=np.zeros((dout,rank))
@@ -22,3 +21,11 @@ assert np.allclose((W+scale*B@A)@x,W@x+scale*B@(A@x))
 print('Dense parameters',W.size,'adapter parameters',A.size+B.size,'delta rank',np.linalg.matrix_rank(B@A))
 for r in [1,2,4,16]:print('2048x4096 rank',r,'adapter count',r*(2048+4096))
 
+
+import numpy as np
+A=np.array([[.1,.2]]);B=np.zeros((2,1));G=np.ones((2,2))
+grad_B=G@A.T;grad_A=B.T@G
+assert np.any(grad_B!=0) and np.all(grad_A==0)
+B=B-.01*grad_B
+assert np.any(B.T@G!=0)
+print('Initial grad_B:',grad_B,'Initial grad_A:',grad_A)

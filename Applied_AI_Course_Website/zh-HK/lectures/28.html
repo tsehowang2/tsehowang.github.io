@@ -1,104 +1,1468 @@
 <!DOCTYPE html>
-
-<html lang="zh-HK"><head><script src="../../assets/translations-zh-HK.js"></script><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/><title>Harness、planning、memory 與有界執行 · Applied AI</title><meta content="Applied generative AI and LLM systems course material" name="description"/><meta content="#173c36" name="theme-color"/><link href="../../assets/favicon.svg" rel="icon" type="image/svg+xml"/><link href="../../assets/style.css" rel="stylesheet"/><link href="../../assets/slides.css" rel="stylesheet"/><script>window.COURSE_BASE="../";</script><script defer="" src="../../assets/site-config.js"></script><script defer="" src="../assets/search-index.js"></script><script defer="" src="../../assets/app.js"></script><script defer="" src="../../assets/visuals.js"></script><script defer="" src="../../assets/slides.js"></script><script defer="" src="../../assets/beginner-visuals.js"></script><script defer="True" src="../../assets/locale-patterns.js"></script><script defer="True" src="../../assets/locale.js"></script><link href="../../assets/bilingual.css" rel="stylesheet"/><link href="../../lectures/28.html" hreflang="en" rel="alternate"/></head><body data-page-kind="lecture" data-week="28"><a class="skip-link" href="#main">跳至內容</a><header class="topbar"><button aria-controls="course-sidebar" aria-expanded="false" class="menu-toggle" type="button">選單</button><a class="brand" href="../index.html"><span aria-hidden="true" class="brand-mark">a<span>i</span></span><span>APPLIED AI<small>從原理到實踐</small></span></a><nav aria-label="主要導覽"><a href="../index.html">課程</a><a href="../visuals.html">互動圖解</a><a href="../project.html">專題</a><a class="language-switch" href="../../lectures/28.html" hreflang="en" lang="en">English</a></nav><button class="search-open" type="button">搜尋課程 <span aria-hidden="true">/</span></button></header><aside aria-label="課程章節" class="sidebar" id="course-sidebar"><a class="side-home" href="../index.html">課程概覽</a><details class="semester-nav"><summary>第一學期<span>第 1–16 週</span></summary><ol start="1"><li><a href="../lectures/01.html"><span class="week-number">01</span><span>Language model 究竟在學甚麼</span><span class="week-tick" data-week-tick="1"></span></a></li><li><a href="../lectures/02.html"><span class="week-number">02</span><span>從文字到 token 和數值 ID</span><span class="week-tick" data-week-tick="2"></span></a></li><li><a href="../lectures/03.html"><span class="week-number">03</span><span>Word vector 能表達甚麼</span><span class="week-tick" data-week-tick="3"></span></a></li><li><a href="../lectures/04.html"><span class="week-number">04</span><span>從 score 到 probability 和學習訊號</span><span class="week-tick" data-week-tick="4"></span></a></li><li><a href="../lectures/05.html"><span class="week-number">05</span><span>為甚麼語言需要 context 和次序</span><span class="week-tick" data-week-tick="5"></span></a></li><li><a href="../lectures/06.html"><span class="week-number">06</span><span>Attention 由 weighted mixture 開始</span><span class="week-tick" data-week-tick="6"></span></a></li><li><a href="../lectures/07.html"><span class="week-number">07</span><span>Query、key 和 value 從何而來</span><span class="week-tick" data-week-tick="7"></span></a></li><li><a href="../lectures/08.html"><span class="week-number">08</span><span>正確進行 attention scaling 和 masking</span><span class="week-tick" data-week-tick="8"></span></a></li><li><a href="../lectures/09.html"><span class="week-number">09</span><span>多個 attention head 與位置</span><span class="week-tick" data-week-tick="9"></span></a></li><li><a href="../lectures/10.html"><span class="week-number">10</span><span>逐步拆解 transformer block</span><span class="week-tick" data-week-tick="10"></span></a></li><li><a href="../lectures/11.html"><span class="week-number">11</span><span>Encoder、decoder 與完整 model architecture</span><span class="week-tick" data-week-tick="11"></span></a></li><li><a href="../lectures/12.html"><span class="week-number">12</span><span>訓練一個小型 transformer</span><span class="week-tick" data-week-tick="12"></span></a></li><li><a href="../lectures/13.html"><span class="week-number">13</span><span>Generation、decoding 與 KV cache</span><span class="week-tick" data-week-tick="13"></span></a></li><li><a href="../lectures/14.html"><span class="week-number">14</span><span>從 pretraining 到 instruction following 和 reasoning</span><span class="week-tick" data-week-tick="14"></span></a></li><li><a href="../lectures/15.html"><span class="week-number">15</span><span>文字以外的 Generative AI</span><span class="week-tick" data-week-tick="15"></span></a></li><li><a href="../lectures/16.html"><span class="week-number">16</span><span>完整 transformer 導覽與第一學期溫習</span><span class="week-tick" data-week-tick="16"></span></a></li></ol></details><details class="semester-nav" open=""><summary>第二學期<span>第 17–32 週</span></summary><ol start="17"><li><a href="../lectures/17.html"><span class="week-number">17</span><span>從 word vector 到 semantic search</span><span class="week-tick" data-week-tick="17"></span></a></li><li><a href="../lectures/18.html"><span class="week-number">18</span><span>從一列 vector 建立 vector database</span><span class="week-tick" data-week-tick="18"></span></a></li><li><a href="../lectures/19.html"><span class="week-number">19</span><span>把 RAG 理解為開卷作答</span><span class="week-tick" data-week-tick="19"></span></a></li><li><a href="../lectures/20.html"><span class="week-number">20</span><span>在保持基本任務的前提下改善 RAG</span><span class="week-tick" data-week-tick="20"></span></a></li><li><a href="../lectures/21.html"><span class="week-number">21</span><span>評估 retrieval、答案與 uncertainty</span><span class="week-tick" data-week-tick="21"></span></a></li><li><a href="../lectures/22.html"><span class="week-number">22</span><span>CPU、GPU、memory 與 model 資源計算</span><span class="week-tick" data-week-tick="22"></span></a></li><li><a href="../lectures/23.html"><span class="week-number">23</span><span>CUDA kernel 與 profiling</span><span class="week-tick" data-week-tick="23"></span></a></li><li><a href="../lectures/24.html"><span class="week-number">24</span><span>Fine-tuning 由教學 dataset 開始</span><span class="week-tick" data-week-tick="24"></span></a></li><li><a href="../lectures/25.html"><span class="week-number">25</span><span>從小型 matrix 理解 LoRA 和 QLoRA</span><span class="week-tick" data-week-tick="25"></span></a></li><li><a href="../lectures/26.html"><span class="week-number">26</span><span>Fine-tuning 實驗、preference 與 distillation</span><span class="week-tick" data-week-tick="26"></span></a></li><li><a href="../lectures/27.html"><span class="week-number">27</span><span>Tool、function、workflow 與 agent</span><span class="week-tick" data-week-tick="27"></span></a></li><li><a aria-current="page" href="../lectures/28.html"><span class="week-number">28</span><span>Harness、planning、memory 與有界執行</span><span class="week-tick" data-week-tick="28"></span></a></li><li><a href="../lectures/29.html"><span class="week-number">29</span><span>從 notebook 到 MLOps 和 inference serving</span><span class="week-tick" data-week-tick="29"></span></a></li><li><a href="../lectures/30.html"><span class="week-number">30</span><span>Monitoring、security、regression test 與 rollback</span><span class="week-tick" data-week-tick="30"></span></a></li><li><a href="../lectures/31.html"><span class="week-number">31</span><span>整合文件助手與進階延伸</span><span class="week-tick" data-week-tick="31"></span></a></li><li><a href="../lectures/32.html"><span class="week-number">32</span><span>溫習、答辯與持續學習計劃</span><span class="week-tick" data-week-tick="32"></span></a></li></ol></details><div class="side-links"><a href="../visuals.html">互動圖解實驗室 <span>14 個互動課節</span></a><a href="../project.html">文件助手 <span>你的 capstone project</span></a><a href="../resources.html">閱讀材料與環境設定</a></div><div class="side-progress"><div><span>你的進度</span><strong data-progress-count="">0 / 32</strong></div><progress aria-label="已完成 lecture" max="32" value="0"></progress><small>儲存在這個瀏覽器</small></div></aside><main class="main" id="main"><div class="content"><div class="chapter-header"><div class="eyebrow">第二學期 / 第 28 週</div><h1>Harness、planning、memory 與有界執行</h1></div><div class="lesson-links"><a href="../tutorials/28.html">練習 28</a><a href="../tests/28.html">檢查你的理解</a><button aria-pressed="false" class="mark-complete" data-week="28" type="button">標記為已完成</button></div><section aria-label="Lecture slides" class="lecture-deck" id="lecture-slides"><div class="deck-top"><div><div class="eyebrow">課堂投影片 · 第 28 週</div><h2>一步一步學習。</h2></div><button class="deck-present" type="button">簡報模式</button></div><p class="deck-help">閱讀每段解說，停下來預測結果，然後繼續。選取簡報後，可用方向鍵操作。完整講義在下方。</p><div aria-label="簡報：使用左右方向鍵" class="slide-viewport" tabindex="0"><section class="lecture-slide" data-slide=""><div class="slide-stage">由例子開始</div><h3>Controller 令 agent 成為可運行 system</h3><div class="slide-prose"><p>想像你在監督 school trip。只有一張 possible tasks 清單並不足夠；需要有人追蹤已發生甚麼，以及何時停止。Agent execution harness 就在 code 中擔任這種協調角色。</p>
-<p>它的 state 可包含 question、allowed version、observations、evidence IDs、step count 和 status。Model 提出 action，再由 harness validation 和 execute。</p>
-<p>Evaluation harness 的角色不同：載入 tasks、執行指定 system、檢查 outcomes，並收集 metrics。兩者都需要 versioned configuration，但不能互相取代。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">由例子開始</div><h3>一個完整小型 loop</h3><div class="slide-prose"><p>Initialize state。向 planner 要 typed proposal。如果是 final answer，validate response contract 後停止。如果是 tool action，執行前先 validate name、schema、scope 和 bounds。</p>
-<p>記錄 normalized observation，更新 state，並在 budget 內重複。根據實作 policy，在 invalid proposals、failures、exhaustion、timeout 或 cancellation 時明確 terminate。</p>
-<p>每條路徑都應留下 trace。Exception 或重複 tool request，不應默默變成虛構的成功 answer。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">建立對機制的理解</div><h3>三個 proposals 的 trace</h3><div class="slide-prose"><p>第一個 proposal retrieve retry rule。第二個計算 cumulative delay。第三個回傳 result，並附已觀察到的 source IDs。</p>
-<p>若 planner 不斷要求再做 calculation，三個 proposals 的 budget 最終會回傳 budget_exhausted。Controller 不會只因 model 客氣地要求就繼續。</p>
-<p>把 citation ID 與先前 retrieved evidence 比對，是一項 structural boundary。該 passage 是否支持 final claim，仍是 evaluation 問題。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">建立對機制的理解</div><h3>Time 與 resource limits</h3><div class="slide-prose"><p>Step cap 限制 loop iterations，卻無法中斷 blocking network call。Call 返回後才檢查 elapsed time，不等於真正設下 call deadline。</p>
-<p>對適當 dependencies 使用 client timeouts 和 cancellation；需要 isolation 的 execution 則使用 process/container controls。Tool output 和 model context 也要限制。</p>
-<p>Synchronous reference controller 示範 step limits 和狹窄 arithmetic safety。它不聲稱是完整的 arbitrary-code sandbox。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">建立對機制的理解</div><h3>Planning 方法</h3><div class="slide-prose"><p>ReAct-style interaction 交替進行 actions 和 observations。Plan-and-execute 先提出 plan，再執行或修訂。Routing 則選擇專門 workflow。</p>
-<p>這些模式可用不同 libraries 實作，但仍要問相同問題：甚麼 state 有權威性、哪些 actions 獲准、甚麼 observation 會改變 plan，以及甚麼會 terminate execution？</p>
-<p>Multiple agents 會增加 coordination、重複 context、cost 和新 failure modes。它們是選做 advanced 方向，不是本 single-controller project 的先決條件。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">建立對機制的理解</div><h3>Memory 有多種意思</h3><div class="slide-prose"><p>目前 chat history、structured task state、retrieved documents 和 persistent user memory，各有不同 lifetime 和 trust properties。</p>
-<p>Summary 可壓縮 text，但也可能遺漏條件。若 user 由 version 1 轉為與 version 2 比較，要明確保留該 intent，而非相信只寫 “user uses version 1.” 的 summary。</p>
-<p>Authorization 必須來自 authenticated application state，而非 model 撰寫的 memory。把 critical constraints 和 source provenance 放在 structured fields。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">建立對機制的理解</div><h3>Task evaluation 要檢查 traces</h3><div class="slide-prose"><p>Final sentence 可以看似正確，卻隱藏 forbidden action 或漏做 required calculation。要量度 task success、call validity、forbidden calls、failures、budgets、latency 和 total model work。</p>
-<p>若 agent 從不使用必需 tool，不應因 “valid-call” denominator 為空而得分。要定義 success predicates，並審核 traces。</p>
-<p>Retries 需要有界、因 operation 而異的處理。Invalid arguments 和 non-idempotent side effects，不能像 transient read timeouts 一樣盲目 retry。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">建立對機制的理解</div><h3>實例練習與學習檢查</h3><div class="slide-prose"><p>使用 visual harness 嘗試 success、unknown tool、wrong version 和 endless planner 情況。然後執行真正 model planner，與 deterministic workflow 比較。</p>
-<p>準備至少 20 個獨立檢查的 tasks，保留 successful 和 failed traces。解釋一項有用 adaptive choice 和一項不必要 action。</p>
-<p>當 agent 是行為可觀察的 bounded state machine，而非未經檢查的 prompt-to-framework call，就已準備好。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">選讀：深入學習</div><h3>完成引導例子後，再深入一層</h3><div class="slide-prose"><p>以下內容適合第二次閱讀。先解釋上面的日常例子，再用以下 equation 和實作細節，把解釋說得更精確。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">選讀：深入學習</div><h3>深入學習 22：直觀理解</h3><div class="slide-prose"><p>Workflow 的 control path 大致預定。Agent 則讓 model outputs 影響下一 action。兩者都需要 orchestration code。當 task 要根據 observations 調整時，agentic behavior 才有用；對固定 lookup，它可能只增加不必要 overhead。</p>
-<p>Harness 在這裏有兩個相關意思。一個 <strong>agent execution harness</strong> 管理 state、model calls、tools、budgets、observation limits、cancellation 和 termination。另一個 <strong>evaluation harness</strong> 載入 tasks、執行指定 system、記錄 results，並計算 metrics。兩者可以整合，但責任不同。明確命名兩者，可避免用含糊的 “we have a harness” 掩蓋缺失 controls。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">選讀：深入學習</div><h3>深入學習 22：State 與 transition</h3><div class="slide-prose"><p>明確表示 state：question、allowed version、evidence IDs、observations、step count、token/cost budget、status 和 error。Planner 提出 tool action 或 final response。Controller validation，execute allowed actions，並更新 state。Termination reasons 包括 success、invalid proposal、tool failure、step exhaustion、timeout 和 cancellation。每條路徑都必須可觀察。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">選讀：深入學習</div><h3>深入學習 22：Trace 實例</h3><div class="slide-prose"><p>Step 1 retrieve retry rules。Step 2 用 bounded expression 呼叫 calculator。Step 3 以 numerical result 和 source IDs 作答。失敗 calculator call 不應永遠重複。如果 planner 最多有三步，而最後一步 proposal 仍需要下一 observation，應明確以 budget-exhausted status 結束，而非虛構 final answer。</p>
-<p>Wall-clock limits 需要真正 enforce。Blocking call 返回後才檢查 elapsed time，無法中斷該 call。Network tools 用 client timeouts；untrusted execution 用 process/container limits。我們的 synchronous starter enforce step limits 和 arithmetic bounds；deployment extension 則需要 per-call timeout/cancellation implementations。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">選讀：深入學習</div><h3>深入學習 22：實驗</h3><div class="slide-prose"><p>notebook 27 讓 deterministic planner 經 controller 執行，以測試 execution contract。這是 controller fixture，不是 LLM planning 的證據。notebook 28 連接真正 model planner。注入永不停止、回傳 malformed JSON，以及虛構 tool 的 planners。驗證明確 terminal states 和有限 tool calls。</p>
-<p>對每條 trace，問展示給 model 的資訊是否必要。大型 tool outputs 可令 context overflow，亦可能帶有 adversarial instructions。限制並標記 observations，另存 authoritative metadata，不要把 tool text 當成新 policy。</p>
-<p><strong>完成標準：</strong> 實作 bounded state machine，並區分 execution 和 evaluation harnesses。 <strong>閱讀材料：</strong> R11；R03 context engineering 主題。 <strong>Tutorial：</strong> 28.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">選讀：深入學習</div><h3>完成引導例子後，再深入一層</h3><div class="slide-prose"><p>以下內容適合第二次閱讀。先解釋上面的日常例子，再用以下 equation 和實作細節，把解釋說得更精確。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">選讀：深入學習</div><h3>深入學習 23：直觀理解</h3><div class="slide-prose"><p>Agent 的 “memory” 可指目前 prompt、task scratch state、retrieved documents，或過去 interactions 的 persistent store。它們的 retention 和 trust properties 不同。記住更多 text，不代表 context 一定更有用。</p>
-<p>用 typed task state 保存 requested version、selected source IDs 和 tool outcomes 等 facts。Summaries 可壓縮長 histories，但可能遺漏 exception，或把不確定 observation 變成自信 assertion。把 critical constraints 保留於 structured fields，並保留 source provenance。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">選讀：深入學習</div><h3>深入學習 23：Planning 模式</h3><div class="slide-prose"><p>ReAct-style systems 交替進行 action selection 和 observations。Plan-and-execute 先產生 plan，再執行，並可能在 observations 不符時修訂。Routing 選擇專門 workflow。Multi-agent systems 分配 roles，但增加 coordination、重複 context、cost 和 evaluation complexity。本課程核心是單一 bounded controller，不要求 multi-agent implementation。</p>
-<p>Versioned lookup 的固定 workflow 可以是 retrieve、pack、answer 和 validate。Troubleshooting task 則可能受惠於 conditional actions：inspect version、retrieve rule、validate config，再解釋第一項違反 requirement 的地方。後者提供 adaptive planning 的具體理由。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">選讀：深入學習</div><h3>深入學習 23：Memory 失敗實例</h3><div class="slide-prose"><p>User 先問 v1，再說 “now compare that with v2.” 若 summary 只儲存 “user uses v1”，下一次 retrieval 可能 filter 掉 v2。要明確保留 task allowed versions 和 comparison intent。Authorization 應來自 authenticated application state，絕不能來自 conversational memory 或 model-generated summaries。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">選讀：深入學習</div><h3>深入學習 23：實驗</h3><div class="slide-prose"><p>notebook 28 把小 model 的 JSON proposal 轉成 controller action。在相同 lookups、calculations 和 troubleshooting tasks 上，與固定 workflow 比較。統計 invalid proposals、不必要 tool calls、漏做 required actions、completion、latency 和 total model tokens。小 model 可能經常失敗；用這些 traces 決定哪些情況應採 deterministic route。</p>
-<p>測試一個長而無關的 observation，以及 retrieved page 中的 misleading instruction。驗證 policy fields 不在 model 權限內。失敗 model proposal 必須產生受控 result，不可改為執行猜測 arguments。</p>
-<p><strong>完成標準：</strong> 為特定 task 解釋 adaptive planning 的理由，並指出哪些 state 應放在 structured memory。 <strong>閱讀材料：</strong> R11；R03 context engineering。 <strong>Tutorial：</strong> 28.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">選讀：深入學習</div><h3>完成引導例子後，再深入一層</h3><div class="slide-prose"><p>以下內容適合第二次閱讀。先解釋上面的日常例子，再用以下 equation 和實作細節，把解釋說得更精確。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">選讀：深入學習</div><h3>深入學習 24：直觀理解</h3><div class="slide-prose"><p>有說服力的 final sentence 可能掩蓋失敗或 forbidden action。Agent evaluation 必須檢查 environment 和 trace，不能只為 final text 評分。對 read-only tools，correctness 包括選對 evidence 和 calculation。對未來 side-effect extension，亦包括 final state，以及沒有非預期 changes。</p>
-<p>定義 task 的 initial state、allowed actions、expected results 和 success predicates。比較 model-only answer、fixed tool workflow 和 adaptive controller。保持 tool affordances 和 budgets 可比較。Agent 有十次機會、workflow 只有一次時，不能不報告差異就比較。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">選讀：深入學習</div><h3>深入學習 24：Metrics 與復原</h3><div class="slide-prose"><p>Task success、valid-call rate、forbidden-action rate、tool failures、step count、budget exhaustion 和 cost 互相補充。從不 call tool 的 system，可能在空 denominator 上得到完美 valid-call rate；要報告使用 tools 的頻率，以及 tasks 是否需要它們。Failures 應分類，令分析能區分 planning、validation、execution 和 answer errors。</p>
-<p>Retries 必須有界且適當。Transient read timeout 可能值得一次 backoff/retry。重複 invalid arguments 不會修復 schema。Non-idempotent side effect 不可盲目 retry。Circuit breaker 限制對失敗 dependency 的重複 calls，但不能取代正確 per-request handling。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">選讀：深入學習</div><h3>深入學習 24：審核實例</h3><div class="slide-prose"><p>Agent 完成 18/20 tasks，但其中一個成功 task 含 unauthorized call，剛好只回傳無害 data。在 zero-forbidden-action release gate 下，它不合格。另一 system 完成 17/20、沒有 violations，並清楚回報三次 controlled failures。視乎 requirements，後者可能才是可部署 candidate。Evaluation 前先定義 gate。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">選讀：深入學習</div><h3>深入學習 24：實驗</h3><div class="slide-prose"><p>建立至少 20 個有 deterministic checkers 的 tool tasks，包含 division by zero、unknown tool、wrong version、invalid config、misleading documentation 和強制 step-limit failure。執行 notebook 28，保留完整 action/observation traces，並手動審核 sample。即使 final answer 看似合理，也要報告 failure counts。</p>
-<p>對 open-ended troubleshooting，使用 rubric 加 manual review，不要假裝一個 exact string 就能代表成功。Project report 應包含一個 agent 增加價值的 case，以及一個固定 workflow 更簡單而同樣有效的 case。若 agent 從未改善 tasks，可保留為經 evaluation 的 experimental branch，不必成為 default product。</p>
-<p><strong>完成標準：</strong> 利用 trace-level evidence 和 recovery behavior，支持 agent release decision。 <strong>閱讀材料：</strong> R02 stakeholder requirements；R11 task/action evaluation。 <strong>Tutorial：</strong> 28.</p></div></section></div><div class="deck-controls"><button class="slide-prev" type="button">← 上一頁</button><span aria-live="polite" class="slide-counter">1 / 23</span><button class="slide-next" type="button">下一頁 →</button></div><label class="slide-jump-label">前往 slide <select aria-label="跳至 slide" class="slide-jump"><option value="0">1</option><option value="1">2</option><option value="2">3</option><option value="3">4</option><option value="4">5</option><option value="5">6</option><option value="6">7</option><option value="7">8</option><option value="8">9</option><option value="9">10</option><option value="10">11</option><option value="11">12</option><option value="12">13</option><option value="13">14</option><option value="14">15</option><option value="15">16</option><option value="16">17</option><option value="17">18</option><option value="18">19</option><option value="19">20</option><option value="20">21</option><option value="21">22</option><option value="22">23</option></select></label><button aria-pressed="false" class="deck-all" type="button">顯示全部 slides</button><a class="reader-link" href="#full-notes">閱讀完整講義 ↓</a></section><section aria-label="Agent 與它的 controller" class="visual-lesson"><div class="eyebrow">探索機制</div><h2>Agent 與它的 controller</h2><p class="visual-intro">查看具型別的 proposal、validator、observation 及有界終止。</p><div data-widget="agent"><p>啟用 JavaScript 以使用此圖解。下方 lecture notes 會解釋同一機制。</p></div></section><article class="prose full-notes" id="full-notes"><div class="eyebrow">完整講義</div><h2>閱讀完整解說</h2><h3 id="the-controller-makes-the-agent-a-runnable-system">Controller 令 agent 成為可運行 system</h3>
-<p>想像你在監督 school trip。只有一張 possible tasks 清單並不足夠；需要有人追蹤已發生甚麼，以及何時停止。Agent execution harness 就在 code 中擔任這種協調角色。</p>
-<p>它的 state 可包含 question、allowed version、observations、evidence IDs、step count 和 status。Model 提出 action，再由 harness validation 和 execute。</p>
-<p>Evaluation harness 的角色不同：載入 tasks、執行指定 system、檢查 outcomes，並收集 metrics。兩者都需要 versioned configuration，但不能互相取代。</p>
-<h3 id="a-complete-small-loop">一個完整小型 loop</h3>
-<p>Initialize state。向 planner 要 typed proposal。如果是 final answer，validate response contract 後停止。如果是 tool action，執行前先 validate name、schema、scope 和 bounds。</p>
-<p>記錄 normalized observation，更新 state，並在 budget 內重複。根據實作 policy，在 invalid proposals、failures、exhaustion、timeout 或 cancellation 時明確 terminate。</p>
-<p>每條路徑都應留下 trace。Exception 或重複 tool request，不應默默變成虛構的成功 answer。</p>
-<h3 id="a-three-proposal-trace">三個 proposals 的 trace</h3>
-<p>第一個 proposal retrieve retry rule。第二個計算 cumulative delay。第三個回傳 result，並附已觀察到的 source IDs。</p>
-<p>若 planner 不斷要求再做 calculation，三個 proposals 的 budget 最終會回傳 budget_exhausted。Controller 不會只因 model 客氣地要求就繼續。</p>
-<p>把 citation ID 與先前 retrieved evidence 比對，是一項 structural boundary。該 passage 是否支持 final claim，仍是 evaluation 問題。</p>
-<h3 id="time-and-resource-limits">Time 與 resource limits</h3>
-<p>Step cap 限制 loop iterations，卻無法中斷 blocking network call。Call 返回後才檢查 elapsed time，不等於真正設下 call deadline。</p>
-<p>對適當 dependencies 使用 client timeouts 和 cancellation；需要 isolation 的 execution 則使用 process/container controls。Tool output 和 model context 也要限制。</p>
-<p>Synchronous reference controller 示範 step limits 和狹窄 arithmetic safety。它不聲稱是完整的 arbitrary-code sandbox。</p>
-<h3 id="planning-methods">Planning 方法</h3>
-<p>ReAct-style interaction 交替進行 actions 和 observations。Plan-and-execute 先提出 plan，再執行或修訂。Routing 則選擇專門 workflow。</p>
-<p>這些模式可用不同 libraries 實作，但仍要問相同問題：甚麼 state 有權威性、哪些 actions 獲准、甚麼 observation 會改變 plan，以及甚麼會 terminate execution？</p>
-<p>Multiple agents 會增加 coordination、重複 context、cost 和新 failure modes。它們是選做 advanced 方向，不是本 single-controller project 的先決條件。</p>
-<h3 id="memory-has-several-meanings">Memory 有多種意思</h3>
-<p>目前 chat history、structured task state、retrieved documents 和 persistent user memory，各有不同 lifetime 和 trust properties。</p>
-<p>Summary 可壓縮 text，但也可能遺漏條件。若 user 由 version 1 轉為與 version 2 比較，要明確保留該 intent，而非相信只寫 “user uses version 1.” 的 summary。</p>
-<p>Authorization 必須來自 authenticated application state，而非 model 撰寫的 memory。把 critical constraints 和 source provenance 放在 structured fields。</p>
-<h3 id="task-evaluation-inspects-traces">Task evaluation 要檢查 traces</h3>
-<p>Final sentence 可以看似正確，卻隱藏 forbidden action 或漏做 required calculation。要量度 task success、call validity、forbidden calls、failures、budgets、latency 和 total model work。</p>
-<p>若 agent 從不使用必需 tool，不應因 “valid-call” denominator 為空而得分。要定義 success predicates，並審核 traces。</p>
-<p>Retries 需要有界、因 operation 而異的處理。Invalid arguments 和 non-idempotent side effects，不能像 transient read timeouts 一樣盲目 retry。</p>
-<h3 id="worked-practice-and-a-readiness-check">實例練習與學習檢查</h3>
-<p>使用 visual harness 嘗試 success、unknown tool、wrong version 和 endless planner 情況。然後執行真正 model planner，與 deterministic workflow 比較。</p>
-<p>準備至少 20 個獨立檢查的 tasks，保留 successful 和 failed traces。解釋一項有用 adaptive choice 和一項不必要 action。</p>
-<p>當 agent 是行為可觀察的 bounded state machine，而非未經檢查的 prompt-to-framework call，就已準備好。</p>
-<h3 id="a-deeper-pass-after-the-worked-introduction">完成引導例子後，再深入一層</h3>
-<p>以下內容適合第二次閱讀。先解釋上面的日常例子，再用以下 equation 和實作細節，把解釋說得更精確。</p>
-<h3 id="further-study-22-intuition">深入學習 22：直觀理解</h3>
-<p>Workflow 的 control path 大致預定。Agent 則讓 model outputs 影響下一 action。兩者都需要 orchestration code。當 task 要根據 observations 調整時，agentic behavior 才有用；對固定 lookup，它可能只增加不必要 overhead。</p>
-<p>Harness 在這裏有兩個相關意思。一個 <strong>agent execution harness</strong> 管理 state、model calls、tools、budgets、observation limits、cancellation 和 termination。另一個 <strong>evaluation harness</strong> 載入 tasks、執行指定 system、記錄 results，並計算 metrics。兩者可以整合，但責任不同。明確命名兩者，可避免用含糊的 “we have a harness” 掩蓋缺失 controls。</p>
-<h3 id="further-study-22-state-and-transitions">深入學習 22：State 與 transition</h3>
-<p>明確表示 state：question、allowed version、evidence IDs、observations、step count、token/cost budget、status 和 error。Planner 提出 tool action 或 final response。Controller validation，execute allowed actions，並更新 state。Termination reasons 包括 success、invalid proposal、tool failure、step exhaustion、timeout 和 cancellation。每條路徑都必須可觀察。</p>
-<h3 id="further-study-22-worked-trace">深入學習 22：Trace 實例</h3>
-<p>Step 1 retrieve retry rules。Step 2 用 bounded expression 呼叫 calculator。Step 3 以 numerical result 和 source IDs 作答。失敗 calculator call 不應永遠重複。如果 planner 最多有三步，而最後一步 proposal 仍需要下一 observation，應明確以 budget-exhausted status 結束，而非虛構 final answer。</p>
-<p>Wall-clock limits 需要真正 enforce。Blocking call 返回後才檢查 elapsed time，無法中斷該 call。Network tools 用 client timeouts；untrusted execution 用 process/container limits。我們的 synchronous starter enforce step limits 和 arithmetic bounds；deployment extension 則需要 per-call timeout/cancellation implementations。</p>
-<h3 id="further-study-22-experiment">深入學習 22：實驗</h3>
-<p>notebook 27 讓 deterministic planner 經 controller 執行，以測試 execution contract。這是 controller fixture，不是 LLM planning 的證據。notebook 28 連接真正 model planner。注入永不停止、回傳 malformed JSON，以及虛構 tool 的 planners。驗證明確 terminal states 和有限 tool calls。</p>
-<p>對每條 trace，問展示給 model 的資訊是否必要。大型 tool outputs 可令 context overflow，亦可能帶有 adversarial instructions。限制並標記 observations，另存 authoritative metadata，不要把 tool text 當成新 policy。</p>
-<p><strong>完成標準：</strong> 實作 bounded state machine，並區分 execution 和 evaluation harnesses。 <strong>閱讀材料：</strong> R11；R03 context engineering 主題。 <strong>Tutorial：</strong> 28.</p>
-<h3 id="a-deeper-pass-after-the-worked-introduction-2">完成引導例子後，再深入一層</h3>
-<p>以下內容適合第二次閱讀。先解釋上面的日常例子，再用以下 equation 和實作細節，把解釋說得更精確。</p>
-<h3 id="further-study-23-intuition">深入學習 23：直觀理解</h3>
-<p>Agent 的 “memory” 可指目前 prompt、task scratch state、retrieved documents，或過去 interactions 的 persistent store。它們的 retention 和 trust properties 不同。記住更多 text，不代表 context 一定更有用。</p>
-<p>用 typed task state 保存 requested version、selected source IDs 和 tool outcomes 等 facts。Summaries 可壓縮長 histories，但可能遺漏 exception，或把不確定 observation 變成自信 assertion。把 critical constraints 保留於 structured fields，並保留 source provenance。</p>
-<h3 id="further-study-23-planning-patterns">深入學習 23：Planning 模式</h3>
-<p>ReAct-style systems 交替進行 action selection 和 observations。Plan-and-execute 先產生 plan，再執行，並可能在 observations 不符時修訂。Routing 選擇專門 workflow。Multi-agent systems 分配 roles，但增加 coordination、重複 context、cost 和 evaluation complexity。本課程核心是單一 bounded controller，不要求 multi-agent implementation。</p>
-<p>Versioned lookup 的固定 workflow 可以是 retrieve、pack、answer 和 validate。Troubleshooting task 則可能受惠於 conditional actions：inspect version、retrieve rule、validate config，再解釋第一項違反 requirement 的地方。後者提供 adaptive planning 的具體理由。</p>
-<h3 id="further-study-23-worked-memory-failure">深入學習 23：Memory 失敗實例</h3>
-<p>User 先問 v1，再說 “now compare that with v2.” 若 summary 只儲存 “user uses v1”，下一次 retrieval 可能 filter 掉 v2。要明確保留 task allowed versions 和 comparison intent。Authorization 應來自 authenticated application state，絕不能來自 conversational memory 或 model-generated summaries。</p>
-<h3 id="further-study-23-experiment">深入學習 23：實驗</h3>
-<p>notebook 28 把小 model 的 JSON proposal 轉成 controller action。在相同 lookups、calculations 和 troubleshooting tasks 上，與固定 workflow 比較。統計 invalid proposals、不必要 tool calls、漏做 required actions、completion、latency 和 total model tokens。小 model 可能經常失敗；用這些 traces 決定哪些情況應採 deterministic route。</p>
-<p>測試一個長而無關的 observation，以及 retrieved page 中的 misleading instruction。驗證 policy fields 不在 model 權限內。失敗 model proposal 必須產生受控 result，不可改為執行猜測 arguments。</p>
-<p><strong>完成標準：</strong> 為特定 task 解釋 adaptive planning 的理由，並指出哪些 state 應放在 structured memory。 <strong>閱讀材料：</strong> R11；R03 context engineering。 <strong>Tutorial：</strong> 28.</p>
-<h3 id="a-deeper-pass-after-the-worked-introduction-3">完成引導例子後，再深入一層</h3>
-<p>以下內容適合第二次閱讀。先解釋上面的日常例子，再用以下 equation 和實作細節，把解釋說得更精確。</p>
-<h3 id="further-study-24-intuition">深入學習 24：直觀理解</h3>
-<p>有說服力的 final sentence 可能掩蓋失敗或 forbidden action。Agent evaluation 必須檢查 environment 和 trace，不能只為 final text 評分。對 read-only tools，correctness 包括選對 evidence 和 calculation。對未來 side-effect extension，亦包括 final state，以及沒有非預期 changes。</p>
-<p>定義 task 的 initial state、allowed actions、expected results 和 success predicates。比較 model-only answer、fixed tool workflow 和 adaptive controller。保持 tool affordances 和 budgets 可比較。Agent 有十次機會、workflow 只有一次時，不能不報告差異就比較。</p>
-<h3 id="further-study-24-metrics-and-recovery">深入學習 24：Metrics 與復原</h3>
-<p>Task success、valid-call rate、forbidden-action rate、tool failures、step count、budget exhaustion 和 cost 互相補充。從不 call tool 的 system，可能在空 denominator 上得到完美 valid-call rate；要報告使用 tools 的頻率，以及 tasks 是否需要它們。Failures 應分類，令分析能區分 planning、validation、execution 和 answer errors。</p>
-<p>Retries 必須有界且適當。Transient read timeout 可能值得一次 backoff/retry。重複 invalid arguments 不會修復 schema。Non-idempotent side effect 不可盲目 retry。Circuit breaker 限制對失敗 dependency 的重複 calls，但不能取代正確 per-request handling。</p>
-<h3 id="further-study-24-worked-audit">深入學習 24：審核實例</h3>
-<p>Agent 完成 18/20 tasks，但其中一個成功 task 含 unauthorized call，剛好只回傳無害 data。在 zero-forbidden-action release gate 下，它不合格。另一 system 完成 17/20、沒有 violations，並清楚回報三次 controlled failures。視乎 requirements，後者可能才是可部署 candidate。Evaluation 前先定義 gate。</p>
-<h3 id="further-study-24-experiment">深入學習 24：實驗</h3>
-<p>建立至少 20 個有 deterministic checkers 的 tool tasks，包含 division by zero、unknown tool、wrong version、invalid config、misleading documentation 和強制 step-limit failure。執行 notebook 28，保留完整 action/observation traces，並手動審核 sample。即使 final answer 看似合理，也要報告 failure counts。</p>
-<p>對 open-ended troubleshooting，使用 rubric 加 manual review，不要假裝一個 exact string 就能代表成功。Project report 應包含一個 agent 增加價值的 case，以及一個固定 workflow 更簡單而同樣有效的 case。若 agent 從未改善 tasks，可保留為經 evaluation 的 experimental branch，不必成為 default product。</p>
-<p><strong>完成標準：</strong> 利用 trace-level evidence 和 recovery behavior，支持 agent release decision。 <strong>閱讀材料：</strong> R02 stakeholder requirements；R11 task/action evaluation。 <strong>Tutorial：</strong> 28.</p></article><nav aria-label="前後 lecture" class="chapter-pagination"><a href="27.html"><small>上一週</small>Tool、function、workflow 與 agent</a><a href="29.html"><small>下一週</small>從 notebook 到 MLOps 和 inference serving</a></nav></div><footer class="footer"><span>Applied AI · 獨立自學課程</span><span>32 週 · 每週 10 小時</span><a href="../resources.html#about-this-course">關於課程及資料來源</a></footer></main><dialog aria-labelledby="search-title" class="search-dialog"><div class="dialog-head"><h2 id="search-title">尋找概念</h2><button aria-label="關閉搜尋" class="search-close" type="button">關閉</button></div><label class="sr-only" for="course-search">搜尋所有 lecture 和 tutorial</label><input autocomplete="off" id="course-search" placeholder="試試 attention、fine-tuning 或 harness……" type="search"/><p aria-live="polite" class="search-status">搜尋 lecture notes、tutorial、測驗及閱讀材料。</p><div class="search-results"></div></dialog><div aria-live="polite" class="toast" role="status"></div></body></html>
+<html lang="zh-HK">
+ <head>
+  <script src="../../assets/translations-zh-HK.js">
+  </script>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width,initial-scale=1" name="viewport"/>
+  <title>
+   Harness、planning、memory 與有界執行 · Applied AI
+  </title>
+  <meta content="Applied generative AI and LLM systems course material" name="description"/>
+  <meta content="#173c36" name="theme-color"/>
+  <link href="../../assets/favicon.svg" rel="icon" type="image/svg+xml"/>
+  <link href="../../assets/style.css" rel="stylesheet"/>
+  <link href="../../assets/slides.css" rel="stylesheet"/>
+  <script>
+   window.COURSE_BASE="../";
+  </script>
+  <script defer="" src="../../assets/site-config.js">
+  </script>
+  <script defer="" src="../assets/search-index.js">
+  </script>
+  <script defer="" src="../../assets/app.js">
+  </script>
+  <script defer="" src="../../assets/visuals.js">
+  </script>
+  <script defer="" src="../../assets/slides.js">
+  </script>
+  <script defer="" src="../../assets/beginner-visuals.js">
+  </script>
+  <script defer="True" src="../../assets/locale-patterns.js">
+  </script>
+  <script defer="True" src="../../assets/locale.js">
+  </script>
+  <link href="../../assets/bilingual.css" rel="stylesheet"/>
+  <link href="../../lectures/28.html" hreflang="en" rel="alternate"/>
+  <link href="../../assets/reader-v3.css" rel="stylesheet"/>
+  <script defer="True" src="../../assets/reader-v3.js">
+  </script>
+ </head>
+ <body data-page-kind="lecture" data-week="28">
+  <a class="skip-link" href="#main">
+   跳至內容
+  </a>
+  <header class="topbar">
+   <button aria-controls="course-sidebar" aria-expanded="false" class="menu-toggle" type="button">
+    選單
+   </button>
+   <a class="brand" href="../index.html">
+    <span aria-hidden="true" class="brand-mark">
+     a
+     <span>
+      i
+     </span>
+    </span>
+    <span>
+     APPLIED AI
+     <small>
+      從原理到實踐
+     </small>
+    </span>
+   </a>
+   <nav aria-label="主要導覽">
+    <a href="../index.html">
+     課程
+    </a>
+    <a href="../visuals.html">
+     互動圖解
+    </a>
+    <a href="../project.html">
+     專題
+    </a>
+    <a class="language-switch" href="../../lectures/28.html" hreflang="en" lang="en">
+     English
+    </a>
+   </nav>
+   <button class="search-open" type="button">
+    搜尋課程
+    <span aria-hidden="true">
+     /
+    </span>
+   </button>
+  </header>
+  <aside aria-label="課程章節" class="sidebar" id="course-sidebar">
+   <a class="side-home" href="../index.html">
+    課程概覽
+   </a>
+   <details class="semester-nav">
+    <summary>
+     第一學期
+     <span>
+      第 1–16 週
+     </span>
+    </summary>
+    <ol start="1">
+     <li>
+      <a href="../lectures/01.html">
+       <span class="week-number">
+        01
+       </span>
+       <span>
+        Language model 究竟在學甚麼
+       </span>
+       <span class="week-tick" data-week-tick="1">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/02.html">
+       <span class="week-number">
+        02
+       </span>
+       <span>
+        從文字到 token 和數值 ID
+       </span>
+       <span class="week-tick" data-week-tick="2">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/03.html">
+       <span class="week-number">
+        03
+       </span>
+       <span>
+        Word vector 能表達甚麼
+       </span>
+       <span class="week-tick" data-week-tick="3">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/04.html">
+       <span class="week-number">
+        04
+       </span>
+       <span>
+        從 score 到 probability 和學習訊號
+       </span>
+       <span class="week-tick" data-week-tick="4">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/05.html">
+       <span class="week-number">
+        05
+       </span>
+       <span>
+        為甚麼語言需要 context 和次序
+       </span>
+       <span class="week-tick" data-week-tick="5">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/06.html">
+       <span class="week-number">
+        06
+       </span>
+       <span>
+        Attention 由 weighted mixture 開始
+       </span>
+       <span class="week-tick" data-week-tick="6">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/07.html">
+       <span class="week-number">
+        07
+       </span>
+       <span>
+        Query、key 和 value 從何而來
+       </span>
+       <span class="week-tick" data-week-tick="7">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/08.html">
+       <span class="week-number">
+        08
+       </span>
+       <span>
+        正確進行 attention scaling 和 masking
+       </span>
+       <span class="week-tick" data-week-tick="8">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/09.html">
+       <span class="week-number">
+        09
+       </span>
+       <span>
+        多個 attention head 與位置
+       </span>
+       <span class="week-tick" data-week-tick="9">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/10.html">
+       <span class="week-number">
+        10
+       </span>
+       <span>
+        逐步拆解 transformer block
+       </span>
+       <span class="week-tick" data-week-tick="10">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/11.html">
+       <span class="week-number">
+        11
+       </span>
+       <span>
+        Encoder、decoder 與完整 model architecture
+       </span>
+       <span class="week-tick" data-week-tick="11">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/12.html">
+       <span class="week-number">
+        12
+       </span>
+       <span>
+        訓練一個小型 transformer
+       </span>
+       <span class="week-tick" data-week-tick="12">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/13.html">
+       <span class="week-number">
+        13
+       </span>
+       <span>
+        Generation、decoding 與 KV cache
+       </span>
+       <span class="week-tick" data-week-tick="13">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/14.html">
+       <span class="week-number">
+        14
+       </span>
+       <span>
+        從 pretraining 到 instruction following 和 reasoning
+       </span>
+       <span class="week-tick" data-week-tick="14">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/15.html">
+       <span class="week-number">
+        15
+       </span>
+       <span>
+        文字以外的 Generative AI
+       </span>
+       <span class="week-tick" data-week-tick="15">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/16.html">
+       <span class="week-number">
+        16
+       </span>
+       <span>
+        完整 transformer 導覽與第一學期溫習
+       </span>
+       <span class="week-tick" data-week-tick="16">
+       </span>
+      </a>
+     </li>
+    </ol>
+   </details>
+   <details class="semester-nav" open="">
+    <summary>
+     第二學期
+     <span>
+      第 17–32 週
+     </span>
+    </summary>
+    <ol start="17">
+     <li>
+      <a href="../lectures/17.html">
+       <span class="week-number">
+        17
+       </span>
+       <span>
+        從 word vector 到 semantic search
+       </span>
+       <span class="week-tick" data-week-tick="17">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/18.html">
+       <span class="week-number">
+        18
+       </span>
+       <span>
+        從一列 vector 建立 vector database
+       </span>
+       <span class="week-tick" data-week-tick="18">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/19.html">
+       <span class="week-number">
+        19
+       </span>
+       <span>
+        把 RAG 理解為開卷作答
+       </span>
+       <span class="week-tick" data-week-tick="19">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/20.html">
+       <span class="week-number">
+        20
+       </span>
+       <span>
+        在保持基本任務的前提下改善 RAG
+       </span>
+       <span class="week-tick" data-week-tick="20">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/21.html">
+       <span class="week-number">
+        21
+       </span>
+       <span>
+        評估 retrieval、答案與 uncertainty
+       </span>
+       <span class="week-tick" data-week-tick="21">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/22.html">
+       <span class="week-number">
+        22
+       </span>
+       <span>
+        CPU、GPU、memory 與 model 資源計算
+       </span>
+       <span class="week-tick" data-week-tick="22">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/23.html">
+       <span class="week-number">
+        23
+       </span>
+       <span>
+        CUDA kernel 與 profiling
+       </span>
+       <span class="week-tick" data-week-tick="23">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/24.html">
+       <span class="week-number">
+        24
+       </span>
+       <span>
+        Fine-tuning 由教學 dataset 開始
+       </span>
+       <span class="week-tick" data-week-tick="24">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/25.html">
+       <span class="week-number">
+        25
+       </span>
+       <span>
+        從小型 matrix 理解 LoRA 和 QLoRA
+       </span>
+       <span class="week-tick" data-week-tick="25">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/26.html">
+       <span class="week-number">
+        26
+       </span>
+       <span>
+        Fine-tuning 實驗、preference 與 distillation
+       </span>
+       <span class="week-tick" data-week-tick="26">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/27.html">
+       <span class="week-number">
+        27
+       </span>
+       <span>
+        Tool、function、workflow 與 agent
+       </span>
+       <span class="week-tick" data-week-tick="27">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a aria-current="page" href="../lectures/28.html">
+       <span class="week-number">
+        28
+       </span>
+       <span>
+        Harness、planning、memory 與有界執行
+       </span>
+       <span class="week-tick" data-week-tick="28">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/29.html">
+       <span class="week-number">
+        29
+       </span>
+       <span>
+        從 notebook 到 MLOps 和 inference serving
+       </span>
+       <span class="week-tick" data-week-tick="29">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/30.html">
+       <span class="week-number">
+        30
+       </span>
+       <span>
+        Monitoring、security、regression test 與 rollback
+       </span>
+       <span class="week-tick" data-week-tick="30">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/31.html">
+       <span class="week-number">
+        31
+       </span>
+       <span>
+        整合文件助手與進階延伸
+       </span>
+       <span class="week-tick" data-week-tick="31">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/32.html">
+       <span class="week-number">
+        32
+       </span>
+       <span>
+        溫習、答辯與持續學習計劃
+       </span>
+       <span class="week-tick" data-week-tick="32">
+       </span>
+      </a>
+     </li>
+    </ol>
+   </details>
+   <div class="side-links">
+    <a href="../visuals.html">
+     互動圖解實驗室
+     <span>
+      14 個互動課節
+     </span>
+    </a>
+    <a href="../project.html">
+     文件助手
+     <span>
+      你的 capstone project
+     </span>
+    </a>
+    <a href="../resources.html">
+     閱讀材料與環境設定
+    </a>
+   </div>
+   <div class="side-progress">
+    <div>
+     <span>
+      你的進度
+     </span>
+     <strong data-progress-count="">
+      0 / 32
+     </strong>
+    </div>
+    <progress aria-label="已完成 lecture" max="32" value="0">
+    </progress>
+    <small>
+     儲存在這個瀏覽器
+    </small>
+   </div>
+  </aside>
+  <main class="main" id="main">
+   <div class="content">
+    <div class="chapter-header">
+     <div class="eyebrow">
+      第二學期 / 第 28 週
+     </div>
+     <h1>
+      Harness、planning、memory 與有界執行
+     </h1>
+    </div>
+    <div class="lesson-links">
+     <a href="../tutorials/28.html">
+      練習 28
+     </a>
+     <a href="../tests/28.html">
+      檢查你的理解
+     </a>
+     <button aria-pressed="false" class="mark-complete" data-week="28" type="button">
+      標記為已完成
+     </button>
+    </div>
+    <div aria-label="課堂檢視" class="lesson-mode" role="tablist">
+     <button aria-controls="full-notes" aria-selected="true" data-mode="read" id="mode-read" role="tab" type="button">
+      閱讀講義
+     </button>
+     <button aria-controls="lecture-slides" aria-selected="false" data-mode="slides" id="mode-slides" role="tab" type="button">
+      課堂 slides
+     </button>
+    </div>
+    <section aria-label="Lecture slides" class="lecture-deck" hidden="" id="lecture-slides" role="tabpanel">
+     <div class="deck-top">
+      <div>
+       <div class="eyebrow">
+        課堂投影片 · 第 28 週
+       </div>
+       <h2>
+        重點步驟與圖解
+       </h2>
+      </div>
+      <button class="deck-present" type="button">
+       簡報模式
+      </button>
+     </div>
+     <p class="deck-help">
+      用 slides 溫習機制；按「閱讀完整解說」可開啟完整講義及程式碼。
+     </p>
+     <div aria-label="簡報：使用左右方向鍵" class="slide-viewport" tabindex="0">
+      <section class="lecture-slide" data-slide="">
+       <div class="slide-stage">
+        第 28 週 · 課節 1
+       </div>
+       <h3>
+        Controller 令 agent 成為可運行 system
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          想像你在監督 school trip。只有一張 possible tasks 清單並不足夠；需要有人追蹤已發生甚麼，以及何時停止。Agent execution harness 就在 code 中擔任這種協調角色。
+         </li>
+         <li>
+          它的 state 可包含 question、allowed version、observations、evidence IDs、step count 和 status。
+         </li>
+         <li>
+          Evaluation harness 的角色不同：載入 tasks、執行指定 system、檢查 outcomes，並收集 metrics。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#the-controller-makes-the-agent-a-runnable-system">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 28 週 · 課節 2
+       </div>
+       <h3>
+        一個完整小型 loop
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Initialize state。向 planner 要 typed proposal。如果是 final answer，validate response contract 後停止。如果是 tool action，執行前先 validate name、schema、scope 和 bounds。
+         </li>
+         <li>
+          記錄 normalized observation，更新 state，並在 budget 內重複。
+         </li>
+         <li>
+          每條路徑都應留下 trace。Exception 或重複 tool request，不應默默變成虛構的成功 answer。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#a-complete-small-loop">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 28 週 · 課節 3
+       </div>
+       <h3>
+        三個 proposals 的 trace
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          第一個 proposal retrieve retry rule。
+         </li>
+         <li>
+          若 planner 不斷要求再做 calculation，三個 proposals 的 budget 最終會回傳 budget_exhausted。
+         </li>
+         <li>
+          把 citation ID 與先前 retrieved evidence 比對，是一項 structural boundary。
+         </li>
+        </ul>
+        <figure class="mechanism-figure">
+         <figcaption>
+          MCP 的通訊 boundary
+         </figcaption>
+         <ol class="mechanism-flow">
+          <li>
+           <span class="mechanism-number">
+            01
+           </span>
+           <strong>
+            Host
+           </strong>
+           <small>
+            assistant application + policy
+           </small>
+          </li>
+          <li>
+           <span class="mechanism-number">
+            02
+           </span>
+           <strong>
+            Client
+           </strong>
+           <small>
+            connection to one server
+           </small>
+          </li>
+          <li>
+           <span class="mechanism-number">
+            03
+           </span>
+           <strong>
+            Server
+           </strong>
+           <small>
+            exposed capabilities + execution
+           </small>
+          </li>
+         </ol>
+         <p>
+          MCP 標準化通訊；harness 仍管理 state、permissions 和 termination。
+         </p>
+        </figure>
+        <a class="slide-section-link" href="#a-three-proposal-trace">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 28 週 · 課節 4
+       </div>
+       <h3>
+        Time 與 resource limits
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Step cap 限制 loop iterations，卻無法中斷 blocking network call。
+         </li>
+         <li>
+          對適當 dependencies 使用 client timeouts 和 cancellation；需要 isolation 的 execution 則使用 process/container controls。
+         </li>
+         <li>
+          Synchronous reference controller 示範 step limits 和狹窄 arithmetic safety。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#time-and-resource-limits">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 28 週 · 課節 5
+       </div>
+       <h3>
+        MCP 連接 application 與 tool provider
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          MCP 即 Model Context Protocol。
+         </li>
+         <li>
+          連線設定完成後，client 可以提出 tools/list request。
+         </li>
+         <li>
+          host 檢查 proposal 後，透過其 MCP client 以 tools/call 傳送允許的 request。
+         </li>
+        </ul>
+        <div class="table-wrap">
+         <table>
+          <thead>
+           <tr>
+            <th>
+             角色
+            </th>
+            <th>
+             在本例中的意思
+            </th>
+           </tr>
+          </thead>
+          <tbody>
+           <tr>
+            <td>
+             Host
+            </td>
+            <td>
+             管理 model、使用者互動和 tool policy 的 documentation-assistant application。
+            </td>
+           </tr>
+           <tr>
+            <td>
+             Client
+            </td>
+            <td>
+             host 內負責與一個 MCP server 通訊的 component。
+            </td>
+           </tr>
+           <tr>
+            <td>
+             Server
+            </td>
+            <td>
+             提供 calculator 並處理 request 的程式；可以在本機或遠端執行。
+            </td>
+           </tr>
+          </tbody>
+         </table>
+        </div>
+        <a class="slide-section-link" href="#mcp-connects-the-application-to-a-tool-provider">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 28 週 · 課節 6
+       </div>
+       <h3>
+        MCP 連接 application 與 tool provider · 續
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          MCP 亦定義 resources，用於提供 handbook passage 等 context data，以及 prompts，用於提供可重用的 message templates。
+         </li>
+         <li>
+          比較已有的 direct function call：direct 版本由 application code 呼叫 calculator；MCP 版本則加入標準 client/server interface，以進行 discovery 和 execution。
+         </li>
+         <li>
+          檢查理解：在這個例子中指出 host、client、server、model proposal、tool result 和 harness。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#mcp-connects-the-application-to-a-tool-provider">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 28 週 · 課節 7
+       </div>
+       <h3>
+        Planning 方法
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          ReAct-style interaction 交替進行 actions 和 observations。
+         </li>
+         <li>
+          這些模式可用不同 libraries 實作，但仍要問相同問題：甚麼 state 有權威性、哪些 actions 獲准、甚麼 observation 會改變 plan，以及甚麼會 terminate execution？
+         </li>
+         <li>
+          Multiple agents 會增加 coordination、重複 context、cost 和新 failure modes。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#planning-methods">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 28 週 · 課節 8
+       </div>
+       <h3>
+        Memory 有多種意思
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          目前 chat history、structured task state、retrieved documents 和 persistent user memory，各有不同 lifetime 和 trust properties。
+         </li>
+         <li>
+          Summary 可壓縮 text，但也可能遺漏條件。
+         </li>
+         <li>
+          Authorization 必須來自 authenticated application state，而非 model 撰寫的 memory。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#memory-has-several-meanings">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 28 週 · 課節 9
+       </div>
+       <h3>
+        Task evaluation 要檢查 traces
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Final sentence 可以看似正確，卻隱藏 forbidden action 或漏做 required calculation。
+         </li>
+         <li>
+          若 agent 從不使用必需 tool，不應因 “valid-call” denominator 為空而得分。
+         </li>
+         <li>
+          Retries 需要有界、因 operation 而異的處理。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#task-evaluation-inspects-traces">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 28 週 · 課節 10
+       </div>
+       <h3>
+        實例練習與學習檢查
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          使用 visual harness 嘗試 success、unknown tool、wrong version 和 endless planner 情況。
+         </li>
+         <li>
+          準備至少 20 個獨立檢查的 tasks，保留 successful 和 failed traces。
+         </li>
+         <li>
+          當 agent 是行為可觀察的 bounded state machine，而非未經檢查的 prompt-to-framework call，就已準備好。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#worked-practice-and-a-readiness-check">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+     </div>
+     <div class="deck-controls">
+      <button class="slide-prev" type="button">
+       ← 上一頁
+      </button>
+      <span aria-live="polite" class="slide-counter">
+       1 / 10
+      </span>
+      <button class="slide-next" type="button">
+       下一頁 →
+      </button>
+     </div>
+     <label class="slide-jump-label">
+      前往 slide
+      <select aria-label="跳至 slide" class="slide-jump">
+       <option value="0">
+        1. Controller 令 agent 成為可運行 system
+       </option>
+       <option value="1">
+        2. 一個完整小型 loop
+       </option>
+       <option value="2">
+        3. 三個 proposals 的 trace
+       </option>
+       <option value="3">
+        4. Time 與 resource limits
+       </option>
+       <option value="4">
+        5. MCP 連接 application 與 tool provider
+       </option>
+       <option value="5">
+        6. MCP 連接 application 與 tool provider · 續
+       </option>
+       <option value="6">
+        7. Planning 方法
+       </option>
+       <option value="7">
+        8. Memory 有多種意思
+       </option>
+       <option value="8">
+        9. Task evaluation 要檢查 traces
+       </option>
+       <option value="9">
+        10. 實例練習與學習檢查
+       </option>
+      </select>
+     </label>
+     <button aria-pressed="false" class="deck-all" type="button">
+      顯示全部 slides
+     </button>
+    </section>
+    <section aria-label="Agent 與它的 controller" class="visual-lesson">
+     <div class="eyebrow">
+      探索機制
+     </div>
+     <h2>
+      Agent 與它的 controller
+     </h2>
+     <p class="visual-intro">
+      查看具型別的 proposal、validator、observation 及有界終止。
+     </p>
+     <div data-widget="agent">
+      <p>
+       啟用 JavaScript 以使用此圖解。下方 lecture notes 會解釋同一機制。
+      </p>
+     </div>
+    </section>
+    <nav aria-label="本課內容" class="reader-toc">
+     <strong>
+      本課內容
+     </strong>
+     <ol>
+      <li>
+       <a href="#the-controller-makes-the-agent-a-runnable-system">
+        Controller 令 agent 成為可運行 system
+       </a>
+      </li>
+      <li>
+       <a href="#a-complete-small-loop">
+        一個完整小型 loop
+       </a>
+      </li>
+      <li>
+       <a href="#a-three-proposal-trace">
+        三個 proposals 的 trace
+       </a>
+      </li>
+      <li>
+       <a href="#time-and-resource-limits">
+        Time 與 resource limits
+       </a>
+      </li>
+      <li>
+       <a href="#mcp-connects-the-application-to-a-tool-provider">
+        MCP 連接 application 與 tool provider
+       </a>
+      </li>
+      <li>
+       <a href="#planning-methods">
+        Planning 方法
+       </a>
+      </li>
+      <li>
+       <a href="#memory-has-several-meanings">
+        Memory 有多種意思
+       </a>
+      </li>
+      <li>
+       <a href="#task-evaluation-inspects-traces">
+        Task evaluation 要檢查 traces
+       </a>
+      </li>
+      <li>
+       <a href="#worked-practice-and-a-readiness-check">
+        實例練習與學習檢查
+       </a>
+      </li>
+     </ol>
+    </nav>
+    <article class="prose full-notes" id="full-notes" role="tabpanel">
+     <div class="eyebrow">
+      完整講義
+     </div>
+     <h2>
+      閱讀完整解說
+     </h2>
+     <h3 id="the-controller-makes-the-agent-a-runnable-system">
+      Controller 令 agent 成為可運行 system
+     </h3>
+     <p>
+      想像你在監督 school trip。只有一張 possible tasks 清單並不足夠；需要有人追蹤已發生甚麼，以及何時停止。Agent execution harness 就在 code 中擔任這種協調角色。
+     </p>
+     <p>
+      它的 state 可包含 question、allowed version、observations、evidence IDs、step count 和 status。Model 提出 action，再由 harness validation 和 execute。
+     </p>
+     <p>
+      Evaluation harness 的角色不同：載入 tasks、執行指定 system、檢查 outcomes，並收集 metrics。兩者都需要 versioned configuration，但不能互相取代。
+     </p>
+     <h3 id="a-complete-small-loop">
+      一個完整小型 loop
+     </h3>
+     <p>
+      Initialize state。向 planner 要 typed proposal。如果是 final answer，validate response contract 後停止。如果是 tool action，執行前先 validate name、schema、scope 和 bounds。
+     </p>
+     <p>
+      記錄 normalized observation，更新 state，並在 budget 內重複。根據實作 policy，在 invalid proposals、failures、exhaustion、timeout 或 cancellation 時明確 terminate。
+     </p>
+     <p>
+      每條路徑都應留下 trace。Exception 或重複 tool request，不應默默變成虛構的成功 answer。
+     </p>
+     <h3 id="a-three-proposal-trace">
+      三個 proposals 的 trace
+     </h3>
+     <figure class="mechanism-figure">
+      <figcaption>
+       MCP 的通訊 boundary
+      </figcaption>
+      <ol class="mechanism-flow">
+       <li>
+        <span class="mechanism-number">
+         01
+        </span>
+        <strong>
+         Host
+        </strong>
+        <small>
+         assistant application + policy
+        </small>
+       </li>
+       <li>
+        <span class="mechanism-number">
+         02
+        </span>
+        <strong>
+         Client
+        </strong>
+        <small>
+         connection to one server
+        </small>
+       </li>
+       <li>
+        <span class="mechanism-number">
+         03
+        </span>
+        <strong>
+         Server
+        </strong>
+        <small>
+         exposed capabilities + execution
+        </small>
+       </li>
+      </ol>
+      <p>
+       MCP 標準化通訊；harness 仍管理 state、permissions 和 termination。
+      </p>
+     </figure>
+     <p>
+      第一個 proposal retrieve retry rule。第二個計算 cumulative delay。第三個回傳 result，並附已觀察到的 source IDs。
+     </p>
+     <p>
+      若 planner 不斷要求再做 calculation，三個 proposals 的 budget 最終會回傳 budget_exhausted。Controller 不會只因 model 客氣地要求就繼續。
+     </p>
+     <p>
+      把 citation ID 與先前 retrieved evidence 比對，是一項 structural boundary。該 passage 是否支持 final claim，仍是 evaluation 問題。
+     </p>
+     <h3 id="time-and-resource-limits">
+      Time 與 resource limits
+     </h3>
+     <p>
+      Step cap 限制 loop iterations，卻無法中斷 blocking network call。Call 返回後才檢查 elapsed time，不等於真正設下 call deadline。
+     </p>
+     <p>
+      對適當 dependencies 使用 client timeouts 和 cancellation；需要 isolation 的 execution 則使用 process/container controls。Tool output 和 model context 也要限制。
+     </p>
+     <p>
+      Synchronous reference controller 示範 step limits 和狹窄 arithmetic safety。它不聲稱是完整的 arbitrary-code sandbox。
+     </p>
+     <h3 id="mcp-connects-the-application-to-a-tool-provider">
+      MCP 連接 application 與 tool provider
+     </h3>
+     <p>
+      MCP 即 Model Context Protocol。回想你已用過的 calculator：model 提議計算，application code 檢查 proposal，然後執行允許的 function。MCP 為 application 提供一套標準方式，以發現及呼叫另一個程式提供的 capabilities。它不會改變算術本身，亦不會取代 request validation [
+      <a class="inline-reading" href="../resources.html#reference-r29">
+       Model Context Protocol architecture (R29)
+      </a>
+      ]。
+     </p>
+     <div class="table-wrap">
+      <table>
+       <thead>
+        <tr>
+         <th>
+          角色
+         </th>
+         <th>
+          在本例中的意思
+         </th>
+        </tr>
+       </thead>
+       <tbody>
+        <tr>
+         <td>
+          Host
+         </td>
+         <td>
+          管理 model、使用者互動和 tool policy 的 documentation-assistant application。
+         </td>
+        </tr>
+        <tr>
+         <td>
+          Client
+         </td>
+         <td>
+          host 內負責與一個 MCP server 通訊的 component。
+         </td>
+        </tr>
+        <tr>
+         <td>
+          Server
+         </td>
+         <td>
+          提供 calculator 並處理 request 的程式；可以在本機或遠端執行。
+         </td>
+        </tr>
+       </tbody>
+      </table>
+     </div>
+     <p>
+      連線設定完成後，client 可以提出 tools/list request。server 會描述可用 tools，包括名稱和 input schemas。host 決定把哪些 tools 提供給 model。對問題「A bus ticket costs 4 dollars. What do three tickets cost?」，model 可能提議使用已有的 calculator，expression 是「3*4」。
+     </p>
+     <p>
+      host 檢查 proposal 後，透過其 MCP client 以 tools/call 傳送允許的 request。server 檢查 request，執行允許的計算，並傳回結果 12。host 記錄 observation，再可把結果提供給 model，組織最終答案。model proposal 和 protocol request 是不同的 representation；application code 把兩者連接起來 [
+      <a class="inline-reading" href="../resources.html#reference-r30">
+       Model Context Protocol tools (R30)
+      </a>
+      ]。
+     </p>
+     <p>
+      MCP 亦定義 resources，用於提供 handbook passage 等 context data，以及 prompts，用於提供可重用的 message templates。在這裏，分別很簡單：tool 執行指定 operation，resource 提供 context，prompt 提供可重用的互動 template。application 仍需決定如何使用它們。
+     </p>
+     <p>
+      比較已有的 direct function call：direct 版本由 application code 呼叫 calculator；MCP 版本則加入標準 client/server interface，以進行 discovery 和 execution。harness 仍負責 state、允許的 actions 和停止條件。透過 MCP 提供 tool，並不會自動令 arguments 有效，或令其使用獲得授權。
+     </p>
+     <p>
+      檢查理解：在這個例子中指出 host、client、server、model proposal、tool result 和 harness。能正確解釋這些 boundary 已足夠；本課程不要求你部署 MCP server。
+     </p>
+     <h3 id="planning-methods">
+      Planning 方法
+     </h3>
+     <p>
+      ReAct-style interaction 交替進行 actions 和 observations。Plan-and-execute 先提出 plan，再執行或修訂。Routing 則選擇專門 workflow。
+     </p>
+     <p>
+      這些模式可用不同 libraries 實作，但仍要問相同問題：甚麼 state 有權威性、哪些 actions 獲准、甚麼 observation 會改變 plan，以及甚麼會 terminate execution？
+     </p>
+     <p>
+      Multiple agents 會增加 coordination、重複 context、cost 和新 failure modes。它們是選做 advanced 方向，不是本 single-controller project 的先決條件。
+     </p>
+     <h3 id="memory-has-several-meanings">
+      Memory 有多種意思
+     </h3>
+     <p>
+      目前 chat history、structured task state、retrieved documents 和 persistent user memory，各有不同 lifetime 和 trust properties。
+     </p>
+     <p>
+      Summary 可壓縮 text，但也可能遺漏條件。若 user 由 version 1 轉為與 version 2 比較，要明確保留該 intent，而非相信只寫 “user uses version 1.” 的 summary。
+     </p>
+     <p>
+      Authorization 必須來自 authenticated application state，而非 model 撰寫的 memory。把 critical constraints 和 source provenance 放在 structured fields。
+     </p>
+     <h3 id="task-evaluation-inspects-traces">
+      Task evaluation 要檢查 traces
+     </h3>
+     <p>
+      Final sentence 可以看似正確，卻隱藏 forbidden action 或漏做 required calculation。要量度 task success、call validity、forbidden calls、failures、budgets、latency 和 total model work。
+     </p>
+     <p>
+      若 agent 從不使用必需 tool，不應因 “valid-call” denominator 為空而得分。要定義 success predicates，並審核 traces。
+     </p>
+     <p>
+      Retries 需要有界、因 operation 而異的處理。Invalid arguments 和 non-idempotent side effects，不能像 transient read timeouts 一樣盲目 retry。
+     </p>
+     <h3 id="worked-practice-and-a-readiness-check">
+      實例練習與學習檢查
+     </h3>
+     <p>
+      使用 visual harness 嘗試 success、unknown tool、wrong version 和 endless planner 情況。然後執行真正 model planner，與 deterministic workflow 比較。
+     </p>
+     <p>
+      準備至少 20 個獨立檢查的 tasks，保留 successful 和 failed traces。解釋一項有用 adaptive choice 和一項不必要 action。
+     </p>
+     <p>
+      當 agent 是行為可觀察的 bounded state machine，而非未經檢查的 prompt-to-framework call，就已準備好。
+     </p>
+     <details class="reference-details" id="reference-details">
+      <summary>
+       參考細節與學習檢查
+      </summary>
+      <h3 id="review-a-intuition">
+       複習 A：直觀理解
+      </h3>
+      <p>
+       Workflow 的 control path 大致預定。Agent 則讓 model outputs 影響下一 action。兩者都需要 orchestration code。當 task 要根據 observations 調整時，agentic behavior 才有用；對固定 lookup，它可能只增加不必要 overhead。
+      </p>
+      <p>
+       Harness 在這裏有兩個相關意思。一個
+       <strong>
+        agent execution harness
+       </strong>
+       管理 state、model calls、tools、budgets、observation limits、cancellation 和 termination。另一個
+       <strong>
+        evaluation harness
+       </strong>
+       載入 tasks、執行指定 system、記錄 results，並計算 metrics。兩者可以整合，但責任不同。明確命名兩者，可避免用含糊的 “we have a harness” 掩蓋缺失 controls。
+      </p>
+      <h3 id="review-a-state-and-transitions">
+       複習 A：State 與 transition
+      </h3>
+      <p>
+       明確表示 state：question、allowed version、evidence IDs、observations、step count、token/cost budget、status 和 error。Planner 提出 tool action 或 final response。Controller validation，execute allowed actions，並更新 state。Termination reasons 包括 success、invalid proposal、tool failure、step exhaustion、timeout 和 cancellation。每條路徑都必須可觀察。
+      </p>
+      <h3 id="review-a-worked-trace">
+       複習 A：Trace 實例
+      </h3>
+      <p>
+       Step 1 retrieve retry rules。Step 2 用 bounded expression 呼叫 calculator。Step 3 以 numerical result 和 source IDs 作答。失敗 calculator call 不應永遠重複。如果 planner 最多有三步，而最後一步 proposal 仍需要下一 observation，應明確以 budget-exhausted status 結束，而非虛構 final answer。
+      </p>
+      <p>
+       Wall-clock limits 需要真正 enforce。Blocking call 返回後才檢查 elapsed time，無法中斷該 call。Network tools 用 client timeouts；untrusted execution 用 process/container limits。我們的 synchronous starter enforce step limits 和 arithmetic bounds；deployment extension 則需要 per-call timeout/cancellation implementations。
+      </p>
+      <h3 id="review-a-experiment">
+       複習 A：實驗
+      </h3>
+      <p>
+       <a href="../tutorials/27.html">
+        Tutorial 27: Tool、function、workflow 與 agent
+       </a>
+       讓 deterministic planner 經 controller 執行，以測試 execution contract。這是 controller fixture，不是 LLM planning 的證據。
+       <a href="../tutorials/28.html">
+        Tutorial 28: Harness、planning、memory 與有界執行
+       </a>
+       連接真正 model planner。注入永不停止、回傳 malformed JSON，以及虛構 tool 的 planners。驗證明確 terminal states 和有限 tool calls。
+      </p>
+      <p>
+       對每條 trace，問展示給 model 的資訊是否必要。大型 tool outputs 可令 context overflow，亦可能帶有 adversarial instructions。限制並標記 observations，另存 authoritative metadata，不要把 tool text 當成新 policy。
+      </p>
+      <p>
+       <strong>
+        完成標準：
+       </strong>
+       實作 bounded state machine，並區分 execution 和 evaluation harnesses。
+       <strong>
+        閱讀材料：
+       </strong>
+       <a class="inline-reading" href="../resources.html#reference-r11">
+        Yao et al. ReAct (R11)
+       </a>
+       ；
+       <a class="inline-reading" href="../resources.html#reference-r03">
+        Hung-yi Lee Introduction to GenAI and ML 2025 (R03)
+       </a>
+       context engineering 主題。
+       <strong>
+        Tutorial：
+       </strong>
+       28.
+      </p>
+      <h3 id="review-b-intuition">
+       複習 B：直觀理解
+      </h3>
+      <p>
+       Agent 的 “memory” 可指目前 prompt、task scratch state、retrieved documents，或過去 interactions 的 persistent store。它們的 retention 和 trust properties 不同。記住更多 text，不代表 context 一定更有用。
+      </p>
+      <p>
+       用 typed task state 保存 requested version、selected source IDs 和 tool outcomes 等 facts。Summaries 可壓縮長 histories，但可能遺漏 exception，或把不確定 observation 變成自信 assertion。把 critical constraints 保留於 structured fields，並保留 source provenance。
+      </p>
+      <h3 id="review-b-planning-patterns">
+       複習 B：Planning 模式
+      </h3>
+      <p>
+       ReAct-style systems 交替進行 action selection 和 observations。Plan-and-execute 先產生 plan，再執行，並可能在 observations 不符時修訂。Routing 選擇專門 workflow。Multi-agent systems 分配 roles，但增加 coordination、重複 context、cost 和 evaluation complexity。本課程核心是單一 bounded controller，不要求 multi-agent implementation。
+      </p>
+      <p>
+       Versioned lookup 的固定 workflow 可以是 retrieve、pack、answer 和 validate。Troubleshooting task 則可能受惠於 conditional actions：inspect version、retrieve rule、validate config，再解釋第一項違反 requirement 的地方。後者提供 adaptive planning 的具體理由。
+      </p>
+      <h3 id="review-b-worked-memory-failure">
+       複習 B：Memory 失敗實例
+      </h3>
+      <p>
+       User 先問 v1，再說 “now compare that with v2.” 若 summary 只儲存 “user uses v1”，下一次 retrieval 可能 filter 掉 v2。要明確保留 task allowed versions 和 comparison intent。Authorization 應來自 authenticated application state，絕不能來自 conversational memory 或 model-generated summaries。
+      </p>
+      <h3 id="review-b-experiment">
+       複習 B：實驗
+      </h3>
+      <p>
+       <a href="../tutorials/28.html">
+        Tutorial 28: Harness、planning、memory 與有界執行
+       </a>
+       把小 model 的 JSON proposal 轉成 controller action。在相同 lookups、calculations 和 troubleshooting tasks 上，與固定 workflow 比較。統計 invalid proposals、不必要 tool calls、漏做 required actions、completion、latency 和 total model tokens。小 model 可能經常失敗；用這些 traces 決定哪些情況應採 deterministic route。
+      </p>
+      <p>
+       測試一個長而無關的 observation，以及 retrieved page 中的 misleading instruction。驗證 policy fields 不在 model 權限內。失敗 model proposal 必須產生受控 result，不可改為執行猜測 arguments。
+      </p>
+      <p>
+       <strong>
+        完成標準：
+       </strong>
+       為特定 task 解釋 adaptive planning 的理由，並指出哪些 state 應放在 structured memory。
+       <strong>
+        閱讀材料：
+       </strong>
+       <a class="inline-reading" href="../resources.html#reference-r11">
+        Yao et al. ReAct (R11)
+       </a>
+       ；
+       <a class="inline-reading" href="../resources.html#reference-r03">
+        Hung-yi Lee Introduction to GenAI and ML 2025 (R03)
+       </a>
+       context engineering。
+       <strong>
+        Tutorial：
+       </strong>
+       28.
+      </p>
+      <h3 id="review-c-intuition">
+       複習 C：直觀理解
+      </h3>
+      <p>
+       有說服力的 final sentence 可能掩蓋失敗或 forbidden action。Agent evaluation 必須檢查 environment 和 trace，不能只為 final text 評分。對 read-only tools，correctness 包括選對 evidence 和 calculation。對未來 side-effect extension，亦包括 final state，以及沒有非預期 changes。
+      </p>
+      <p>
+       定義 task 的 initial state、allowed actions、expected results 和 success predicates。比較 model-only answer、fixed tool workflow 和 adaptive controller。保持 tool affordances 和 budgets 可比較。Agent 有十次機會、workflow 只有一次時，不能不報告差異就比較。
+      </p>
+      <h3 id="review-c-metrics-and-recovery">
+       複習 C：Metrics 與復原
+      </h3>
+      <p>
+       Task success、valid-call rate、forbidden-action rate、tool failures、step count、budget exhaustion 和 cost 互相補充。從不 call tool 的 system，可能在空 denominator 上得到完美 valid-call rate；要報告使用 tools 的頻率，以及 tasks 是否需要它們。Failures 應分類，令分析能區分 planning、validation、execution 和 answer errors。
+      </p>
+      <p>
+       Retries 必須有界且適當。Transient read timeout 可能值得一次 backoff/retry。重複 invalid arguments 不會修復 schema。Non-idempotent side effect 不可盲目 retry。Circuit breaker 限制對失敗 dependency 的重複 calls，但不能取代正確 per-request handling。
+      </p>
+      <h3 id="review-c-worked-audit">
+       複習 C：審核實例
+      </h3>
+      <p>
+       Agent 完成 18/20 tasks，但其中一個成功 task 含 unauthorized call，剛好只回傳無害 data。在 zero-forbidden-action release gate 下，它不合格。另一 system 完成 17/20、沒有 violations，並清楚回報三次 controlled failures。視乎 requirements，後者可能才是可部署 candidate。Evaluation 前先定義 gate。
+      </p>
+      <h3 id="review-c-experiment">
+       複習 C：實驗
+      </h3>
+      <p>
+       建立至少 20 個有 deterministic checkers 的 tool tasks，包含 division by zero、unknown tool、wrong version、invalid config、misleading documentation 和強制 step-limit failure。執行
+       <a href="../tutorials/28.html">
+        Tutorial 28: Harness、planning、memory 與有界執行
+       </a>
+       ，保留完整 action/observation traces，並手動審核 sample。即使 final answer 看似合理，也要報告 failure counts。
+      </p>
+      <p>
+       對 open-ended troubleshooting，使用 rubric 加 manual review，不要假裝一個 exact string 就能代表成功。Project report 應包含一個 agent 增加價值的 case，以及一個固定 workflow 更簡單而同樣有效的 case。若 agent 從未改善 tasks，可保留為經 evaluation 的 experimental branch，不必成為 default product。
+      </p>
+      <p>
+       <strong>
+        完成標準：
+       </strong>
+       利用 trace-level evidence 和 recovery behavior，支持 agent release decision。
+       <strong>
+        閱讀材料：
+       </strong>
+       <a class="inline-reading" href="../resources.html#reference-r02">
+        Stanford CS329S Machine Learning Systems Design (R02)
+       </a>
+       stakeholder requirements；
+       <a class="inline-reading" href="../resources.html#reference-r11">
+        Yao et al. ReAct (R11)
+       </a>
+       task/action evaluation。
+       <strong>
+        Tutorial：
+       </strong>
+       28.
+      </p>
+     </details>
+    </article>
+    <nav aria-label="前後 lecture" class="chapter-pagination">
+     <a href="27.html">
+      <small>
+       上一週
+      </small>
+      Tool、function、workflow 與 agent
+     </a>
+     <a href="29.html">
+      <small>
+       下一週
+      </small>
+      從 notebook 到 MLOps 和 inference serving
+     </a>
+    </nav>
+   </div>
+   <footer class="footer">
+    <span>
+     Applied AI · 獨立自學課程
+    </span>
+    <span>
+     32 週 · 每週 10 小時
+    </span>
+    <a href="../resources.html#about-this-course">
+     關於課程及資料來源
+    </a>
+   </footer>
+  </main>
+  <dialog aria-labelledby="search-title" class="search-dialog">
+   <div class="dialog-head">
+    <h2 id="search-title">
+     尋找概念
+    </h2>
+    <button aria-label="關閉搜尋" class="search-close" type="button">
+     關閉
+    </button>
+   </div>
+   <label class="sr-only" for="course-search">
+    搜尋所有 lecture 和 tutorial
+   </label>
+   <input autocomplete="off" id="course-search" placeholder="試試 attention、fine-tuning 或 harness……" type="search"/>
+   <p aria-live="polite" class="search-status">
+    搜尋 lecture notes、tutorial、測驗及閱讀材料。
+   </p>
+   <div class="search-results">
+   </div>
+  </dialog>
+  <div aria-live="polite" class="toast" role="status">
+  </div>
+ </body>
+</html>

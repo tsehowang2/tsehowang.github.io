@@ -1,68 +1,1169 @@
 <!DOCTYPE html>
-
-<html lang="zh-HK"><head><script src="../../assets/translations-zh-HK.js"></script><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/><title>從一列 vector 建立 vector database · Applied AI</title><meta content="Applied generative AI and LLM systems course material" name="description"/><meta content="#173c36" name="theme-color"/><link href="../../assets/favicon.svg" rel="icon" type="image/svg+xml"/><link href="../../assets/style.css" rel="stylesheet"/><link href="../../assets/slides.css" rel="stylesheet"/><script>window.COURSE_BASE="../";</script><script defer="" src="../../assets/site-config.js"></script><script defer="" src="../assets/search-index.js"></script><script defer="" src="../../assets/app.js"></script><script defer="" src="../../assets/visuals.js"></script><script defer="" src="../../assets/slides.js"></script><script defer="" src="../../assets/beginner-visuals.js"></script><script defer="True" src="../../assets/locale-patterns.js"></script><script defer="True" src="../../assets/locale.js"></script><link href="../../assets/bilingual.css" rel="stylesheet"/><link href="../../lectures/18.html" hreflang="en" rel="alternate"/></head><body data-page-kind="lecture" data-week="18"><a class="skip-link" href="#main">跳至內容</a><header class="topbar"><button aria-controls="course-sidebar" aria-expanded="false" class="menu-toggle" type="button">選單</button><a class="brand" href="../index.html"><span aria-hidden="true" class="brand-mark">a<span>i</span></span><span>APPLIED AI<small>從原理到實踐</small></span></a><nav aria-label="主要導覽"><a href="../index.html">課程</a><a href="../visuals.html">互動圖解</a><a href="../project.html">專題</a><a class="language-switch" href="../../lectures/18.html" hreflang="en" lang="en">English</a></nav><button class="search-open" type="button">搜尋課程 <span aria-hidden="true">/</span></button></header><aside aria-label="課程章節" class="sidebar" id="course-sidebar"><a class="side-home" href="../index.html">課程概覽</a><details class="semester-nav"><summary>第一學期<span>第 1–16 週</span></summary><ol start="1"><li><a href="../lectures/01.html"><span class="week-number">01</span><span>Language model 究竟在學甚麼</span><span class="week-tick" data-week-tick="1"></span></a></li><li><a href="../lectures/02.html"><span class="week-number">02</span><span>從文字到 token 和數值 ID</span><span class="week-tick" data-week-tick="2"></span></a></li><li><a href="../lectures/03.html"><span class="week-number">03</span><span>Word vector 能表達甚麼</span><span class="week-tick" data-week-tick="3"></span></a></li><li><a href="../lectures/04.html"><span class="week-number">04</span><span>從 score 到 probability 和學習訊號</span><span class="week-tick" data-week-tick="4"></span></a></li><li><a href="../lectures/05.html"><span class="week-number">05</span><span>為甚麼語言需要 context 和次序</span><span class="week-tick" data-week-tick="5"></span></a></li><li><a href="../lectures/06.html"><span class="week-number">06</span><span>Attention 由 weighted mixture 開始</span><span class="week-tick" data-week-tick="6"></span></a></li><li><a href="../lectures/07.html"><span class="week-number">07</span><span>Query、key 和 value 從何而來</span><span class="week-tick" data-week-tick="7"></span></a></li><li><a href="../lectures/08.html"><span class="week-number">08</span><span>正確進行 attention scaling 和 masking</span><span class="week-tick" data-week-tick="8"></span></a></li><li><a href="../lectures/09.html"><span class="week-number">09</span><span>多個 attention head 與位置</span><span class="week-tick" data-week-tick="9"></span></a></li><li><a href="../lectures/10.html"><span class="week-number">10</span><span>逐步拆解 transformer block</span><span class="week-tick" data-week-tick="10"></span></a></li><li><a href="../lectures/11.html"><span class="week-number">11</span><span>Encoder、decoder 與完整 model architecture</span><span class="week-tick" data-week-tick="11"></span></a></li><li><a href="../lectures/12.html"><span class="week-number">12</span><span>訓練一個小型 transformer</span><span class="week-tick" data-week-tick="12"></span></a></li><li><a href="../lectures/13.html"><span class="week-number">13</span><span>Generation、decoding 與 KV cache</span><span class="week-tick" data-week-tick="13"></span></a></li><li><a href="../lectures/14.html"><span class="week-number">14</span><span>從 pretraining 到 instruction following 和 reasoning</span><span class="week-tick" data-week-tick="14"></span></a></li><li><a href="../lectures/15.html"><span class="week-number">15</span><span>文字以外的 Generative AI</span><span class="week-tick" data-week-tick="15"></span></a></li><li><a href="../lectures/16.html"><span class="week-number">16</span><span>完整 transformer 導覽與第一學期溫習</span><span class="week-tick" data-week-tick="16"></span></a></li></ol></details><details class="semester-nav" open=""><summary>第二學期<span>第 17–32 週</span></summary><ol start="17"><li><a href="../lectures/17.html"><span class="week-number">17</span><span>從 word vector 到 semantic search</span><span class="week-tick" data-week-tick="17"></span></a></li><li><a aria-current="page" href="../lectures/18.html"><span class="week-number">18</span><span>從一列 vector 建立 vector database</span><span class="week-tick" data-week-tick="18"></span></a></li><li><a href="../lectures/19.html"><span class="week-number">19</span><span>把 RAG 理解為開卷作答</span><span class="week-tick" data-week-tick="19"></span></a></li><li><a href="../lectures/20.html"><span class="week-number">20</span><span>在保持基本任務的前提下改善 RAG</span><span class="week-tick" data-week-tick="20"></span></a></li><li><a href="../lectures/21.html"><span class="week-number">21</span><span>評估 retrieval、答案與 uncertainty</span><span class="week-tick" data-week-tick="21"></span></a></li><li><a href="../lectures/22.html"><span class="week-number">22</span><span>CPU、GPU、memory 與 model 資源計算</span><span class="week-tick" data-week-tick="22"></span></a></li><li><a href="../lectures/23.html"><span class="week-number">23</span><span>CUDA kernel 與 profiling</span><span class="week-tick" data-week-tick="23"></span></a></li><li><a href="../lectures/24.html"><span class="week-number">24</span><span>Fine-tuning 由教學 dataset 開始</span><span class="week-tick" data-week-tick="24"></span></a></li><li><a href="../lectures/25.html"><span class="week-number">25</span><span>從小型 matrix 理解 LoRA 和 QLoRA</span><span class="week-tick" data-week-tick="25"></span></a></li><li><a href="../lectures/26.html"><span class="week-number">26</span><span>Fine-tuning 實驗、preference 與 distillation</span><span class="week-tick" data-week-tick="26"></span></a></li><li><a href="../lectures/27.html"><span class="week-number">27</span><span>Tool、function、workflow 與 agent</span><span class="week-tick" data-week-tick="27"></span></a></li><li><a href="../lectures/28.html"><span class="week-number">28</span><span>Harness、planning、memory 與有界執行</span><span class="week-tick" data-week-tick="28"></span></a></li><li><a href="../lectures/29.html"><span class="week-number">29</span><span>從 notebook 到 MLOps 和 inference serving</span><span class="week-tick" data-week-tick="29"></span></a></li><li><a href="../lectures/30.html"><span class="week-number">30</span><span>Monitoring、security、regression test 與 rollback</span><span class="week-tick" data-week-tick="30"></span></a></li><li><a href="../lectures/31.html"><span class="week-number">31</span><span>整合文件助手與進階延伸</span><span class="week-tick" data-week-tick="31"></span></a></li><li><a href="../lectures/32.html"><span class="week-number">32</span><span>溫習、答辯與持續學習計劃</span><span class="week-tick" data-week-tick="32"></span></a></li></ol></details><div class="side-links"><a href="../visuals.html">互動圖解實驗室 <span>14 個互動課節</span></a><a href="../project.html">文件助手 <span>你的 capstone project</span></a><a href="../resources.html">閱讀材料與環境設定</a></div><div class="side-progress"><div><span>你的進度</span><strong data-progress-count="">0 / 32</strong></div><progress aria-label="已完成 lecture" max="32" value="0"></progress><small>儲存在這個瀏覽器</small></div></aside><main class="main" id="main"><div class="content"><div class="chapter-header"><div class="eyebrow">第二學期 / 第 18 週</div><h1>從一列 vector 建立 vector database</h1></div><div class="lesson-links"><a href="../tutorials/18.html">練習 18</a><a href="../tests/18.html">檢查你的理解</a><button aria-pressed="false" class="mark-complete" data-week="18" type="button">標記為已完成</button></div><section aria-label="Lecture slides" class="lecture-deck" id="lecture-slides"><div class="deck-top"><div><div class="eyebrow">課堂投影片 · 第 18 週</div><h2>一步一步學習。</h2></div><button class="deck-present" type="button">簡報模式</button></div><p class="deck-help">閱讀每段解說，停下來預測結果，然後繼續。選取簡報後，可用方向鍵操作。完整講義在下方。</p><div aria-label="簡報：使用左右方向鍵" class="slide-viewport" tabindex="0"><section class="lecture-slide" data-slide=""><div class="slide-stage">由例子開始</div><h3>當清單改變時，persistence 就派上用場</h3><div class="slide-prose"><p>上週，我們可以把三個手冊 vector 放在 memory 中直接比較。現在想像有數千個 passage、每學期都有更新，而且重新啟動程式之後仍有人提出問題。</p>
-<p>Vector database 協助在這些操作之間維持 vector 及其相關資料。先從一個 point 開始：它包含 ID、vector、source text reference 和 metadata。Database 負責按其支援的行為儲存和搜尋這些 point。</p>
-<p>Embedding model 建立 vector；similarity metric 定義比較方法；index 組織 search；database 則加入管理和操作能力。這些 component 互相關聯，但各有不同職責。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">由例子開始</div><h3>一筆可直接檢查的 record</h3><div class="slide-prose"><p>把 H2 表示為 ID=bus-2026、vector=[...]、version=2026、source=handbook transport section，以及 content hash。如果規則曾改變，關於 2025 的問題不應默默採用 2026 規則。</p>
-<p>Metadata filter 限制哪些 passage 可以成為候選。更新期間，text、vector 和 version 必須一直保持對應。即使 nearest-neighbor algorithm 正確，也無法修復 ingestion 時標錯 version 的 record。</p>
-<p>Stable ID 有助更新現有 passage，避免不斷累積 duplicate。確切的 update semantics 視乎 database API，並需要 save/reload test 驗證。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">建立對機制的理解</div><h3>以 exact search 作參考</h3><div class="slide-prose"><p>Exact search 把 query 與每個符合條件的 stored vector 比較，再按 metric 選出最佳結果。對小型 collection 而言，它可能已完全足夠。</p>
-<p>隨着 collection 增大，approximate nearest-neighbor 方法可以用額外結構和資源，換取較少的 search 工作。這裏的 approximation 針對選定的 vector metric；如果 embedding 質素差，即使 exact vector neighbor 也可能在語意上無關。</p>
-<p>要分開這兩種 error source：approximation 可能漏掉 exact neighbor，而 representation quality 則可能令 exact neighbor 對問題沒有幫助。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">建立對機制的理解</div><h3>用 graph 理解 HNSW</h3><div class="slide-prose"><p>Approximate graph index 把 point 連接起來，讓 search 沿着有希望的 neighbor 前進，而不必檢查每個 point。HNSW 使用多層、可導航的 graph hierarchy。</p>
-<p>可以直觀地想像成沿着越來越局部的連接在地圖上尋路，但真正的結構是 vector-space point 和 algorithmic rule。Search breadth 和 construction setting 會影響 recall、latency 和 storage。</p>
-<p>用同一批 query vector 和相同 metadata constraint，比較 approximate result 與 exact result。Local mode 的九個 teaching point，不能證明 production HNSW 的效能。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">建立對機制的理解</div><h3>在選 candidate 之前還是之後 filtering</h3><div class="slide-prose"><p>假設未 filtering 的前三個結果全屬於 2026，但問題問的是 2025。先取三個結果再刪去錯誤年份，可能甚麼都不剩，儘管 relevant 的 2025 evidence 其實存在於未 filtering 排名更後的位置。</p>
-<p>透過 search mechanism 套用必需 constraint，並評估 filtered 行為。在 private system 中，authorization 必須由 application/database control 強制執行，而不能依靠 model 生成的建議。</p>
-<p>在公開的 teaching corpus 中，version filtering 是 scope constraint。不應把它說成完整 authentication 或 multi-tenant security。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">建立對機制的理解</div><h3>Storage 計算與 compatibility</h3><div class="slide-prose"><p>一百萬個 384-dimensional float32 vector，原始 vector 大小是 1,536,000,000 bytes。這還未包括 graph link、ID、payload、text、replica 和 allocation overhead。</p>
-<p>兩個輸出 dimension 同為 384 的 embedding model，不一定共享 coordinate system。即使 database 接受相同 vector length，更換 model 通常仍需要重新 embedding，並建立 compatible index。</p>
-<p>記錄實際 model/tokenizer revision 和 source manifest。Dimension checking 可以找出一類 mismatch；identity checking 則找出另一類。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">建立對機制的理解</div><h3>Update、deletion 與 migration</h3><div class="slide-prose"><p>如果手冊修改了 bus departure time，就要更新 source record 及依賴它的 vector/index state。如果某 passage 被移除，要確保其 index entry 和任何 cached answer 都獲處理。</p>
-<p>進行 model migration 時，先建立另一個 compatible collection，驗證 point count 和 ID，benchmark retrieval；只有通過所選 gate 後，才切換 active collection。保留較早 collection，才能一致地 rollback。</p>
-<p>這正是 data engineering 的嚴謹做法直接發揮作用的地方。即使 vector representation 是學出來的，它仍需要 lineage、schema check 和 lifecycle。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">建立對機制的理解</div><h3>實例練習與學習檢查</h3><div class="slide-prose"><p>把 local collection 儲存、關閉，再重新開啟，重複一次 filtered query。用同一 ID 更新一個 point，確認內容已改變。刪除另一個 point，再確認它已不存在。</p>
-<p>解釋失敗的 query 是由 ingestion、filter、embedding representation 還是 approximation 引起。設計一個 test，區分其中兩種原因。</p>
-<p>當你理解 “vector DB” 是一個持續維護的 collection 和 search service，並有明確 compatibility 與 update 行為，而不是 embedding model 的同義詞，就已準備好繼續。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">選讀：深入學習</div><h3>完成引導例子後，再深入一層</h3><div class="slide-prose"><p>以下內容適合第二次閱讀。先解釋上面的日常例子，再用以下 equation 和實作細節，把解釋說得更精確。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">選讀：深入學習</div><h3>深入研習 12：直觀理解</h3><div class="slide-prose"><p>一串 vector 和 cosine score 可以示範 semantic search。Vector database 再加入 persistent collection、metadata、update、filtering 和 operational behavior。這些能力很重要，因為 documentation 會改變，而使用者仍持續 query。Index 是有 lifecycle 的 artifact，並非一次性的 preprocessing 步驟。</p>
-<p>每個 point 應儲存 stable ID、embedding、source reference、version、content hash 和 payload。在 collection manifest 記錄 embedding model 和 tokenizer revision。兩個 model 即使都輸出 384 個數字，也可能產生不相容的 geometry。Model migration 通常需要重新 embedding，並建立或重建 index；不要只因 dimension 一樣就混用 vector。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">選讀：深入學習</div><h3>深入研習 12：Exact 與 approximate search</h3><div class="slide-prose"><p>Exact nearest-neighbor search 評估所有 candidate，提供有用參考。Approximate nearest-neighbor search 在工作量、storage 和 retrieval quality 之間取捨。HNSW 建立可導航的 graph；search breadth 會影響速度與 recall。Index setting 必須在真實 metadata filter 下與 exact result 比較，而不能只用未 filtering 的隨機 benchmark。</p>
-<p>當只有少部分 document 符合條件時，filtered search 的行為可能不同。先取一小串 top-k 再套 version filter，即使 relevant document 存在，也可能沒有有效 candidate。透過 retrieval mechanism 套用 constraint，並量度結果。與 security 有關的 authorization filter 不可交由 language model 執行。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">選讀：深入學習</div><h3>深入研習 12：Migration 例子</h3><div class="slide-prose"><p>假設 index A 包含 model M1 的 vector 和 10,000 個 source chunk。使用 M2 和相同 source manifest 建立 index B。檢查 row count、missing ID、embedding dimension 及 development retrieval benchmark。先把有限 evaluation workload 導向 B，只有通過 gate 後才切換 active index。保留 A 作 rollback。如果 document 同時改變，也要把這點記錄為獨立 experimental variable。</p>
-<p>Deletion 同樣重要。從 object storage 移除 document，不會自動刪掉它的 chunk、cached answer 或 replicated index entry。要定義 tombstone/update policy 和 completion check。</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">選讀：深入學習</div><h3>深入研習 12：實驗</h3><div class="slide-prose"><p>Notebook 18 建立 local Qdrant collection、upsert vector、按 version filtering、儲存後重新開啟，再次 query。直接檢查 payload。以相同 ID 加入一次 update，然後刪除一個 point，確認它不再出現。Local mode 教的是 client 和 lifecycle；不能證明 distributed durability 或 production throughput。</p>
-<p><strong>完成標準：</strong> 分辨 embedding model、vector similarity function、ANN index，以及操作這個 index 的 database。 <strong>閱讀材料：</strong> R08；選讀 R24。 <strong>Tutorial：</strong> 18.</p></div></section></div><div class="deck-controls"><button class="slide-prev" type="button">← 上一頁</button><span aria-live="polite" class="slide-counter">1 / 13</span><button class="slide-next" type="button">下一頁 →</button></div><label class="slide-jump-label">前往 slide <select aria-label="跳至 slide" class="slide-jump"><option value="0">1</option><option value="1">2</option><option value="2">3</option><option value="3">4</option><option value="4">5</option><option value="5">6</option><option value="6">7</option><option value="7">8</option><option value="8">9</option><option value="9">10</option><option value="10">11</option><option value="11">12</option><option value="12">13</option></select></label><button aria-pressed="false" class="deck-all" type="button">顯示全部 slides</button><a class="reader-link" href="#full-notes">閱讀完整講義 ↓</a></section><section aria-label="Hybrid retrieval" class="visual-lesson"><div class="eyebrow">探索機制</div><h2>Hybrid retrieval</h2><p class="visual-intro">理解 exact vector search 後，查看 rank fusion 及 candidate recall。</p><div data-widget="retrieval"><p>啟用 JavaScript 以使用此圖解。下方 lecture notes 會解釋同一機制。</p></div></section><article class="prose full-notes" id="full-notes"><div class="eyebrow">完整講義</div><h2>閱讀完整解說</h2><h3 id="persistence-becomes-useful-when-the-list-changes">當清單改變時，persistence 就派上用場</h3>
-<p>上週，我們可以把三個手冊 vector 放在 memory 中直接比較。現在想像有數千個 passage、每學期都有更新，而且重新啟動程式之後仍有人提出問題。</p>
-<p>Vector database 協助在這些操作之間維持 vector 及其相關資料。先從一個 point 開始：它包含 ID、vector、source text reference 和 metadata。Database 負責按其支援的行為儲存和搜尋這些 point。</p>
-<p>Embedding model 建立 vector；similarity metric 定義比較方法；index 組織 search；database 則加入管理和操作能力。這些 component 互相關聯，但各有不同職責。</p>
-<h3 id="a-record-you-can-inspect">一筆可直接檢查的 record</h3>
-<p>把 H2 表示為 ID=bus-2026、vector=[...]、version=2026、source=handbook transport section，以及 content hash。如果規則曾改變，關於 2025 的問題不應默默採用 2026 規則。</p>
-<p>Metadata filter 限制哪些 passage 可以成為候選。更新期間，text、vector 和 version 必須一直保持對應。即使 nearest-neighbor algorithm 正確，也無法修復 ingestion 時標錯 version 的 record。</p>
-<p>Stable ID 有助更新現有 passage，避免不斷累積 duplicate。確切的 update semantics 視乎 database API，並需要 save/reload test 驗證。</p>
-<h3 id="exact-search-provides-a-reference">以 exact search 作參考</h3>
-<p>Exact search 把 query 與每個符合條件的 stored vector 比較，再按 metric 選出最佳結果。對小型 collection 而言，它可能已完全足夠。</p>
-<p>隨着 collection 增大，approximate nearest-neighbor 方法可以用額外結構和資源，換取較少的 search 工作。這裏的 approximation 針對選定的 vector metric；如果 embedding 質素差，即使 exact vector neighbor 也可能在語意上無關。</p>
-<p>要分開這兩種 error source：approximation 可能漏掉 exact neighbor，而 representation quality 則可能令 exact neighbor 對問題沒有幫助。</p>
-<h3 id="a-graph-intuition-for-hnsw">用 graph 理解 HNSW</h3>
-<p>Approximate graph index 把 point 連接起來，讓 search 沿着有希望的 neighbor 前進，而不必檢查每個 point。HNSW 使用多層、可導航的 graph hierarchy。</p>
-<p>可以直觀地想像成沿着越來越局部的連接在地圖上尋路，但真正的結構是 vector-space point 和 algorithmic rule。Search breadth 和 construction setting 會影響 recall、latency 和 storage。</p>
-<p>用同一批 query vector 和相同 metadata constraint，比較 approximate result 與 exact result。Local mode 的九個 teaching point，不能證明 production HNSW 的效能。</p>
-<h3 id="filtering-before-or-after-candidate-selection">在選 candidate 之前還是之後 filtering</h3>
-<p>假設未 filtering 的前三個結果全屬於 2026，但問題問的是 2025。先取三個結果再刪去錯誤年份，可能甚麼都不剩，儘管 relevant 的 2025 evidence 其實存在於未 filtering 排名更後的位置。</p>
-<p>透過 search mechanism 套用必需 constraint，並評估 filtered 行為。在 private system 中，authorization 必須由 application/database control 強制執行，而不能依靠 model 生成的建議。</p>
-<p>在公開的 teaching corpus 中，version filtering 是 scope constraint。不應把它說成完整 authentication 或 multi-tenant security。</p>
-<h3 id="storage-arithmetic-and-compatibility">Storage 計算與 compatibility</h3>
-<p>一百萬個 384-dimensional float32 vector，原始 vector 大小是 1,536,000,000 bytes。這還未包括 graph link、ID、payload、text、replica 和 allocation overhead。</p>
-<p>兩個輸出 dimension 同為 384 的 embedding model，不一定共享 coordinate system。即使 database 接受相同 vector length，更換 model 通常仍需要重新 embedding，並建立 compatible index。</p>
-<p>記錄實際 model/tokenizer revision 和 source manifest。Dimension checking 可以找出一類 mismatch；identity checking 則找出另一類。</p>
-<h3 id="updates-deletion-and-migration">Update、deletion 與 migration</h3>
-<p>如果手冊修改了 bus departure time，就要更新 source record 及依賴它的 vector/index state。如果某 passage 被移除，要確保其 index entry 和任何 cached answer 都獲處理。</p>
-<p>進行 model migration 時，先建立另一個 compatible collection，驗證 point count 和 ID，benchmark retrieval；只有通過所選 gate 後，才切換 active collection。保留較早 collection，才能一致地 rollback。</p>
-<p>這正是 data engineering 的嚴謹做法直接發揮作用的地方。即使 vector representation 是學出來的，它仍需要 lineage、schema check 和 lifecycle。</p>
-<h3 id="worked-practice-and-a-readiness-check">實例練習與學習檢查</h3>
-<p>把 local collection 儲存、關閉，再重新開啟，重複一次 filtered query。用同一 ID 更新一個 point，確認內容已改變。刪除另一個 point，再確認它已不存在。</p>
-<p>解釋失敗的 query 是由 ingestion、filter、embedding representation 還是 approximation 引起。設計一個 test，區分其中兩種原因。</p>
-<p>當你理解 “vector DB” 是一個持續維護的 collection 和 search service，並有明確 compatibility 與 update 行為，而不是 embedding model 的同義詞，就已準備好繼續。</p>
-<h3 id="a-deeper-pass-after-the-worked-introduction">完成引導例子後，再深入一層</h3>
-<p>以下內容適合第二次閱讀。先解釋上面的日常例子，再用以下 equation 和實作細節，把解釋說得更精確。</p>
-<h3 id="further-study-12-intuition">深入研習 12：直觀理解</h3>
-<p>一串 vector 和 cosine score 可以示範 semantic search。Vector database 再加入 persistent collection、metadata、update、filtering 和 operational behavior。這些能力很重要，因為 documentation 會改變，而使用者仍持續 query。Index 是有 lifecycle 的 artifact，並非一次性的 preprocessing 步驟。</p>
-<p>每個 point 應儲存 stable ID、embedding、source reference、version、content hash 和 payload。在 collection manifest 記錄 embedding model 和 tokenizer revision。兩個 model 即使都輸出 384 個數字，也可能產生不相容的 geometry。Model migration 通常需要重新 embedding，並建立或重建 index；不要只因 dimension 一樣就混用 vector。</p>
-<h3 id="further-study-12-exact-and-approximate-search">深入研習 12：Exact 與 approximate search</h3>
-<p>Exact nearest-neighbor search 評估所有 candidate，提供有用參考。Approximate nearest-neighbor search 在工作量、storage 和 retrieval quality 之間取捨。HNSW 建立可導航的 graph；search breadth 會影響速度與 recall。Index setting 必須在真實 metadata filter 下與 exact result 比較，而不能只用未 filtering 的隨機 benchmark。</p>
-<p>當只有少部分 document 符合條件時，filtered search 的行為可能不同。先取一小串 top-k 再套 version filter，即使 relevant document 存在，也可能沒有有效 candidate。透過 retrieval mechanism 套用 constraint，並量度結果。與 security 有關的 authorization filter 不可交由 language model 執行。</p>
-<h3 id="further-study-12-worked-migration">深入研習 12：Migration 例子</h3>
-<p>假設 index A 包含 model M1 的 vector 和 10,000 個 source chunk。使用 M2 和相同 source manifest 建立 index B。檢查 row count、missing ID、embedding dimension 及 development retrieval benchmark。先把有限 evaluation workload 導向 B，只有通過 gate 後才切換 active index。保留 A 作 rollback。如果 document 同時改變，也要把這點記錄為獨立 experimental variable。</p>
-<p>Deletion 同樣重要。從 object storage 移除 document，不會自動刪掉它的 chunk、cached answer 或 replicated index entry。要定義 tombstone/update policy 和 completion check。</p>
-<h3 id="further-study-12-experiment">深入研習 12：實驗</h3>
-<p>Notebook 18 建立 local Qdrant collection、upsert vector、按 version filtering、儲存後重新開啟，再次 query。直接檢查 payload。以相同 ID 加入一次 update，然後刪除一個 point，確認它不再出現。Local mode 教的是 client 和 lifecycle；不能證明 distributed durability 或 production throughput。</p>
-<p><strong>完成標準：</strong> 分辨 embedding model、vector similarity function、ANN index，以及操作這個 index 的 database。 <strong>閱讀材料：</strong> R08；選讀 R24。 <strong>Tutorial：</strong> 18.</p></article><nav aria-label="前後 lecture" class="chapter-pagination"><a href="17.html"><small>上一週</small>從 word vector 到 semantic search</a><a href="19.html"><small>下一週</small>把 RAG 理解為開卷作答</a></nav></div><footer class="footer"><span>Applied AI · 獨立自學課程</span><span>32 週 · 每週 10 小時</span><a href="../resources.html#about-this-course">關於課程及資料來源</a></footer></main><dialog aria-labelledby="search-title" class="search-dialog"><div class="dialog-head"><h2 id="search-title">尋找概念</h2><button aria-label="關閉搜尋" class="search-close" type="button">關閉</button></div><label class="sr-only" for="course-search">搜尋所有 lecture 和 tutorial</label><input autocomplete="off" id="course-search" placeholder="試試 attention、fine-tuning 或 harness……" type="search"/><p aria-live="polite" class="search-status">搜尋 lecture notes、tutorial、測驗及閱讀材料。</p><div class="search-results"></div></dialog><div aria-live="polite" class="toast" role="status"></div></body></html>
+<html lang="zh-HK">
+ <head>
+  <script src="../../assets/translations-zh-HK.js">
+  </script>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width,initial-scale=1" name="viewport"/>
+  <title>
+   從一列 vector 建立 vector database · Applied AI
+  </title>
+  <meta content="Applied generative AI and LLM systems course material" name="description"/>
+  <meta content="#173c36" name="theme-color"/>
+  <link href="../../assets/favicon.svg" rel="icon" type="image/svg+xml"/>
+  <link href="../../assets/style.css" rel="stylesheet"/>
+  <link href="../../assets/slides.css" rel="stylesheet"/>
+  <script>
+   window.COURSE_BASE="../";
+  </script>
+  <script defer="" src="../../assets/site-config.js">
+  </script>
+  <script defer="" src="../assets/search-index.js">
+  </script>
+  <script defer="" src="../../assets/app.js">
+  </script>
+  <script defer="" src="../../assets/visuals.js">
+  </script>
+  <script defer="" src="../../assets/slides.js">
+  </script>
+  <script defer="" src="../../assets/beginner-visuals.js">
+  </script>
+  <script defer="True" src="../../assets/locale-patterns.js">
+  </script>
+  <script defer="True" src="../../assets/locale.js">
+  </script>
+  <link href="../../assets/bilingual.css" rel="stylesheet"/>
+  <link href="../../lectures/18.html" hreflang="en" rel="alternate"/>
+  <link href="../../assets/reader-v3.css" rel="stylesheet"/>
+  <script defer="True" src="../../assets/reader-v3.js">
+  </script>
+ </head>
+ <body data-page-kind="lecture" data-week="18">
+  <a class="skip-link" href="#main">
+   跳至內容
+  </a>
+  <header class="topbar">
+   <button aria-controls="course-sidebar" aria-expanded="false" class="menu-toggle" type="button">
+    選單
+   </button>
+   <a class="brand" href="../index.html">
+    <span aria-hidden="true" class="brand-mark">
+     a
+     <span>
+      i
+     </span>
+    </span>
+    <span>
+     APPLIED AI
+     <small>
+      從原理到實踐
+     </small>
+    </span>
+   </a>
+   <nav aria-label="主要導覽">
+    <a href="../index.html">
+     課程
+    </a>
+    <a href="../visuals.html">
+     互動圖解
+    </a>
+    <a href="../project.html">
+     專題
+    </a>
+    <a class="language-switch" href="../../lectures/18.html" hreflang="en" lang="en">
+     English
+    </a>
+   </nav>
+   <button class="search-open" type="button">
+    搜尋課程
+    <span aria-hidden="true">
+     /
+    </span>
+   </button>
+  </header>
+  <aside aria-label="課程章節" class="sidebar" id="course-sidebar">
+   <a class="side-home" href="../index.html">
+    課程概覽
+   </a>
+   <details class="semester-nav">
+    <summary>
+     第一學期
+     <span>
+      第 1–16 週
+     </span>
+    </summary>
+    <ol start="1">
+     <li>
+      <a href="../lectures/01.html">
+       <span class="week-number">
+        01
+       </span>
+       <span>
+        Language model 究竟在學甚麼
+       </span>
+       <span class="week-tick" data-week-tick="1">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/02.html">
+       <span class="week-number">
+        02
+       </span>
+       <span>
+        從文字到 token 和數值 ID
+       </span>
+       <span class="week-tick" data-week-tick="2">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/03.html">
+       <span class="week-number">
+        03
+       </span>
+       <span>
+        Word vector 能表達甚麼
+       </span>
+       <span class="week-tick" data-week-tick="3">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/04.html">
+       <span class="week-number">
+        04
+       </span>
+       <span>
+        從 score 到 probability 和學習訊號
+       </span>
+       <span class="week-tick" data-week-tick="4">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/05.html">
+       <span class="week-number">
+        05
+       </span>
+       <span>
+        為甚麼語言需要 context 和次序
+       </span>
+       <span class="week-tick" data-week-tick="5">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/06.html">
+       <span class="week-number">
+        06
+       </span>
+       <span>
+        Attention 由 weighted mixture 開始
+       </span>
+       <span class="week-tick" data-week-tick="6">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/07.html">
+       <span class="week-number">
+        07
+       </span>
+       <span>
+        Query、key 和 value 從何而來
+       </span>
+       <span class="week-tick" data-week-tick="7">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/08.html">
+       <span class="week-number">
+        08
+       </span>
+       <span>
+        正確進行 attention scaling 和 masking
+       </span>
+       <span class="week-tick" data-week-tick="8">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/09.html">
+       <span class="week-number">
+        09
+       </span>
+       <span>
+        多個 attention head 與位置
+       </span>
+       <span class="week-tick" data-week-tick="9">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/10.html">
+       <span class="week-number">
+        10
+       </span>
+       <span>
+        逐步拆解 transformer block
+       </span>
+       <span class="week-tick" data-week-tick="10">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/11.html">
+       <span class="week-number">
+        11
+       </span>
+       <span>
+        Encoder、decoder 與完整 model architecture
+       </span>
+       <span class="week-tick" data-week-tick="11">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/12.html">
+       <span class="week-number">
+        12
+       </span>
+       <span>
+        訓練一個小型 transformer
+       </span>
+       <span class="week-tick" data-week-tick="12">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/13.html">
+       <span class="week-number">
+        13
+       </span>
+       <span>
+        Generation、decoding 與 KV cache
+       </span>
+       <span class="week-tick" data-week-tick="13">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/14.html">
+       <span class="week-number">
+        14
+       </span>
+       <span>
+        從 pretraining 到 instruction following 和 reasoning
+       </span>
+       <span class="week-tick" data-week-tick="14">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/15.html">
+       <span class="week-number">
+        15
+       </span>
+       <span>
+        文字以外的 Generative AI
+       </span>
+       <span class="week-tick" data-week-tick="15">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/16.html">
+       <span class="week-number">
+        16
+       </span>
+       <span>
+        完整 transformer 導覽與第一學期溫習
+       </span>
+       <span class="week-tick" data-week-tick="16">
+       </span>
+      </a>
+     </li>
+    </ol>
+   </details>
+   <details class="semester-nav" open="">
+    <summary>
+     第二學期
+     <span>
+      第 17–32 週
+     </span>
+    </summary>
+    <ol start="17">
+     <li>
+      <a href="../lectures/17.html">
+       <span class="week-number">
+        17
+       </span>
+       <span>
+        從 word vector 到 semantic search
+       </span>
+       <span class="week-tick" data-week-tick="17">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a aria-current="page" href="../lectures/18.html">
+       <span class="week-number">
+        18
+       </span>
+       <span>
+        從一列 vector 建立 vector database
+       </span>
+       <span class="week-tick" data-week-tick="18">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/19.html">
+       <span class="week-number">
+        19
+       </span>
+       <span>
+        把 RAG 理解為開卷作答
+       </span>
+       <span class="week-tick" data-week-tick="19">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/20.html">
+       <span class="week-number">
+        20
+       </span>
+       <span>
+        在保持基本任務的前提下改善 RAG
+       </span>
+       <span class="week-tick" data-week-tick="20">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/21.html">
+       <span class="week-number">
+        21
+       </span>
+       <span>
+        評估 retrieval、答案與 uncertainty
+       </span>
+       <span class="week-tick" data-week-tick="21">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/22.html">
+       <span class="week-number">
+        22
+       </span>
+       <span>
+        CPU、GPU、memory 與 model 資源計算
+       </span>
+       <span class="week-tick" data-week-tick="22">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/23.html">
+       <span class="week-number">
+        23
+       </span>
+       <span>
+        CUDA kernel 與 profiling
+       </span>
+       <span class="week-tick" data-week-tick="23">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/24.html">
+       <span class="week-number">
+        24
+       </span>
+       <span>
+        Fine-tuning 由教學 dataset 開始
+       </span>
+       <span class="week-tick" data-week-tick="24">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/25.html">
+       <span class="week-number">
+        25
+       </span>
+       <span>
+        從小型 matrix 理解 LoRA 和 QLoRA
+       </span>
+       <span class="week-tick" data-week-tick="25">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/26.html">
+       <span class="week-number">
+        26
+       </span>
+       <span>
+        Fine-tuning 實驗、preference 與 distillation
+       </span>
+       <span class="week-tick" data-week-tick="26">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/27.html">
+       <span class="week-number">
+        27
+       </span>
+       <span>
+        Tool、function、workflow 與 agent
+       </span>
+       <span class="week-tick" data-week-tick="27">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/28.html">
+       <span class="week-number">
+        28
+       </span>
+       <span>
+        Harness、planning、memory 與有界執行
+       </span>
+       <span class="week-tick" data-week-tick="28">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/29.html">
+       <span class="week-number">
+        29
+       </span>
+       <span>
+        從 notebook 到 MLOps 和 inference serving
+       </span>
+       <span class="week-tick" data-week-tick="29">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/30.html">
+       <span class="week-number">
+        30
+       </span>
+       <span>
+        Monitoring、security、regression test 與 rollback
+       </span>
+       <span class="week-tick" data-week-tick="30">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/31.html">
+       <span class="week-number">
+        31
+       </span>
+       <span>
+        整合文件助手與進階延伸
+       </span>
+       <span class="week-tick" data-week-tick="31">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/32.html">
+       <span class="week-number">
+        32
+       </span>
+       <span>
+        溫習、答辯與持續學習計劃
+       </span>
+       <span class="week-tick" data-week-tick="32">
+       </span>
+      </a>
+     </li>
+    </ol>
+   </details>
+   <div class="side-links">
+    <a href="../visuals.html">
+     互動圖解實驗室
+     <span>
+      14 個互動課節
+     </span>
+    </a>
+    <a href="../project.html">
+     文件助手
+     <span>
+      你的 capstone project
+     </span>
+    </a>
+    <a href="../resources.html">
+     閱讀材料與環境設定
+    </a>
+   </div>
+   <div class="side-progress">
+    <div>
+     <span>
+      你的進度
+     </span>
+     <strong data-progress-count="">
+      0 / 32
+     </strong>
+    </div>
+    <progress aria-label="已完成 lecture" max="32" value="0">
+    </progress>
+    <small>
+     儲存在這個瀏覽器
+    </small>
+   </div>
+  </aside>
+  <main class="main" id="main">
+   <div class="content">
+    <div class="chapter-header">
+     <div class="eyebrow">
+      第二學期 / 第 18 週
+     </div>
+     <h1>
+      從一列 vector 建立 vector database
+     </h1>
+    </div>
+    <div class="lesson-links">
+     <a href="../tutorials/18.html">
+      練習 18
+     </a>
+     <a href="../tests/18.html">
+      檢查你的理解
+     </a>
+     <button aria-pressed="false" class="mark-complete" data-week="18" type="button">
+      標記為已完成
+     </button>
+    </div>
+    <div aria-label="課堂檢視" class="lesson-mode" role="tablist">
+     <button aria-controls="full-notes" aria-selected="true" data-mode="read" id="mode-read" role="tab" type="button">
+      閱讀講義
+     </button>
+     <button aria-controls="lecture-slides" aria-selected="false" data-mode="slides" id="mode-slides" role="tab" type="button">
+      課堂 slides
+     </button>
+    </div>
+    <section aria-label="Lecture slides" class="lecture-deck" hidden="" id="lecture-slides" role="tabpanel">
+     <div class="deck-top">
+      <div>
+       <div class="eyebrow">
+        課堂投影片 · 第 18 週
+       </div>
+       <h2>
+        重點步驟與圖解
+       </h2>
+      </div>
+      <button class="deck-present" type="button">
+       簡報模式
+      </button>
+     </div>
+     <p class="deck-help">
+      用 slides 溫習機制；按「閱讀完整解說」可開啟完整講義及程式碼。
+     </p>
+     <div aria-label="簡報：使用左右方向鍵" class="slide-viewport" tabindex="0">
+      <section class="lecture-slide" data-slide="">
+       <div class="slide-stage">
+        第 18 週 · 課節 1
+       </div>
+       <h3>
+        當清單改變時，persistence 就派上用場
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          上週我們可以把三個 handbook vectors 放在 memory 中直接比較。
+         </li>
+         <li>
+          Vector database 協助在這些操作之間維持 vector 及其相關資料。
+         </li>
+         <li>
+          Embedding model 建立 vector；similarity metric 定義比較方法；index 組織 search；database 則加入管理和操作能力。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#persistence-becomes-useful-when-the-list-changes">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 18 週 · 課節 2
+       </div>
+       <h3>
+        一筆可直接檢查的 record
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          把 H2 表示為 ID=bus-2026、vector=[...]、version=2026、source=handbook transport section，以及 content hash。
+         </li>
+         <li>
+          Metadata filter 限制哪些 passage 可以成為候選。
+         </li>
+         <li>
+          Stable ID 有助更新現有 passage，避免不斷累積 duplicate。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#a-record-you-can-inspect">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 18 週 · 課節 3
+       </div>
+       <h3>
+        以 exact search 作參考
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Exact search 把 query 與每個符合條件的 stored vector 比較，再按 metric 選出最佳結果。
+         </li>
+         <li>
+          隨着 collection 增大，approximate nearest-neighbor 方法可以用額外結構和資源，換取較少的 search 工作。
+         </li>
+         <li>
+          要分開這兩種 error source：approximation 可能漏掉 exact neighbor，而 representation quality 則可能令 exact neighbor 對問題沒有幫助。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#exact-search-provides-a-reference">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 18 週 · 課節 4
+       </div>
+       <h3>
+        用 graph 理解 HNSW
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Approximate graph index 把 point 連接起來，讓 search 沿着有希望的 neighbor 前進，而不必檢查每個 point。
+         </li>
+         <li>
+          可以直觀地想像成沿着越來越局部的連接在地圖上尋路，但真正的結構是 vector-space point 和 algorithmic rule。
+         </li>
+         <li>
+          用同一批 query vector 和相同 metadata constraint，比較 approximate result 與 exact result。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#a-graph-intuition-for-hnsw">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 18 週 · 課節 5
+       </div>
+       <h3>
+        三個 HNSW controls 各有不同作用
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          M 控制 graph 的 connection capacity；implementation 的 base layer 可能採用不同上限。
+         </li>
+         <li>
+          假設 exact top-3 vector neighbors 是 [A,B,C]，approximate search 則回傳 [A,D,C]，neighbor Recall@3 就是 2/3。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#the-three-hnsw-controls-have-different-jobs">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 18 週 · 課節 6
+       </div>
+       <h3>
+        其他 index families 從不同 storage 選擇開始
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          IVF 把 vectors 分到學習得來的 coarse centroids 附近。
+         </li>
+         <li>
+          Scalar quantization 儲存較低 precision 的 coordinates。
+         </li>
+         <li>
+          DiskANN 是一系列 graph-based vector-search methods，目的是在完整 index 太大、無法放入 RAM 時有效使用 SSD。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#other-index-families-start-from-different-storage-choices">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 18 週 · 課節 7
+       </div>
+       <h3>
+        在選 candidate 之前還是之後 filtering
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          假設未 filtering 的前三個結果全屬於 2026，但問題問的是 2025。
+         </li>
+         <li>
+          透過 search mechanism 套用必需 constraint，並評估 filtered 行為。
+         </li>
+         <li>
+          在公開的 teaching corpus 中，version filtering 是 scope constraint。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#filtering-before-or-after-candidate-selection">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 18 週 · 課節 8
+       </div>
+       <h3>
+        Storage 計算與 compatibility
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          一百萬個 384-dimensional float32 vector，原始 vector 大小是 1,536,000,000 bytes。
+         </li>
+         <li>
+          兩個輸出 dimension 同為 384 的 embedding model，不一定共享 coordinate system。
+         </li>
+         <li>
+          記錄實際 model/tokenizer revision 和 source manifest。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#storage-arithmetic-and-compatibility">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 18 週 · 課節 9
+       </div>
+       <h3>
+        Update、deletion 與 migration
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          如果手冊修改了 bus departure time，就要更新 source record 及依賴它的 vector/index state。
+         </li>
+         <li>
+          進行 model migration 時，先建立另一個 compatible collection，驗證 point count 和 ID，benchmark retrieval；只有通過所選 gate 後，才切換 active collection。
+         </li>
+         <li>
+          這正是 data engineering 的嚴謹做法直接發揮作用的地方。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#updates-deletion-and-migration">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 18 週 · 課節 10
+       </div>
+       <h3>
+        實例練習與學習檢查
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          把 local collection 儲存、關閉，再重新開啟，重複一次 filtered query。
+         </li>
+         <li>
+          解釋失敗的 query 是由 ingestion、filter、embedding representation 還是 approximation 引起。
+         </li>
+         <li>
+          當你理解 “vector DB” 是一個持續維護的 collection 和 search service，並有明確 compatibility 與 update 行為，而不是 embedding model 的同義詞，就已準備好繼續。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#worked-practice-and-a-readiness-check">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+     </div>
+     <div class="deck-controls">
+      <button class="slide-prev" type="button">
+       ← 上一頁
+      </button>
+      <span aria-live="polite" class="slide-counter">
+       1 / 10
+      </span>
+      <button class="slide-next" type="button">
+       下一頁 →
+      </button>
+     </div>
+     <label class="slide-jump-label">
+      前往 slide
+      <select aria-label="跳至 slide" class="slide-jump">
+       <option value="0">
+        1. 當清單改變時，persistence 就派上用場
+       </option>
+       <option value="1">
+        2. 一筆可直接檢查的 record
+       </option>
+       <option value="2">
+        3. 以 exact search 作參考
+       </option>
+       <option value="3">
+        4. 用 graph 理解 HNSW
+       </option>
+       <option value="4">
+        5. 三個 HNSW controls 各有不同作用
+       </option>
+       <option value="5">
+        6. 其他 index families 從不同 storage 選擇開始
+       </option>
+       <option value="6">
+        7. 在選 candidate 之前還是之後 filtering
+       </option>
+       <option value="7">
+        8. Storage 計算與 compatibility
+       </option>
+       <option value="8">
+        9. Update、deletion 與 migration
+       </option>
+       <option value="9">
+        10. 實例練習與學習檢查
+       </option>
+      </select>
+     </label>
+     <button aria-pressed="false" class="deck-all" type="button">
+      顯示全部 slides
+     </button>
+    </section>
+    <section aria-label="Hybrid retrieval" class="visual-lesson">
+     <div class="eyebrow">
+      探索機制
+     </div>
+     <h2>
+      Hybrid retrieval
+     </h2>
+     <p class="visual-intro">
+      理解 exact vector search 後，查看 rank fusion 及 candidate recall。
+     </p>
+     <div data-widget="retrieval">
+      <p>
+       啟用 JavaScript 以使用此圖解。下方 lecture notes 會解釋同一機制。
+      </p>
+     </div>
+    </section>
+    <nav aria-label="本課內容" class="reader-toc">
+     <strong>
+      本課內容
+     </strong>
+     <ol>
+      <li>
+       <a href="#persistence-becomes-useful-when-the-list-changes">
+        當清單改變時，persistence 就派上用場
+       </a>
+      </li>
+      <li>
+       <a href="#a-record-you-can-inspect">
+        一筆可直接檢查的 record
+       </a>
+      </li>
+      <li>
+       <a href="#exact-search-provides-a-reference">
+        以 exact search 作參考
+       </a>
+      </li>
+      <li>
+       <a href="#a-graph-intuition-for-hnsw">
+        用 graph 理解 HNSW
+       </a>
+      </li>
+      <li>
+       <a href="#the-three-hnsw-controls-have-different-jobs">
+        三個 HNSW controls 各有不同作用
+       </a>
+      </li>
+      <li>
+       <a href="#other-index-families-start-from-different-storage-choices">
+        其他 index families 從不同 storage 選擇開始
+       </a>
+      </li>
+      <li>
+       <a href="#filtering-before-or-after-candidate-selection">
+        在選 candidate 之前還是之後 filtering
+       </a>
+      </li>
+      <li>
+       <a href="#storage-arithmetic-and-compatibility">
+        Storage 計算與 compatibility
+       </a>
+      </li>
+      <li>
+       <a href="#updates-deletion-and-migration">
+        Update、deletion 與 migration
+       </a>
+      </li>
+      <li>
+       <a href="#worked-practice-and-a-readiness-check">
+        實例練習與學習檢查
+       </a>
+      </li>
+     </ol>
+    </nav>
+    <article class="prose full-notes" id="full-notes" role="tabpanel">
+     <div class="eyebrow">
+      完整講義
+     </div>
+     <h2>
+      閱讀完整解說
+     </h2>
+     <h3 id="persistence-becomes-useful-when-the-list-changes">
+      當清單改變時，persistence 就派上用場
+     </h3>
+     <p>
+      上週我們可以把三個 handbook vectors 放在 memory 中直接比較。現在想像有數千個 passages，每個學期都會更新 timetable，而且程式重新啟動後仍有新問題要回答。
+     </p>
+     <p>
+      Vector database 協助在這些操作之間維持 vector 及其相關資料。先從一個 point 開始：它包含 ID、vector、source text reference 和 metadata。Database 負責按其支援的行為儲存和搜尋這些 point。
+     </p>
+     <p>
+      Embedding model 建立 vector；similarity metric 定義比較方法；index 組織 search；database 則加入管理和操作能力。這些 component 互相關聯，但各有不同職責。
+     </p>
+     <h3 id="a-record-you-can-inspect">
+      一筆可直接檢查的 record
+     </h3>
+     <p>
+      把 H2 表示為 ID=bus-2026、vector=[...]、version=2026、source=handbook transport section，以及 content hash。如果規則曾改變，關於 2025 的問題不應默默採用 2026 規則。
+     </p>
+     <p>
+      Metadata filter 限制哪些 passage 可以成為候選。更新期間，text、vector 和 version 必須一直保持對應。即使 nearest-neighbor algorithm 正確，也無法修復 ingestion 時標錯 version 的 record。
+     </p>
+     <p>
+      Stable ID 有助更新現有 passage，避免不斷累積 duplicate。確切的 update semantics 視乎 database API，並需要 save/reload test 驗證。
+     </p>
+     <h3 id="exact-search-provides-a-reference">
+      以 exact search 作參考
+     </h3>
+     <p>
+      Exact search 把 query 與每個符合條件的 stored vector 比較，再按 metric 選出最佳結果。對小型 collection 而言，它可能已完全足夠。
+     </p>
+     <p>
+      隨着 collection 增大，approximate nearest-neighbor 方法可以用額外結構和資源，換取較少的 search 工作。這裏的 approximation 針對選定的 vector metric；如果 embedding 質素差，即使 exact vector neighbor 也可能在語意上無關。
+     </p>
+     <p>
+      要分開這兩種 error source：approximation 可能漏掉 exact neighbor，而 representation quality 則可能令 exact neighbor 對問題沒有幫助。
+     </p>
+     <h3 id="a-graph-intuition-for-hnsw">
+      用 graph 理解 HNSW
+     </h3>
+     <p>
+      Approximate graph index 把 point 連接起來，讓 search 沿着有希望的 neighbor 前進，而不必檢查每個 point。HNSW 使用多層、可導航的 graph hierarchy。
+     </p>
+     <p>
+      可以直觀地想像成沿着越來越局部的連接在地圖上尋路，但真正的結構是 vector-space point 和 algorithmic rule。Search breadth 和 construction setting 會影響 recall、latency 和 storage。
+     </p>
+     <p>
+      用同一批 query vector 和相同 metadata constraint，比較 approximate result 與 exact result。Local mode 的九個 teaching point，不能證明 production HNSW 的效能。
+     </p>
+     <h3 id="the-three-hnsw-controls-have-different-jobs">
+      三個 HNSW controls 各有不同作用
+     </h3>
+     <p>
+      M 控制 graph 的 connection capacity；implementation 的 base layer 可能採用不同上限。更多 connections 一般會增加 graph memory 和 build work。efConstruction 控制建構時搜尋有用 connections 的廣度。efSearch 在部分 library 中稱為 ef，控制 query 時探索的 candidate set。較大的 query breadth 通常提高 neighbor recall，同時增加 query work。這些是 tuning controls，並非固定 accuracy 百分比。
+     </p>
+     <p>
+      假設 exact top-3 vector neighbors 是 [A,B,C]，approximate search 則回傳 [A,D,C]，neighbor Recall@3 就是 2/3。另外，若問題所需 evidence 是 {B}，evidence Recall@3 就是零。增加 efSearch 可能找回 B；但若 embeddings 令 irrelevant passage 即使在 exact search 亦排第一，改 efSearch 不能解決。這樣可分清 index approximation 和 semantic relevance。
+     </p>
+     <h3 id="other-index-families-start-from-different-storage-choices">
+      其他 index families 從不同 storage 選擇開始
+     </h3>
+     <p>
+      IVF 把 vectors 分到學習得來的 coarse centroids 附近。Query 只搜尋部分 groups，而非全部；nprobe 控制搜尋 group 數目。搜尋更多 groups 通常需要更多 work，亦有較好的 neighbor recall。IVF 的 training set 應代表之後會進入 index 的 vectors。
+     </p>
+     <p>
+      Scalar quantization 儲存較低 precision 的 coordinates。Product quantization（PQ）把 vector 分成 sub-vectors，每部分儲存短 code，指向學習得來的 representative。假設 8-dimensional vector 分成四個 2-dimensional parts，四個 one-byte code IDs 使用 4 bytes，而 float32 coordinates 使用 32 bytes；這未包括 codebooks 和 index overhead。以壓縮 representatives 計算的 distances 是 approximate。IVF-PQ 結合 coarse grouping 和壓縮 vectors。
+     </p>
+     <p>
+      DiskANN 是一系列 graph-based vector-search methods，目的是在完整 index 太大、無法放入 RAM 時有效使用 SSD。它把部分資訊留在 memory，並仔細安排 graph traversal 和 I/O。SSD reads、caching、filters 和 updates 都成為評估 tradeoff 的一部分。小型課程 corpus 仍應從 exact search 開始；這些機制解釋大型系統為何作出不同選擇。
+     </p>
+     <h3 id="filtering-before-or-after-candidate-selection">
+      在選 candidate 之前還是之後 filtering
+     </h3>
+     <p>
+      假設未 filtering 的前三個結果全屬於 2026，但問題問的是 2025。先取三個結果再刪去錯誤年份，可能甚麼都不剩，儘管 relevant 的 2025 evidence 其實存在於未 filtering 排名更後的位置。
+     </p>
+     <p>
+      透過 search mechanism 套用必需 constraint，並評估 filtered 行為。在 private system 中，authorization 必須由 application/database control 強制執行，而不能依靠 model 生成的建議。
+     </p>
+     <p>
+      在公開的 teaching corpus 中，version filtering 是 scope constraint。不應把它說成完整 authentication 或 multi-tenant security。
+     </p>
+     <h3 id="storage-arithmetic-and-compatibility">
+      Storage 計算與 compatibility
+     </h3>
+     <p>
+      一百萬個 384-dimensional float32 vector，原始 vector 大小是 1,536,000,000 bytes。這還未包括 graph link、ID、payload、text、replica 和 allocation overhead。
+     </p>
+     <p>
+      兩個輸出 dimension 同為 384 的 embedding model，不一定共享 coordinate system。即使 database 接受相同 vector length，更換 model 通常仍需要重新 embedding，並建立 compatible index。
+     </p>
+     <p>
+      記錄實際 model/tokenizer revision 和 source manifest。Dimension checking 可以找出一類 mismatch；identity checking 則找出另一類。
+     </p>
+     <h3 id="updates-deletion-and-migration">
+      Update、deletion 與 migration
+     </h3>
+     <p>
+      如果手冊修改了 bus departure time，就要更新 source record 及依賴它的 vector/index state。如果某 passage 被移除，要確保其 index entry 和任何 cached answer 都獲處理。
+     </p>
+     <p>
+      進行 model migration 時，先建立另一個 compatible collection，驗證 point count 和 ID，benchmark retrieval；只有通過所選 gate 後，才切換 active collection。保留較早 collection，才能一致地 rollback。
+     </p>
+     <p>
+      這正是 data engineering 的嚴謹做法直接發揮作用的地方。即使 vector representation 是學出來的，它仍需要 lineage、schema check 和 lifecycle。
+     </p>
+     <h3 id="worked-practice-and-a-readiness-check">
+      實例練習與學習檢查
+     </h3>
+     <p>
+      把 local collection 儲存、關閉，再重新開啟，重複一次 filtered query。用同一 ID 更新一個 point，確認內容已改變。刪除另一個 point，再確認它已不存在。
+     </p>
+     <p>
+      解釋失敗的 query 是由 ingestion、filter、embedding representation 還是 approximation 引起。設計一個 test，區分其中兩種原因。
+     </p>
+     <p>
+      當你理解 “vector DB” 是一個持續維護的 collection 和 search service，並有明確 compatibility 與 update 行為，而不是 embedding model 的同義詞，就已準備好繼續。
+     </p>
+     <details class="reference-details" id="reference-details">
+      <summary>
+       參考細節與學習檢查
+      </summary>
+      <h3 id="review-a-intuition">
+       複習 A：直觀理解
+      </h3>
+      <p>
+       一串 vector 和 cosine score 可以示範 semantic search。Vector database 再加入 persistent collection、metadata、update、filtering 和 operational behavior。這些能力很重要，因為 documentation 會改變，而使用者仍持續 query。Index 是有 lifecycle 的 artifact，並非一次性的 preprocessing 步驟。
+      </p>
+      <p>
+       每個 point 應儲存 stable ID、embedding、source reference、version、content hash 和 payload。在 collection manifest 記錄 embedding model 和 tokenizer revision。兩個 model 即使都輸出 384 個數字，也可能產生不相容的 geometry。Model migration 通常需要重新 embedding，並建立或重建 index；不要只因 dimension 一樣就混用 vector。
+      </p>
+      <h3 id="review-a-exact-and-approximate-search">
+       複習 A：Exact 與 approximate search
+      </h3>
+      <p>
+       Exact nearest-neighbor search 提供 reference ranking。Approximate nearest-neighbor search 通常接受漏掉部分 exact neighbors 的風險，以減少 query work 和 latency。Memory cost 視乎方法：HNSW 加入 graph links，可能比 flat vector array 使用更多 memory；quantization 則可減少 vector storage。應在實際 filters 下，同時評估 speed、memory、build cost 和 neighbor recall。
+      </p>
+      <p>
+       當只有少部分 document 符合條件時，filtered search 的行為可能不同。先取一小串 top-k 再套 version filter，即使 relevant document 存在，也可能沒有有效 candidate。透過 retrieval mechanism 套用 constraint，並量度結果。與 security 有關的 authorization filter 不可交由 language model 執行。
+      </p>
+      <h3 id="review-a-worked-migration">
+       複習 A：Migration 例子
+      </h3>
+      <p>
+       假設 index A 包含 model M1 的 vector 和 10,000 個 source chunk。使用 M2 和相同 source manifest 建立 index B。檢查 row count、missing ID、embedding dimension 及 development retrieval benchmark。先把有限 evaluation workload 導向 B，只有通過 gate 後才切換 active index。保留 A 作 rollback。如果 document 同時改變，也要把這點記錄為獨立 experimental variable。
+      </p>
+      <p>
+       Deletion 同樣重要。從 object storage 移除 document，不會自動刪掉它的 chunk、cached answer 或 replicated index entry。要定義 tombstone/update policy 和 completion check。
+      </p>
+      <h3 id="review-a-experiment">
+       複習 A：實驗
+      </h3>
+      <p>
+       <a href="../tutorials/18.html">
+        Tutorial 18: 從一列 vector 建立 vector database
+       </a>
+       建立 local Qdrant collection、upsert vector、按 version filtering、儲存後重新開啟，再次 query。直接檢查 payload。以相同 ID 加入一次 update，然後刪除一個 point，確認它不再出現。Local mode 教的是 client 和 lifecycle；不能證明 distributed durability 或 production throughput。
+      </p>
+      <p>
+       <strong>
+        完成標準：
+       </strong>
+       分辨 embedding model、vector similarity function、ANN index，以及操作這個 index 的 database。
+       <strong>
+        閱讀材料：
+       </strong>
+       <a class="inline-reading" href="../resources.html#reference-r08">
+        Qdrant local quickstart (R08)
+       </a>
+       ；選讀
+       <a class="inline-reading" href="../resources.html#reference-r24">
+        Malkov and Yashunin HNSW (R24)
+       </a>
+       。
+       <strong>
+        Tutorial：
+       </strong>
+       18.
+      </p>
+     </details>
+    </article>
+    <nav aria-label="前後 lecture" class="chapter-pagination">
+     <a href="17.html">
+      <small>
+       上一週
+      </small>
+      從 word vector 到 semantic search
+     </a>
+     <a href="19.html">
+      <small>
+       下一週
+      </small>
+      把 RAG 理解為開卷作答
+     </a>
+    </nav>
+   </div>
+   <footer class="footer">
+    <span>
+     Applied AI · 獨立自學課程
+    </span>
+    <span>
+     32 週 · 每週 10 小時
+    </span>
+    <a href="../resources.html#about-this-course">
+     關於課程及資料來源
+    </a>
+   </footer>
+  </main>
+  <dialog aria-labelledby="search-title" class="search-dialog">
+   <div class="dialog-head">
+    <h2 id="search-title">
+     尋找概念
+    </h2>
+    <button aria-label="關閉搜尋" class="search-close" type="button">
+     關閉
+    </button>
+   </div>
+   <label class="sr-only" for="course-search">
+    搜尋所有 lecture 和 tutorial
+   </label>
+   <input autocomplete="off" id="course-search" placeholder="試試 attention、fine-tuning 或 harness……" type="search"/>
+   <p aria-live="polite" class="search-status">
+    搜尋 lecture notes、tutorial、測驗及閱讀材料。
+   </p>
+   <div class="search-results">
+   </div>
+  </dialog>
+  <div aria-live="polite" class="toast" role="status">
+  </div>
+ </body>
+</html>

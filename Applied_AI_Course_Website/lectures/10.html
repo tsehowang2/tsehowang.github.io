@@ -1,67 +1,1261 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/><title>The transformer block step by step · Applied AI</title><meta content="Applied generative AI and LLM systems course material" name="description"/><meta content="#173c36" name="theme-color"/><link href="../assets/favicon.svg" rel="icon" type="image/svg+xml"/><link href="../assets/style.css" rel="stylesheet"/><link href="../assets/slides.css" rel="stylesheet"/><script>window.COURSE_BASE="../";</script><script defer="" src="../assets/site-config.js"></script><script defer="" src="../assets/search-index.js"></script><script defer="" src="../assets/app.js"></script><script defer="" src="../assets/visuals.js"></script><script defer="" src="../assets/slides.js"></script><script defer="" src="../assets/beginner-visuals.js"></script><link href="../zh-HK/lectures/10.html" hreflang="zh-HK" rel="alternate"/><link href="../assets/bilingual.css" rel="stylesheet"/></head><body data-page-kind="lecture" data-week="10"><a class="skip-link" href="#main">Skip to content</a><header class="topbar"><button aria-controls="course-sidebar" aria-expanded="false" class="menu-toggle" type="button">Menu</button><a class="brand" href="../index.html"><span aria-hidden="true" class="brand-mark">a<span>i</span></span><span>APPLIED AI<small>Principles into practice</small></span></a><nav aria-label="Main navigation"><a href="../index.html">The course</a><a href="../visuals.html">Visual lab</a><a href="../project.html">Project</a><a class="language-switch" href="../zh-HK/lectures/10.html" hreflang="zh-HK" lang="zh-HK">繁體中文</a></nav><button class="search-open" type="button">Search the course <span aria-hidden="true">/</span></button></header><aside aria-label="Course chapters" class="sidebar" id="course-sidebar"><a class="side-home" href="../index.html">Course overview</a><details class="semester-nav" open=""><summary>Semester 1<span>Weeks 1–16</span></summary><ol start="1"><li><a href="../lectures/01.html"><span class="week-number">01</span><span>What a language model is trying to learn</span><span class="week-tick" data-week-tick="1"></span></a></li><li><a href="../lectures/02.html"><span class="week-number">02</span><span>From text to tokens and numerical IDs</span><span class="week-tick" data-week-tick="2"></span></a></li><li><a href="../lectures/03.html"><span class="week-number">03</span><span>What word vectors can represent</span><span class="week-tick" data-week-tick="3"></span></a></li><li><a href="../lectures/04.html"><span class="week-number">04</span><span>From scores to probabilities and learning signals</span><span class="week-tick" data-week-tick="4"></span></a></li><li><a href="../lectures/05.html"><span class="week-number">05</span><span>Why language needs context and order</span><span class="week-tick" data-week-tick="5"></span></a></li><li><a href="../lectures/06.html"><span class="week-number">06</span><span>Attention begins as a weighted mixture</span><span class="week-tick" data-week-tick="6"></span></a></li><li><a href="../lectures/07.html"><span class="week-number">07</span><span>Where queries keys and values come from</span><span class="week-tick" data-week-tick="7"></span></a></li><li><a href="../lectures/08.html"><span class="week-number">08</span><span>Scaling and masking attention correctly</span><span class="week-tick" data-week-tick="8"></span></a></li><li><a href="../lectures/09.html"><span class="week-number">09</span><span>Multiple attention heads and position</span><span class="week-tick" data-week-tick="9"></span></a></li><li><a aria-current="page" href="../lectures/10.html"><span class="week-number">10</span><span>The transformer block step by step</span><span class="week-tick" data-week-tick="10"></span></a></li><li><a href="../lectures/11.html"><span class="week-number">11</span><span>Encoders decoders and complete model architectures</span><span class="week-tick" data-week-tick="11"></span></a></li><li><a href="../lectures/12.html"><span class="week-number">12</span><span>Training a small transformer</span><span class="week-tick" data-week-tick="12"></span></a></li><li><a href="../lectures/13.html"><span class="week-number">13</span><span>Generation decoding and the KV cache</span><span class="week-tick" data-week-tick="13"></span></a></li><li><a href="../lectures/14.html"><span class="week-number">14</span><span>From pretraining to instruction following and reasoning</span><span class="week-tick" data-week-tick="14"></span></a></li><li><a href="../lectures/15.html"><span class="week-number">15</span><span>Generative AI beyond text</span><span class="week-tick" data-week-tick="15"></span></a></li><li><a href="../lectures/16.html"><span class="week-number">16</span><span>A complete transformer walkthrough and first semester review</span><span class="week-tick" data-week-tick="16"></span></a></li></ol></details><details class="semester-nav"><summary>Semester 2<span>Weeks 17–32</span></summary><ol start="17"><li><a href="../lectures/17.html"><span class="week-number">17</span><span>From word vectors to semantic search</span><span class="week-tick" data-week-tick="17"></span></a></li><li><a href="../lectures/18.html"><span class="week-number">18</span><span>A vector database from a list of vectors</span><span class="week-tick" data-week-tick="18"></span></a></li><li><a href="../lectures/19.html"><span class="week-number">19</span><span>RAG as an open book question</span><span class="week-tick" data-week-tick="19"></span></a></li><li><a href="../lectures/20.html"><span class="week-number">20</span><span>Improving RAG without losing the basic task</span><span class="week-tick" data-week-tick="20"></span></a></li><li><a href="../lectures/21.html"><span class="week-number">21</span><span>Evaluating retrieval answers and uncertainty</span><span class="week-tick" data-week-tick="21"></span></a></li><li><a href="../lectures/22.html"><span class="week-number">22</span><span>CPU GPU memory and model resource accounting</span><span class="week-tick" data-week-tick="22"></span></a></li><li><a href="../lectures/23.html"><span class="week-number">23</span><span>CUDA kernels and profiling</span><span class="week-tick" data-week-tick="23"></span></a></li><li><a href="../lectures/24.html"><span class="week-number">24</span><span>Fine tuning starts with a teaching dataset</span><span class="week-tick" data-week-tick="24"></span></a></li><li><a href="../lectures/25.html"><span class="week-number">25</span><span>LoRA and QLoRA from a small matrix</span><span class="week-tick" data-week-tick="25"></span></a></li><li><a href="../lectures/26.html"><span class="week-number">26</span><span>Fine tuning experiments preferences and distillation</span><span class="week-tick" data-week-tick="26"></span></a></li><li><a href="../lectures/27.html"><span class="week-number">27</span><span>Tools functions workflows and agents</span><span class="week-tick" data-week-tick="27"></span></a></li><li><a href="../lectures/28.html"><span class="week-number">28</span><span>Harnesses planning memory and bounded execution</span><span class="week-tick" data-week-tick="28"></span></a></li><li><a href="../lectures/29.html"><span class="week-number">29</span><span>From a notebook to MLOps and inference serving</span><span class="week-tick" data-week-tick="29"></span></a></li><li><a href="../lectures/30.html"><span class="week-number">30</span><span>Monitoring security regression tests and rollback</span><span class="week-tick" data-week-tick="30"></span></a></li><li><a href="../lectures/31.html"><span class="week-number">31</span><span>Integrating the documentation assistant and advanced extensions</span><span class="week-tick" data-week-tick="31"></span></a></li><li><a href="../lectures/32.html"><span class="week-number">32</span><span>Review defense and a continuing learning plan</span><span class="week-tick" data-week-tick="32"></span></a></li></ol></details><div class="side-links"><a href="../visuals.html">Visual laboratory <span>14 interactive lessons</span></a><a href="../project.html">Documentation assistant <span>Your capstone project</span></a><a href="../resources.html">Readings and setup</a></div><div class="side-progress"><div><span>Your progress</span><strong data-progress-count="">0 / 32</strong></div><progress aria-label="Completed lectures" max="32" value="0"></progress><small>Saved in this browser</small></div></aside><main class="main" id="main"><div class="content"><div class="chapter-header"><div class="eyebrow">Semester 1 / Week 10</div><h1>The transformer block step by step</h1></div><div class="lesson-links"><a href="../tutorials/10.html">Tutorial 10</a><a href="../tests/10.html">Test your understanding</a><button aria-pressed="false" class="mark-complete" data-week="10" type="button">Mark as complete</button></div><section aria-label="Lecture slides" class="lecture-deck" id="lecture-slides"><div class="deck-top"><div><div class="eyebrow">Lecture slides · Week 10</div><h2>Learn one step at a time.</h2></div><button class="deck-present" type="button">Present</button></div><p class="deck-help">Read each explanation, pause to predict the result, then continue. Use the arrow keys while the presentation is focused. The complete lecture reader is below.</p><div aria-label="Presentation: use left and right arrow keys" class="slide-viewport" tabindex="0"><section class="lecture-slide" data-slide=""><div class="slide-stage">Start with an example</div><h3>Attention is one operation inside a larger computation</h3><div class="slide-prose"><p>We can now compute contextual mixtures, but a useful model needs more than a single mixture. A transformer block combines attention with a feed-forward network, normalization, and residual connections.</p>
-<p>Imagine each token carrying a working vector. Attention adds information from other allowed positions. The feed-forward network transforms the features at that position. Residual paths retain an additive route for the existing representation.</p>
-<p>We will use a pre-normalization block. Other ordering choices exist; specify which one you mean before comparing code. Our goal is to trace one concrete architecture correctly.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Start with an example</div><h3>The residual stream</h3><div class="slide-prose"><p>Let x be a token representation [1,2]. Suppose an attention sublayer produces [0.5,-0.5]. Residual addition gives [1.5,1.5]. Both terms must have matching shape.</p>
-<p>The residual connection means the block adds a learned transformation to the existing representation. It does not force the transformation to be small or guarantee that information is never lost. Later layers and projections can still change behavior substantially.</p>
-<p>Across a sentence, the residual stream has shape [T,D], or [B,T,D] with batching. Its width stays consistent across the additions in this teaching model.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Build the mechanism</div><h3>Normalization before a transformation</h3><div class="slide-prose"><p>Layer normalization computes statistics over the feature coordinates of each token. For a simple row [2,4], the mean is 3 and variance is 1, ignoring the small numerical epsilon. Standardizing gives [-1,1] before learned affine parameters.</p>
-<p>This operation does not average different token positions together. It therefore does not itself allow a causal model to read future words. The choice of axis is central to both the mathematics and the implementation.</p>
-<p>Real normalization includes epsilon to avoid division problems and usually learned scale and bias. RMSNorm is a related but different operation that uses root-mean-square scaling without subtracting the mean in its basic form.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Build the mechanism</div><h3>The first half of a pre norm block</h3><div class="slide-prose"><p>Write h = x + Attention(LayerNorm(x)). Normalize the residual representation, compute masked multi-head attention, project back to width D, then add the result to x.</p>
-<p>The query, key, and value projections operate on normalized inputs in this arrangement. The attention output still depends on the appropriate mask and position information.</p>
-<p>Read the expression from the inside outward. The layer does not first add x to itself or normalize the entire batch as one vector. When debugging, save the normalized input and sublayer output separately.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Build the mechanism</div><h3>The feed forward network</h3><div class="slide-prose"><p>The second half is y = h + MLP(LayerNorm(h)). The MLP operates independently at each token position with shared weights. A common teaching form expands from D to 4D, applies a nonlinear activation, then projects back to D.</p>
-<p>For D=8, a row [1,8] becomes [1,32], then [1,8]. This is a feature transformation, not another direct comparison across token positions.</p>
-<p>Why the nonlinearity? Two linear maps without a nonlinearity compose into one linear map. A nonlinear activation permits a richer transformation. Modern models may use gated variants, but the basic separation of attention across positions and feature transformation within a position remains useful.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Build the mechanism</div><h3>Stacking blocks and producing logits</h3><div class="slide-prose"><p>One block outputs another [B,T,D] tensor. A stack of blocks repeatedly applies these transformations. The final normalized representations feed a vocabulary output projection.</p>
-<p>For our six-token sentence and vocabulary size V, logits have shape [B,6,V]. The logit row at a position predicts the following token under next-token training.</p>
-<p>This completes a path from IDs to embeddings, positions, contextual blocks, and vocabulary scores. Softmax over vocabulary happens at a different boundary from softmax inside attention.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Build the mechanism</div><h3>Counting a small block</h3><div class="slide-prose"><p>Ignoring biases, standard attention uses about 4D² parameters for Q, K, V, and the output projection. An MLP with width 4D uses about 8D². Together that is about 12D² per block.</p>
-<p>At D=64, the estimate is 49152 matrix parameters per block. Two blocks give 98304. Embeddings, normalization parameters, biases, and the output head add to that count; tied embeddings change it.</p>
-<p>Use this estimate to understand where parameters come from, then verify by summing the actual implementation's parameter sizes. A rough formula is not a replacement for inspecting the model.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Build the mechanism</div><h3>Worked practice and a readiness check</h3><div class="slide-prose"><p>Draw the full pre-norm block with two residual additions. Label the tensors before and after each operation. Explain which operations mix positions and which act independently on each token's feature row.</p>
-<p>Given a sentence tensor [2,6,64], state why the attention and MLP outputs must return [2,6,64] before their residual additions. Then calculate the MLP's two matrix shapes [64,256] and [256,64].</p>
-<p>You are ready to read a small transformer implementation when you can point to every part of this block and explain its role without using “the model understands” as the mechanism.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Optional deeper study</div><h3>A deeper pass after the worked introduction</h3><div class="slide-prose"><p>The following reference treatment is for a second pass. First explain the ordinary example above, then use the equations and implementation details below to make the explanation more precise.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Optional deeper study</div><h3>Further study 5 Intuition</h3><div class="slide-prose"><p>Attention moves information across positions. A feed-forward network transforms information within a position. A transformer block combines both operations with residual connections and normalization, and stacking blocks allows progressively richer computation. The output head converts the final representation at each position into vocabulary logits.</p>
-<p>Our teaching model uses token embeddings plus learned position embeddings. A pre-normalization block is <code>h = x + Attention(LayerNorm(x))</code>, followed by <code>y = h + MLP(LayerNorm(h))</code>. The MLP expands the channel dimension, applies a nonlinearity, and projects back. Residual paths help gradients and preserve information. Modern models may use RMSNorm, rotary position embeddings, gated MLPs or grouped-query attention; these modifications do not remove the basic information-flow picture.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Optional deeper study</div><h3>Further study 5 Shapes and parameters</h3><div class="slide-prose"><p>For batch B, length T and width D, the residual tensor is <code>[B,T,D]</code>. An MLP with expansion 4D has roughly <code>8D^2</code> weight parameters, ignoring biases. Standard multi-head attention's Q, K, V and output matrices contribute roughly <code>4D^2</code>. A rough block count is therefore <code>12D^2</code>; embeddings and output layers may dominate for a large vocabulary. Tied input/output embeddings reuse weights, changing the total.</p>
-<p>For D=64 and two blocks, block matrices contain about <code>2*12*64^2 = 98,304</code> parameters. A 256-token embedding table adds 16,384. This is a tiny educational model, not an LLM. Counting parameters by summing <code>p.numel()</code> is the authoritative implementation check.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Optional deeper study</div><h3>Further study 5 Position and context</h3><div class="slide-prose"><p>Without position information, pure self-attention cannot generally distinguish permutations of the same unmasked set in the intended way. Learned absolute embeddings assign a vector to each position. Rotary position methods rotate query/key components so relative displacement influences their dot products. Do not assume a position method alone grants reliable extrapolation beyond trained context lengths.</p>
-<p>The model outputs one logit vector per input position. During training, the logit at position t predicts the token at t+1. During inference, use the last position's logits to select the next token. For encoder-decoder models, cross-attention additionally reads encoder outputs; our tiny model has no encoder.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Optional deeper study</div><h3>Further study 5 Experiment</h3><div class="slide-prose"><p>notebook 12 trains a byte-level decoder on ordinary school and travel sentences. Draw the block before running it, count parameters, and overfit a tiny batch as a debugging step. Then restore a held-out sequence split and report validation loss. Compare removing attention versus removing the MLP while keeping the training budget fixed. A larger model trained for more steps is not a clean architectural ablation.</p>
-<p><strong>Failure to recognize:</strong> generating plausible fragments from a tiny repeated corpus is not evidence of general documentation understanding. It demonstrates that the model and training loop run. <strong>Reading:</strong> R04 model architecture; optional R01 architectures lecture. <strong>Tutorial:</strong> 10.</p></div></section></div><div class="deck-controls"><button class="slide-prev" type="button">← Previous</button><span aria-live="polite" class="slide-counter">1 / 13</span><button class="slide-next" type="button">Next →</button></div><label class="slide-jump-label">Go to slide <select aria-label="Go to slide" class="slide-jump"><option value="0">1</option><option value="1">2</option><option value="2">3</option><option value="3">4</option><option value="4">5</option><option value="5">6</option><option value="6">7</option><option value="7">8</option><option value="8">9</option><option value="9">10</option><option value="10">11</option><option value="11">12</option><option value="12">13</option></select></label><button aria-pressed="false" class="deck-all" type="button">Show all slides</button><a class="reader-link" href="#full-notes">Read the complete lecture ↓</a></section><section aria-label="The transformer block" class="visual-lesson"><div class="eyebrow">Explore the mechanism</div><h2>The transformer block</h2><p class="visual-intro">Trace the residual stream through communication and feature processing.</p><div data-widget="block"><p>Enable JavaScript to use this illustration. The lecture notes below explain the same mechanism.</p></div></section><article class="prose full-notes" id="full-notes"><div class="eyebrow">Complete lecture reader</div><h2>Read the full explanation</h2><h3 id="attention-is-one-operation-inside-a-larger-computation">Attention is one operation inside a larger computation</h3>
-<p>We can now compute contextual mixtures, but a useful model needs more than a single mixture. A transformer block combines attention with a feed-forward network, normalization, and residual connections.</p>
-<p>Imagine each token carrying a working vector. Attention adds information from other allowed positions. The feed-forward network transforms the features at that position. Residual paths retain an additive route for the existing representation.</p>
-<p>We will use a pre-normalization block. Other ordering choices exist; specify which one you mean before comparing code. Our goal is to trace one concrete architecture correctly.</p>
-<h3 id="the-residual-stream">The residual stream</h3>
-<p>Let x be a token representation [1,2]. Suppose an attention sublayer produces [0.5,-0.5]. Residual addition gives [1.5,1.5]. Both terms must have matching shape.</p>
-<p>The residual connection means the block adds a learned transformation to the existing representation. It does not force the transformation to be small or guarantee that information is never lost. Later layers and projections can still change behavior substantially.</p>
-<p>Across a sentence, the residual stream has shape [T,D], or [B,T,D] with batching. Its width stays consistent across the additions in this teaching model.</p>
-<h3 id="normalization-before-a-transformation">Normalization before a transformation</h3>
-<p>Layer normalization computes statistics over the feature coordinates of each token. For a simple row [2,4], the mean is 3 and variance is 1, ignoring the small numerical epsilon. Standardizing gives [-1,1] before learned affine parameters.</p>
-<p>This operation does not average different token positions together. It therefore does not itself allow a causal model to read future words. The choice of axis is central to both the mathematics and the implementation.</p>
-<p>Real normalization includes epsilon to avoid division problems and usually learned scale and bias. RMSNorm is a related but different operation that uses root-mean-square scaling without subtracting the mean in its basic form.</p>
-<h3 id="the-first-half-of-a-pre-norm-block">The first half of a pre norm block</h3>
-<p>Write h = x + Attention(LayerNorm(x)). Normalize the residual representation, compute masked multi-head attention, project back to width D, then add the result to x.</p>
-<p>The query, key, and value projections operate on normalized inputs in this arrangement. The attention output still depends on the appropriate mask and position information.</p>
-<p>Read the expression from the inside outward. The layer does not first add x to itself or normalize the entire batch as one vector. When debugging, save the normalized input and sublayer output separately.</p>
-<h3 id="the-feed-forward-network">The feed forward network</h3>
-<p>The second half is y = h + MLP(LayerNorm(h)). The MLP operates independently at each token position with shared weights. A common teaching form expands from D to 4D, applies a nonlinear activation, then projects back to D.</p>
-<p>For D=8, a row [1,8] becomes [1,32], then [1,8]. This is a feature transformation, not another direct comparison across token positions.</p>
-<p>Why the nonlinearity? Two linear maps without a nonlinearity compose into one linear map. A nonlinear activation permits a richer transformation. Modern models may use gated variants, but the basic separation of attention across positions and feature transformation within a position remains useful.</p>
-<h3 id="stacking-blocks-and-producing-logits">Stacking blocks and producing logits</h3>
-<p>One block outputs another [B,T,D] tensor. A stack of blocks repeatedly applies these transformations. The final normalized representations feed a vocabulary output projection.</p>
-<p>For our six-token sentence and vocabulary size V, logits have shape [B,6,V]. The logit row at a position predicts the following token under next-token training.</p>
-<p>This completes a path from IDs to embeddings, positions, contextual blocks, and vocabulary scores. Softmax over vocabulary happens at a different boundary from softmax inside attention.</p>
-<h3 id="counting-a-small-block">Counting a small block</h3>
-<p>Ignoring biases, standard attention uses about 4D² parameters for Q, K, V, and the output projection. An MLP with width 4D uses about 8D². Together that is about 12D² per block.</p>
-<p>At D=64, the estimate is 49152 matrix parameters per block. Two blocks give 98304. Embeddings, normalization parameters, biases, and the output head add to that count; tied embeddings change it.</p>
-<p>Use this estimate to understand where parameters come from, then verify by summing the actual implementation's parameter sizes. A rough formula is not a replacement for inspecting the model.</p>
-<h3 id="worked-practice-and-a-readiness-check">Worked practice and a readiness check</h3>
-<p>Draw the full pre-norm block with two residual additions. Label the tensors before and after each operation. Explain which operations mix positions and which act independently on each token's feature row.</p>
-<p>Given a sentence tensor [2,6,64], state why the attention and MLP outputs must return [2,6,64] before their residual additions. Then calculate the MLP's two matrix shapes [64,256] and [256,64].</p>
-<p>You are ready to read a small transformer implementation when you can point to every part of this block and explain its role without using “the model understands” as the mechanism.</p>
-<h3 id="a-deeper-pass-after-the-worked-introduction">A deeper pass after the worked introduction</h3>
-<p>The following reference treatment is for a second pass. First explain the ordinary example above, then use the equations and implementation details below to make the explanation more precise.</p>
-<h3 id="further-study-5-intuition">Further study 5 Intuition</h3>
-<p>Attention moves information across positions. A feed-forward network transforms information within a position. A transformer block combines both operations with residual connections and normalization, and stacking blocks allows progressively richer computation. The output head converts the final representation at each position into vocabulary logits.</p>
-<p>Our teaching model uses token embeddings plus learned position embeddings. A pre-normalization block is <code>h = x + Attention(LayerNorm(x))</code>, followed by <code>y = h + MLP(LayerNorm(h))</code>. The MLP expands the channel dimension, applies a nonlinearity, and projects back. Residual paths help gradients and preserve information. Modern models may use RMSNorm, rotary position embeddings, gated MLPs or grouped-query attention; these modifications do not remove the basic information-flow picture.</p>
-<h3 id="further-study-5-shapes-and-parameters">Further study 5 Shapes and parameters</h3>
-<p>For batch B, length T and width D, the residual tensor is <code>[B,T,D]</code>. An MLP with expansion 4D has roughly <code>8D^2</code> weight parameters, ignoring biases. Standard multi-head attention's Q, K, V and output matrices contribute roughly <code>4D^2</code>. A rough block count is therefore <code>12D^2</code>; embeddings and output layers may dominate for a large vocabulary. Tied input/output embeddings reuse weights, changing the total.</p>
-<p>For D=64 and two blocks, block matrices contain about <code>2*12*64^2 = 98,304</code> parameters. A 256-token embedding table adds 16,384. This is a tiny educational model, not an LLM. Counting parameters by summing <code>p.numel()</code> is the authoritative implementation check.</p>
-<h3 id="further-study-5-position-and-context">Further study 5 Position and context</h3>
-<p>Without position information, pure self-attention cannot generally distinguish permutations of the same unmasked set in the intended way. Learned absolute embeddings assign a vector to each position. Rotary position methods rotate query/key components so relative displacement influences their dot products. Do not assume a position method alone grants reliable extrapolation beyond trained context lengths.</p>
-<p>The model outputs one logit vector per input position. During training, the logit at position t predicts the token at t+1. During inference, use the last position's logits to select the next token. For encoder-decoder models, cross-attention additionally reads encoder outputs; our tiny model has no encoder.</p>
-<h3 id="further-study-5-experiment">Further study 5 Experiment</h3>
-<p>notebook 12 trains a byte-level decoder on ordinary school and travel sentences. Draw the block before running it, count parameters, and overfit a tiny batch as a debugging step. Then restore a held-out sequence split and report validation loss. Compare removing attention versus removing the MLP while keeping the training budget fixed. A larger model trained for more steps is not a clean architectural ablation.</p>
-<p><strong>Failure to recognize:</strong> generating plausible fragments from a tiny repeated corpus is not evidence of general documentation understanding. It demonstrates that the model and training loop run. <strong>Reading:</strong> R04 model architecture; optional R01 architectures lecture. <strong>Tutorial:</strong> 10.</p></article><nav aria-label="Adjacent lectures" class="chapter-pagination"><a href="09.html"><small>Previous week</small>Multiple attention heads and position</a><a href="11.html"><small>Next week</small>Encoders decoders and complete model architectures</a></nav></div><footer class="footer"><span>Applied AI · An independent self-study course</span><span>32 weeks · 10 hours per week</span><a href="../resources.html#about-this-course">About and sources</a></footer></main><dialog aria-labelledby="search-title" class="search-dialog"><div class="dialog-head"><h2 id="search-title">Find a concept</h2><button aria-label="Close search" class="search-close" type="button">Close</button></div><label class="sr-only" for="course-search">Search all lectures and tutorials</label><input autocomplete="off" id="course-search" placeholder="Try attention, fine-tuning, or harness…" type="search"/><p aria-live="polite" class="search-status">Search lecture notes, tutorials, tests and readings.</p><div class="search-results"></div></dialog><div aria-live="polite" class="toast" role="status"></div></body></html>
+<html lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width,initial-scale=1" name="viewport"/>
+  <title>
+   The transformer block step by step · Applied AI
+  </title>
+  <meta content="Applied generative AI and LLM systems course material" name="description"/>
+  <meta content="#173c36" name="theme-color"/>
+  <link href="../assets/favicon.svg" rel="icon" type="image/svg+xml"/>
+  <link href="../assets/style.css" rel="stylesheet"/>
+  <link href="../assets/slides.css" rel="stylesheet"/>
+  <script>
+   window.COURSE_BASE="../";
+  </script>
+  <script defer="" src="../assets/site-config.js">
+  </script>
+  <script defer="" src="../assets/search-index.js">
+  </script>
+  <script defer="" src="../assets/app.js">
+  </script>
+  <script defer="" src="../assets/visuals.js">
+  </script>
+  <script defer="" src="../assets/slides.js">
+  </script>
+  <script defer="" src="../assets/beginner-visuals.js">
+  </script>
+  <link href="../zh-HK/lectures/10.html" hreflang="zh-HK" rel="alternate"/>
+  <link href="../assets/bilingual.css" rel="stylesheet"/>
+  <link href="../assets/reader-v3.css" rel="stylesheet"/>
+  <script defer="True" src="../assets/reader-v3.js">
+  </script>
+ </head>
+ <body data-page-kind="lecture" data-week="10">
+  <a class="skip-link" href="#main">
+   Skip to content
+  </a>
+  <header class="topbar">
+   <button aria-controls="course-sidebar" aria-expanded="false" class="menu-toggle" type="button">
+    Menu
+   </button>
+   <a class="brand" href="../index.html">
+    <span aria-hidden="true" class="brand-mark">
+     a
+     <span>
+      i
+     </span>
+    </span>
+    <span>
+     APPLIED AI
+     <small>
+      Principles into practice
+     </small>
+    </span>
+   </a>
+   <nav aria-label="Main navigation">
+    <a href="../index.html">
+     The course
+    </a>
+    <a href="../visuals.html">
+     Visual lab
+    </a>
+    <a href="../project.html">
+     Project
+    </a>
+    <a class="language-switch" href="../zh-HK/lectures/10.html" hreflang="zh-HK" lang="zh-HK">
+     繁體中文
+    </a>
+   </nav>
+   <button class="search-open" type="button">
+    Search the course
+    <span aria-hidden="true">
+     /
+    </span>
+   </button>
+  </header>
+  <aside aria-label="Course chapters" class="sidebar" id="course-sidebar">
+   <a class="side-home" href="../index.html">
+    Course overview
+   </a>
+   <details class="semester-nav" open="">
+    <summary>
+     Semester 1
+     <span>
+      Weeks 1–16
+     </span>
+    </summary>
+    <ol start="1">
+     <li>
+      <a href="../lectures/01.html">
+       <span class="week-number">
+        01
+       </span>
+       <span>
+        What a language model is trying to learn
+       </span>
+       <span class="week-tick" data-week-tick="1">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/02.html">
+       <span class="week-number">
+        02
+       </span>
+       <span>
+        From text to tokens and numerical IDs
+       </span>
+       <span class="week-tick" data-week-tick="2">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/03.html">
+       <span class="week-number">
+        03
+       </span>
+       <span>
+        What word vectors can represent
+       </span>
+       <span class="week-tick" data-week-tick="3">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/04.html">
+       <span class="week-number">
+        04
+       </span>
+       <span>
+        From scores to probabilities and learning signals
+       </span>
+       <span class="week-tick" data-week-tick="4">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/05.html">
+       <span class="week-number">
+        05
+       </span>
+       <span>
+        Why language needs context and order
+       </span>
+       <span class="week-tick" data-week-tick="5">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/06.html">
+       <span class="week-number">
+        06
+       </span>
+       <span>
+        Attention begins as a weighted mixture
+       </span>
+       <span class="week-tick" data-week-tick="6">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/07.html">
+       <span class="week-number">
+        07
+       </span>
+       <span>
+        Where queries keys and values come from
+       </span>
+       <span class="week-tick" data-week-tick="7">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/08.html">
+       <span class="week-number">
+        08
+       </span>
+       <span>
+        Scaling and masking attention correctly
+       </span>
+       <span class="week-tick" data-week-tick="8">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/09.html">
+       <span class="week-number">
+        09
+       </span>
+       <span>
+        Multiple attention heads and position
+       </span>
+       <span class="week-tick" data-week-tick="9">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a aria-current="page" href="../lectures/10.html">
+       <span class="week-number">
+        10
+       </span>
+       <span>
+        The transformer block step by step
+       </span>
+       <span class="week-tick" data-week-tick="10">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/11.html">
+       <span class="week-number">
+        11
+       </span>
+       <span>
+        Encoders decoders and complete model architectures
+       </span>
+       <span class="week-tick" data-week-tick="11">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/12.html">
+       <span class="week-number">
+        12
+       </span>
+       <span>
+        Training a small transformer
+       </span>
+       <span class="week-tick" data-week-tick="12">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/13.html">
+       <span class="week-number">
+        13
+       </span>
+       <span>
+        Generation decoding and the KV cache
+       </span>
+       <span class="week-tick" data-week-tick="13">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/14.html">
+       <span class="week-number">
+        14
+       </span>
+       <span>
+        From pretraining to instruction following and reasoning
+       </span>
+       <span class="week-tick" data-week-tick="14">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/15.html">
+       <span class="week-number">
+        15
+       </span>
+       <span>
+        Generative AI beyond text
+       </span>
+       <span class="week-tick" data-week-tick="15">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/16.html">
+       <span class="week-number">
+        16
+       </span>
+       <span>
+        A complete transformer walkthrough and first semester review
+       </span>
+       <span class="week-tick" data-week-tick="16">
+       </span>
+      </a>
+     </li>
+    </ol>
+   </details>
+   <details class="semester-nav">
+    <summary>
+     Semester 2
+     <span>
+      Weeks 17–32
+     </span>
+    </summary>
+    <ol start="17">
+     <li>
+      <a href="../lectures/17.html">
+       <span class="week-number">
+        17
+       </span>
+       <span>
+        From word vectors to semantic search
+       </span>
+       <span class="week-tick" data-week-tick="17">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/18.html">
+       <span class="week-number">
+        18
+       </span>
+       <span>
+        A vector database from a list of vectors
+       </span>
+       <span class="week-tick" data-week-tick="18">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/19.html">
+       <span class="week-number">
+        19
+       </span>
+       <span>
+        RAG as an open book question
+       </span>
+       <span class="week-tick" data-week-tick="19">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/20.html">
+       <span class="week-number">
+        20
+       </span>
+       <span>
+        Improving RAG without losing the basic task
+       </span>
+       <span class="week-tick" data-week-tick="20">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/21.html">
+       <span class="week-number">
+        21
+       </span>
+       <span>
+        Evaluating retrieval answers and uncertainty
+       </span>
+       <span class="week-tick" data-week-tick="21">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/22.html">
+       <span class="week-number">
+        22
+       </span>
+       <span>
+        CPU GPU memory and model resource accounting
+       </span>
+       <span class="week-tick" data-week-tick="22">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/23.html">
+       <span class="week-number">
+        23
+       </span>
+       <span>
+        CUDA kernels and profiling
+       </span>
+       <span class="week-tick" data-week-tick="23">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/24.html">
+       <span class="week-number">
+        24
+       </span>
+       <span>
+        Fine tuning starts with a teaching dataset
+       </span>
+       <span class="week-tick" data-week-tick="24">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/25.html">
+       <span class="week-number">
+        25
+       </span>
+       <span>
+        LoRA and QLoRA from a small matrix
+       </span>
+       <span class="week-tick" data-week-tick="25">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/26.html">
+       <span class="week-number">
+        26
+       </span>
+       <span>
+        Fine tuning experiments preferences and distillation
+       </span>
+       <span class="week-tick" data-week-tick="26">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/27.html">
+       <span class="week-number">
+        27
+       </span>
+       <span>
+        Tools functions workflows and agents
+       </span>
+       <span class="week-tick" data-week-tick="27">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/28.html">
+       <span class="week-number">
+        28
+       </span>
+       <span>
+        Harnesses planning memory and bounded execution
+       </span>
+       <span class="week-tick" data-week-tick="28">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/29.html">
+       <span class="week-number">
+        29
+       </span>
+       <span>
+        From a notebook to MLOps and inference serving
+       </span>
+       <span class="week-tick" data-week-tick="29">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/30.html">
+       <span class="week-number">
+        30
+       </span>
+       <span>
+        Monitoring security regression tests and rollback
+       </span>
+       <span class="week-tick" data-week-tick="30">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/31.html">
+       <span class="week-number">
+        31
+       </span>
+       <span>
+        Integrating the documentation assistant and advanced extensions
+       </span>
+       <span class="week-tick" data-week-tick="31">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/32.html">
+       <span class="week-number">
+        32
+       </span>
+       <span>
+        Review defense and a continuing learning plan
+       </span>
+       <span class="week-tick" data-week-tick="32">
+       </span>
+      </a>
+     </li>
+    </ol>
+   </details>
+   <div class="side-links">
+    <a href="../visuals.html">
+     Visual laboratory
+     <span>
+      14 interactive lessons
+     </span>
+    </a>
+    <a href="../project.html">
+     Documentation assistant
+     <span>
+      Your capstone project
+     </span>
+    </a>
+    <a href="../resources.html">
+     Readings and setup
+    </a>
+   </div>
+   <div class="side-progress">
+    <div>
+     <span>
+      Your progress
+     </span>
+     <strong data-progress-count="">
+      0 / 32
+     </strong>
+    </div>
+    <progress aria-label="Completed lectures" max="32" value="0">
+    </progress>
+    <small>
+     Saved in this browser
+    </small>
+   </div>
+  </aside>
+  <main class="main" id="main">
+   <div class="content">
+    <div class="chapter-header">
+     <div class="eyebrow">
+      Semester 1 / Week 10
+     </div>
+     <h1>
+      The transformer block step by step
+     </h1>
+    </div>
+    <div class="lesson-links">
+     <a href="../tutorials/10.html">
+      Tutorial 10
+     </a>
+     <a href="../tests/10.html">
+      Test your understanding
+     </a>
+     <button aria-pressed="false" class="mark-complete" data-week="10" type="button">
+      Mark as complete
+     </button>
+    </div>
+    <div aria-label="Lesson view" class="lesson-mode" role="tablist">
+     <button aria-controls="full-notes" aria-selected="true" data-mode="read" id="mode-read" role="tab" type="button">
+      Read lesson
+     </button>
+     <button aria-controls="lecture-slides" aria-selected="false" data-mode="slides" id="mode-slides" role="tab" type="button">
+      Lesson slides
+     </button>
+    </div>
+    <section aria-label="Lecture slides" class="lecture-deck" hidden="" id="lecture-slides" role="tabpanel">
+     <div class="deck-top">
+      <div>
+       <div class="eyebrow">
+        Lecture slides · Week 10
+       </div>
+       <h2>
+        Key steps and worked visuals
+       </h2>
+      </div>
+      <button class="deck-present" type="button">
+       Present
+      </button>
+     </div>
+     <p class="deck-help">
+      Use these slides to review the mechanism. Open “Read the worked explanation” for the complete notes and code.
+     </p>
+     <div aria-label="Presentation: use left and right arrow keys" class="slide-viewport" tabindex="0">
+      <section class="lecture-slide" data-slide="">
+       <div class="slide-stage">
+        Week 10 · Section 1
+       </div>
+       <h3>
+        Attention is one operation inside a larger computation
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          We can now compute contextual mixtures, but a useful model needs more than a single mixture.
+         </li>
+         <li>
+          Imagine each token carrying a working vector.
+         </li>
+         <li>
+          We will use a pre-normalization block.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#attention-is-one-operation-inside-a-larger-computation">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 10 · Section 2
+       </div>
+       <h3>
+        The residual stream
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Let x be a token representation [1,2].
+         </li>
+         <li>
+          The residual connection means the block adds a learned transformation to the existing representation.
+         </li>
+         <li>
+          Across a sentence, the residual stream has shape [T,d_model], or [B,T,d_model] with batching.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#the-residual-stream">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 10 · Section 3
+       </div>
+       <h3>
+        Normalization before a transformation
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Layer normalization computes statistics over the feature coordinates of each token.
+         </li>
+         <li>
+          This operation does not average different token positions together.
+         </li>
+         <li>
+          Real normalization includes epsilon to avoid division problems and usually learned scale and bias.
+         </li>
+        </ul>
+        <figure class="mechanism-figure">
+         <figcaption>
+          A pre-normalization transformer block
+         </figcaption>
+         <ol class="mechanism-flow">
+          <li>
+           <span class="mechanism-number">
+            01
+           </span>
+           <strong>
+            x
+           </strong>
+           <small>
+            residual stream
+           </small>
+          </li>
+          <li>
+           <span class="mechanism-number">
+            02
+           </span>
+           <strong>
+            h
+           </strong>
+           <small>
+            x + Attention(Norm(x))
+           </small>
+          </li>
+          <li>
+           <span class="mechanism-number">
+            03
+           </span>
+           <strong>
+            y
+           </strong>
+           <small>
+            h + MLP(Norm(h))
+           </small>
+          </li>
+         </ol>
+         <p>
+          Attention mixes positions. The MLP transforms features at each position. Residual additions preserve the tensor shape.
+         </p>
+        </figure>
+        <a class="slide-section-link" href="#normalization-before-a-transformation">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 10 · Section 4
+       </div>
+       <h3>
+        The first half of a pre norm block
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Write h = x + Attention(LayerNorm(x)).
+         </li>
+         <li>
+          The query, key, and value projections operate on normalized inputs in this arrangement.
+         </li>
+         <li>
+          Read the expression from the inside outward.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#the-first-half-of-a-pre-norm-block">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 10 · Section 5
+       </div>
+       <h3>
+        The feed forward network
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          The second half is y = h + MLP(LayerNorm(h)).
+         </li>
+         <li>
+          For d_model=8, a row [1,8] becomes [1,32], then [1,8].
+         </li>
+         <li>
+          Why the nonlinearity? Two linear maps without a nonlinearity compose into one linear map. A nonlinear activation permits a richer transformation. Modern models may use gated variants, but the basic separation of attention across positions and feature transformation within a position remains useful.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#the-feed-forward-network">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 10 · Section 6
+       </div>
+       <h3>
+        Stacking blocks and producing logits
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          One block outputs another [B,T,d_model] tensor.
+         </li>
+         <li>
+          For our six-token sentence and vocabulary size V, logits have shape [B,6,V].
+         </li>
+         <li>
+          This completes a path from IDs to embeddings, positions, contextual blocks, and vocabulary scores.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#stacking-blocks-and-producing-logits">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 10 · Section 7
+       </div>
+       <h3>
+        Counting a small block
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          For the specific teaching block, ignore biases and normalization parameters.
+         </li>
+         <li>
+          At d_model=64, the estimate is 49152 matrix parameters per block.
+         </li>
+         <li>
+          Use this estimate to understand where parameters come from, then verify by summing the actual implementation's parameter sizes.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#counting-a-small-block">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 10 · Section 8
+       </div>
+       <h3>
+        GQA and SwiGLU change the parameter count
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          GQA keeps H query heads but shares H_kv key/value heads.
+         </li>
+         <li>
+          SwiGLU uses three matrices: two project the input to d_ff, one branch is passed through SiLU, their coordinates are multiplied, and the third projects back to d_model.
+         </li>
+         <li>
+          Source: GQA: shared key/value heads .
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#gqa-and-swiglu-change-the-parameter-count">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 10 · Section 9
+       </div>
+       <h3>
+        GQA and SwiGLU change the parameter count · continued
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Source: GLU variants and SwiGLU .
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#gqa-and-swiglu-change-the-parameter-count">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 10 · Section 10
+       </div>
+       <h3>
+        Worked practice and a readiness check
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Draw the full pre-norm block with two residual additions.
+         </li>
+         <li>
+          Given a sentence tensor [2,6,64], state why the attention and MLP outputs must return [2,6,64] before their residual additions.
+         </li>
+         <li>
+          You are ready to read a small transformer implementation when you can point to every part of this block and explain its role without using “the model understands” as the mechanism.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#worked-practice-and-a-readiness-check">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+     </div>
+     <div class="deck-controls">
+      <button class="slide-prev" type="button">
+       ← Previous
+      </button>
+      <span aria-live="polite" class="slide-counter">
+       1 / 10
+      </span>
+      <button class="slide-next" type="button">
+       Next →
+      </button>
+     </div>
+     <label class="slide-jump-label">
+      Go to slide
+      <select aria-label="Go to slide" class="slide-jump">
+       <option value="0">
+        1. Attention is one operation inside a larger computation
+       </option>
+       <option value="1">
+        2. The residual stream
+       </option>
+       <option value="2">
+        3. Normalization before a transformation
+       </option>
+       <option value="3">
+        4. The first half of a pre norm block
+       </option>
+       <option value="4">
+        5. The feed forward network
+       </option>
+       <option value="5">
+        6. Stacking blocks and producing logits
+       </option>
+       <option value="6">
+        7. Counting a small block
+       </option>
+       <option value="7">
+        8. GQA and SwiGLU change the parameter count
+       </option>
+       <option value="8">
+        9. GQA and SwiGLU change the parameter count · continued
+       </option>
+       <option value="9">
+        10. Worked practice and a readiness check
+       </option>
+      </select>
+     </label>
+     <button aria-pressed="false" class="deck-all" type="button">
+      Show all slides
+     </button>
+    </section>
+    <section aria-label="The transformer block" class="visual-lesson">
+     <div class="eyebrow">
+      Explore the mechanism
+     </div>
+     <h2>
+      The transformer block
+     </h2>
+     <p class="visual-intro">
+      Trace the residual stream through communication and feature processing.
+     </p>
+     <div data-widget="block">
+      <p>
+       Enable JavaScript to use this illustration. The lecture notes below explain the same mechanism.
+      </p>
+     </div>
+    </section>
+    <nav aria-label="In this lesson" class="reader-toc">
+     <strong>
+      In this lesson
+     </strong>
+     <ol>
+      <li>
+       <a href="#attention-is-one-operation-inside-a-larger-computation">
+        Attention is one operation inside a larger computation
+       </a>
+      </li>
+      <li>
+       <a href="#the-residual-stream">
+        The residual stream
+       </a>
+      </li>
+      <li>
+       <a href="#normalization-before-a-transformation">
+        Normalization before a transformation
+       </a>
+      </li>
+      <li>
+       <a href="#the-first-half-of-a-pre-norm-block">
+        The first half of a pre norm block
+       </a>
+      </li>
+      <li>
+       <a href="#the-feed-forward-network">
+        The feed forward network
+       </a>
+      </li>
+      <li>
+       <a href="#stacking-blocks-and-producing-logits">
+        Stacking blocks and producing logits
+       </a>
+      </li>
+      <li>
+       <a href="#counting-a-small-block">
+        Counting a small block
+       </a>
+      </li>
+      <li>
+       <a href="#gqa-and-swiglu-change-the-parameter-count">
+        GQA and SwiGLU change the parameter count
+       </a>
+      </li>
+      <li>
+       <a href="#worked-practice-and-a-readiness-check">
+        Worked practice and a readiness check
+       </a>
+      </li>
+     </ol>
+    </nav>
+    <article class="prose full-notes" id="full-notes" role="tabpanel">
+     <div class="eyebrow">
+      Complete lecture reader
+     </div>
+     <h2>
+      Read the full explanation
+     </h2>
+     <aside class="notation-key">
+      <strong>
+       Notation in this lesson
+      </strong>
+      <p>
+       B: batch · T: tokens · d_model: model width · H: query heads · H_kv: key/value heads · d_head: query/key width per head · d_value: value width per head
+      </p>
+     </aside>
+     <h3 id="attention-is-one-operation-inside-a-larger-computation">
+      Attention is one operation inside a larger computation
+     </h3>
+     <p>
+      We can now compute contextual mixtures, but a useful model needs more than a single mixture. A transformer block combines attention with a feed-forward network, normalization, and residual connections.
+     </p>
+     <p>
+      Imagine each token carrying a working vector. Attention adds information from other allowed positions. The feed-forward network transforms the features at that position. Residual paths retain an additive route for the existing representation.
+     </p>
+     <p>
+      We will use a pre-normalization block. Other ordering choices exist; specify which one you mean before comparing code. Our goal is to trace one concrete architecture correctly.
+     </p>
+     <h3 id="the-residual-stream">
+      The residual stream
+     </h3>
+     <p>
+      Let x be a token representation [1,2]. Suppose an attention sublayer produces [0.5,-0.5]. Residual addition gives [1.5,1.5]. Both terms must have matching shape.
+     </p>
+     <p>
+      The residual connection means the block adds a learned transformation to the existing representation. It does not force the transformation to be small or guarantee that information is never lost. Later layers and projections can still change behavior substantially.
+     </p>
+     <p>
+      Across a sentence, the residual stream has shape [T,d_model], or [B,T,d_model] with batching. Its width stays consistent across the additions in this teaching model.
+     </p>
+     <h3 id="normalization-before-a-transformation">
+      Normalization before a transformation
+     </h3>
+     <figure class="mechanism-figure">
+      <figcaption>
+       A pre-normalization transformer block
+      </figcaption>
+      <ol class="mechanism-flow">
+       <li>
+        <span class="mechanism-number">
+         01
+        </span>
+        <strong>
+         x
+        </strong>
+        <small>
+         residual stream
+        </small>
+       </li>
+       <li>
+        <span class="mechanism-number">
+         02
+        </span>
+        <strong>
+         h
+        </strong>
+        <small>
+         x + Attention(Norm(x))
+        </small>
+       </li>
+       <li>
+        <span class="mechanism-number">
+         03
+        </span>
+        <strong>
+         y
+        </strong>
+        <small>
+         h + MLP(Norm(h))
+        </small>
+       </li>
+      </ol>
+      <p>
+       Attention mixes positions. The MLP transforms features at each position. Residual additions preserve the tensor shape.
+      </p>
+     </figure>
+     <p>
+      Layer normalization computes statistics over the feature coordinates of each token. For a simple row [2,4], the mean is 3 and variance is 1, ignoring the small numerical epsilon. Standardizing gives [-1,1] before learned affine parameters.
+     </p>
+     <p>
+      This operation does not average different token positions together. It therefore does not itself allow a causal model to read future words. The choice of axis is central to both the mathematics and the implementation.
+     </p>
+     <p>
+      Real normalization includes epsilon to avoid division problems and usually learned scale and bias. RMSNorm is a related but different operation that uses root-mean-square scaling without subtracting the mean in its basic form.
+     </p>
+     <h3 id="the-first-half-of-a-pre-norm-block">
+      The first half of a pre norm block
+     </h3>
+     <p>
+      Write h = x + Attention(LayerNorm(x)). Normalize the residual representation, compute masked multi-head attention, project back to width d_model, then add the result to x.
+     </p>
+     <p>
+      The query, key, and value projections operate on normalized inputs in this arrangement. The attention output still depends on the appropriate mask and position information.
+     </p>
+     <p>
+      Read the expression from the inside outward. The layer does not first add x to itself or normalize the entire batch as one vector. When debugging, save the normalized input and sublayer output separately.
+     </p>
+     <h3 id="the-feed-forward-network">
+      The feed forward network
+     </h3>
+     <p>
+      The second half is y = h + MLP(LayerNorm(h)). The MLP operates independently at each token position with shared weights. A common teaching form expands from d_model to 4*d_model, applies a nonlinear activation, then projects back to d_model.
+     </p>
+     <p>
+      For d_model=8, a row [1,8] becomes [1,32], then [1,8]. This is a feature transformation, not another direct comparison across token positions.
+     </p>
+     <p>
+      Why the nonlinearity? Two linear maps without a nonlinearity compose into one linear map. A nonlinear activation permits a richer transformation. Modern models may use gated variants, but the basic separation of attention across positions and feature transformation within a position remains useful.
+     </p>
+     <h3 id="stacking-blocks-and-producing-logits">
+      Stacking blocks and producing logits
+     </h3>
+     <p>
+      One block outputs another [B,T,d_model] tensor. A stack of blocks repeatedly applies these transformations. The final normalized representations feed a vocabulary output projection.
+     </p>
+     <p>
+      For our six-token sentence and vocabulary size V, logits have shape [B,6,V]. The logit row at a position predicts the following token under next-token training.
+     </p>
+     <p>
+      This completes a path from IDs to embeddings, positions, contextual blocks, and vocabulary scores. Softmax over vocabulary happens at a different boundary from softmax inside attention.
+     </p>
+     <h3 id="counting-a-small-block">
+      Counting a small block
+     </h3>
+     <p>
+      For the specific teaching block, ignore biases and normalization parameters. Standard MHA with H*d_head=d_model uses 4*d_model² matrix parameters for Q, K, V, and the output projection. A two-matrix MLP with hidden width d_ff=4*d_model uses 2*d_model*d_ff=8*d_model². Their sum is 12*d_model². This formula belongs to that combination of attention and MLP, not to every transformer block.
+     </p>
+     <p>
+      At d_model=64, the estimate is 49152 matrix parameters per block. Two blocks give 98304. Embeddings, normalization parameters, biases, and the output head add to that count; tied embeddings change it.
+     </p>
+     <p>
+      Use this estimate to understand where parameters come from, then verify by summing the actual implementation's parameter sizes. A rough formula is not a replacement for inspecting the model.
+     </p>
+     <h3 id="gqa-and-swiglu-change-the-parameter-count">
+      GQA and SwiGLU change the parameter count
+     </h3>
+     <p>
+      GQA keeps H query heads but shares H_kv key/value heads. With d_head=d_model/H and matching value widths, the attention matrix count is 2*d_model²+2*d_model*H_kv*d_head: one full-width query projection, smaller key/value projections, and one full-width output projection. For d_model=64, H=8, H_kv=2 and d_head=8, this is 10,240 attention parameters, compared with 16,384 for MHA.
+     </p>
+     <p>
+      SwiGLU uses three matrices: two project the input to d_ff, one branch is passed through SiLU, their coordinates are multiplied, and the third projects back to d_model. Its matrix count is 3*d_model*d_ff. If d_ff=4*d_model, that is 12*d_model² for the MLP alone. Choosing d_ff approximately (8/3)*d_model gives a count close to the teaching MLP’s 8*d_model²; implementations round widths for efficient kernels. Compare matched budgets instead of silently assuming every MLP expands by four.
+     </p>
+     <p>
+      Source:
+      <a href="https://arxiv.org/abs/2305.13245">
+       GQA: shared key/value heads
+      </a>
+      .
+     </p>
+     <p>
+      Source:
+      <a href="https://arxiv.org/abs/2002.05202">
+       GLU variants and SwiGLU
+      </a>
+      .
+     </p>
+     <h3 id="worked-practice-and-a-readiness-check">
+      Worked practice and a readiness check
+     </h3>
+     <p>
+      Draw the full pre-norm block with two residual additions. Label the tensors before and after each operation. Explain which operations mix positions and which act independently on each token's feature row.
+     </p>
+     <p>
+      Given a sentence tensor [2,6,64], state why the attention and MLP outputs must return [2,6,64] before their residual additions. Then calculate the MLP's two matrix shapes [64,256] and [256,64].
+     </p>
+     <p>
+      You are ready to read a small transformer implementation when you can point to every part of this block and explain its role without using “the model understands” as the mechanism.
+     </p>
+     <details class="reference-details" id="reference-details">
+      <summary>
+       Reference details and checks
+      </summary>
+      <h3 id="review-a-intuition">
+       Review A: Intuition
+      </h3>
+      <p>
+       Our teaching model uses token embeddings plus learned position embeddings. A pre-normalization block is
+       <code>
+        h = x + Attention(LayerNorm(x))
+       </code>
+       , followed by
+       <code>
+        y = h + MLP(LayerNorm(h))
+       </code>
+       . The MLP expands the channel dimension, applies a nonlinearity, and projects back. Residual paths help gradients and preserve information. Modern models may use RMSNorm, rotary position embeddings, gated MLPs or grouped-query attention; these modifications do not remove the basic information-flow picture.
+      </p>
+      <h3 id="review-a-shapes-and-parameters">
+       Review A: Shapes and parameters
+      </h3>
+      <p>
+       For this standard MHA plus two-matrix MLP, the residual tensor is [B,T,d_model] and the approximate matrix count is 12*d_model². For GQA or a gated MLP, count the actual projection shapes using the formulas above. Embedding and output-head parameters are additional; tying those weights changes their combined count.
+      </p>
+      <p>
+       For d_model=64 and two blocks, block matrices contain about
+       <code>
+        2*12*64^2 = 98,304
+       </code>
+       parameters. A 256-token embedding table adds 16,384. This is a tiny educational model, not an LLM. Counting parameters by summing
+       <code>
+        p.numel()
+       </code>
+       is the authoritative implementation check.
+      </p>
+      <h3 id="review-a-position-and-context">
+       Review A: Position and context
+      </h3>
+      <p>
+       The model outputs one logit vector per input position. During training, the logit at position t predicts the token at t+1. During inference, use the last position's logits to select the next token. For encoder-decoder models, cross-attention additionally reads encoder outputs; our tiny model has no encoder.
+      </p>
+      <h3 id="review-a-experiment">
+       Review A: Experiment
+      </h3>
+      <p>
+       <a href="../tutorials/12.html">
+        Tutorial 12: Training a small transformer
+       </a>
+       trains a byte-level decoder on ordinary school and travel sentences. Draw the block before running it, count parameters, and overfit a tiny batch as a debugging step. Then restore a held-out sequence split and report validation loss. Compare removing attention versus removing the MLP while keeping the training budget fixed. A larger model trained for more steps is not a clean architectural ablation.
+      </p>
+      <p>
+       <strong>
+        Failure to recognize:
+       </strong>
+       generating plausible fragments from a tiny repeated corpus is not evidence of general documentation understanding. It demonstrates that the model and training loop run.
+       <strong>
+        Reading:
+       </strong>
+       <a class="inline-reading" href="../resources.html#reference-r04">
+        Vaswani et al. Attention Is All You Need (R04)
+       </a>
+       model architecture; optional
+       <a class="inline-reading" href="../resources.html#reference-r01">
+        Stanford CS336 Language Modeling from Scratch (R01)
+       </a>
+       architectures lecture.
+       <strong>
+        Tutorial:
+       </strong>
+       10.
+      </p>
+     </details>
+    </article>
+    <nav aria-label="Adjacent lectures" class="chapter-pagination">
+     <a href="09.html">
+      <small>
+       Previous week
+      </small>
+      Multiple attention heads and position
+     </a>
+     <a href="11.html">
+      <small>
+       Next week
+      </small>
+      Encoders decoders and complete model architectures
+     </a>
+    </nav>
+   </div>
+   <footer class="footer">
+    <span>
+     Applied AI · An independent self-study course
+    </span>
+    <span>
+     32 weeks · 10 hours per week
+    </span>
+    <a href="../resources.html#about-this-course">
+     About and sources
+    </a>
+   </footer>
+  </main>
+  <dialog aria-labelledby="search-title" class="search-dialog">
+   <div class="dialog-head">
+    <h2 id="search-title">
+     Find a concept
+    </h2>
+    <button aria-label="Close search" class="search-close" type="button">
+     Close
+    </button>
+   </div>
+   <label class="sr-only" for="course-search">
+    Search all lectures and tutorials
+   </label>
+   <input autocomplete="off" id="course-search" placeholder="Try attention, fine-tuning, or harness…" type="search"/>
+   <p aria-live="polite" class="search-status">
+    Search lecture notes, tutorials, tests and readings.
+   </p>
+   <div class="search-results">
+   </div>
+  </dialog>
+  <div aria-live="polite" class="toast" role="status">
+  </div>
+ </body>
+</html>

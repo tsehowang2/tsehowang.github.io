@@ -1,46 +1,1979 @@
 <!DOCTYPE html>
-
-<html lang="zh-HK"><head><script src="../assets/translations-zh-HK.js"></script><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/><title>閱讀材料、環境設定及課程資訊 · Applied AI</title><meta content="Applied generative AI and LLM systems course material" name="description"/><meta content="#173c36" name="theme-color"/><link href="../assets/favicon.svg" rel="icon" type="image/svg+xml"/><link href="../assets/style.css" rel="stylesheet"/><link href="../assets/slides.css" rel="stylesheet"/><script>window.COURSE_BASE="";</script><script defer="" src="../assets/site-config.js"></script><script defer="" src="assets/search-index.js"></script><script defer="" src="../assets/app.js"></script><script defer="" src="../assets/visuals.js"></script><script defer="" src="../assets/slides.js"></script><script defer="" src="../assets/beginner-visuals.js"></script><script defer="True" src="../assets/locale-patterns.js"></script><script defer="True" src="../assets/locale.js"></script><link href="../assets/bilingual.css" rel="stylesheet"/><link href="../resources.html" hreflang="en" rel="alternate"/></head><body data-page-kind="resources" data-week="0"><a class="skip-link" href="#main">跳至內容</a><header class="topbar"><button aria-controls="course-sidebar" aria-expanded="false" class="menu-toggle" type="button">選單</button><a class="brand" href="index.html"><span aria-hidden="true" class="brand-mark">a<span>i</span></span><span>APPLIED AI<small>從原理到實踐</small></span></a><nav aria-label="主要導覽"><a href="index.html">課程</a><a href="visuals.html">互動圖解</a><a href="project.html">專題</a><a class="language-switch" href="../resources.html" hreflang="en" lang="en">English</a></nav><button class="search-open" type="button">搜尋課程 <span aria-hidden="true">/</span></button></header><aside aria-label="課程章節" class="sidebar" id="course-sidebar"><a class="side-home" href="index.html">課程概覽</a><details class="semester-nav" open=""><summary>第一學期<span>第 1–16 週</span></summary><ol start="1"><li><a href="lectures/01.html"><span class="week-number">01</span><span>Language model 究竟在學甚麼</span><span class="week-tick" data-week-tick="1"></span></a></li><li><a href="lectures/02.html"><span class="week-number">02</span><span>從文字到 token 和數值 ID</span><span class="week-tick" data-week-tick="2"></span></a></li><li><a href="lectures/03.html"><span class="week-number">03</span><span>Word vector 能表達甚麼</span><span class="week-tick" data-week-tick="3"></span></a></li><li><a href="lectures/04.html"><span class="week-number">04</span><span>從 score 到 probability 和學習訊號</span><span class="week-tick" data-week-tick="4"></span></a></li><li><a href="lectures/05.html"><span class="week-number">05</span><span>為甚麼語言需要 context 和次序</span><span class="week-tick" data-week-tick="5"></span></a></li><li><a href="lectures/06.html"><span class="week-number">06</span><span>Attention 由 weighted mixture 開始</span><span class="week-tick" data-week-tick="6"></span></a></li><li><a href="lectures/07.html"><span class="week-number">07</span><span>Query、key 和 value 從何而來</span><span class="week-tick" data-week-tick="7"></span></a></li><li><a href="lectures/08.html"><span class="week-number">08</span><span>正確進行 attention scaling 和 masking</span><span class="week-tick" data-week-tick="8"></span></a></li><li><a href="lectures/09.html"><span class="week-number">09</span><span>多個 attention head 與位置</span><span class="week-tick" data-week-tick="9"></span></a></li><li><a href="lectures/10.html"><span class="week-number">10</span><span>逐步拆解 transformer block</span><span class="week-tick" data-week-tick="10"></span></a></li><li><a href="lectures/11.html"><span class="week-number">11</span><span>Encoder、decoder 與完整 model architecture</span><span class="week-tick" data-week-tick="11"></span></a></li><li><a href="lectures/12.html"><span class="week-number">12</span><span>訓練一個小型 transformer</span><span class="week-tick" data-week-tick="12"></span></a></li><li><a href="lectures/13.html"><span class="week-number">13</span><span>Generation、decoding 與 KV cache</span><span class="week-tick" data-week-tick="13"></span></a></li><li><a href="lectures/14.html"><span class="week-number">14</span><span>從 pretraining 到 instruction following 和 reasoning</span><span class="week-tick" data-week-tick="14"></span></a></li><li><a href="lectures/15.html"><span class="week-number">15</span><span>文字以外的 Generative AI</span><span class="week-tick" data-week-tick="15"></span></a></li><li><a href="lectures/16.html"><span class="week-number">16</span><span>完整 transformer 導覽與第一學期溫習</span><span class="week-tick" data-week-tick="16"></span></a></li></ol></details><details class="semester-nav"><summary>第二學期<span>第 17–32 週</span></summary><ol start="17"><li><a href="lectures/17.html"><span class="week-number">17</span><span>從 word vector 到 semantic search</span><span class="week-tick" data-week-tick="17"></span></a></li><li><a href="lectures/18.html"><span class="week-number">18</span><span>從一列 vector 建立 vector database</span><span class="week-tick" data-week-tick="18"></span></a></li><li><a href="lectures/19.html"><span class="week-number">19</span><span>把 RAG 理解為開卷作答</span><span class="week-tick" data-week-tick="19"></span></a></li><li><a href="lectures/20.html"><span class="week-number">20</span><span>在保持基本任務的前提下改善 RAG</span><span class="week-tick" data-week-tick="20"></span></a></li><li><a href="lectures/21.html"><span class="week-number">21</span><span>評估 retrieval、答案與 uncertainty</span><span class="week-tick" data-week-tick="21"></span></a></li><li><a href="lectures/22.html"><span class="week-number">22</span><span>CPU、GPU、memory 與 model 資源計算</span><span class="week-tick" data-week-tick="22"></span></a></li><li><a href="lectures/23.html"><span class="week-number">23</span><span>CUDA kernel 與 profiling</span><span class="week-tick" data-week-tick="23"></span></a></li><li><a href="lectures/24.html"><span class="week-number">24</span><span>Fine-tuning 由教學 dataset 開始</span><span class="week-tick" data-week-tick="24"></span></a></li><li><a href="lectures/25.html"><span class="week-number">25</span><span>從小型 matrix 理解 LoRA 和 QLoRA</span><span class="week-tick" data-week-tick="25"></span></a></li><li><a href="lectures/26.html"><span class="week-number">26</span><span>Fine-tuning 實驗、preference 與 distillation</span><span class="week-tick" data-week-tick="26"></span></a></li><li><a href="lectures/27.html"><span class="week-number">27</span><span>Tool、function、workflow 與 agent</span><span class="week-tick" data-week-tick="27"></span></a></li><li><a href="lectures/28.html"><span class="week-number">28</span><span>Harness、planning、memory 與有界執行</span><span class="week-tick" data-week-tick="28"></span></a></li><li><a href="lectures/29.html"><span class="week-number">29</span><span>從 notebook 到 MLOps 和 inference serving</span><span class="week-tick" data-week-tick="29"></span></a></li><li><a href="lectures/30.html"><span class="week-number">30</span><span>Monitoring、security、regression test 與 rollback</span><span class="week-tick" data-week-tick="30"></span></a></li><li><a href="lectures/31.html"><span class="week-number">31</span><span>整合文件助手與進階延伸</span><span class="week-tick" data-week-tick="31"></span></a></li><li><a href="lectures/32.html"><span class="week-number">32</span><span>溫習、答辯與持續學習計劃</span><span class="week-tick" data-week-tick="32"></span></a></li></ol></details><div class="side-links"><a href="visuals.html">互動圖解實驗室 <span>14 個互動課節</span></a><a href="project.html">文件助手 <span>你的 capstone project</span></a><a href="resources.html">閱讀材料與環境設定</a></div><div class="side-progress"><div><span>你的進度</span><strong data-progress-count="">0 / 32</strong></div><progress aria-label="已完成 lecture" max="32" value="0"></progress><small>儲存在這個瀏覽器</small></div></aside><main class="main" id="main"><div class="content"><div class="chapter-header"><div class="eyebrow">隨時查閱原始資料</div><h1>閱讀材料、環境設定及課程資訊</h1></div><div class="lesson-links"><a download="" href="../downloads/Applied_Generative_AI_Course.zip">下載完整課程包</a><a href="supplement.html">詳解補充材料</a><a href="schedule.html">完整課程大綱</a><a href="tests/checkpoints.html">階段小測</a><a href="implementation.html">參考 code</a></div><article class="prose"><h2>環境設定與運算計劃</h2><h2 id="read-first">請先閱讀</h2>
-<p>網站使用靜態 HTML、CSS 及 JavaScript。閱讀、slides、搜尋、詳解、圖解及進度記錄都不需要安裝 Python 或付費服務。Code 會另外在你的電腦或 Colab 執行。</p>
-<h2 id="cpu-foundation-route">CPU 基礎路線</h2>
-<p>在 virtual environment 使用 Python 3.10–3.12，以取得較廣的 package 相容性。數值課節請安裝 NumPy。大部分早期 notebook 及 controller／evaluation 練習只需要 standard library 和 NumPy；Colab 通常已包含這些套件。</p>
-<p>解壓完整課程 ZIP。根目錄包含 coursekit、data、notebooks 和 tests。在該目錄執行 python -m unittest discover -s tests -v。在 Colab 上載 ZIP，解壓至 /content/llm_course，再執行 bootstrap cell。該 cell 也會尋找已解壓的 llm_course_v2 資料夾。不要只上載 notebook 而欠缺支援檔案。</p>
-<h2 id="model-downloads-and-free-gpus">Model 下載與免費 GPU</h2>
-<p>第 12 週介紹小型 PyTorch transformer。短時間 CPU 執行用來核實 training 路徑；有 GPU 時，可在 Colab 進行較長實驗。後期 notebook 設有明確的安裝／下載 cell。免費 GPU 供應並不固定；請檢查獲分配的 device。斷線前，把 checkpoint 和報告儲存在暫時 runtime 以外的位置。</p>
-<p>你的 GTX 1650 Super 屬可選資源。使用 nvidia-smi 檢查實際可用 VRAM。數值課節用 CPU，較大的 model 實驗用 Colab。不要假設所有 GPU 都支援 BF16、large batch 或 QLoRA kernel。先以 float32 CPU 核實正確性，或使用獲支援的 float16 GPU 執行。</p>
-<h2 id="reproducible-model-work">可重現的 model 實驗</h2>
-<p>Notebook 中的 package 版本範圍只是起始約束，並非不可變 lockfile。記錄實際解析出的 Python、torch、transformers 和 accelerator 版本、model／tokenizer commit、data hash、seed 及 configuration。為可用環境儲存 lockfile。如果安裝 API 不同，請查閱最新官方文件。</p>
-<p>Model lab 會下載小型 Qwen model 及／或 sentence embedding model。課程會解釋 QLoRA，但引導式 LoRA 試驗不要求 four-bit kernel。第 23 週 CUDA compilation 需要 nvcc。如果沒有，請閱讀 kernel 並記錄這個限制。</p>
-<h2 id="outputs">輸出</h2>
-<p>Bootstrap 會建立 runs 目錄。請使用 run ID 並保留實際輸出。虛構教學 fixture 規模很小，不能證明 production 品質或 model 的廣泛能力。</p><h2>原始參考資料</h2><p>連結於 2026 年 10 月 20 日核對。課程網頁用作教學結構參考及選讀；書面章節和練習均為原創。軟件文件會變動，請保留實際執行的版本。除非標示選讀，否則閱讀指定章節即可，不必讀完整份資料。</p>
-<div class="table-wrap"><table><thead><tr><th>ID</th><th>原始資料</th><th>用途</th></tr></thead><tbody>
-<tr><td>R01</td><td><a href="https://cs336.stanford.edu/">Stanford CS336 Language Modeling from Scratch</a></td><td>Architecture、資源計算、data、alignment；可選進階作業</td></tr>
-<tr><td>R02</td><td><a href="https://stanford-cs329s.github.io/">Stanford CS329S Machine Learning Systems Design</a></td><td>Lifecycle、stakeholder requirement、deployment 及 monitoring</td></tr>
-<tr><td>R03</td><td><a href="https://speech.ee.ntu.edu.tw/~hylee/GenAI-ML/2025-fall.php">Hung-yi Lee Introduction to GenAI and ML 2025</a></td><td>可選直覺入門影片：context engineering、model 內部、evaluation、post-training</td></tr>
-<tr><td>R04</td><td><a href="https://arxiv.org/abs/1706.03762">Vaswani et al. Attention Is All You Need</a></td><td>Scaled dot-product attention 及 multi-head architecture</td></tr>
-<tr><td>R05</td><td><a href="https://research.google.com/colaboratory/faq.html">Google Colab FAQ</a></td><td>資源供應、session 限制及持久儲存</td></tr>
-<tr><td>R06</td><td><a href="https://arxiv.org/abs/2005.11401">Lewis et al. Retrieval Augmented Generation</a></td><td>Parametric 與 retrieved 資訊；RAG 的歷史 formulation</td></tr>
-<tr><td>R07</td><td><a href="https://www.sbert.net/docs/sentence_transformer/usage/semantic_textual_similarity.html">Sentence Transformers semantic similarity</a></td><td>Embedding encoding 與 similarity</td></tr>
-<tr><td>R08</td><td><a href="https://qdrant.tech/documentation/quickstart/">Qdrant local quickstart</a></td><td>Collection、point 與 payload</td></tr>
-<tr><td>R09</td><td><a href="https://huggingface.co/docs/transformers/chat_templating">Hugging Face Transformers chat templates</a></td><td>Message serialization 與 generation prompt</td></tr>
-<tr><td>R10</td><td><a href="https://arxiv.org/abs/2201.11903">Wei et al. Chain of Thought Prompting</a></td><td>Intermediate-step prompting 與按 task 評估</td></tr>
-<tr><td>R11</td><td><a href="https://arxiv.org/abs/2210.03629">Yao et al. ReAct</a></td><td>交替進行 observation 和 action</td></tr>
-<tr><td>R12</td><td><a href="https://arxiv.org/abs/2106.09685">Hu et al. LoRA</a></td><td>Low-rank 可訓練更新</td></tr>
-<tr><td>R13</td><td><a href="https://arxiv.org/abs/2305.14314">Dettmers et al. QLoRA</a></td><td>Quantized frozen base 加 adapter</td></tr>
-<tr><td>R14</td><td><a href="https://huggingface.co/docs/peft/main/en/conceptual_guides/lora">Hugging Face PEFT LoRA guide</a></td><td>Configuration 及 adapter 操作；請在文件選擇已安裝版本</td></tr>
-<tr><td>R15</td><td><a href="https://arxiv.org/abs/2305.18290">Rafailov et al. Direct Preference Optimization</a></td><td>Preference learning objective</td></tr>
-<tr><td>R16</td><td><a href="https://docs.nvidia.com/cuda/cuda-programming-guide/">NVIDIA CUDA programming guide</a></td><td>Thread hierarchy、memory 與 synchronization</td></tr>
-<tr><td>R17</td><td><a href="https://developer.nvidia.com/blog/easy-introduction-cuda-c-and-c/">NVIDIA CUDA introduction</a></td><td>最小 CUDA C++ 程式</td></tr>
-<tr><td>R18</td><td><a href="https://docs.pytorch.org/tutorials/recipes/recipes/amp_recipe.html">PyTorch automatic mixed precision recipe</a></td><td>Autocast 與 gradient scaling</td></tr>
-<tr><td>R19</td><td><a href="https://docs.pytorch.org/tutorials/recipes/recipes/profiler_recipe.html">PyTorch profiler recipe</a></td><td>CPU／GPU 活動、operator 時間與 memory</td></tr>
-<tr><td>R20</td><td><a href="https://mlflow.org/docs/latest/ml/tracking/">MLflow experiment tracking</a></td><td>Run、parameter、metric 與 artifact</td></tr>
-<tr><td>R21</td><td><a href="https://arxiv.org/abs/2006.11239">Ho et al. Denoising Diffusion Probabilistic Models</a></td><td>Forward noising 與學習得來的 denoising</td></tr>
-<tr><td>R22</td><td><a href="https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2">MiniLM L6 model card</a></td><td>Embedding model 的使用與限制</td></tr>
-<tr><td>R23</td><td><a href="https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct">Qwen2.5 0.5B Instruct model card</a></td><td>小型 generator 設定與 chat format</td></tr>
-<tr><td>R24</td><td><a href="https://arxiv.org/abs/1603.09320">Malkov and Yashunin HNSW</a></td><td>Hierarchical approximate nearest-neighbor graph</td></tr>
-<tr><td>R25</td><td><a href="https://doi.org/10.1561/1500000019">Robertson and Zaragoza Probabilistic Relevance Framework</a></td><td>BM25 term saturation 與 length normalization</td></tr>
-<tr><td>R26</td><td><a href="https://arxiv.org/abs/2205.14135">Dao et al. FlashAttention</a></td><td>減少 memory traffic 的 exact attention</td></tr>
-</tbody></table></div>
-<h2 id="readings-by-phase">按階段閱讀</h2>
-<p>第 1–5 週：筆記中的日常句子例子及數學先備知識；外部閱讀屬選讀。第 6–11 週：R04 attention 和 transformer 圖解，以及官方 Stanford CS224N 材料 https://web.stanford.edu/class/cs224n/。第 12–16 週：R04 training／architecture、R09 instruction／reasoning 例子、R10 受控 reasoning 研究、R21 generative-model 直覺。第 17–21 週：R06 RAG、R07 embedding、R08 vector database、R24 ANN、R25 lexical retrieval。第 22–23 週：R16 CUDA thread hierarchy、R19 profiling、R26 memory-aware attention。第 24–26 週：R12 LoRA、R13 QLoRA、R14 adapter configuration、R15 preference。第 27–32 週：R11 action／observation、R20 tracking、R18 delivery recipe，以及相關 model／runtime 文件。閱讀材料用來延伸 lecture；先理解基礎例子，才閱讀 research paper。</p><h2 id="about-this-course">關於本課程</h2><p>獨立原創自學材料，與 Stanford 或 NTU 並無隸屬關係，也不提供其證書。教學方法結合直覺講解、機制、實作及受控實驗。導師公開材料的連結屬可選參考，並非複製其 lecture 內容。</p><h2>驗證與限制</h2><p>全部 32 份 notebook 及配套 script 已檢查 syntax。27 條可用 CPU 執行的 tutorial 路徑，以 Python 3.13 成功執行，需要時使用 NumPy 2.5.4。23 項支援元件 contract test 通過。上述 CPU 執行期間，已停用可選的真實 model 區塊。Extraction API smoke test 及 controller fixture 已執行；它們並非 LLM inference benchmark。</p>
-<p>這次修訂環境沒有執行真實 tiny-transformer training（第 12 週）、embedding／Qdrant（第 18 週）、CUDA compilation／profiling（第 23 週）、LoRA training（第 26 週）及真實 model planning（第 28 週）。第 13、17、20 週的可選 model 路徑也沒有執行。Code 已檢查 syntax；package／device／model 相容性及 model 品質須在你的 runtime 驗證。沒有把 fixture 結果當作已訓練 model 的結果。發放的 notebook output 為空，亦不包含驗證 run 和 checkpoint。</p></article></div><footer class="footer"><span>Applied AI · 獨立自學課程</span><span>32 週 · 每週 10 小時</span><a href="resources.html#about-this-course">關於課程及資料來源</a></footer></main><dialog aria-labelledby="search-title" class="search-dialog"><div class="dialog-head"><h2 id="search-title">尋找概念</h2><button aria-label="關閉搜尋" class="search-close" type="button">關閉</button></div><label class="sr-only" for="course-search">搜尋所有 lecture 和 tutorial</label><input autocomplete="off" id="course-search" placeholder="試試 attention、fine-tuning 或 harness……" type="search"/><p aria-live="polite" class="search-status">搜尋 lecture notes、tutorial、測驗及閱讀材料。</p><div class="search-results"></div></dialog><div aria-live="polite" class="toast" role="status"></div></body></html>
+<html lang="zh-HK">
+ <head>
+  <script src="../assets/translations-zh-HK.js">
+  </script>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width,initial-scale=1" name="viewport"/>
+  <title>
+   閱讀材料、環境設定及課程資訊 · Applied AI
+  </title>
+  <meta content="Applied generative AI and LLM systems course material" name="description"/>
+  <meta content="#173c36" name="theme-color"/>
+  <link href="../assets/favicon.svg" rel="icon" type="image/svg+xml"/>
+  <link href="../assets/style.css" rel="stylesheet"/>
+  <link href="../assets/slides.css" rel="stylesheet"/>
+  <script>
+   window.COURSE_BASE="";
+  </script>
+  <script defer="" src="../assets/site-config.js">
+  </script>
+  <script defer="" src="assets/search-index.js">
+  </script>
+  <script defer="" src="../assets/app.js">
+  </script>
+  <script defer="" src="../assets/visuals.js">
+  </script>
+  <script defer="" src="../assets/slides.js">
+  </script>
+  <script defer="" src="../assets/beginner-visuals.js">
+  </script>
+  <script defer="True" src="../assets/locale-patterns.js">
+  </script>
+  <script defer="True" src="../assets/locale.js">
+  </script>
+  <link href="../assets/bilingual.css" rel="stylesheet"/>
+  <link href="../resources.html" hreflang="en" rel="alternate"/>
+  <link href="../assets/reader-v3.css" rel="stylesheet"/>
+  <script defer="True" src="../assets/reader-v3.js">
+  </script>
+ </head>
+ <body data-page-kind="resources" data-week="0">
+  <a class="skip-link" href="#main">
+   跳至內容
+  </a>
+  <header class="topbar">
+   <button aria-controls="course-sidebar" aria-expanded="false" class="menu-toggle" type="button">
+    選單
+   </button>
+   <a class="brand" href="index.html">
+    <span aria-hidden="true" class="brand-mark">
+     a
+     <span>
+      i
+     </span>
+    </span>
+    <span>
+     APPLIED AI
+     <small>
+      從原理到實踐
+     </small>
+    </span>
+   </a>
+   <nav aria-label="主要導覽">
+    <a href="index.html">
+     課程
+    </a>
+    <a href="visuals.html">
+     互動圖解
+    </a>
+    <a href="project.html">
+     專題
+    </a>
+    <a class="language-switch" href="../resources.html" hreflang="en" lang="en">
+     English
+    </a>
+   </nav>
+   <button class="search-open" type="button">
+    搜尋課程
+    <span aria-hidden="true">
+     /
+    </span>
+   </button>
+  </header>
+  <aside aria-label="課程章節" class="sidebar" id="course-sidebar">
+   <a class="side-home" href="index.html">
+    課程概覽
+   </a>
+   <details class="semester-nav" open="">
+    <summary>
+     第一學期
+     <span>
+      第 1–16 週
+     </span>
+    </summary>
+    <ol start="1">
+     <li>
+      <a href="lectures/01.html">
+       <span class="week-number">
+        01
+       </span>
+       <span>
+        Language model 究竟在學甚麼
+       </span>
+       <span class="week-tick" data-week-tick="1">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="lectures/02.html">
+       <span class="week-number">
+        02
+       </span>
+       <span>
+        從文字到 token 和數值 ID
+       </span>
+       <span class="week-tick" data-week-tick="2">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="lectures/03.html">
+       <span class="week-number">
+        03
+       </span>
+       <span>
+        Word vector 能表達甚麼
+       </span>
+       <span class="week-tick" data-week-tick="3">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="lectures/04.html">
+       <span class="week-number">
+        04
+       </span>
+       <span>
+        從 score 到 probability 和學習訊號
+       </span>
+       <span class="week-tick" data-week-tick="4">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="lectures/05.html">
+       <span class="week-number">
+        05
+       </span>
+       <span>
+        為甚麼語言需要 context 和次序
+       </span>
+       <span class="week-tick" data-week-tick="5">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="lectures/06.html">
+       <span class="week-number">
+        06
+       </span>
+       <span>
+        Attention 由 weighted mixture 開始
+       </span>
+       <span class="week-tick" data-week-tick="6">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="lectures/07.html">
+       <span class="week-number">
+        07
+       </span>
+       <span>
+        Query、key 和 value 從何而來
+       </span>
+       <span class="week-tick" data-week-tick="7">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="lectures/08.html">
+       <span class="week-number">
+        08
+       </span>
+       <span>
+        正確進行 attention scaling 和 masking
+       </span>
+       <span class="week-tick" data-week-tick="8">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="lectures/09.html">
+       <span class="week-number">
+        09
+       </span>
+       <span>
+        多個 attention head 與位置
+       </span>
+       <span class="week-tick" data-week-tick="9">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="lectures/10.html">
+       <span class="week-number">
+        10
+       </span>
+       <span>
+        逐步拆解 transformer block
+       </span>
+       <span class="week-tick" data-week-tick="10">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="lectures/11.html">
+       <span class="week-number">
+        11
+       </span>
+       <span>
+        Encoder、decoder 與完整 model architecture
+       </span>
+       <span class="week-tick" data-week-tick="11">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="lectures/12.html">
+       <span class="week-number">
+        12
+       </span>
+       <span>
+        訓練一個小型 transformer
+       </span>
+       <span class="week-tick" data-week-tick="12">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="lectures/13.html">
+       <span class="week-number">
+        13
+       </span>
+       <span>
+        Generation、decoding 與 KV cache
+       </span>
+       <span class="week-tick" data-week-tick="13">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="lectures/14.html">
+       <span class="week-number">
+        14
+       </span>
+       <span>
+        從 pretraining 到 instruction following 和 reasoning
+       </span>
+       <span class="week-tick" data-week-tick="14">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="lectures/15.html">
+       <span class="week-number">
+        15
+       </span>
+       <span>
+        文字以外的 Generative AI
+       </span>
+       <span class="week-tick" data-week-tick="15">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="lectures/16.html">
+       <span class="week-number">
+        16
+       </span>
+       <span>
+        完整 transformer 導覽與第一學期溫習
+       </span>
+       <span class="week-tick" data-week-tick="16">
+       </span>
+      </a>
+     </li>
+    </ol>
+   </details>
+   <details class="semester-nav">
+    <summary>
+     第二學期
+     <span>
+      第 17–32 週
+     </span>
+    </summary>
+    <ol start="17">
+     <li>
+      <a href="lectures/17.html">
+       <span class="week-number">
+        17
+       </span>
+       <span>
+        從 word vector 到 semantic search
+       </span>
+       <span class="week-tick" data-week-tick="17">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="lectures/18.html">
+       <span class="week-number">
+        18
+       </span>
+       <span>
+        從一列 vector 建立 vector database
+       </span>
+       <span class="week-tick" data-week-tick="18">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="lectures/19.html">
+       <span class="week-number">
+        19
+       </span>
+       <span>
+        把 RAG 理解為開卷作答
+       </span>
+       <span class="week-tick" data-week-tick="19">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="lectures/20.html">
+       <span class="week-number">
+        20
+       </span>
+       <span>
+        在保持基本任務的前提下改善 RAG
+       </span>
+       <span class="week-tick" data-week-tick="20">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="lectures/21.html">
+       <span class="week-number">
+        21
+       </span>
+       <span>
+        評估 retrieval、答案與 uncertainty
+       </span>
+       <span class="week-tick" data-week-tick="21">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="lectures/22.html">
+       <span class="week-number">
+        22
+       </span>
+       <span>
+        CPU、GPU、memory 與 model 資源計算
+       </span>
+       <span class="week-tick" data-week-tick="22">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="lectures/23.html">
+       <span class="week-number">
+        23
+       </span>
+       <span>
+        CUDA kernel 與 profiling
+       </span>
+       <span class="week-tick" data-week-tick="23">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="lectures/24.html">
+       <span class="week-number">
+        24
+       </span>
+       <span>
+        Fine-tuning 由教學 dataset 開始
+       </span>
+       <span class="week-tick" data-week-tick="24">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="lectures/25.html">
+       <span class="week-number">
+        25
+       </span>
+       <span>
+        從小型 matrix 理解 LoRA 和 QLoRA
+       </span>
+       <span class="week-tick" data-week-tick="25">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="lectures/26.html">
+       <span class="week-number">
+        26
+       </span>
+       <span>
+        Fine-tuning 實驗、preference 與 distillation
+       </span>
+       <span class="week-tick" data-week-tick="26">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="lectures/27.html">
+       <span class="week-number">
+        27
+       </span>
+       <span>
+        Tool、function、workflow 與 agent
+       </span>
+       <span class="week-tick" data-week-tick="27">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="lectures/28.html">
+       <span class="week-number">
+        28
+       </span>
+       <span>
+        Harness、planning、memory 與有界執行
+       </span>
+       <span class="week-tick" data-week-tick="28">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="lectures/29.html">
+       <span class="week-number">
+        29
+       </span>
+       <span>
+        從 notebook 到 MLOps 和 inference serving
+       </span>
+       <span class="week-tick" data-week-tick="29">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="lectures/30.html">
+       <span class="week-number">
+        30
+       </span>
+       <span>
+        Monitoring、security、regression test 與 rollback
+       </span>
+       <span class="week-tick" data-week-tick="30">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="lectures/31.html">
+       <span class="week-number">
+        31
+       </span>
+       <span>
+        整合文件助手與進階延伸
+       </span>
+       <span class="week-tick" data-week-tick="31">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="lectures/32.html">
+       <span class="week-number">
+        32
+       </span>
+       <span>
+        溫習、答辯與持續學習計劃
+       </span>
+       <span class="week-tick" data-week-tick="32">
+       </span>
+      </a>
+     </li>
+    </ol>
+   </details>
+   <div class="side-links">
+    <a href="visuals.html">
+     互動圖解實驗室
+     <span>
+      14 個互動課節
+     </span>
+    </a>
+    <a href="project.html">
+     文件助手
+     <span>
+      你的 capstone project
+     </span>
+    </a>
+    <a href="resources.html">
+     閱讀材料與環境設定
+    </a>
+   </div>
+   <div class="side-progress">
+    <div>
+     <span>
+      你的進度
+     </span>
+     <strong data-progress-count="">
+      0 / 32
+     </strong>
+    </div>
+    <progress aria-label="已完成 lecture" max="32" value="0">
+    </progress>
+    <small>
+     儲存在這個瀏覽器
+    </small>
+   </div>
+  </aside>
+  <main class="main" id="main">
+   <div class="content">
+    <div class="chapter-header">
+     <div class="eyebrow">
+      隨時查閱原始資料
+     </div>
+     <h1>
+      閱讀材料、環境設定及課程資訊
+     </h1>
+    </div>
+    <div class="lesson-links">
+     <a download="" href="../downloads/Applied_Generative_AI_Course.zip">
+      下載完整課程包
+     </a>
+     <a href="supplement.html">
+      詳解補充材料
+     </a>
+     <a href="schedule.html">
+      完整課程大綱
+     </a>
+     <a href="tests/checkpoints.html">
+      階段小測
+     </a>
+     <a href="implementation.html">
+      參考 code
+     </a>
+     <a class="source-download" href="../downloads/Course_Website_Source.zip">
+      下載可編輯網站 source 及 rebuild 說明
+     </a>
+    </div>
+    <article class="prose">
+     <h2>
+      環境設定與運算計劃
+     </h2>
+     <h2 id="read-first">
+      先閱讀這部分
+     </h2>
+     <p>
+      網站使用 static HTML、CSS 和 JavaScript。閱讀、slides、搜尋、解答、圖解和進度記錄均不需要安裝 Python 或付費服務。程式碼另外在你的電腦或 Colab 執行。
+     </p>
+     <h2 id="choose-a-supported-python-environment">
+      選擇受支援的 Python environment
+     </h2>
+     <p>
+      建立新的課程 environment 時，先選 Python 3.12 或 3.13，並使用 virtual environment。若某個 dependency 有需要，Python 3.11 仍是受支援的後備選項。Python 3.10 已於 2026 年 10 月 1 日結束支援，因此不再建議用於新安裝 [
+      <a class="inline-reading" href="resources.html#reference-r31">
+       Python version status (R31)
+      </a>
+      ]。
+     </p>
+     <p>
+      現時 PyTorch 安裝文件支援 Python 3.14。選用前，應檢查該 lab 使用的 NumPy、Transformers、Sentence Transformers、PEFT、Qdrant，以及 accelerator packages 是否都有相容版本。Python 3.15 是較新的 Python release，但 language release 本身並不能證明整個 machine-learning environment 已相容 [
+      <a class="inline-reading" href="resources.html#reference-r31">
+       Python version status (R31)
+      </a>
+      ,
+      <a class="inline-reading" href="resources.html#reference-r32">
+       PyTorch installation selector (R32)
+      </a>
+      ]。
+     </p>
+     <p>
+      數值課節需要 NumPy。使用 PyTorch 安裝選擇器，選擇你的 operating system 及 CPU 或 CUDA runtime；安裝後先執行小型 tensor operation，使用 GPU 時亦檢查 torch.cuda.is_available()。成功 import 是第一個 environment check，lab 結果則是另一項檢查。Colab 一般已有 NumPy 和 PyTorch，但仍應記錄該 session 的版本 [
+      <a class="inline-reading" href="resources.html#reference-r32">
+       PyTorch installation selector (R32)
+      </a>
+      ]。
+     </p>
+     <p>
+      先解壓完整課程 ZIP。根目錄包含 coursekit、data、notebooks 和 tests。在根目錄執行 python -m unittest discover -s tests -v。在 Colab 上載 ZIP，解壓至 /content/llm_course，再執行 bootstrap cell；該 cell 亦會尋找已解壓的 llm_course_v2 folder。單獨的 notebook 仍需要相應 support files。
+     </p>
+     <h2 id="models-for-english-and-hong-kong-chinese-examples">
+      英文與香港中文例子的 models
+     </h2>
+     <p>
+      預設的雙語 retrieval route 使用 intfloat/multilingual-e5-small，輸出 384-dimensional vectors，input limit 是 512 tokens。Retrieval 問題加上「query: 」prefix，passage 加上「passage: 」prefix，中文亦一樣；之後 normalize embeddings，以 cosine 或等價的 dot-product 排名。這些 prefixes 屬於這個 model，並非每個 embedding model 的共同規則。你的 evaluation 應包含英文、繁體中文及跨語言的 question-passage pairs [
+      <a class="inline-reading" href="resources.html#reference-r33">
+       Multilingual E5 small model card (R33)
+      </a>
+      ]。
+     </p>
+     <p>
+      較新的小型 generator route 使用 Qwen/Qwen3-0.6B，需要 Transformers 4.51.0 或以上版本。一般答案及 JSON-tool 練習應在 apply_chat_template 傳入 enable_thinking=False，因為這個 model 預設啟用 thinking。Run record 要一併記錄 model ID、model revision 及 chat-template settings [
+      <a class="inline-reading" href="resources.html#reference-r34">
+       Qwen3 0.6B model card (R34)
+      </a>
+      ]。
+     </p>
+     <div class="table-wrap">
+      <table>
+       <thead>
+        <tr>
+         <th>
+          Model route
+         </th>
+         <th>
+          用途與限制
+         </th>
+        </tr>
+       </thead>
+       <tbody>
+        <tr>
+         <td>
+          intfloat/multilingual-e5-small
+         </td>
+         <td>
+          雙語 retrieval 預設選項；384 dimensions；最多 512 input tokens；使用 model-specific query 和 passage prefixes。
+         </td>
+        </tr>
+        <tr>
+         <td>
+          Qwen/Qwen3-0.6B
+         </td>
+         <td>
+          小型 generator；一般 tool 和答案 route 明確使用 non-thinking mode。
+         </td>
+        </tr>
+        <tr>
+         <td>
+          sentence-transformers/all-MiniLM-L6-v2
+         </td>
+         <td>
+          舊版 English baseline；384 dimensions；預設會截斷超過 256 word pieces 的 input。
+         </td>
+        </tr>
+        <tr>
+         <td>
+          Qwen/Qwen2.5-0.5B-Instruct
+         </td>
+         <td>
+          保留的舊版小型 generator baseline，用於重現早期課程 runs。
+         </td>
+        </tr>
+       </tbody>
+      </table>
+     </div>
+     <p>
+      舊 models 仍是有用的對照；年份較早並不會令 baseline 自動失效。這裏明確標示其用途，避免雙語實驗不小心只使用 English embedding model。更換 model 一般需要重新建立 embeddings、相容的 index 及新的 evaluation，並非只替換檔名 [
+      <a class="inline-reading" href="resources.html#reference-r22">
+       MiniLM L6 legacy English model card (R22)
+      </a>
+      ,
+      <a class="inline-reading" href="resources.html#reference-r23">
+       Qwen2.5 0.5B Instruct legacy model card (R23)
+      </a>
+      ,
+      <a class="inline-reading" href="resources.html#reference-r33">
+       Multilingual E5 small model card (R33)
+      </a>
+      ,
+      <a class="inline-reading" href="resources.html#reference-r34">
+       Qwen3 0.6B model card (R34)
+      </a>
+      ]。
+     </p>
+     <h2 id="match-the-lab-to-available-hardware">
+      按可用 hardware 選擇 lab route
+     </h2>
+     <p>
+      手算核對、metric arithmetic、小型 vector search 和 controller tests 都可使用 CPU。Model inference 先用短 input、小型 output limit 和一個 request。約 4 GiB VRAM 的入門 GPU 或可執行短 context 的小型 model inference；VRAM 較多的免費 cloud GPU 則可支援較大的實驗。這些是規劃 route，並非 memory 保證；應量度實際 configuration 使用的 model、cache、activations 及 temporary allocations。
+     </p>
+     <p>
+      免費 Colab 的 GPU 供應會改變。以 nvidia-smi 檢查分配到的 device 和可用 VRAM，並把 checkpoints 和 reports 另存至 temporary runtime 以外的位置。選擇受支援的 dtype：float32 適合先在 CPU 核對正確性；float16、bfloat16 及 quantized kernels 則視乎 hardware 和 software。第 23 週的 CUDA compilation 需要 nvcc；若沒有，先完成數值及 code-reading 部分，並記錄這項 runtime 限制。
+     </p>
+     <h2 id="flashattention-versions-and-generative-model-references">
+      FlashAttention 版本與 generative-model 參考
+     </h2>
+     <p>
+      原始 FlashAttention paper 解釋 IO-aware exact attention。FlashAttention-2 改善 work partitioning 和 parallelism；FlashAttention-3 針對 Hopper execution，包括 asynchronous scheduling 及 low-precision paths。它們是相關的 implementation generations，而不是不同的 probability 定義。考慮安裝前，先讀第 22–23 週的 algorithm 圖解 [
+      <a class="inline-reading" href="resources.html#reference-r26">
+       Dao et al. FlashAttention (R26)
+      </a>
+      ,
+      <a class="inline-reading" href="resources.html#reference-r35">
+       Dao FlashAttention-2 (R35)
+      </a>
+      ,
+      <a class="inline-reading" href="resources.html#reference-r36">
+       Shah et al. FlashAttention-3 (R36)
+      </a>
+      ]。
+     </p>
+     <p>
+      Kernel support 與 hardware 有關。標準 CUDA FlashAttention-2 route 針對 Ampere、Ada 和 Hopper GPUs；FlashAttention-3 則針對 H100/H800 等 Hopper GPUs。官方 implementation 列出現時 requirements 及更新 kernels。本課程不要求安裝 FlashAttention package 才能學習或測試普通 attention；使用 environment 內受支援的 backend 即可 [
+      <a class="inline-reading" href="resources.html#reference-r37">
+       Official FlashAttention implementation (R37)
+      </a>
+      ]。
+     </p>
+     <p>
+      DDPM 是 diffusion 的基礎描述，並非對現時 model 的推薦。第 15 週把它連繫至 learned reverse denoising、latent diffusion 和 flow matching，讓 forward-noising formula 不會被當成完整 generation process [
+      <a class="inline-reading" href="resources.html#reference-r21">
+       Ho et al. Denoising Diffusion Probabilistic Models (R21)
+      </a>
+      ,
+      <a class="inline-reading" href="resources.html#reference-r38">
+       Rombach et al. Latent Diffusion Models (R38)
+      </a>
+      ,
+      <a class="inline-reading" href="resources.html#reference-r39">
+       Lipman et al. Flow Matching (R39)
+      </a>
+      ]。
+     </p>
+     <h2 id="reproduce-the-environment-you-actually-ran">
+      重現實際執行的 environment
+     </h2>
+     <p>
+      Notebook 中的 package ranges 是初始 constraints，並非 lockfiles。尤其 Qwen3 route 需要較新的 Transformers lower bound；要重現舊 run 時，仍可能需要先前儲存的 environment。記錄實際安裝的 Python、torch、transformers、sentence-transformers、PEFT 和 accelerator 版本、model／tokenizer commits、data hashes、seeds 及 configuration。所選 lab 成功執行後，再儲存 lockfile。
+     </p>
+     <p>
+      課程附帶的 source 和數值檢查，與 model-download、GPU-training 及 kernel checks 是不同的驗證。Model card 或成功的 syntax check，並不代表完整 workload 已在你的 device 執行。每份 report 都應附上 execution status。
+     </p>
+     <h2 id="outputs">
+      輸出
+     </h2>
+     <p>
+      Bootstrap 會建立 runs directory。使用 run IDs 並保留實際 outputs。虛構教學 fixtures 刻意維持小型規模，因此應把它們報告為教學例子，而非 production benchmarks。
+     </p>
+     <h2>
+      原始參考資料
+     </h2>
+     <p>
+      連結於 2026 年 10 月 20 日核對。課程網頁用作教學結構參考及選讀；書面章節和練習均為原創。軟件文件會變動，請保留實際執行的版本。除非標示選讀，否則閱讀指定章節即可，不必讀完整份資料。
+     </p>
+     <div class="table-wrap">
+      <table>
+       <thead>
+        <tr>
+         <th>
+          ID
+         </th>
+         <th>
+          原始資料
+         </th>
+         <th>
+          用途
+         </th>
+        </tr>
+       </thead>
+       <tbody>
+        <tr id="reference-r01">
+         <td>
+          R01
+         </td>
+         <td>
+          <a href="https://cs336.stanford.edu/">
+           Stanford CS336 Language Modeling from Scratch
+          </a>
+         </td>
+         <td>
+          Architecture、資源計算、data、alignment；可選進階作業
+         </td>
+        </tr>
+        <tr id="reference-r02">
+         <td>
+          R02
+         </td>
+         <td>
+          <a href="https://stanford-cs329s.github.io/">
+           Stanford CS329S Machine Learning Systems Design
+          </a>
+         </td>
+         <td>
+          Lifecycle、stakeholder requirement、deployment 及 monitoring
+         </td>
+        </tr>
+        <tr id="reference-r03">
+         <td>
+          R03
+         </td>
+         <td>
+          <a href="https://speech.ee.ntu.edu.tw/~hylee/GenAI-ML/2025-fall.php">
+           Hung-yi Lee Introduction to GenAI and ML 2025
+          </a>
+         </td>
+         <td>
+          可選直覺入門影片：context engineering、model 內部、evaluation、post-training
+         </td>
+        </tr>
+        <tr id="reference-r04">
+         <td>
+          R04
+         </td>
+         <td>
+          <a href="https://arxiv.org/abs/1706.03762">
+           Vaswani et al. Attention Is All You Need
+          </a>
+         </td>
+         <td>
+          Scaled dot-product attention 及 multi-head architecture
+         </td>
+        </tr>
+        <tr id="reference-r05">
+         <td>
+          R05
+         </td>
+         <td>
+          <a href="https://research.google.com/colaboratory/faq.html">
+           Google Colab FAQ
+          </a>
+         </td>
+         <td>
+          資源供應、session 限制及持久儲存
+         </td>
+        </tr>
+        <tr id="reference-r06">
+         <td>
+          R06
+         </td>
+         <td>
+          <a href="https://arxiv.org/abs/2005.11401">
+           Lewis et al. Retrieval Augmented Generation
+          </a>
+         </td>
+         <td>
+          Parametric 與 retrieved 資訊；RAG 的歷史 formulation
+         </td>
+        </tr>
+        <tr id="reference-r07">
+         <td>
+          R07
+         </td>
+         <td>
+          <a href="https://www.sbert.net/docs/sentence_transformer/usage/semantic_textual_similarity.html">
+           Sentence Transformers semantic similarity
+          </a>
+         </td>
+         <td>
+          Embedding encoding 與 similarity
+         </td>
+        </tr>
+        <tr id="reference-r08">
+         <td>
+          R08
+         </td>
+         <td>
+          <a href="https://qdrant.tech/documentation/quickstart/">
+           Qdrant local quickstart
+          </a>
+         </td>
+         <td>
+          Collection、point 與 payload
+         </td>
+        </tr>
+        <tr id="reference-r09">
+         <td>
+          R09
+         </td>
+         <td>
+          <a href="https://huggingface.co/docs/transformers/chat_templating">
+           Hugging Face Transformers chat templates
+          </a>
+         </td>
+         <td>
+          Message serialization 與 generation prompt
+         </td>
+        </tr>
+        <tr id="reference-r10">
+         <td>
+          R10
+         </td>
+         <td>
+          <a href="https://arxiv.org/abs/2201.11903">
+           Wei et al. Chain of Thought Prompting
+          </a>
+         </td>
+         <td>
+          Intermediate-step prompting 與按 task 評估
+         </td>
+        </tr>
+        <tr id="reference-r11">
+         <td>
+          R11
+         </td>
+         <td>
+          <a href="https://arxiv.org/abs/2210.03629">
+           Yao et al. ReAct
+          </a>
+         </td>
+         <td>
+          交替進行 observation 和 action
+         </td>
+        </tr>
+        <tr id="reference-r12">
+         <td>
+          R12
+         </td>
+         <td>
+          <a href="https://arxiv.org/abs/2106.09685">
+           Hu et al. LoRA
+          </a>
+         </td>
+         <td>
+          Low-rank 可訓練更新
+         </td>
+        </tr>
+        <tr id="reference-r13">
+         <td>
+          R13
+         </td>
+         <td>
+          <a href="https://arxiv.org/abs/2305.14314">
+           Dettmers et al. QLoRA
+          </a>
+         </td>
+         <td>
+          Quantized frozen base 加 adapter
+         </td>
+        </tr>
+        <tr id="reference-r14">
+         <td>
+          R14
+         </td>
+         <td>
+          <a href="https://huggingface.co/docs/peft/main/en/conceptual_guides/lora">
+           Hugging Face PEFT LoRA guide
+          </a>
+         </td>
+         <td>
+          Configuration 及 adapter 操作；請在文件選擇已安裝版本
+         </td>
+        </tr>
+        <tr id="reference-r15">
+         <td>
+          R15
+         </td>
+         <td>
+          <a href="https://arxiv.org/abs/2305.18290">
+           Rafailov et al. Direct Preference Optimization
+          </a>
+         </td>
+         <td>
+          Preference learning objective
+         </td>
+        </tr>
+        <tr id="reference-r16">
+         <td>
+          R16
+         </td>
+         <td>
+          <a href="https://docs.nvidia.com/cuda/cuda-programming-guide/">
+           NVIDIA CUDA programming guide
+          </a>
+         </td>
+         <td>
+          Thread hierarchy、memory 與 synchronization
+         </td>
+        </tr>
+        <tr id="reference-r17">
+         <td>
+          R17
+         </td>
+         <td>
+          <a href="https://developer.nvidia.com/blog/easy-introduction-cuda-c-and-c/">
+           NVIDIA CUDA introduction
+          </a>
+         </td>
+         <td>
+          最小 CUDA C++ 程式
+         </td>
+        </tr>
+        <tr id="reference-r18">
+         <td>
+          R18
+         </td>
+         <td>
+          <a href="https://docs.pytorch.org/tutorials/recipes/recipes/amp_recipe.html">
+           PyTorch automatic mixed precision recipe
+          </a>
+         </td>
+         <td>
+          Autocast 與 gradient scaling
+         </td>
+        </tr>
+        <tr id="reference-r19">
+         <td>
+          R19
+         </td>
+         <td>
+          <a href="https://docs.pytorch.org/tutorials/recipes/recipes/profiler_recipe.html">
+           PyTorch profiler recipe
+          </a>
+         </td>
+         <td>
+          CPU／GPU 活動、operator 時間與 memory
+         </td>
+        </tr>
+        <tr id="reference-r20">
+         <td>
+          R20
+         </td>
+         <td>
+          <a href="https://mlflow.org/docs/latest/ml/tracking/">
+           MLflow experiment tracking
+          </a>
+         </td>
+         <td>
+          Run、parameter、metric 與 artifact
+         </td>
+        </tr>
+        <tr id="reference-r21">
+         <td>
+          R21
+         </td>
+         <td>
+          <a href="https://arxiv.org/abs/2006.11239">
+           Ho et al. Denoising Diffusion Probabilistic Models
+          </a>
+         </td>
+         <td>
+          基礎 forward 與 learned reverse diffusion；連繫 latent diffusion 和 flow matching
+         </td>
+        </tr>
+        <tr id="reference-r22">
+         <td>
+          R22
+         </td>
+         <td>
+          <a href="https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2">
+           MiniLM L6 legacy English model card
+          </a>
+         </td>
+         <td>
+          歷史 English baseline；預設截斷超過 256 word pieces 的 input
+         </td>
+        </tr>
+        <tr id="reference-r23">
+         <td>
+          R23
+         </td>
+         <td>
+          <a href="https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct">
+           Qwen2.5 0.5B Instruct legacy model card
+          </a>
+         </td>
+         <td>
+          用於可重現比較的歷史 generator baseline
+         </td>
+        </tr>
+        <tr id="reference-r24">
+         <td>
+          R24
+         </td>
+         <td>
+          <a href="https://arxiv.org/abs/1603.09320">
+           Malkov and Yashunin HNSW
+          </a>
+         </td>
+         <td>
+          Hierarchical approximate nearest-neighbor graph
+         </td>
+        </tr>
+        <tr id="reference-r25">
+         <td>
+          R25
+         </td>
+         <td>
+          <a href="https://doi.org/10.1561/1500000019">
+           Robertson and Zaragoza Probabilistic Relevance Framework
+          </a>
+         </td>
+         <td>
+          BM25 term saturation 與 length normalization
+         </td>
+        </tr>
+        <tr id="reference-r26">
+         <td>
+          R26
+         </td>
+         <td>
+          <a href="https://arxiv.org/abs/2205.14135">
+           Dao et al. FlashAttention
+          </a>
+         </td>
+         <td>
+          基礎 IO-aware exact attention；比較其後的 implementation generations
+         </td>
+        </tr>
+        <tr id="reference-r27">
+         <td>
+          R27
+         </td>
+         <td>
+          <a href="https://sbert.net/docs/package_reference/sentence_transformer/losses.html">
+           Sentence Transformers contrastive losses
+          </a>
+         </td>
+         <td>
+          Contrastive training 與 negative pairs 的假設
+         </td>
+        </tr>
+        <tr id="reference-r28">
+         <td>
+          R28
+         </td>
+         <td>
+          <a href="https://sbert.net/examples/sentence_transformer/applications/retrieve_rerank/README.html">
+           Sentence Transformers retrieve and rerank
+          </a>
+         </td>
+         <td>
+          Bi-encoder 與 cross-encoder 的角色
+         </td>
+        </tr>
+        <tr id="reference-r29">
+         <td>
+          R29
+         </td>
+         <td>
+          <a href="https://modelcontextprotocol.io/docs/learn/architecture">
+           Model Context Protocol architecture
+          </a>
+         </td>
+         <td>
+          Host、client、server、tools、resources 和 prompts
+         </td>
+        </tr>
+        <tr id="reference-r30">
+         <td>
+          R30
+         </td>
+         <td>
+          <a href="https://modelcontextprotocol.io/specification/2026-07-28/server/tools">
+           Model Context Protocol tools
+          </a>
+         </td>
+         <td>
+          Tool discovery 和 tool calls；概念參考
+         </td>
+        </tr>
+        <tr id="reference-r31">
+         <td>
+          R31
+         </td>
+         <td>
+          <a href="https://devguide.python.org/versions/">
+           Python version status
+          </a>
+         </td>
+         <td>
+          受支援 releases 及 Python 3.10 結束支援日期
+         </td>
+        </tr>
+        <tr id="reference-r32">
+         <td>
+          R32
+         </td>
+         <td>
+          <a href="https://pytorch.org/get-started/locally/">
+           PyTorch installation selector
+          </a>
+         </td>
+         <td>
+          配對 Python、operating system 和 accelerator installation
+         </td>
+        </tr>
+        <tr id="reference-r33">
+         <td>
+          R33
+         </td>
+         <td>
+          <a href="https://huggingface.co/intfloat/multilingual-e5-small">
+           Multilingual E5 small model card
+          </a>
+         </td>
+         <td>
+          雙語 retrieval route；384 dimensions、512 tokens 及 query／passage prefixes
+         </td>
+        </tr>
+        <tr id="reference-r34">
+         <td>
+          R34
+         </td>
+         <td>
+          <a href="https://huggingface.co/Qwen/Qwen3-0.6B">
+           Qwen3 0.6B model card
+          </a>
+         </td>
+         <td>
+          較新的小型 generator；Transformers requirements 和 thinking-mode control
+         </td>
+        </tr>
+        <tr id="reference-r35">
+         <td>
+          R35
+         </td>
+         <td>
+          <a href="https://arxiv.org/abs/2307.08691">
+           Dao FlashAttention-2
+          </a>
+         </td>
+         <td>
+          Work partitioning 與 parallelism
+         </td>
+        </tr>
+        <tr id="reference-r36">
+         <td>
+          R36
+         </td>
+         <td>
+          <a href="https://arxiv.org/abs/2407.08608">
+           Shah et al. FlashAttention-3
+          </a>
+         </td>
+         <td>
+          針對 Hopper 的 asynchronous 和 low-precision execution
+         </td>
+        </tr>
+        <tr id="reference-r37">
+         <td>
+          R37
+         </td>
+         <td>
+          <a href="https://github.com/Dao-AILab/flash-attention">
+           Official FlashAttention implementation
+          </a>
+         </td>
+         <td>
+          現時 kernel 和 hardware support
+         </td>
+        </tr>
+        <tr id="reference-r38">
+         <td>
+          R38
+         </td>
+         <td>
+          <a href="https://arxiv.org/abs/2112.10752">
+           Rombach et al. Latent Diffusion Models
+          </a>
+         </td>
+         <td>
+          在 autoencoder latent space 進行 generation
+         </td>
+        </tr>
+        <tr id="reference-r39">
+         <td>
+          R39
+         </td>
+         <td>
+          <a href="https://arxiv.org/abs/2210.02747">
+           Lipman et al. Flow Matching
+          </a>
+         </td>
+         <td>
+          為 generative modeling 學習 vector field
+         </td>
+        </tr>
+        <tr id="reference-r40">
+         <td>
+          R40
+         </td>
+         <td>
+          <a href="https://huggingface.co/docs/peft/package_reference/lora">
+           PEFT LoRA documentation
+          </a>
+         </td>
+         <td>
+          參考主題：PEFT LoRA documentation
+         </td>
+        </tr>
+        <tr id="reference-r41">
+         <td>
+          R41
+         </td>
+         <td>
+          <a href="https://arxiv.org/abs/2402.09353">
+           DoRA: Weight-Decomposed Low-Rank Adaptation
+          </a>
+         </td>
+         <td>
+          參考主題：DoRA: Weight-Decomposed Low-Rank Adaptation
+         </td>
+        </tr>
+        <tr id="reference-r42">
+         <td>
+          R42
+         </td>
+         <td>
+          <a href="https://arxiv.org/abs/2312.03732">
+           A Rank Stabilization Scaling Factor for Fine-Tuning with LoRA
+          </a>
+         </td>
+         <td>
+          參考主題：A Rank Stabilization Scaling Factor for Fine-Tuning with LoRA
+         </td>
+        </tr>
+        <tr id="reference-r43">
+         <td>
+          R43
+         </td>
+         <td>
+          <a href="https://huggingface.co/docs/trl/dpo_trainer">
+           TRL DPO Trainer
+          </a>
+         </td>
+         <td>
+          參考主題：TRL DPO Trainer
+         </td>
+        </tr>
+        <tr id="reference-r44">
+         <td>
+          R44
+         </td>
+         <td>
+          <a href="https://huggingface.co/docs/transformers/chat_extras">
+           Hugging Face Transformers tool use
+          </a>
+         </td>
+         <td>
+          參考主題：Hugging Face Transformers tool use
+         </td>
+        </tr>
+        <tr id="reference-r45">
+         <td>
+          R45
+         </td>
+         <td>
+          <a href="https://www.swebench.com/">
+           SWE-bench official benchmark
+          </a>
+         </td>
+         <td>
+          參考主題：SWE-bench official benchmark
+         </td>
+        </tr>
+        <tr id="reference-r46">
+         <td>
+          R46
+         </td>
+         <td>
+          <a href="https://docs.vllm.ai/en/stable/getting_started/quickstart/">
+           vLLM quickstart
+          </a>
+         </td>
+         <td>
+          參考主題：vLLM quickstart
+         </td>
+        </tr>
+        <tr id="reference-r47">
+         <td>
+          R47
+         </td>
+         <td>
+          <a href="https://github.com/ggml-org/llama.cpp/blob/master/tools/server/README.md">
+           llama.cpp server
+          </a>
+         </td>
+         <td>
+          參考主題：llama.cpp server
+         </td>
+        </tr>
+        <tr id="reference-r48">
+         <td>
+          R48
+         </td>
+         <td>
+          <a href="https://arxiv.org/abs/2309.06180">
+           PagedAttention
+          </a>
+         </td>
+         <td>
+          參考主題：PagedAttention
+         </td>
+        </tr>
+        <tr id="reference-r49">
+         <td>
+          R49
+         </td>
+         <td>
+          <a href="https://genai.owasp.org/llm-top-10/">
+           OWASP 2025 LLM Top 10
+          </a>
+         </td>
+         <td>
+          參考主題：OWASP 2025 LLM Top 10
+         </td>
+        </tr>
+        <tr id="reference-r50">
+         <td>
+          R50
+         </td>
+         <td>
+          <a href="https://www.pcpd.org.hk/english/data_privacy_law/6_data_protection_principles/principles.html">
+           PCPD Six Data Protection Principles
+          </a>
+         </td>
+         <td>
+          參考主題：PCPD Six Data Protection Principles
+         </td>
+        </tr>
+        <tr id="reference-r51">
+         <td>
+          R51
+         </td>
+         <td>
+          <a href="https://www.pcpd.org.hk/english/resources_centre/publications/files/ai_protection_framework.pdf">
+           PCPD AI Model Personal Data Protection Framework
+          </a>
+         </td>
+         <td>
+          參考主題：PCPD AI Model Personal Data Protection Framework
+         </td>
+        </tr>
+        <tr id="reference-r52">
+         <td>
+          R52
+         </td>
+         <td>
+          <a href="https://www.ipd.gov.hk/en/copyright/index.html">
+           Hong Kong Intellectual Property Department copyright
+          </a>
+         </td>
+         <td>
+          參考主題：Hong Kong Intellectual Property Department copyright
+         </td>
+        </tr>
+        <tr id="reference-r53">
+         <td>
+          R53
+         </td>
+         <td>
+          <a href="https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai">
+           European Commission AI Act
+          </a>
+         </td>
+         <td>
+          參考主題：European Commission AI Act
+         </td>
+        </tr>
+        <tr id="reference-r54">
+         <td>
+          R54
+         </td>
+         <td>
+          <a href="https://huggingface.co/learn/llm-course/en/chapter6/5">
+           Hugging Face BPE tokenization
+          </a>
+         </td>
+         <td>
+          參考主題：Hugging Face BPE tokenization
+         </td>
+        </tr>
+        <tr id="reference-r55">
+         <td>
+          R55
+         </td>
+         <td>
+          <a href="https://huggingface.co/learn/llm-course/en/chapter6/6">
+           Hugging Face WordPiece tokenization
+          </a>
+         </td>
+         <td>
+          參考主題：Hugging Face WordPiece tokenization
+         </td>
+        </tr>
+        <tr id="reference-r56">
+         <td>
+          R56
+         </td>
+         <td>
+          <a href="https://huggingface.co/learn/llm-course/en/chapter6/7">
+           Hugging Face Unigram tokenization
+          </a>
+         </td>
+         <td>
+          參考主題：Hugging Face Unigram tokenization
+         </td>
+        </tr>
+        <tr id="reference-r57">
+         <td>
+          R57
+         </td>
+         <td>
+          <a href="https://arxiv.org/abs/1808.06226">
+           SentencePiece
+          </a>
+         </td>
+         <td>
+          參考主題：SentencePiece
+         </td>
+        </tr>
+        <tr id="reference-r58">
+         <td>
+          R58
+         </td>
+         <td>
+          <a href="https://arxiv.org/abs/1909.00512">
+           How Contextual are Contextualized Word Representations?
+          </a>
+         </td>
+         <td>
+          參考主題：How Contextual are Contextualized Word Representations?
+         </td>
+        </tr>
+        <tr id="reference-r59">
+         <td>
+          R59
+         </td>
+         <td>
+          <a href="https://docs.pytorch.org/docs/2.14/generated/torch.nn.functional.log_softmax.html">
+           PyTorch log_softmax
+          </a>
+         </td>
+         <td>
+          參考主題：PyTorch log_softmax
+         </td>
+        </tr>
+        <tr id="reference-r60">
+         <td>
+          R60
+         </td>
+         <td>
+          <a href="https://docs.pytorch.org/docs/2.14/generated/torch.nn.CrossEntropyLoss.html">
+           PyTorch CrossEntropyLoss
+          </a>
+         </td>
+         <td>
+          參考主題：PyTorch CrossEntropyLoss
+         </td>
+        </tr>
+        <tr id="reference-r61">
+         <td>
+          R61
+         </td>
+         <td>
+          <a href="https://huggingface.co/docs/transformers/perplexity">
+           Perplexity of fixed-length models
+          </a>
+         </td>
+         <td>
+          參考主題：Perplexity of fixed-length models
+         </td>
+        </tr>
+        <tr id="reference-r62">
+         <td>
+          R62
+         </td>
+         <td>
+          <a href="https://arxiv.org/abs/2104.09864">
+           RoFormer
+          </a>
+         </td>
+         <td>
+          參考主題：RoFormer
+         </td>
+        </tr>
+        <tr id="reference-r63">
+         <td>
+          R63
+         </td>
+         <td>
+          <a href="https://arxiv.org/abs/2203.16634">
+           NoPE causal language models
+          </a>
+         </td>
+         <td>
+          參考主題：NoPE causal language models
+         </td>
+        </tr>
+        <tr id="reference-r64">
+         <td>
+          R64
+         </td>
+         <td>
+          <a href="https://arxiv.org/abs/2305.13245">
+           GQA
+          </a>
+         </td>
+         <td>
+          參考主題：GQA
+         </td>
+        </tr>
+        <tr id="reference-r65">
+         <td>
+          R65
+         </td>
+         <td>
+          <a href="https://arxiv.org/abs/2002.05202">
+           GLU variants
+          </a>
+         </td>
+         <td>
+          參考主題：GLU variants
+         </td>
+        </tr>
+        <tr id="reference-r66">
+         <td>
+          R66
+         </td>
+         <td>
+          <a href="https://arxiv.org/abs/2405.04434">
+           DeepSeek-V2
+          </a>
+         </td>
+         <td>
+          參考主題：DeepSeek-V2
+         </td>
+        </tr>
+        <tr id="reference-r67">
+         <td>
+          R67
+         </td>
+         <td>
+          <a href="https://arxiv.org/abs/2312.00752">
+           Mamba
+          </a>
+         </td>
+         <td>
+          參考主題：Mamba
+         </td>
+        </tr>
+        <tr id="reference-r68">
+         <td>
+          R68
+         </td>
+         <td>
+          <a href="https://arxiv.org/abs/2203.15556">
+           Compute-optimal language models
+          </a>
+         </td>
+         <td>
+          參考主題：Compute-optimal language models
+         </td>
+        </tr>
+        <tr id="reference-r69">
+         <td>
+          R69
+         </td>
+         <td>
+          <a href="https://docs.pytorch.org/docs/stable/generated/torch.optim.AdamW.html">
+           AdamW
+          </a>
+         </td>
+         <td>
+          參考主題：AdamW
+         </td>
+        </tr>
+        <tr id="reference-r70">
+         <td>
+          R70
+         </td>
+         <td>
+          <a href="https://huggingface.co/docs/transformers/main_classes/text_generation">
+           Transformers generation parameters
+          </a>
+         </td>
+         <td>
+          參考主題：Transformers generation parameters
+         </td>
+        </tr>
+        <tr id="reference-r71">
+         <td>
+          R71
+         </td>
+         <td>
+          <a href="https://arxiv.org/abs/2302.01318">
+           Speculative sampling
+          </a>
+         </td>
+         <td>
+          參考主題：Speculative sampling
+         </td>
+        </tr>
+        <tr id="reference-r72">
+         <td>
+          R72
+         </td>
+         <td>
+          <a href="https://arxiv.org/abs/1707.06347">
+           PPO
+          </a>
+         </td>
+         <td>
+          參考主題：PPO
+         </td>
+        </tr>
+        <tr id="reference-r73">
+         <td>
+          R73
+         </td>
+         <td>
+          <a href="https://arxiv.org/abs/2402.03300">
+           DeepSeekMath
+          </a>
+         </td>
+         <td>
+          參考主題：DeepSeekMath
+         </td>
+        </tr>
+        <tr id="reference-r74">
+         <td>
+          R74
+         </td>
+         <td>
+          <a href="https://arxiv.org/abs/2212.08073">
+           Constitutional AI
+          </a>
+         </td>
+         <td>
+          參考主題：Constitutional AI
+         </td>
+        </tr>
+        <tr id="reference-r75">
+         <td>
+          R75
+         </td>
+         <td>
+          <a href="https://arxiv.org/abs/2212.09748">
+           DiT
+          </a>
+         </td>
+         <td>
+          參考主題：DiT
+         </td>
+        </tr>
+        <tr id="reference-r76">
+         <td>
+          R76
+         </td>
+         <td>
+          <a href="https://arxiv.org/abs/2207.12598">
+           Classifier-free guidance
+          </a>
+         </td>
+         <td>
+          參考主題：Classifier-free guidance
+         </td>
+        </tr>
+        <tr id="reference-r77">
+         <td>
+          R77
+         </td>
+         <td>
+          <a href="https://arxiv.org/abs/2304.08485">
+           Visual instruction tuning
+          </a>
+         </td>
+         <td>
+          參考主題：Visual instruction tuning
+         </td>
+        </tr>
+        <tr id="reference-r78">
+         <td>
+          R78
+         </td>
+         <td>
+          <a href="https://sbert.net/docs/sentence_transformer/pretrained_models.html">
+           Sentence Transformers pretrained models
+          </a>
+         </td>
+         <td>
+          參考主題：Sentence Transformers pretrained models
+         </td>
+        </tr>
+        <tr id="reference-r79">
+         <td>
+          R79
+         </td>
+         <td>
+          <a href="https://arxiv.org/abs/2205.13147">
+           Matryoshka Representation Learning
+          </a>
+         </td>
+         <td>
+          參考主題：Matryoshka Representation Learning
+         </td>
+        </tr>
+        <tr id="reference-r80">
+         <td>
+          R80
+         </td>
+         <td>
+          <a href="https://arxiv.org/abs/2004.12832">
+           ColBERT
+          </a>
+         </td>
+         <td>
+          參考主題：ColBERT
+         </td>
+        </tr>
+        <tr id="reference-r81">
+         <td>
+          R81
+         </td>
+         <td>
+          <a href="https://arxiv.org/abs/2107.05720">
+           SPLADE
+          </a>
+         </td>
+         <td>
+          參考主題：SPLADE
+         </td>
+        </tr>
+        <tr id="reference-r82">
+         <td>
+          R82
+         </td>
+         <td>
+          <a href="https://github.com/nmslib/hnswlib/blob/master/ALGO_PARAMS.md">
+           HNSW parameters
+          </a>
+         </td>
+         <td>
+          參考主題：HNSW parameters
+         </td>
+        </tr>
+        <tr id="reference-r83">
+         <td>
+          R83
+         </td>
+         <td>
+          <a href="https://github.com/facebookresearch/faiss/wiki/Faiss-indexes">
+           Faiss indexes
+          </a>
+         </td>
+         <td>
+          參考主題：Faiss indexes
+         </td>
+        </tr>
+        <tr id="reference-r84">
+         <td>
+          R84
+         </td>
+         <td>
+          <a href="https://github.com/microsoft/DiskANN">
+           DiskANN
+          </a>
+         </td>
+         <td>
+          參考主題：DiskANN
+         </td>
+        </tr>
+        <tr id="reference-r85">
+         <td>
+          R85
+         </td>
+         <td>
+          <a href="https://triton-lang.org/main/getting-started/tutorials/01-vector-add.html">
+           Triton vector addition
+          </a>
+         </td>
+         <td>
+          參考主題：Triton vector addition
+         </td>
+        </tr>
+        <tr id="reference-r86">
+         <td>
+          R86
+         </td>
+         <td>
+          <a href="https://docs.pytorch.org/tutorials/intermediate/torch_compile_tutorial.html">
+           torch.compile introduction
+          </a>
+         </td>
+         <td>
+          參考主題：torch.compile introduction
+         </td>
+        </tr>
+        <tr id="reference-r87">
+         <td>
+          R87
+         </td>
+         <td>
+          <a href="https://docs.pytorch.org/tutorials/intermediate/FSDP1_tutorial.html">
+           FSDP tutorial
+          </a>
+         </td>
+         <td>
+          參考主題：FSDP tutorial
+         </td>
+        </tr>
+        <tr id="reference-r88">
+         <td>
+          R88
+         </td>
+         <td>
+          <a href="https://www.deepspeed.ai/tutorials/zero/">
+           DeepSpeed ZeRO tutorial
+          </a>
+         </td>
+         <td>
+          參考主題：DeepSpeed ZeRO tutorial
+         </td>
+        </tr>
+       </tbody>
+      </table>
+     </div>
+     <h2 id="readings-by-phase">
+      按學習階段閱讀
+     </h2>
+     <p>
+      先閱讀課程內的解說和計算例子。概念出現位置的 source links，可讓你查閱原始定義或具體 software behavior。Research papers 和完整外部課程都是參考，並非額外 assignments。
+     </p>
+     <p>
+      第 1–5 週使用講義及 tokenization／model-card 例子；第 6–11 週把 attention 和 architecture 連繫至原始 transformer 及現代 variants。第 12–16 週連繫 training、chat templates、reasoning 和 generative families。第 17–21 週使用 retrieval、embedding 和 evaluation 文件；第 22–23 週使用 memory、kernels 和 profiling sources；第 24–26 週使用 adaptation 和 preference-learning sources；第 27–32 週使用 tool、protocol、serving、safety 和 lifecycle 文件。按課節指定部分閱讀即可，不需要把所有 sources 全部讀完。
+     </p>
+     <h2 id="historical-foundations-and-current-tools">
+      歷史基礎與現時工具
+     </h2>
+     <p>
+      基礎 paper 不會只因出版年份較早而過時。Attention、diffusion 和 low-rank adaptation 保留原始定義；安裝工具時則使用現時 implementation 文件。舊 model 是重現結果的對照；修訂後的 model labs 建議先使用 multilingual embedding 及較新的 small-generator routes。
+     </p>
+     <h2 id="about-this-course">
+      關於本課程
+     </h2>
+     <p>
+      獨立原創自學材料，與 Stanford 或 NTU 並無隸屬關係，也不提供其證書。教學方法結合直覺講解、機制、實作及受控實驗。導師公開材料的連結屬可選參考，並非複製其 lecture 內容。
+     </p>
+     <h2>
+      驗證與限制
+     </h2>
+     <p>
+      32 份 notebooks 及 companion scripts 均通過 syntax checks。本次修訂已執行 13 條完整 CPU-safe tutorial paths，以及獨立 DPO 算術檢查，全部通過。Tutorial 30 亦通過全部 23 項 support contract tests。CPU 檢查期間關閉了 optional model-download blocks。Attention、RoPE、parameter count、contrastive loss、nDCG、McNemar、memory、bandwidth、DPO 和 energy 的手算例子已獨立重算。
+     </p>
+     <p>
+      本次環境並未執行 model downloads、實際 transformer／adapter training、Qdrant model execution、CUDA compilation／profiling、production serving 或實際 model-agent runs。更新的 recipes 已通過 syntax checks；使用練習 runtime 時，仍需確認 hardware、package 和 model compatibility。Fixture results 和手算會與 trained-model measurements 分開標示。發佈的 notebook outputs 保持空白。
+     </p>
+    </article>
+   </div>
+   <footer class="footer">
+    <span>
+     Applied AI · 獨立自學課程
+    </span>
+    <span>
+     32 週 · 每週 10 小時
+    </span>
+    <a href="resources.html#about-this-course">
+     關於課程及資料來源
+    </a>
+   </footer>
+  </main>
+  <dialog aria-labelledby="search-title" class="search-dialog">
+   <div class="dialog-head">
+    <h2 id="search-title">
+     尋找概念
+    </h2>
+    <button aria-label="關閉搜尋" class="search-close" type="button">
+     關閉
+    </button>
+   </div>
+   <label class="sr-only" for="course-search">
+    搜尋所有 lecture 和 tutorial
+   </label>
+   <input autocomplete="off" id="course-search" placeholder="試試 attention、fine-tuning 或 harness……" type="search"/>
+   <p aria-live="polite" class="search-status">
+    搜尋 lecture notes、tutorial、測驗及閱讀材料。
+   </p>
+   <div class="search-results">
+   </div>
+  </dialog>
+  <div aria-live="polite" class="toast" role="status">
+  </div>
+ </body>
+</html>

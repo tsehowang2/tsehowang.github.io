@@ -1,65 +1,1277 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/><title>LoRA and QLoRA from a small matrix · Applied AI</title><meta content="Applied generative AI and LLM systems course material" name="description"/><meta content="#173c36" name="theme-color"/><link href="../assets/favicon.svg" rel="icon" type="image/svg+xml"/><link href="../assets/style.css" rel="stylesheet"/><link href="../assets/slides.css" rel="stylesheet"/><script>window.COURSE_BASE="../";</script><script defer="" src="../assets/site-config.js"></script><script defer="" src="../assets/search-index.js"></script><script defer="" src="../assets/app.js"></script><script defer="" src="../assets/visuals.js"></script><script defer="" src="../assets/slides.js"></script><script defer="" src="../assets/beginner-visuals.js"></script><link href="../zh-HK/lectures/25.html" hreflang="zh-HK" rel="alternate"/><link href="../assets/bilingual.css" rel="stylesheet"/></head><body data-page-kind="lecture" data-week="25"><a class="skip-link" href="#main">Skip to content</a><header class="topbar"><button aria-controls="course-sidebar" aria-expanded="false" class="menu-toggle" type="button">Menu</button><a class="brand" href="../index.html"><span aria-hidden="true" class="brand-mark">a<span>i</span></span><span>APPLIED AI<small>Principles into practice</small></span></a><nav aria-label="Main navigation"><a href="../index.html">The course</a><a href="../visuals.html">Visual lab</a><a href="../project.html">Project</a><a class="language-switch" href="../zh-HK/lectures/25.html" hreflang="zh-HK" lang="zh-HK">繁體中文</a></nav><button class="search-open" type="button">Search the course <span aria-hidden="true">/</span></button></header><aside aria-label="Course chapters" class="sidebar" id="course-sidebar"><a class="side-home" href="../index.html">Course overview</a><details class="semester-nav"><summary>Semester 1<span>Weeks 1–16</span></summary><ol start="1"><li><a href="../lectures/01.html"><span class="week-number">01</span><span>What a language model is trying to learn</span><span class="week-tick" data-week-tick="1"></span></a></li><li><a href="../lectures/02.html"><span class="week-number">02</span><span>From text to tokens and numerical IDs</span><span class="week-tick" data-week-tick="2"></span></a></li><li><a href="../lectures/03.html"><span class="week-number">03</span><span>What word vectors can represent</span><span class="week-tick" data-week-tick="3"></span></a></li><li><a href="../lectures/04.html"><span class="week-number">04</span><span>From scores to probabilities and learning signals</span><span class="week-tick" data-week-tick="4"></span></a></li><li><a href="../lectures/05.html"><span class="week-number">05</span><span>Why language needs context and order</span><span class="week-tick" data-week-tick="5"></span></a></li><li><a href="../lectures/06.html"><span class="week-number">06</span><span>Attention begins as a weighted mixture</span><span class="week-tick" data-week-tick="6"></span></a></li><li><a href="../lectures/07.html"><span class="week-number">07</span><span>Where queries keys and values come from</span><span class="week-tick" data-week-tick="7"></span></a></li><li><a href="../lectures/08.html"><span class="week-number">08</span><span>Scaling and masking attention correctly</span><span class="week-tick" data-week-tick="8"></span></a></li><li><a href="../lectures/09.html"><span class="week-number">09</span><span>Multiple attention heads and position</span><span class="week-tick" data-week-tick="9"></span></a></li><li><a href="../lectures/10.html"><span class="week-number">10</span><span>The transformer block step by step</span><span class="week-tick" data-week-tick="10"></span></a></li><li><a href="../lectures/11.html"><span class="week-number">11</span><span>Encoders decoders and complete model architectures</span><span class="week-tick" data-week-tick="11"></span></a></li><li><a href="../lectures/12.html"><span class="week-number">12</span><span>Training a small transformer</span><span class="week-tick" data-week-tick="12"></span></a></li><li><a href="../lectures/13.html"><span class="week-number">13</span><span>Generation decoding and the KV cache</span><span class="week-tick" data-week-tick="13"></span></a></li><li><a href="../lectures/14.html"><span class="week-number">14</span><span>From pretraining to instruction following and reasoning</span><span class="week-tick" data-week-tick="14"></span></a></li><li><a href="../lectures/15.html"><span class="week-number">15</span><span>Generative AI beyond text</span><span class="week-tick" data-week-tick="15"></span></a></li><li><a href="../lectures/16.html"><span class="week-number">16</span><span>A complete transformer walkthrough and first semester review</span><span class="week-tick" data-week-tick="16"></span></a></li></ol></details><details class="semester-nav" open=""><summary>Semester 2<span>Weeks 17–32</span></summary><ol start="17"><li><a href="../lectures/17.html"><span class="week-number">17</span><span>From word vectors to semantic search</span><span class="week-tick" data-week-tick="17"></span></a></li><li><a href="../lectures/18.html"><span class="week-number">18</span><span>A vector database from a list of vectors</span><span class="week-tick" data-week-tick="18"></span></a></li><li><a href="../lectures/19.html"><span class="week-number">19</span><span>RAG as an open book question</span><span class="week-tick" data-week-tick="19"></span></a></li><li><a href="../lectures/20.html"><span class="week-number">20</span><span>Improving RAG without losing the basic task</span><span class="week-tick" data-week-tick="20"></span></a></li><li><a href="../lectures/21.html"><span class="week-number">21</span><span>Evaluating retrieval answers and uncertainty</span><span class="week-tick" data-week-tick="21"></span></a></li><li><a href="../lectures/22.html"><span class="week-number">22</span><span>CPU GPU memory and model resource accounting</span><span class="week-tick" data-week-tick="22"></span></a></li><li><a href="../lectures/23.html"><span class="week-number">23</span><span>CUDA kernels and profiling</span><span class="week-tick" data-week-tick="23"></span></a></li><li><a href="../lectures/24.html"><span class="week-number">24</span><span>Fine tuning starts with a teaching dataset</span><span class="week-tick" data-week-tick="24"></span></a></li><li><a aria-current="page" href="../lectures/25.html"><span class="week-number">25</span><span>LoRA and QLoRA from a small matrix</span><span class="week-tick" data-week-tick="25"></span></a></li><li><a href="../lectures/26.html"><span class="week-number">26</span><span>Fine tuning experiments preferences and distillation</span><span class="week-tick" data-week-tick="26"></span></a></li><li><a href="../lectures/27.html"><span class="week-number">27</span><span>Tools functions workflows and agents</span><span class="week-tick" data-week-tick="27"></span></a></li><li><a href="../lectures/28.html"><span class="week-number">28</span><span>Harnesses planning memory and bounded execution</span><span class="week-tick" data-week-tick="28"></span></a></li><li><a href="../lectures/29.html"><span class="week-number">29</span><span>From a notebook to MLOps and inference serving</span><span class="week-tick" data-week-tick="29"></span></a></li><li><a href="../lectures/30.html"><span class="week-number">30</span><span>Monitoring security regression tests and rollback</span><span class="week-tick" data-week-tick="30"></span></a></li><li><a href="../lectures/31.html"><span class="week-number">31</span><span>Integrating the documentation assistant and advanced extensions</span><span class="week-tick" data-week-tick="31"></span></a></li><li><a href="../lectures/32.html"><span class="week-number">32</span><span>Review defense and a continuing learning plan</span><span class="week-tick" data-week-tick="32"></span></a></li></ol></details><div class="side-links"><a href="../visuals.html">Visual laboratory <span>14 interactive lessons</span></a><a href="../project.html">Documentation assistant <span>Your capstone project</span></a><a href="../resources.html">Readings and setup</a></div><div class="side-progress"><div><span>Your progress</span><strong data-progress-count="">0 / 32</strong></div><progress aria-label="Completed lectures" max="32" value="0"></progress><small>Saved in this browser</small></div></aside><main class="main" id="main"><div class="content"><div class="chapter-header"><div class="eyebrow">Semester 2 / Week 25</div><h1>LoRA and QLoRA from a small matrix</h1></div><div class="lesson-links"><a href="../tutorials/25.html">Tutorial 25</a><a href="../tests/25.html">Test your understanding</a><button aria-pressed="false" class="mark-complete" data-week="25" type="button">Mark as complete</button></div><section aria-label="Lecture slides" class="lecture-deck" id="lecture-slides"><div class="deck-top"><div><div class="eyebrow">Lecture slides · Week 25</div><h2>Learn one step at a time.</h2></div><button class="deck-present" type="button">Present</button></div><p class="deck-help">Read each explanation, pause to predict the result, then continue. Use the arrow keys while the presentation is focused. The complete lecture reader is below.</p><div aria-label="Presentation: use left and right arrow keys" class="slide-viewport" tabindex="0"><section class="lecture-slide" data-slide=""><div class="slide-stage">Start with an example</div><h3>Training fewer parameters</h3><div class="slide-prose"><p>A full model can contain many weight matrices. Fine-tuning every entry requires trainable state for all those parameters. LoRA instead keeps a base matrix fixed and learns a structured update using two smaller matrices.</p>
-<p>Begin with one layer y=Wx using column-vector notation. The base W still processes the input. An additional path contributes a learned change.</p>
-<p>This changes how we parameterize adaptation. It does not supply missing evidence, review training labels, or guarantee an application improvement.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Start with an example</div><h3>A two by two update by hand</h3><div class="slide-prose"><p>Let A=[0.1,0.2] have shape [1,2], and B=[[1],[2]] have shape [2,1]. Their product BA is [[0.1,0.2],[0.2,0.4]].</p>
-<p>The two rows are proportional, so this update has rank at most one. Multiplying BA by x=[1,1] gives [0.3,0.6]. Add that contribution to the base layer's Wx output.</p>
-<p>The tiny case makes the computation visible but does not yet save parameters: A and B have four entries, the same count as a 2×2 dense matrix. Savings depend on dimensions and a sufficiently small rank.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Build the mechanism</div><h3>General shapes and the savings condition</h3><div class="slide-prose"><p>For W shaped [Dout,Din], choose A shaped [r,Din] and B shaped [Dout,r]. Adapter parameters total r(Din+Dout), compared with Din×Dout for W.</p>
-<p>At Din=Dout=1000 and r=4, the adapter has 8000 parameters compared with one million in the dense matrix. The update is restricted to a low-rank factorization.</p>
-<p>Increasing r increases capacity and trainable state. It does not guarantee monotonically better held-out quality. Compare ranks under a defined dataset and training budget.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Build the mechanism</div><h3>Scaling and zero update initialization</h3><div class="slide-prose"><p>A common expression is y=Wx+(α/r)BAx. The factor α/r controls the scale of the update under this parameterization.</p>
-<p>An initialization with one factor zero and the other nonzero starts with BA=0 while allowing a trainable gradient path. Initializing both factors to zero can make both initial factor gradients zero.</p>
-<p>This is worth checking in code: the adapted model should start close to the base computation under comparable modes, and trainable adapter parameters should receive the expected gradients.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Build the mechanism</div><h3>What stays in memory</h3><div class="slide-prose"><p>The frozen base still occupies memory and participates in forward computation. Activations needed to learn the adapters can also be substantial.</p>
-<p>LoRA reduces the trainable parameter and optimizer-state portion. It does not turn a large model into a tiny activation footprint or remove all backward computation.</p>
-<p>Use the week-22 resource accounting to identify which state changed. A small adapter file is only one part of the full model/runtime requirements.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Build the mechanism</div><h3>QLoRA adds a quantized frozen base</h3><div class="slide-prose"><p>QLoRA combines low-rank adaptation with a quantized base representation. Some tensors, computations, and trainable states remain in higher precision.</p>
-<p>Four-bit base weights do not imply four-bit activations, gradients, optimizer states, or a universal speedup. Hardware and kernel support matter, especially on an older local GPU.</p>
-<p>The required experiment uses a small ordinary LoRA model. A quantized comparison is an optional extension if the runtime supports the chosen backend and the experiment fits the available time.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Build the mechanism</div><h3>Saving and using an adapter</h3><div class="slide-prose"><p>Save adapter weights and configuration together with the exact base model and tokenizer identities. Applying a checkpoint to an incompatible base can change behavior or fail.</p>
-<p>Some adapter updates can be merged into a compatible base for inference. Quantized merging and numerical behavior require validation rather than an assumption.</p>
-<p>Test a saved/reloaded artifact, not only the in-memory object that just trained. The next week performs this complete experiment.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Build the mechanism</div><h3>Worked practice and a readiness check</h3><div class="slide-prose"><p>Calculate adapter shapes and count for a 4096×4096 matrix at rank 8. The result is 65536 adapter parameters, or about 0.390625% of the dense matrix.</p>
-<p>Explain why a rank-one update cannot represent every possible 2×2 change. Then describe one memory cost LoRA reduces and one that remains.</p>
-<p>You are ready when the factorization, scaling, initialization, memory implications, and checkpoint dependencies are concrete numerical statements.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Optional deeper study</div><h3>A deeper pass after the worked introduction</h3><div class="slide-prose"><p>The following reference treatment is for a second pass. First explain the ordinary example above, then use the equations and implementation details below to make the explanation more precise.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Optional deeper study</div><h3>Further study 18 Mechanism</h3><div class="slide-prose"><p>A dense layer computes <code>y = W x</code>. LoRA freezes W and learns <code>delta_W = (alpha/r) B A</code>, so <code>y = W x + (alpha/r) B A x</code>. For W shaped <code>[d_out,d_in]</code>, A has <code>[r,d_in]</code> and B <code>[d_out,r]</code>. Only <code>r*(d_in+d_out)</code> adapter parameters are trained for that layer. The choice of target layers is part of the experiment.</p>
-<p>For a 4096×4096 matrix and r=8, the dense matrix has 16,777,216 parameters while A and B total 65,536, about 0.39%. This reduces trainable optimizer state substantially. It does not eliminate frozen model storage, activations or forward/backward computation through the model. LoRA can be applied to attention projections and other layers; examine actual module names rather than copying a configuration blindly.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Optional deeper study</div><h3>Further study 18 Initialization and scaling</h3><div class="slide-prose"><p>A common initialization makes one factor zero so the initial update is zero while the other factor is random. Then the adapted model initially reproduces the base computation, apart from training-mode effects such as dropout. If both factors are zero, both factor gradients can initially be zero. Rank controls update capacity, not a guaranteed quality ordering. Increasing rank also changes parameters and potentially tuning behavior, so compare under a defined budget.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Optional deeper study</div><h3>Further study 18 QLoRA</h3><div class="slide-prose"><p>QLoRA combines a quantized frozen base with low-rank trainable adapters [R13]. Four-bit base weights do not imply every tensor or calculation is four-bit. Quantization scales, compute dtype, adapters, gradients, optimizer states and activations remain relevant. Specialized backend support depends on hardware and software. The course requires a small ordinary LoRA run; a QLoRA comparison is optional if the available runtime supports it.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Optional deeper study</div><h3>Further study 18 Deployment considerations</h3><div class="slide-prose"><p>Save the adapter with base model/tokenizer identity and target modules. An adapter checkpoint alone is insufficient if the base revision is unknown. Merging low-rank weights into a compatible unquantized base can remove the separate adapter path, but numerical behavior and quantized merge support require checking. Test the saved/reloaded artifact, not just the in-memory training object.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Optional deeper study</div><h3>Further study 18 Experiment</h3><div class="slide-prose"><p>notebook 24 calculates trainable parameter counts and inspects a planned model. notebook 26 creates actual adapters and confirms which parameters receive gradients. Compare your analytical count with the model's count and explain biases or excluded modules. Estimate memory before loading, then measure after the first training step.</p>
-<p><strong>Exit criterion:</strong> derive LoRA shapes, explain the zero-update initialization, and distinguish LoRA from QLoRA. <strong>Reading:</strong> R12 method, R13 overview, R14. <strong>Tutorial:</strong> 25.</p></div></section></div><div class="deck-controls"><button class="slide-prev" type="button">← Previous</button><span aria-live="polite" class="slide-counter">1 / 14</span><button class="slide-next" type="button">Next →</button></div><label class="slide-jump-label">Go to slide <select aria-label="Go to slide" class="slide-jump"><option value="0">1</option><option value="1">2</option><option value="2">3</option><option value="3">4</option><option value="4">5</option><option value="5">6</option><option value="6">7</option><option value="7">8</option><option value="8">9</option><option value="9">10</option><option value="10">11</option><option value="11">12</option><option value="12">13</option><option value="13">14</option></select></label><button aria-pressed="false" class="deck-all" type="button">Show all slides</button><a class="reader-link" href="#full-notes">Read the complete lecture ↓</a></section><section aria-label="A low rank update" class="visual-lesson"><div class="eyebrow">Explore the mechanism</div><h2>A low rank update</h2><p class="visual-intro">Follow the frozen matrix and a trainable low-rank update.</p><div data-widget="lora"><p>Enable JavaScript to use this illustration. The lecture notes below explain the same mechanism.</p></div></section><article class="prose full-notes" id="full-notes"><div class="eyebrow">Complete lecture reader</div><h2>Read the full explanation</h2><h3 id="training-fewer-parameters">Training fewer parameters</h3>
-<p>A full model can contain many weight matrices. Fine-tuning every entry requires trainable state for all those parameters. LoRA instead keeps a base matrix fixed and learns a structured update using two smaller matrices.</p>
-<p>Begin with one layer y=Wx using column-vector notation. The base W still processes the input. An additional path contributes a learned change.</p>
-<p>This changes how we parameterize adaptation. It does not supply missing evidence, review training labels, or guarantee an application improvement.</p>
-<h3 id="a-two-by-two-update-by-hand">A two by two update by hand</h3>
-<p>Let A=[0.1,0.2] have shape [1,2], and B=[[1],[2]] have shape [2,1]. Their product BA is [[0.1,0.2],[0.2,0.4]].</p>
-<p>The two rows are proportional, so this update has rank at most one. Multiplying BA by x=[1,1] gives [0.3,0.6]. Add that contribution to the base layer's Wx output.</p>
-<p>The tiny case makes the computation visible but does not yet save parameters: A and B have four entries, the same count as a 2×2 dense matrix. Savings depend on dimensions and a sufficiently small rank.</p>
-<h3 id="general-shapes-and-the-savings-condition">General shapes and the savings condition</h3>
-<p>For W shaped [Dout,Din], choose A shaped [r,Din] and B shaped [Dout,r]. Adapter parameters total r(Din+Dout), compared with Din×Dout for W.</p>
-<p>At Din=Dout=1000 and r=4, the adapter has 8000 parameters compared with one million in the dense matrix. The update is restricted to a low-rank factorization.</p>
-<p>Increasing r increases capacity and trainable state. It does not guarantee monotonically better held-out quality. Compare ranks under a defined dataset and training budget.</p>
-<h3 id="scaling-and-zero-update-initialization">Scaling and zero update initialization</h3>
-<p>A common expression is y=Wx+(α/r)BAx. The factor α/r controls the scale of the update under this parameterization.</p>
-<p>An initialization with one factor zero and the other nonzero starts with BA=0 while allowing a trainable gradient path. Initializing both factors to zero can make both initial factor gradients zero.</p>
-<p>This is worth checking in code: the adapted model should start close to the base computation under comparable modes, and trainable adapter parameters should receive the expected gradients.</p>
-<h3 id="what-stays-in-memory">What stays in memory</h3>
-<p>The frozen base still occupies memory and participates in forward computation. Activations needed to learn the adapters can also be substantial.</p>
-<p>LoRA reduces the trainable parameter and optimizer-state portion. It does not turn a large model into a tiny activation footprint or remove all backward computation.</p>
-<p>Use the week-22 resource accounting to identify which state changed. A small adapter file is only one part of the full model/runtime requirements.</p>
-<h3 id="qlora-adds-a-quantized-frozen-base">QLoRA adds a quantized frozen base</h3>
-<p>QLoRA combines low-rank adaptation with a quantized base representation. Some tensors, computations, and trainable states remain in higher precision.</p>
-<p>Four-bit base weights do not imply four-bit activations, gradients, optimizer states, or a universal speedup. Hardware and kernel support matter, especially on an older local GPU.</p>
-<p>The required experiment uses a small ordinary LoRA model. A quantized comparison is an optional extension if the runtime supports the chosen backend and the experiment fits the available time.</p>
-<h3 id="saving-and-using-an-adapter">Saving and using an adapter</h3>
-<p>Save adapter weights and configuration together with the exact base model and tokenizer identities. Applying a checkpoint to an incompatible base can change behavior or fail.</p>
-<p>Some adapter updates can be merged into a compatible base for inference. Quantized merging and numerical behavior require validation rather than an assumption.</p>
-<p>Test a saved/reloaded artifact, not only the in-memory object that just trained. The next week performs this complete experiment.</p>
-<h3 id="worked-practice-and-a-readiness-check">Worked practice and a readiness check</h3>
-<p>Calculate adapter shapes and count for a 4096×4096 matrix at rank 8. The result is 65536 adapter parameters, or about 0.390625% of the dense matrix.</p>
-<p>Explain why a rank-one update cannot represent every possible 2×2 change. Then describe one memory cost LoRA reduces and one that remains.</p>
-<p>You are ready when the factorization, scaling, initialization, memory implications, and checkpoint dependencies are concrete numerical statements.</p>
-<h3 id="a-deeper-pass-after-the-worked-introduction">A deeper pass after the worked introduction</h3>
-<p>The following reference treatment is for a second pass. First explain the ordinary example above, then use the equations and implementation details below to make the explanation more precise.</p>
-<h3 id="further-study-18-mechanism">Further study 18 Mechanism</h3>
-<p>A dense layer computes <code>y = W x</code>. LoRA freezes W and learns <code>delta_W = (alpha/r) B A</code>, so <code>y = W x + (alpha/r) B A x</code>. For W shaped <code>[d_out,d_in]</code>, A has <code>[r,d_in]</code> and B <code>[d_out,r]</code>. Only <code>r*(d_in+d_out)</code> adapter parameters are trained for that layer. The choice of target layers is part of the experiment.</p>
-<p>For a 4096×4096 matrix and r=8, the dense matrix has 16,777,216 parameters while A and B total 65,536, about 0.39%. This reduces trainable optimizer state substantially. It does not eliminate frozen model storage, activations or forward/backward computation through the model. LoRA can be applied to attention projections and other layers; examine actual module names rather than copying a configuration blindly.</p>
-<h3 id="further-study-18-initialization-and-scaling">Further study 18 Initialization and scaling</h3>
-<p>A common initialization makes one factor zero so the initial update is zero while the other factor is random. Then the adapted model initially reproduces the base computation, apart from training-mode effects such as dropout. If both factors are zero, both factor gradients can initially be zero. Rank controls update capacity, not a guaranteed quality ordering. Increasing rank also changes parameters and potentially tuning behavior, so compare under a defined budget.</p>
-<h3 id="further-study-18-qlora">Further study 18 QLoRA</h3>
-<p>QLoRA combines a quantized frozen base with low-rank trainable adapters [R13]. Four-bit base weights do not imply every tensor or calculation is four-bit. Quantization scales, compute dtype, adapters, gradients, optimizer states and activations remain relevant. Specialized backend support depends on hardware and software. The course requires a small ordinary LoRA run; a QLoRA comparison is optional if the available runtime supports it.</p>
-<h3 id="further-study-18-deployment-considerations">Further study 18 Deployment considerations</h3>
-<p>Save the adapter with base model/tokenizer identity and target modules. An adapter checkpoint alone is insufficient if the base revision is unknown. Merging low-rank weights into a compatible unquantized base can remove the separate adapter path, but numerical behavior and quantized merge support require checking. Test the saved/reloaded artifact, not just the in-memory training object.</p>
-<h3 id="further-study-18-experiment">Further study 18 Experiment</h3>
-<p>notebook 24 calculates trainable parameter counts and inspects a planned model. notebook 26 creates actual adapters and confirms which parameters receive gradients. Compare your analytical count with the model's count and explain biases or excluded modules. Estimate memory before loading, then measure after the first training step.</p>
-<p><strong>Exit criterion:</strong> derive LoRA shapes, explain the zero-update initialization, and distinguish LoRA from QLoRA. <strong>Reading:</strong> R12 method, R13 overview, R14. <strong>Tutorial:</strong> 25.</p></article><nav aria-label="Adjacent lectures" class="chapter-pagination"><a href="24.html"><small>Previous week</small>Fine tuning starts with a teaching dataset</a><a href="26.html"><small>Next week</small>Fine tuning experiments preferences and distillation</a></nav></div><footer class="footer"><span>Applied AI · An independent self-study course</span><span>32 weeks · 10 hours per week</span><a href="../resources.html#about-this-course">About and sources</a></footer></main><dialog aria-labelledby="search-title" class="search-dialog"><div class="dialog-head"><h2 id="search-title">Find a concept</h2><button aria-label="Close search" class="search-close" type="button">Close</button></div><label class="sr-only" for="course-search">Search all lectures and tutorials</label><input autocomplete="off" id="course-search" placeholder="Try attention, fine-tuning, or harness…" type="search"/><p aria-live="polite" class="search-status">Search lecture notes, tutorials, tests and readings.</p><div class="search-results"></div></dialog><div aria-live="polite" class="toast" role="status"></div></body></html>
+<html lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width,initial-scale=1" name="viewport"/>
+  <title>
+   LoRA and QLoRA from a small matrix · Applied AI
+  </title>
+  <meta content="Applied generative AI and LLM systems course material" name="description"/>
+  <meta content="#173c36" name="theme-color"/>
+  <link href="../assets/favicon.svg" rel="icon" type="image/svg+xml"/>
+  <link href="../assets/style.css" rel="stylesheet"/>
+  <link href="../assets/slides.css" rel="stylesheet"/>
+  <script>
+   window.COURSE_BASE="../";
+  </script>
+  <script defer="" src="../assets/site-config.js">
+  </script>
+  <script defer="" src="../assets/search-index.js">
+  </script>
+  <script defer="" src="../assets/app.js">
+  </script>
+  <script defer="" src="../assets/visuals.js">
+  </script>
+  <script defer="" src="../assets/slides.js">
+  </script>
+  <script defer="" src="../assets/beginner-visuals.js">
+  </script>
+  <link href="../zh-HK/lectures/25.html" hreflang="zh-HK" rel="alternate"/>
+  <link href="../assets/bilingual.css" rel="stylesheet"/>
+  <link href="../assets/reader-v3.css" rel="stylesheet"/>
+  <script defer="True" src="../assets/reader-v3.js">
+  </script>
+ </head>
+ <body data-page-kind="lecture" data-week="25">
+  <a class="skip-link" href="#main">
+   Skip to content
+  </a>
+  <header class="topbar">
+   <button aria-controls="course-sidebar" aria-expanded="false" class="menu-toggle" type="button">
+    Menu
+   </button>
+   <a class="brand" href="../index.html">
+    <span aria-hidden="true" class="brand-mark">
+     a
+     <span>
+      i
+     </span>
+    </span>
+    <span>
+     APPLIED AI
+     <small>
+      Principles into practice
+     </small>
+    </span>
+   </a>
+   <nav aria-label="Main navigation">
+    <a href="../index.html">
+     The course
+    </a>
+    <a href="../visuals.html">
+     Visual lab
+    </a>
+    <a href="../project.html">
+     Project
+    </a>
+    <a class="language-switch" href="../zh-HK/lectures/25.html" hreflang="zh-HK" lang="zh-HK">
+     繁體中文
+    </a>
+   </nav>
+   <button class="search-open" type="button">
+    Search the course
+    <span aria-hidden="true">
+     /
+    </span>
+   </button>
+  </header>
+  <aside aria-label="Course chapters" class="sidebar" id="course-sidebar">
+   <a class="side-home" href="../index.html">
+    Course overview
+   </a>
+   <details class="semester-nav">
+    <summary>
+     Semester 1
+     <span>
+      Weeks 1–16
+     </span>
+    </summary>
+    <ol start="1">
+     <li>
+      <a href="../lectures/01.html">
+       <span class="week-number">
+        01
+       </span>
+       <span>
+        What a language model is trying to learn
+       </span>
+       <span class="week-tick" data-week-tick="1">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/02.html">
+       <span class="week-number">
+        02
+       </span>
+       <span>
+        From text to tokens and numerical IDs
+       </span>
+       <span class="week-tick" data-week-tick="2">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/03.html">
+       <span class="week-number">
+        03
+       </span>
+       <span>
+        What word vectors can represent
+       </span>
+       <span class="week-tick" data-week-tick="3">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/04.html">
+       <span class="week-number">
+        04
+       </span>
+       <span>
+        From scores to probabilities and learning signals
+       </span>
+       <span class="week-tick" data-week-tick="4">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/05.html">
+       <span class="week-number">
+        05
+       </span>
+       <span>
+        Why language needs context and order
+       </span>
+       <span class="week-tick" data-week-tick="5">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/06.html">
+       <span class="week-number">
+        06
+       </span>
+       <span>
+        Attention begins as a weighted mixture
+       </span>
+       <span class="week-tick" data-week-tick="6">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/07.html">
+       <span class="week-number">
+        07
+       </span>
+       <span>
+        Where queries keys and values come from
+       </span>
+       <span class="week-tick" data-week-tick="7">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/08.html">
+       <span class="week-number">
+        08
+       </span>
+       <span>
+        Scaling and masking attention correctly
+       </span>
+       <span class="week-tick" data-week-tick="8">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/09.html">
+       <span class="week-number">
+        09
+       </span>
+       <span>
+        Multiple attention heads and position
+       </span>
+       <span class="week-tick" data-week-tick="9">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/10.html">
+       <span class="week-number">
+        10
+       </span>
+       <span>
+        The transformer block step by step
+       </span>
+       <span class="week-tick" data-week-tick="10">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/11.html">
+       <span class="week-number">
+        11
+       </span>
+       <span>
+        Encoders decoders and complete model architectures
+       </span>
+       <span class="week-tick" data-week-tick="11">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/12.html">
+       <span class="week-number">
+        12
+       </span>
+       <span>
+        Training a small transformer
+       </span>
+       <span class="week-tick" data-week-tick="12">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/13.html">
+       <span class="week-number">
+        13
+       </span>
+       <span>
+        Generation decoding and the KV cache
+       </span>
+       <span class="week-tick" data-week-tick="13">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/14.html">
+       <span class="week-number">
+        14
+       </span>
+       <span>
+        From pretraining to instruction following and reasoning
+       </span>
+       <span class="week-tick" data-week-tick="14">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/15.html">
+       <span class="week-number">
+        15
+       </span>
+       <span>
+        Generative AI beyond text
+       </span>
+       <span class="week-tick" data-week-tick="15">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/16.html">
+       <span class="week-number">
+        16
+       </span>
+       <span>
+        A complete transformer walkthrough and first semester review
+       </span>
+       <span class="week-tick" data-week-tick="16">
+       </span>
+      </a>
+     </li>
+    </ol>
+   </details>
+   <details class="semester-nav" open="">
+    <summary>
+     Semester 2
+     <span>
+      Weeks 17–32
+     </span>
+    </summary>
+    <ol start="17">
+     <li>
+      <a href="../lectures/17.html">
+       <span class="week-number">
+        17
+       </span>
+       <span>
+        From word vectors to semantic search
+       </span>
+       <span class="week-tick" data-week-tick="17">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/18.html">
+       <span class="week-number">
+        18
+       </span>
+       <span>
+        A vector database from a list of vectors
+       </span>
+       <span class="week-tick" data-week-tick="18">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/19.html">
+       <span class="week-number">
+        19
+       </span>
+       <span>
+        RAG as an open book question
+       </span>
+       <span class="week-tick" data-week-tick="19">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/20.html">
+       <span class="week-number">
+        20
+       </span>
+       <span>
+        Improving RAG without losing the basic task
+       </span>
+       <span class="week-tick" data-week-tick="20">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/21.html">
+       <span class="week-number">
+        21
+       </span>
+       <span>
+        Evaluating retrieval answers and uncertainty
+       </span>
+       <span class="week-tick" data-week-tick="21">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/22.html">
+       <span class="week-number">
+        22
+       </span>
+       <span>
+        CPU GPU memory and model resource accounting
+       </span>
+       <span class="week-tick" data-week-tick="22">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/23.html">
+       <span class="week-number">
+        23
+       </span>
+       <span>
+        CUDA kernels and profiling
+       </span>
+       <span class="week-tick" data-week-tick="23">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/24.html">
+       <span class="week-number">
+        24
+       </span>
+       <span>
+        Fine tuning starts with a teaching dataset
+       </span>
+       <span class="week-tick" data-week-tick="24">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a aria-current="page" href="../lectures/25.html">
+       <span class="week-number">
+        25
+       </span>
+       <span>
+        LoRA and QLoRA from a small matrix
+       </span>
+       <span class="week-tick" data-week-tick="25">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/26.html">
+       <span class="week-number">
+        26
+       </span>
+       <span>
+        Fine tuning experiments preferences and distillation
+       </span>
+       <span class="week-tick" data-week-tick="26">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/27.html">
+       <span class="week-number">
+        27
+       </span>
+       <span>
+        Tools functions workflows and agents
+       </span>
+       <span class="week-tick" data-week-tick="27">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/28.html">
+       <span class="week-number">
+        28
+       </span>
+       <span>
+        Harnesses planning memory and bounded execution
+       </span>
+       <span class="week-tick" data-week-tick="28">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/29.html">
+       <span class="week-number">
+        29
+       </span>
+       <span>
+        From a notebook to MLOps and inference serving
+       </span>
+       <span class="week-tick" data-week-tick="29">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/30.html">
+       <span class="week-number">
+        30
+       </span>
+       <span>
+        Monitoring security regression tests and rollback
+       </span>
+       <span class="week-tick" data-week-tick="30">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/31.html">
+       <span class="week-number">
+        31
+       </span>
+       <span>
+        Integrating the documentation assistant and advanced extensions
+       </span>
+       <span class="week-tick" data-week-tick="31">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/32.html">
+       <span class="week-number">
+        32
+       </span>
+       <span>
+        Review defense and a continuing learning plan
+       </span>
+       <span class="week-tick" data-week-tick="32">
+       </span>
+      </a>
+     </li>
+    </ol>
+   </details>
+   <div class="side-links">
+    <a href="../visuals.html">
+     Visual laboratory
+     <span>
+      14 interactive lessons
+     </span>
+    </a>
+    <a href="../project.html">
+     Documentation assistant
+     <span>
+      Your capstone project
+     </span>
+    </a>
+    <a href="../resources.html">
+     Readings and setup
+    </a>
+   </div>
+   <div class="side-progress">
+    <div>
+     <span>
+      Your progress
+     </span>
+     <strong data-progress-count="">
+      0 / 32
+     </strong>
+    </div>
+    <progress aria-label="Completed lectures" max="32" value="0">
+    </progress>
+    <small>
+     Saved in this browser
+    </small>
+   </div>
+  </aside>
+  <main class="main" id="main">
+   <div class="content">
+    <div class="chapter-header">
+     <div class="eyebrow">
+      Semester 2 / Week 25
+     </div>
+     <h1>
+      LoRA and QLoRA from a small matrix
+     </h1>
+    </div>
+    <div class="lesson-links">
+     <a href="../tutorials/25.html">
+      Tutorial 25
+     </a>
+     <a href="../tests/25.html">
+      Test your understanding
+     </a>
+     <button aria-pressed="false" class="mark-complete" data-week="25" type="button">
+      Mark as complete
+     </button>
+    </div>
+    <div aria-label="Lesson view" class="lesson-mode" role="tablist">
+     <button aria-controls="full-notes" aria-selected="true" data-mode="read" id="mode-read" role="tab" type="button">
+      Read lesson
+     </button>
+     <button aria-controls="lecture-slides" aria-selected="false" data-mode="slides" id="mode-slides" role="tab" type="button">
+      Lesson slides
+     </button>
+    </div>
+    <section aria-label="Lecture slides" class="lecture-deck" hidden="" id="lecture-slides" role="tabpanel">
+     <div class="deck-top">
+      <div>
+       <div class="eyebrow">
+        Lecture slides · Week 25
+       </div>
+       <h2>
+        Key steps and worked visuals
+       </h2>
+      </div>
+      <button class="deck-present" type="button">
+       Present
+      </button>
+     </div>
+     <p class="deck-help">
+      Use these slides to review the mechanism. Open “Read the worked explanation” for the complete notes and code.
+     </p>
+     <div aria-label="Presentation: use left and right arrow keys" class="slide-viewport" tabindex="0">
+      <section class="lecture-slide" data-slide="">
+       <div class="slide-stage">
+        Week 25 · Section 1
+       </div>
+       <h3>
+        Training fewer parameters
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          A full model can contain many weight matrices.
+         </li>
+         <li>
+          Begin with one layer y=Wx using column-vector notation.
+         </li>
+         <li>
+          This changes how we parameterize adaptation.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#training-fewer-parameters">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 25 · Section 2
+       </div>
+       <h3>
+        A two by two update by hand
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Let A=[0.1,0.2] have shape [1,2], and B=[[1],[2]] have shape [2,1].
+         </li>
+         <li>
+          The two rows are proportional, so this update has rank at most one.
+         </li>
+         <li>
+          The tiny case makes the computation visible but does not yet save parameters: A and B have four entries, the same count as a 2×2 dense matrix.
+         </li>
+        </ul>
+        <figure class="mechanism-figure">
+         <figcaption>
+          LoRA keeps two computation paths
+         </figcaption>
+         <ol class="mechanism-flow">
+          <li>
+           <span class="mechanism-number">
+            01
+           </span>
+           <strong>
+            Frozen base
+           </strong>
+           <small>
+            Wx
+           </small>
+          </li>
+          <li>
+           <span class="mechanism-number">
+            02
+           </span>
+           <strong>
+            Trainable branch
+           </strong>
+           <small>
+            (α/r) B(Ax)
+           </small>
+          </li>
+          <li>
+           <span class="mechanism-number">
+            03
+           </span>
+           <strong>
+            Combine
+           </strong>
+           <small>
+            Wx + (α/r)B(Ax)
+           </small>
+          </li>
+         </ol>
+         <p>
+          With random A and zero B, the initial adapter update is zero. B can receive the first nonzero gradient.
+         </p>
+        </figure>
+        <a class="slide-section-link" href="#a-two-by-two-update-by-hand">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 25 · Section 3
+       </div>
+       <h3>
+        General shapes and the savings condition
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          For W shaped [d_out,d_in], choose A shaped [r,d_in] and B shaped [d_out,r].
+         </li>
+         <li>
+          At d_in=d_out=1000 and r=4, the adapter has 8000 parameters compared with one million in the dense matrix.
+         </li>
+         <li>
+          Increasing r increases capacity and trainable state.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#general-shapes-and-the-savings-condition">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 25 · Section 4
+       </div>
+       <h3>
+        Scaling and zero update initialization
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          A common expression is y=Wx+(α/r)BAx.
+         </li>
+         <li>
+          The usual LoRA initialization sets B=0 and initializes A randomly.
+         </li>
+         <li>
+          This is worth checking in code: the adapted model should start close to the base computation under comparable modes, and trainable adapter parameters should receive the expected gradients.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#scaling-and-zero-update-initialization">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 25 · Section 5
+       </div>
+       <h3>
+        What stays in memory
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          The frozen base still occupies memory and participates in forward computation.
+         </li>
+         <li>
+          LoRA reduces the trainable parameter and optimizer-state portion.
+         </li>
+         <li>
+          Use the week-22 resource accounting to identify which state changed.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#what-stays-in-memory">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 25 · Section 6
+       </div>
+       <h3>
+        QLoRA adds a quantized frozen base
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          QLoRA combines low-rank adaptation with a quantized base representation.
+         </li>
+         <li>
+          Four-bit base weights do not imply four-bit activations, gradients, optimizer states, or a universal speedup.
+         </li>
+         <li>
+          The required experiment uses a small ordinary LoRA model.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#qlora-adds-a-quantized-frozen-base">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 25 · Section 7
+       </div>
+       <h3>
+        What NF4, double quantization, and paged optimizers do
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          QLoRA combines three memory ideas with LoRA.
+         </li>
+         <li>
+          Double quantization also quantizes the block-scale information.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#what-nf4-double-quantization-and-paged-optimizers-do">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 25 · Section 8
+       </div>
+       <h3>
+        Two LoRA variants with different changes
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          rsLoRA changes the scaling from alpha/r to alpha/sqrt(r), aiming to keep updates better behaved as rank increases.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#two-lora-variants-with-different-changes">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 25 · Section 9
+       </div>
+       <h3>
+        Saving and using an adapter
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Save adapter weights and configuration together with the exact base model and tokenizer identities.
+         </li>
+         <li>
+          Some adapter updates can be merged into a compatible base for inference.
+         </li>
+         <li>
+          Test a saved/reloaded artifact, not only the in-memory object that just trained.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#saving-and-using-an-adapter">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 25 · Section 10
+       </div>
+       <h3>
+        Worked practice and a readiness check
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Calculate adapter shapes and count for a 4096×4096 matrix at rank 8.
+         </li>
+         <li>
+          Explain why a rank-one update cannot represent every possible 2×2 change.
+         </li>
+         <li>
+          You are ready when the factorization, scaling, initialization, memory implications, and checkpoint dependencies are concrete numerical statements.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#worked-practice-and-a-readiness-check">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+     </div>
+     <div class="deck-controls">
+      <button class="slide-prev" type="button">
+       ← Previous
+      </button>
+      <span aria-live="polite" class="slide-counter">
+       1 / 10
+      </span>
+      <button class="slide-next" type="button">
+       Next →
+      </button>
+     </div>
+     <label class="slide-jump-label">
+      Go to slide
+      <select aria-label="Go to slide" class="slide-jump">
+       <option value="0">
+        1. Training fewer parameters
+       </option>
+       <option value="1">
+        2. A two by two update by hand
+       </option>
+       <option value="2">
+        3. General shapes and the savings condition
+       </option>
+       <option value="3">
+        4. Scaling and zero update initialization
+       </option>
+       <option value="4">
+        5. What stays in memory
+       </option>
+       <option value="5">
+        6. QLoRA adds a quantized frozen base
+       </option>
+       <option value="6">
+        7. What NF4, double quantization, and paged optimizers do
+       </option>
+       <option value="7">
+        8. Two LoRA variants with different changes
+       </option>
+       <option value="8">
+        9. Saving and using an adapter
+       </option>
+       <option value="9">
+        10. Worked practice and a readiness check
+       </option>
+      </select>
+     </label>
+     <button aria-pressed="false" class="deck-all" type="button">
+      Show all slides
+     </button>
+    </section>
+    <section aria-label="A low rank update" class="visual-lesson">
+     <div class="eyebrow">
+      Explore the mechanism
+     </div>
+     <h2>
+      A low rank update
+     </h2>
+     <p class="visual-intro">
+      Follow the frozen matrix and a trainable low-rank update.
+     </p>
+     <div data-widget="lora">
+      <p>
+       Enable JavaScript to use this illustration. The lecture notes below explain the same mechanism.
+      </p>
+     </div>
+    </section>
+    <nav aria-label="In this lesson" class="reader-toc">
+     <strong>
+      In this lesson
+     </strong>
+     <ol>
+      <li>
+       <a href="#training-fewer-parameters">
+        Training fewer parameters
+       </a>
+      </li>
+      <li>
+       <a href="#a-two-by-two-update-by-hand">
+        A two by two update by hand
+       </a>
+      </li>
+      <li>
+       <a href="#general-shapes-and-the-savings-condition">
+        General shapes and the savings condition
+       </a>
+      </li>
+      <li>
+       <a href="#scaling-and-zero-update-initialization">
+        Scaling and zero update initialization
+       </a>
+      </li>
+      <li>
+       <a href="#what-stays-in-memory">
+        What stays in memory
+       </a>
+      </li>
+      <li>
+       <a href="#qlora-adds-a-quantized-frozen-base">
+        QLoRA adds a quantized frozen base
+       </a>
+      </li>
+      <li>
+       <a href="#what-nf4-double-quantization-and-paged-optimizers-do">
+        What NF4, double quantization, and paged optimizers do
+       </a>
+      </li>
+      <li>
+       <a href="#two-lora-variants-with-different-changes">
+        Two LoRA variants with different changes
+       </a>
+      </li>
+      <li>
+       <a href="#saving-and-using-an-adapter">
+        Saving and using an adapter
+       </a>
+      </li>
+      <li>
+       <a href="#worked-practice-and-a-readiness-check">
+        Worked practice and a readiness check
+       </a>
+      </li>
+     </ol>
+    </nav>
+    <article class="prose full-notes" id="full-notes" role="tabpanel">
+     <div class="eyebrow">
+      Complete lecture reader
+     </div>
+     <h2>
+      Read the full explanation
+     </h2>
+     <h3 id="training-fewer-parameters">
+      Training fewer parameters
+     </h3>
+     <p>
+      A full model can contain many weight matrices. Fine-tuning every entry requires trainable state for all those parameters. LoRA instead keeps a base matrix fixed and learns a structured update using two smaller matrices.
+     </p>
+     <p>
+      Begin with one layer y=Wx using column-vector notation. The base W still processes the input. An additional path contributes a learned change.
+     </p>
+     <p>
+      This changes how we parameterize adaptation. It does not supply missing evidence, review training labels, or guarantee an application improvement.
+     </p>
+     <h3 id="a-two-by-two-update-by-hand">
+      A two by two update by hand
+     </h3>
+     <figure class="mechanism-figure">
+      <figcaption>
+       LoRA keeps two computation paths
+      </figcaption>
+      <ol class="mechanism-flow">
+       <li>
+        <span class="mechanism-number">
+         01
+        </span>
+        <strong>
+         Frozen base
+        </strong>
+        <small>
+         Wx
+        </small>
+       </li>
+       <li>
+        <span class="mechanism-number">
+         02
+        </span>
+        <strong>
+         Trainable branch
+        </strong>
+        <small>
+         (α/r) B(Ax)
+        </small>
+       </li>
+       <li>
+        <span class="mechanism-number">
+         03
+        </span>
+        <strong>
+         Combine
+        </strong>
+        <small>
+         Wx + (α/r)B(Ax)
+        </small>
+       </li>
+      </ol>
+      <p>
+       With random A and zero B, the initial adapter update is zero. B can receive the first nonzero gradient.
+      </p>
+     </figure>
+     <p>
+      Let A=[0.1,0.2] have shape [1,2], and B=[[1],[2]] have shape [2,1]. Their product BA is [[0.1,0.2],[0.2,0.4]].
+     </p>
+     <p>
+      The two rows are proportional, so this update has rank at most one. Multiplying BA by x=[1,1] gives [0.3,0.6]. Add that contribution to the base layer's Wx output.
+     </p>
+     <p>
+      The tiny case makes the computation visible but does not yet save parameters: A and B have four entries, the same count as a 2×2 dense matrix. Savings depend on dimensions and a sufficiently small rank.
+     </p>
+     <h3 id="general-shapes-and-the-savings-condition">
+      General shapes and the savings condition
+     </h3>
+     <p>
+      For W shaped [d_out,d_in], choose A shaped [r,d_in] and B shaped [d_out,r]. Adapter parameters total r(d_in+d_out), compared with d_in×d_out for W.
+     </p>
+     <p>
+      At d_in=d_out=1000 and r=4, the adapter has 8000 parameters compared with one million in the dense matrix. The update is restricted to a low-rank factorization.
+     </p>
+     <p>
+      Increasing r increases capacity and trainable state. It does not guarantee monotonically better held-out quality. Compare ranks under a defined dataset and training budget.
+     </p>
+     <h3 id="scaling-and-zero-update-initialization">
+      Scaling and zero update initialization
+     </h3>
+     <p>
+      A common expression is y=Wx+(α/r)BAx. The factor α/r controls the scale of the update under this parameterization.
+     </p>
+     <p>
+      The usual LoRA initialization sets B=0 and initializes A randomly. The initial BA update is therefore zero. On the first backward pass, B can receive a nonzero gradient through random A, while A initially receives zero gradient through zero B. After B changes, A can also learn. Setting both A and B to zero blocks both initial factor gradients.
+     </p>
+     <p>
+      This is worth checking in code: the adapted model should start close to the base computation under comparable modes, and trainable adapter parameters should receive the expected gradients.
+     </p>
+     <h3 id="what-stays-in-memory">
+      What stays in memory
+     </h3>
+     <p>
+      The frozen base still occupies memory and participates in forward computation. Activations needed to learn the adapters can also be substantial.
+     </p>
+     <p>
+      LoRA reduces the trainable parameter and optimizer-state portion. It does not turn a large model into a tiny activation footprint or remove all backward computation.
+     </p>
+     <p>
+      Use the week-22 resource accounting to identify which state changed. A small adapter file is only one part of the full model/runtime requirements.
+     </p>
+     <h3 id="qlora-adds-a-quantized-frozen-base">
+      QLoRA adds a quantized frozen base
+     </h3>
+     <p>
+      QLoRA combines low-rank adaptation with a quantized base representation. Some tensors, computations, and trainable states remain in higher precision.
+     </p>
+     <p>
+      Four-bit base weights do not imply four-bit activations, gradients, optimizer states, or a universal speedup. Hardware and kernel support matter, especially on an older local GPU.
+     </p>
+     <p>
+      The required experiment uses a small ordinary LoRA model. A quantized comparison is an optional extension if the runtime supports the chosen backend and the experiment fits the available time.
+     </p>
+     <h3 id="what-nf4-double-quantization-and-paged-optimizers-do">
+      What NF4, double quantization, and paged optimizers do
+     </h3>
+     <p>
+      QLoRA combines three memory ideas with LoRA. NF4 stores normalized weight blocks using a 4-bit codebook designed for normally distributed values. Its 16 code values are not simply 16 equally spaced integers. A block scale maps those stored codes back to approximate weights for computation. The frozen base is quantized, while the adapter and computation can use a higher precision.
+     </p>
+     <p>
+      Double quantization also quantizes the block-scale information. Imagine storing many small boxes of weights: the boxes are compressed, then part of their numerical labels is compressed too. This saves some metadata storage; it does not halve every tensor again. Paged optimizers use managed-memory paging to handle temporary optimizer-memory pressure. Moving state between host and device can cost time, so paging addresses memory spikes rather than guaranteeing faster training.
+     </p>
+     <h3 id="two-lora-variants-with-different-changes">
+      Two LoRA variants with different changes
+     </h3>
+     <p>
+      rsLoRA changes the scaling from alpha/r to alpha/sqrt(r), aiming to keep updates better behaved as rank increases. For alpha=16 and r=16, those factors are 1 and 4 respectively. This is a scaling rule, not a different base quantizer. DoRA separates weight magnitude from direction: it learns a magnitude component and uses a low-rank update for direction. DoRA therefore changes the parameterization and adds state; it is not another name for QLoRA. Learn the ordinary LoRA path first, then recognize which component each variant changes.
+     </p>
+     <h3 id="saving-and-using-an-adapter">
+      Saving and using an adapter
+     </h3>
+     <p>
+      Save adapter weights and configuration together with the exact base model and tokenizer identities. Applying a checkpoint to an incompatible base can change behavior or fail.
+     </p>
+     <p>
+      Some adapter updates can be merged into a compatible base for inference. Quantized merging and numerical behavior require validation rather than an assumption.
+     </p>
+     <p>
+      Test a saved/reloaded artifact, not only the in-memory object that just trained. The next week performs this complete experiment.
+     </p>
+     <h3 id="worked-practice-and-a-readiness-check">
+      Worked practice and a readiness check
+     </h3>
+     <p>
+      Calculate adapter shapes and count for a 4096×4096 matrix at rank 8. The result is 65536 adapter parameters, or about 0.390625% of the dense matrix.
+     </p>
+     <p>
+      Explain why a rank-one update cannot represent every possible 2×2 change. Then describe one memory cost LoRA reduces and one that remains.
+     </p>
+     <p>
+      You are ready when the factorization, scaling, initialization, memory implications, and checkpoint dependencies are concrete numerical statements.
+     </p>
+     <details class="reference-details" id="reference-details">
+      <summary>
+       Reference details and checks
+      </summary>
+      <h3 id="review-a-mechanism">
+       Review A: Mechanism
+      </h3>
+      <p>
+       A dense layer computes
+       <code>
+        y = W x
+       </code>
+       . LoRA freezes W and learns
+       <code>
+        delta_W = (alpha/r) B A
+       </code>
+       , so
+       <code>
+        y = W x + (alpha/r) B A x
+       </code>
+       . For W shaped
+       <code>
+        [d_out,d_in]
+       </code>
+       , A has
+       <code>
+        [r,d_in]
+       </code>
+       and B
+       <code>
+        [d_out,r]
+       </code>
+       . Only
+       <code>
+        r*(d_in+d_out)
+       </code>
+       adapter parameters are trained for that layer. The choice of target layers is part of the experiment.
+      </p>
+      <p>
+       For a 4096×4096 matrix and r=8, the dense matrix has 16,777,216 parameters while A and B total 65,536, about 0.39%. This reduces trainable optimizer state substantially. It does not eliminate frozen model storage, activations or forward/backward computation through the model. LoRA can be applied to attention projections and other layers; examine actual module names rather than copying a configuration blindly.
+      </p>
+      <h3 id="review-a-initialization-and-scaling">
+       Review A: Initialization and scaling
+      </h3>
+      <p>
+       Standard LoRA uses random A and zero B, giving an initial update BA=0. The first gradient can update B; A begins learning once B becomes nonzero. The adapted model starts with the base computation under comparable modes. Rank controls the size of the update space and trainable state, so compare ranks under a fixed evaluation and training budget.
+      </p>
+      <h3 id="review-a-qlora">
+       Review A: QLoRA
+      </h3>
+      <p>
+       QLoRA combines a quantized frozen base with low-rank trainable adapters [
+       <a class="inline-reading" href="../resources.html#reference-r13">
+        Dettmers et al. QLoRA (R13)
+       </a>
+       ]. Four-bit base weights do not imply every tensor or calculation is four-bit. Quantization scales, compute dtype, adapters, gradients, optimizer states and activations remain relevant. Specialized backend support depends on hardware and software. The course requires a small ordinary LoRA run; a QLoRA comparison is optional if the available runtime supports it.
+      </p>
+      <h3 id="review-a-deployment-considerations">
+       Review A: Deployment considerations
+      </h3>
+      <p>
+       Save the adapter with base model/tokenizer identity and target modules. An adapter checkpoint alone is insufficient if the base revision is unknown. Merging low-rank weights into a compatible unquantized base can remove the separate adapter path, but numerical behavior and quantized merge support require checking. Test the saved/reloaded artifact, not just the in-memory training object.
+      </p>
+      <h3 id="review-a-experiment">
+       Review A: Experiment
+      </h3>
+      <p>
+       <a href="../tutorials/25.html">
+        Tutorial 25: Lora and qlora from a small matrix
+       </a>
+       calculates trainable parameter counts and inspects the LoRA initialization.
+       <a href="../tutorials/26.html">
+        Tutorial 26: Fine tuning experiments preferences and distillation
+       </a>
+       creates actual adapters and confirms which parameters receive gradients. Compare your analytical count with the model's count and explain biases or excluded modules. Estimate memory before loading, then measure after the first training step.
+      </p>
+      <p>
+       <strong>
+        Exit criterion:
+       </strong>
+       derive LoRA shapes, explain the zero-update initialization, and distinguish LoRA from QLoRA.
+       <strong>
+        Reading:
+       </strong>
+       <a class="inline-reading" href="../resources.html#reference-r12">
+        Hu et al. LoRA (R12)
+       </a>
+       method,
+       <a class="inline-reading" href="../resources.html#reference-r13">
+        Dettmers et al. QLoRA (R13)
+       </a>
+       overview,
+       <a class="inline-reading" href="../resources.html#reference-r14">
+        Hugging Face PEFT LoRA guide (R14)
+       </a>
+       .
+       <strong>
+        Tutorial:
+       </strong>
+       25.
+      </p>
+     </details>
+    </article>
+    <nav aria-label="Adjacent lectures" class="chapter-pagination">
+     <a href="24.html">
+      <small>
+       Previous week
+      </small>
+      Fine tuning starts with a teaching dataset
+     </a>
+     <a href="26.html">
+      <small>
+       Next week
+      </small>
+      Fine tuning experiments preferences and distillation
+     </a>
+    </nav>
+   </div>
+   <footer class="footer">
+    <span>
+     Applied AI · An independent self-study course
+    </span>
+    <span>
+     32 weeks · 10 hours per week
+    </span>
+    <a href="../resources.html#about-this-course">
+     About and sources
+    </a>
+   </footer>
+  </main>
+  <dialog aria-labelledby="search-title" class="search-dialog">
+   <div class="dialog-head">
+    <h2 id="search-title">
+     Find a concept
+    </h2>
+    <button aria-label="Close search" class="search-close" type="button">
+     Close
+    </button>
+   </div>
+   <label class="sr-only" for="course-search">
+    Search all lectures and tutorials
+   </label>
+   <input autocomplete="off" id="course-search" placeholder="Try attention, fine-tuning, or harness…" type="search"/>
+   <p aria-live="polite" class="search-status">
+    Search lecture notes, tutorials, tests and readings.
+   </p>
+   <div class="search-results">
+   </div>
+  </dialog>
+  <div aria-live="polite" class="toast" role="status">
+  </div>
+ </body>
+</html>

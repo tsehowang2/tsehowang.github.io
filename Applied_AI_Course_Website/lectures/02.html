@@ -1,49 +1,1239 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/><title>From text to tokens and numerical IDs · Applied AI</title><meta content="Applied generative AI and LLM systems course material" name="description"/><meta content="#173c36" name="theme-color"/><link href="../assets/favicon.svg" rel="icon" type="image/svg+xml"/><link href="../assets/style.css" rel="stylesheet"/><link href="../assets/slides.css" rel="stylesheet"/><script>window.COURSE_BASE="../";</script><script defer="" src="../assets/site-config.js"></script><script defer="" src="../assets/search-index.js"></script><script defer="" src="../assets/app.js"></script><script defer="" src="../assets/visuals.js"></script><script defer="" src="../assets/slides.js"></script><script defer="" src="../assets/beginner-visuals.js"></script><link href="../zh-HK/lectures/02.html" hreflang="zh-HK" rel="alternate"/><link href="../assets/bilingual.css" rel="stylesheet"/></head><body data-page-kind="lecture" data-week="2"><a class="skip-link" href="#main">Skip to content</a><header class="topbar"><button aria-controls="course-sidebar" aria-expanded="false" class="menu-toggle" type="button">Menu</button><a class="brand" href="../index.html"><span aria-hidden="true" class="brand-mark">a<span>i</span></span><span>APPLIED AI<small>Principles into practice</small></span></a><nav aria-label="Main navigation"><a href="../index.html">The course</a><a href="../visuals.html">Visual lab</a><a href="../project.html">Project</a><a class="language-switch" href="../zh-HK/lectures/02.html" hreflang="zh-HK" lang="zh-HK">繁體中文</a></nav><button class="search-open" type="button">Search the course <span aria-hidden="true">/</span></button></header><aside aria-label="Course chapters" class="sidebar" id="course-sidebar"><a class="side-home" href="../index.html">Course overview</a><details class="semester-nav" open=""><summary>Semester 1<span>Weeks 1–16</span></summary><ol start="1"><li><a href="../lectures/01.html"><span class="week-number">01</span><span>What a language model is trying to learn</span><span class="week-tick" data-week-tick="1"></span></a></li><li><a aria-current="page" href="../lectures/02.html"><span class="week-number">02</span><span>From text to tokens and numerical IDs</span><span class="week-tick" data-week-tick="2"></span></a></li><li><a href="../lectures/03.html"><span class="week-number">03</span><span>What word vectors can represent</span><span class="week-tick" data-week-tick="3"></span></a></li><li><a href="../lectures/04.html"><span class="week-number">04</span><span>From scores to probabilities and learning signals</span><span class="week-tick" data-week-tick="4"></span></a></li><li><a href="../lectures/05.html"><span class="week-number">05</span><span>Why language needs context and order</span><span class="week-tick" data-week-tick="5"></span></a></li><li><a href="../lectures/06.html"><span class="week-number">06</span><span>Attention begins as a weighted mixture</span><span class="week-tick" data-week-tick="6"></span></a></li><li><a href="../lectures/07.html"><span class="week-number">07</span><span>Where queries keys and values come from</span><span class="week-tick" data-week-tick="7"></span></a></li><li><a href="../lectures/08.html"><span class="week-number">08</span><span>Scaling and masking attention correctly</span><span class="week-tick" data-week-tick="8"></span></a></li><li><a href="../lectures/09.html"><span class="week-number">09</span><span>Multiple attention heads and position</span><span class="week-tick" data-week-tick="9"></span></a></li><li><a href="../lectures/10.html"><span class="week-number">10</span><span>The transformer block step by step</span><span class="week-tick" data-week-tick="10"></span></a></li><li><a href="../lectures/11.html"><span class="week-number">11</span><span>Encoders decoders and complete model architectures</span><span class="week-tick" data-week-tick="11"></span></a></li><li><a href="../lectures/12.html"><span class="week-number">12</span><span>Training a small transformer</span><span class="week-tick" data-week-tick="12"></span></a></li><li><a href="../lectures/13.html"><span class="week-number">13</span><span>Generation decoding and the KV cache</span><span class="week-tick" data-week-tick="13"></span></a></li><li><a href="../lectures/14.html"><span class="week-number">14</span><span>From pretraining to instruction following and reasoning</span><span class="week-tick" data-week-tick="14"></span></a></li><li><a href="../lectures/15.html"><span class="week-number">15</span><span>Generative AI beyond text</span><span class="week-tick" data-week-tick="15"></span></a></li><li><a href="../lectures/16.html"><span class="week-number">16</span><span>A complete transformer walkthrough and first semester review</span><span class="week-tick" data-week-tick="16"></span></a></li></ol></details><details class="semester-nav"><summary>Semester 2<span>Weeks 17–32</span></summary><ol start="17"><li><a href="../lectures/17.html"><span class="week-number">17</span><span>From word vectors to semantic search</span><span class="week-tick" data-week-tick="17"></span></a></li><li><a href="../lectures/18.html"><span class="week-number">18</span><span>A vector database from a list of vectors</span><span class="week-tick" data-week-tick="18"></span></a></li><li><a href="../lectures/19.html"><span class="week-number">19</span><span>RAG as an open book question</span><span class="week-tick" data-week-tick="19"></span></a></li><li><a href="../lectures/20.html"><span class="week-number">20</span><span>Improving RAG without losing the basic task</span><span class="week-tick" data-week-tick="20"></span></a></li><li><a href="../lectures/21.html"><span class="week-number">21</span><span>Evaluating retrieval answers and uncertainty</span><span class="week-tick" data-week-tick="21"></span></a></li><li><a href="../lectures/22.html"><span class="week-number">22</span><span>CPU GPU memory and model resource accounting</span><span class="week-tick" data-week-tick="22"></span></a></li><li><a href="../lectures/23.html"><span class="week-number">23</span><span>CUDA kernels and profiling</span><span class="week-tick" data-week-tick="23"></span></a></li><li><a href="../lectures/24.html"><span class="week-number">24</span><span>Fine tuning starts with a teaching dataset</span><span class="week-tick" data-week-tick="24"></span></a></li><li><a href="../lectures/25.html"><span class="week-number">25</span><span>LoRA and QLoRA from a small matrix</span><span class="week-tick" data-week-tick="25"></span></a></li><li><a href="../lectures/26.html"><span class="week-number">26</span><span>Fine tuning experiments preferences and distillation</span><span class="week-tick" data-week-tick="26"></span></a></li><li><a href="../lectures/27.html"><span class="week-number">27</span><span>Tools functions workflows and agents</span><span class="week-tick" data-week-tick="27"></span></a></li><li><a href="../lectures/28.html"><span class="week-number">28</span><span>Harnesses planning memory and bounded execution</span><span class="week-tick" data-week-tick="28"></span></a></li><li><a href="../lectures/29.html"><span class="week-number">29</span><span>From a notebook to MLOps and inference serving</span><span class="week-tick" data-week-tick="29"></span></a></li><li><a href="../lectures/30.html"><span class="week-number">30</span><span>Monitoring security regression tests and rollback</span><span class="week-tick" data-week-tick="30"></span></a></li><li><a href="../lectures/31.html"><span class="week-number">31</span><span>Integrating the documentation assistant and advanced extensions</span><span class="week-tick" data-week-tick="31"></span></a></li><li><a href="../lectures/32.html"><span class="week-number">32</span><span>Review defense and a continuing learning plan</span><span class="week-tick" data-week-tick="32"></span></a></li></ol></details><div class="side-links"><a href="../visuals.html">Visual laboratory <span>14 interactive lessons</span></a><a href="../project.html">Documentation assistant <span>Your capstone project</span></a><a href="../resources.html">Readings and setup</a></div><div class="side-progress"><div><span>Your progress</span><strong data-progress-count="">0 / 32</strong></div><progress aria-label="Completed lectures" max="32" value="0"></progress><small>Saved in this browser</small></div></aside><main class="main" id="main"><div class="content"><div class="chapter-header"><div class="eyebrow">Semester 1 / Week 02</div><h1>From text to tokens and numerical IDs</h1></div><div class="lesson-links"><a href="../tutorials/02.html">Tutorial 02</a><a href="../tests/02.html">Test your understanding</a><button aria-pressed="false" class="mark-complete" data-week="2" type="button">Mark as complete</button></div><section aria-label="Lecture slides" class="lecture-deck" id="lecture-slides"><div class="deck-top"><div><div class="eyebrow">Lecture slides · Week 02</div><h2>Learn one step at a time.</h2></div><button class="deck-present" type="button">Present</button></div><p class="deck-help">Read each explanation, pause to predict the result, then continue. Use the arrow keys while the presentation is focused. The complete lecture reader is below.</p><div aria-label="Presentation: use left and right arrow keys" class="slide-viewport" tabindex="0"><section class="lecture-slide" data-slide=""><div class="slide-stage">Start with an example</div><h3>Why the model needs a representation</h3><div class="slide-prose"><p>We can read “I go to school by bus,” but a numerical model needs a reproducible way to represent it. Start with the toy rule “split at spaces.” The sentence becomes six tokens: I, go, to, school, by, bus. A vocabulary lists the token types the model knows.</p>
-<p>Assign IDs: I=0, go=1, to=2, school=3, by=4, bus=5. The sentence becomes [0,1,2,3,4,5]. An ID is a label. School does not become more meaningful because its ID is larger than the ID for go. If we consistently permuted the IDs and corresponding model tables, the labels themselves would not change the task.</p>
-<p>Keep three objects separate: the original text, the token sequence, and the ID sequence. A tokenizer determines the conversion. A vocabulary determines which IDs correspond to which token strings. The model consumes those IDs through a representation layer.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Start with an example</div><h3>Punctuation reveals a weakness in word splitting</h3><div class="slide-prose"><p>Compare “bus” and “bus.” A naive space splitter treats them as different strings. What about “school-bus,” “school bus,” or a misspelling? Treating every possible word form as a separate vocabulary item creates many rare entries and difficulty with unseen words.</p>
-<p>A character tokenizer instead represents b, u, s, and punctuation separately. It has a smaller basic inventory but creates longer sequences. A subword tokenizer uses reusable pieces between whole words and characters. Common words may be single tokens while less common words break into several pieces.</p>
-<p>There is no rule that one token equals one word. Once we use a real model, we must inspect its actual tokenizer. Word splitting remains useful as a teaching device because we can follow every ID by hand.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Build the mechanism</div><h3>A vocabulary is learned or chosen before use</h3><div class="slide-prose"><p>Suppose the vocabulary includes school and schools as whole tokens but not schoolyard. A word-level system needs an unknown-token policy. A subword system might encode schoolyard using school and yard, or other pieces depending on the learned vocabulary.</p>
-<p>Tokenization must stay compatible with the trained model. If ID 5 meant bus during training and means train during inference, the model receives the wrong representation even though both inputs are valid integers. A model checkpoint and its tokenizer therefore belong together.</p>
-<p>Special tokens may mark the beginning or end of a sequence, padding, or conversation boundaries. Their exact meanings depend on the model. We will introduce conversation templates later rather than assuming that a visible word such as “assistant” automatically acts as a special role marker.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Build the mechanism</div><h3>Byte pair encoding with a tiny example</h3><div class="slide-prose"><p>Consider the words low, low, and lower. Begin with characters and an end marker: l o w _, l o w _, l o w e r _. Count adjacent pairs. The pair l,o occurs three times, as does o,w. Choose a fixed tie rule and merge l,o into lo. Count again; lo,w now occurs three times, so merge into low.</p>
-<p>The algorithm builds reusable pieces from frequent adjacent patterns. A practical tokenizer has more details, including its initial alphabet and text preprocessing. Our example explains the merge idea without claiming to reproduce a particular production tokenizer.</p>
-<p>When encoding new text, apply the saved merge rules. Do not fit a new tokenizer independently for each sentence. The model's input vocabulary would otherwise move underneath its learned parameters.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Build the mechanism</div><h3>IDs become vectors through a lookup table</h3><div class="slide-prose"><p>An embedding table contains one learned vector per vocabulary entry. If the table has six rows and each vector has three coordinates, its shape is [6,3]. Looking up bus, ID 5, selects row 5.</p>
-<p>For illustration, assign bus the vector [0.2,0.8,0.1] and school [0.9,0.1,0.4]. These coordinates are invented numbers for tracing the computation. They are not a statement that the first coordinate literally means education or the second means transport.</p>
-<p>The six-token sentence now becomes a matrix with six rows and three columns. Each row corresponds to one position in the sequence. Week 3 will examine vector geometry; attention will later combine information across these rows.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Go deeper and check understanding</div><h3>One hot encoding and lookup mean the same selection</h3><div class="slide-prose"><p>A one-hot vector for ID 5 has six coordinates, all zero except a one at index 5. Multiplying that row vector by the [6,3] embedding table selects the same row as a lookup. This equivalence explains the operation mathematically.</p>
-<p>An implementation normally performs an efficient indexing operation instead of materializing a huge one-hot matrix. The distinction is between a mathematical description and an efficient implementation of the same selection.</p>
-<p>At this point, the vector for bus does not depend on its sentence. The lookup produces the same starting row wherever bus appears. Contextual processing will change the representation using surrounding tokens.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Go deeper and check understanding</div><h3>Length and decoding</h3><div class="slide-prose"><p>If a word tokenizer produces six tokens but a character tokenizer produces twenty-one, a model processes sequences of different lengths for the same text. Length influences how much computation and memory later stages need.</p>
-<p>Decoding converts IDs back to text under the tokenizer's rules. Whitespace and special tokens deserve attention; joining token strings with spaces is not a universal decoding algorithm. Keep the original string when checking round-trip behavior.</p>
-<p>Our tutorial compares a simple word tokenizer with UTF-8 bytes. Byte count is useful to inspect encoding, but it is not a substitute for the token count of a pretrained model.</p></div></section><section class="lecture-slide" data-slide="" hidden=""><div class="slide-stage">Go deeper and check understanding</div><h3>Worked practice and a readiness check</h3><div class="slide-prose"><p>Write a vocabulary for “I go to school by bus” and “You go to work by train.” Decide how you will represent a period and an end marker. Encode both sentences and decode them again. Then encode “I go to school by bicycle” when bicycle is absent.</p>
-<p>State your policy for the unknown token, and explain why another tokenizer could avoid that particular unknown by using smaller pieces. Given a vocabulary of 100 entries and vector width 16, calculate 1600 embedding parameters. Given a sentence of seven tokens, write its representation shape as [7,16].</p>
-<p>You are ready when you can explain why IDs are labels, why the tokenizer must match the model, and how an ID selects a vector. No sentence similarity service or database is needed to understand this layer.</p></div></section></div><div class="deck-controls"><button class="slide-prev" type="button">← Previous</button><span aria-live="polite" class="slide-counter">1 / 8</span><button class="slide-next" type="button">Next →</button></div><label class="slide-jump-label">Go to slide <select aria-label="Go to slide" class="slide-jump"><option value="0">1</option><option value="1">2</option><option value="2">3</option><option value="3">4</option><option value="4">5</option><option value="5">6</option><option value="6">7</option><option value="7">8</option></select></label><button aria-pressed="false" class="deck-all" type="button">Show all slides</button><a class="reader-link" href="#full-notes">Read the complete lecture ↓</a></section><section aria-label="Words become row numbers" class="visual-lesson"><div class="eyebrow">Explore the mechanism</div><h2>Words become row numbers</h2><p class="visual-intro">Step through an ordinary sentence. Token IDs are arbitrary indices, not numerical meanings.</p><div data-widget="tokens"><p>Enable JavaScript to use this illustration. The lecture notes below explain the same mechanism.</p></div></section><article class="prose full-notes" id="full-notes"><div class="eyebrow">Complete lecture reader</div><h2>Read the full explanation</h2><h3 id="why-the-model-needs-a-representation">Why the model needs a representation</h3>
-<p>We can read “I go to school by bus,” but a numerical model needs a reproducible way to represent it. Start with the toy rule “split at spaces.” The sentence becomes six tokens: I, go, to, school, by, bus. A vocabulary lists the token types the model knows.</p>
-<p>Assign IDs: I=0, go=1, to=2, school=3, by=4, bus=5. The sentence becomes [0,1,2,3,4,5]. An ID is a label. School does not become more meaningful because its ID is larger than the ID for go. If we consistently permuted the IDs and corresponding model tables, the labels themselves would not change the task.</p>
-<p>Keep three objects separate: the original text, the token sequence, and the ID sequence. A tokenizer determines the conversion. A vocabulary determines which IDs correspond to which token strings. The model consumes those IDs through a representation layer.</p>
-<h3 id="punctuation-reveals-a-weakness-in-word-splitting">Punctuation reveals a weakness in word splitting</h3>
-<p>Compare “bus” and “bus.” A naive space splitter treats them as different strings. What about “school-bus,” “school bus,” or a misspelling? Treating every possible word form as a separate vocabulary item creates many rare entries and difficulty with unseen words.</p>
-<p>A character tokenizer instead represents b, u, s, and punctuation separately. It has a smaller basic inventory but creates longer sequences. A subword tokenizer uses reusable pieces between whole words and characters. Common words may be single tokens while less common words break into several pieces.</p>
-<p>There is no rule that one token equals one word. Once we use a real model, we must inspect its actual tokenizer. Word splitting remains useful as a teaching device because we can follow every ID by hand.</p>
-<h3 id="a-vocabulary-is-learned-or-chosen-before-use">A vocabulary is learned or chosen before use</h3>
-<p>Suppose the vocabulary includes school and schools as whole tokens but not schoolyard. A word-level system needs an unknown-token policy. A subword system might encode schoolyard using school and yard, or other pieces depending on the learned vocabulary.</p>
-<p>Tokenization must stay compatible with the trained model. If ID 5 meant bus during training and means train during inference, the model receives the wrong representation even though both inputs are valid integers. A model checkpoint and its tokenizer therefore belong together.</p>
-<p>Special tokens may mark the beginning or end of a sequence, padding, or conversation boundaries. Their exact meanings depend on the model. We will introduce conversation templates later rather than assuming that a visible word such as “assistant” automatically acts as a special role marker.</p>
-<h3 id="byte-pair-encoding-with-a-tiny-example">Byte pair encoding with a tiny example</h3>
-<p>Consider the words low, low, and lower. Begin with characters and an end marker: l o w _, l o w _, l o w e r _. Count adjacent pairs. The pair l,o occurs three times, as does o,w. Choose a fixed tie rule and merge l,o into lo. Count again; lo,w now occurs three times, so merge into low.</p>
-<p>The algorithm builds reusable pieces from frequent adjacent patterns. A practical tokenizer has more details, including its initial alphabet and text preprocessing. Our example explains the merge idea without claiming to reproduce a particular production tokenizer.</p>
-<p>When encoding new text, apply the saved merge rules. Do not fit a new tokenizer independently for each sentence. The model's input vocabulary would otherwise move underneath its learned parameters.</p>
-<h3 id="ids-become-vectors-through-a-lookup-table">IDs become vectors through a lookup table</h3>
-<p>An embedding table contains one learned vector per vocabulary entry. If the table has six rows and each vector has three coordinates, its shape is [6,3]. Looking up bus, ID 5, selects row 5.</p>
-<p>For illustration, assign bus the vector [0.2,0.8,0.1] and school [0.9,0.1,0.4]. These coordinates are invented numbers for tracing the computation. They are not a statement that the first coordinate literally means education or the second means transport.</p>
-<p>The six-token sentence now becomes a matrix with six rows and three columns. Each row corresponds to one position in the sequence. Week 3 will examine vector geometry; attention will later combine information across these rows.</p>
-<h3 id="one-hot-encoding-and-lookup-mean-the-same-selection">One hot encoding and lookup mean the same selection</h3>
-<p>A one-hot vector for ID 5 has six coordinates, all zero except a one at index 5. Multiplying that row vector by the [6,3] embedding table selects the same row as a lookup. This equivalence explains the operation mathematically.</p>
-<p>An implementation normally performs an efficient indexing operation instead of materializing a huge one-hot matrix. The distinction is between a mathematical description and an efficient implementation of the same selection.</p>
-<p>At this point, the vector for bus does not depend on its sentence. The lookup produces the same starting row wherever bus appears. Contextual processing will change the representation using surrounding tokens.</p>
-<h3 id="length-and-decoding">Length and decoding</h3>
-<p>If a word tokenizer produces six tokens but a character tokenizer produces twenty-one, a model processes sequences of different lengths for the same text. Length influences how much computation and memory later stages need.</p>
-<p>Decoding converts IDs back to text under the tokenizer's rules. Whitespace and special tokens deserve attention; joining token strings with spaces is not a universal decoding algorithm. Keep the original string when checking round-trip behavior.</p>
-<p>Our tutorial compares a simple word tokenizer with UTF-8 bytes. Byte count is useful to inspect encoding, but it is not a substitute for the token count of a pretrained model.</p>
-<h3 id="worked-practice-and-a-readiness-check">Worked practice and a readiness check</h3>
-<p>Write a vocabulary for “I go to school by bus” and “You go to work by train.” Decide how you will represent a period and an end marker. Encode both sentences and decode them again. Then encode “I go to school by bicycle” when bicycle is absent.</p>
-<p>State your policy for the unknown token, and explain why another tokenizer could avoid that particular unknown by using smaller pieces. Given a vocabulary of 100 entries and vector width 16, calculate 1600 embedding parameters. Given a sentence of seven tokens, write its representation shape as [7,16].</p>
-<p>You are ready when you can explain why IDs are labels, why the tokenizer must match the model, and how an ID selects a vector. No sentence similarity service or database is needed to understand this layer.</p></article><nav aria-label="Adjacent lectures" class="chapter-pagination"><a href="01.html"><small>Previous week</small>What a language model is trying to learn</a><a href="03.html"><small>Next week</small>What word vectors can represent</a></nav></div><footer class="footer"><span>Applied AI · An independent self-study course</span><span>32 weeks · 10 hours per week</span><a href="../resources.html#about-this-course">About and sources</a></footer></main><dialog aria-labelledby="search-title" class="search-dialog"><div class="dialog-head"><h2 id="search-title">Find a concept</h2><button aria-label="Close search" class="search-close" type="button">Close</button></div><label class="sr-only" for="course-search">Search all lectures and tutorials</label><input autocomplete="off" id="course-search" placeholder="Try attention, fine-tuning, or harness…" type="search"/><p aria-live="polite" class="search-status">Search lecture notes, tutorials, tests and readings.</p><div class="search-results"></div></dialog><div aria-live="polite" class="toast" role="status"></div></body></html>
+<html lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width,initial-scale=1" name="viewport"/>
+  <title>
+   From text to tokens and numerical IDs · Applied AI
+  </title>
+  <meta content="Applied generative AI and LLM systems course material" name="description"/>
+  <meta content="#173c36" name="theme-color"/>
+  <link href="../assets/favicon.svg" rel="icon" type="image/svg+xml"/>
+  <link href="../assets/style.css" rel="stylesheet"/>
+  <link href="../assets/slides.css" rel="stylesheet"/>
+  <script>
+   window.COURSE_BASE="../";
+  </script>
+  <script defer="" src="../assets/site-config.js">
+  </script>
+  <script defer="" src="../assets/search-index.js">
+  </script>
+  <script defer="" src="../assets/app.js">
+  </script>
+  <script defer="" src="../assets/visuals.js">
+  </script>
+  <script defer="" src="../assets/slides.js">
+  </script>
+  <script defer="" src="../assets/beginner-visuals.js">
+  </script>
+  <link href="../zh-HK/lectures/02.html" hreflang="zh-HK" rel="alternate"/>
+  <link href="../assets/bilingual.css" rel="stylesheet"/>
+  <link href="../assets/reader-v3.css" rel="stylesheet"/>
+  <script defer="True" src="../assets/reader-v3.js">
+  </script>
+ </head>
+ <body data-page-kind="lecture" data-week="2">
+  <a class="skip-link" href="#main">
+   Skip to content
+  </a>
+  <header class="topbar">
+   <button aria-controls="course-sidebar" aria-expanded="false" class="menu-toggle" type="button">
+    Menu
+   </button>
+   <a class="brand" href="../index.html">
+    <span aria-hidden="true" class="brand-mark">
+     a
+     <span>
+      i
+     </span>
+    </span>
+    <span>
+     APPLIED AI
+     <small>
+      Principles into practice
+     </small>
+    </span>
+   </a>
+   <nav aria-label="Main navigation">
+    <a href="../index.html">
+     The course
+    </a>
+    <a href="../visuals.html">
+     Visual lab
+    </a>
+    <a href="../project.html">
+     Project
+    </a>
+    <a class="language-switch" href="../zh-HK/lectures/02.html" hreflang="zh-HK" lang="zh-HK">
+     繁體中文
+    </a>
+   </nav>
+   <button class="search-open" type="button">
+    Search the course
+    <span aria-hidden="true">
+     /
+    </span>
+   </button>
+  </header>
+  <aside aria-label="Course chapters" class="sidebar" id="course-sidebar">
+   <a class="side-home" href="../index.html">
+    Course overview
+   </a>
+   <details class="semester-nav" open="">
+    <summary>
+     Semester 1
+     <span>
+      Weeks 1–16
+     </span>
+    </summary>
+    <ol start="1">
+     <li>
+      <a href="../lectures/01.html">
+       <span class="week-number">
+        01
+       </span>
+       <span>
+        What a language model is trying to learn
+       </span>
+       <span class="week-tick" data-week-tick="1">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a aria-current="page" href="../lectures/02.html">
+       <span class="week-number">
+        02
+       </span>
+       <span>
+        From text to tokens and numerical IDs
+       </span>
+       <span class="week-tick" data-week-tick="2">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/03.html">
+       <span class="week-number">
+        03
+       </span>
+       <span>
+        What word vectors can represent
+       </span>
+       <span class="week-tick" data-week-tick="3">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/04.html">
+       <span class="week-number">
+        04
+       </span>
+       <span>
+        From scores to probabilities and learning signals
+       </span>
+       <span class="week-tick" data-week-tick="4">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/05.html">
+       <span class="week-number">
+        05
+       </span>
+       <span>
+        Why language needs context and order
+       </span>
+       <span class="week-tick" data-week-tick="5">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/06.html">
+       <span class="week-number">
+        06
+       </span>
+       <span>
+        Attention begins as a weighted mixture
+       </span>
+       <span class="week-tick" data-week-tick="6">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/07.html">
+       <span class="week-number">
+        07
+       </span>
+       <span>
+        Where queries keys and values come from
+       </span>
+       <span class="week-tick" data-week-tick="7">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/08.html">
+       <span class="week-number">
+        08
+       </span>
+       <span>
+        Scaling and masking attention correctly
+       </span>
+       <span class="week-tick" data-week-tick="8">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/09.html">
+       <span class="week-number">
+        09
+       </span>
+       <span>
+        Multiple attention heads and position
+       </span>
+       <span class="week-tick" data-week-tick="9">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/10.html">
+       <span class="week-number">
+        10
+       </span>
+       <span>
+        The transformer block step by step
+       </span>
+       <span class="week-tick" data-week-tick="10">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/11.html">
+       <span class="week-number">
+        11
+       </span>
+       <span>
+        Encoders decoders and complete model architectures
+       </span>
+       <span class="week-tick" data-week-tick="11">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/12.html">
+       <span class="week-number">
+        12
+       </span>
+       <span>
+        Training a small transformer
+       </span>
+       <span class="week-tick" data-week-tick="12">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/13.html">
+       <span class="week-number">
+        13
+       </span>
+       <span>
+        Generation decoding and the KV cache
+       </span>
+       <span class="week-tick" data-week-tick="13">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/14.html">
+       <span class="week-number">
+        14
+       </span>
+       <span>
+        From pretraining to instruction following and reasoning
+       </span>
+       <span class="week-tick" data-week-tick="14">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/15.html">
+       <span class="week-number">
+        15
+       </span>
+       <span>
+        Generative AI beyond text
+       </span>
+       <span class="week-tick" data-week-tick="15">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/16.html">
+       <span class="week-number">
+        16
+       </span>
+       <span>
+        A complete transformer walkthrough and first semester review
+       </span>
+       <span class="week-tick" data-week-tick="16">
+       </span>
+      </a>
+     </li>
+    </ol>
+   </details>
+   <details class="semester-nav">
+    <summary>
+     Semester 2
+     <span>
+      Weeks 17–32
+     </span>
+    </summary>
+    <ol start="17">
+     <li>
+      <a href="../lectures/17.html">
+       <span class="week-number">
+        17
+       </span>
+       <span>
+        From word vectors to semantic search
+       </span>
+       <span class="week-tick" data-week-tick="17">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/18.html">
+       <span class="week-number">
+        18
+       </span>
+       <span>
+        A vector database from a list of vectors
+       </span>
+       <span class="week-tick" data-week-tick="18">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/19.html">
+       <span class="week-number">
+        19
+       </span>
+       <span>
+        RAG as an open book question
+       </span>
+       <span class="week-tick" data-week-tick="19">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/20.html">
+       <span class="week-number">
+        20
+       </span>
+       <span>
+        Improving RAG without losing the basic task
+       </span>
+       <span class="week-tick" data-week-tick="20">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/21.html">
+       <span class="week-number">
+        21
+       </span>
+       <span>
+        Evaluating retrieval answers and uncertainty
+       </span>
+       <span class="week-tick" data-week-tick="21">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/22.html">
+       <span class="week-number">
+        22
+       </span>
+       <span>
+        CPU GPU memory and model resource accounting
+       </span>
+       <span class="week-tick" data-week-tick="22">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/23.html">
+       <span class="week-number">
+        23
+       </span>
+       <span>
+        CUDA kernels and profiling
+       </span>
+       <span class="week-tick" data-week-tick="23">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/24.html">
+       <span class="week-number">
+        24
+       </span>
+       <span>
+        Fine tuning starts with a teaching dataset
+       </span>
+       <span class="week-tick" data-week-tick="24">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/25.html">
+       <span class="week-number">
+        25
+       </span>
+       <span>
+        LoRA and QLoRA from a small matrix
+       </span>
+       <span class="week-tick" data-week-tick="25">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/26.html">
+       <span class="week-number">
+        26
+       </span>
+       <span>
+        Fine tuning experiments preferences and distillation
+       </span>
+       <span class="week-tick" data-week-tick="26">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/27.html">
+       <span class="week-number">
+        27
+       </span>
+       <span>
+        Tools functions workflows and agents
+       </span>
+       <span class="week-tick" data-week-tick="27">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/28.html">
+       <span class="week-number">
+        28
+       </span>
+       <span>
+        Harnesses planning memory and bounded execution
+       </span>
+       <span class="week-tick" data-week-tick="28">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/29.html">
+       <span class="week-number">
+        29
+       </span>
+       <span>
+        From a notebook to MLOps and inference serving
+       </span>
+       <span class="week-tick" data-week-tick="29">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/30.html">
+       <span class="week-number">
+        30
+       </span>
+       <span>
+        Monitoring security regression tests and rollback
+       </span>
+       <span class="week-tick" data-week-tick="30">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/31.html">
+       <span class="week-number">
+        31
+       </span>
+       <span>
+        Integrating the documentation assistant and advanced extensions
+       </span>
+       <span class="week-tick" data-week-tick="31">
+       </span>
+      </a>
+     </li>
+     <li>
+      <a href="../lectures/32.html">
+       <span class="week-number">
+        32
+       </span>
+       <span>
+        Review defense and a continuing learning plan
+       </span>
+       <span class="week-tick" data-week-tick="32">
+       </span>
+      </a>
+     </li>
+    </ol>
+   </details>
+   <div class="side-links">
+    <a href="../visuals.html">
+     Visual laboratory
+     <span>
+      14 interactive lessons
+     </span>
+    </a>
+    <a href="../project.html">
+     Documentation assistant
+     <span>
+      Your capstone project
+     </span>
+    </a>
+    <a href="../resources.html">
+     Readings and setup
+    </a>
+   </div>
+   <div class="side-progress">
+    <div>
+     <span>
+      Your progress
+     </span>
+     <strong data-progress-count="">
+      0 / 32
+     </strong>
+    </div>
+    <progress aria-label="Completed lectures" max="32" value="0">
+    </progress>
+    <small>
+     Saved in this browser
+    </small>
+   </div>
+  </aside>
+  <main class="main" id="main">
+   <div class="content">
+    <div class="chapter-header">
+     <div class="eyebrow">
+      Semester 1 / Week 02
+     </div>
+     <h1>
+      From text to tokens and numerical IDs
+     </h1>
+    </div>
+    <div class="lesson-links">
+     <a href="../tutorials/02.html">
+      Tutorial 02
+     </a>
+     <a href="../tests/02.html">
+      Test your understanding
+     </a>
+     <button aria-pressed="false" class="mark-complete" data-week="2" type="button">
+      Mark as complete
+     </button>
+    </div>
+    <div aria-label="Lesson view" class="lesson-mode" role="tablist">
+     <button aria-controls="full-notes" aria-selected="true" data-mode="read" id="mode-read" role="tab" type="button">
+      Read lesson
+     </button>
+     <button aria-controls="lecture-slides" aria-selected="false" data-mode="slides" id="mode-slides" role="tab" type="button">
+      Lesson slides
+     </button>
+    </div>
+    <section aria-label="Lecture slides" class="lecture-deck" hidden="" id="lecture-slides" role="tabpanel">
+     <div class="deck-top">
+      <div>
+       <div class="eyebrow">
+        Lecture slides · Week 02
+       </div>
+       <h2>
+        Key steps and worked visuals
+       </h2>
+      </div>
+      <button class="deck-present" type="button">
+       Present
+      </button>
+     </div>
+     <p class="deck-help">
+      Use these slides to review the mechanism. Open “Read the worked explanation” for the complete notes and code.
+     </p>
+     <div aria-label="Presentation: use left and right arrow keys" class="slide-viewport" tabindex="0">
+      <section class="lecture-slide" data-slide="">
+       <div class="slide-stage">
+        Week 02 · Section 1
+       </div>
+       <h3>
+        Why the model needs a representation
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          We can read “I go to school by bus,” but a numerical model needs a reproducible way to represent it.
+         </li>
+         <li>
+          Assign IDs: I=0, go=1, to=2, school=3, by=4, bus=5.
+         </li>
+         <li>
+          Keep three objects separate: the original text, the token sequence, and the ID sequence.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#why-the-model-needs-a-representation">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 02 · Section 2
+       </div>
+       <h3>
+        Punctuation reveals a weakness in word splitting
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Compare “bus” and “bus.” A naive space splitter treats them as different strings.
+         </li>
+         <li>
+          A character tokenizer instead represents b, u, s, and punctuation separately.
+         </li>
+         <li>
+          There is no rule that one token equals one word.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#punctuation-reveals-a-weakness-in-word-splitting">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 02 · Section 3
+       </div>
+       <h3>
+        A vocabulary is learned or chosen before use
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Suppose the vocabulary includes school and schools as whole tokens but not schoolyard.
+         </li>
+         <li>
+          Tokenization must stay compatible with the trained model.
+         </li>
+         <li>
+          Special tokens may mark the beginning or end of a sequence, padding, or conversation boundaries.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#a-vocabulary-is-learned-or-chosen-before-use">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 02 · Section 4
+       </div>
+       <h3>
+        Byte pair encoding with a tiny example
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Use the invented training corpus bus four times, busy twice, and plus once.
+         </li>
+         <li>
+          Count again after the merge.
+         </li>
+         <li>
+          Save the learned vocabulary and merge order.
+         </li>
+        </ul>
+        <figure class="mechanism-figure">
+         <figcaption>
+          Count pairs across this corpus
+         </figcaption>
+         <ol class="mechanism-flow">
+          <li>
+           <span class="mechanism-number">
+            01
+           </span>
+           <strong>
+            b u s
+           </strong>
+           <small>
+            bus × 4
+           </small>
+          </li>
+          <li>
+           <span class="mechanism-number">
+            02
+           </span>
+           <strong>
+            b u s y
+           </strong>
+           <small>
+            busy × 2
+           </small>
+          </li>
+          <li>
+           <span class="mechanism-number">
+            03
+           </span>
+           <strong>
+            p l u s
+           </strong>
+           <small>
+            plus × 1
+           </small>
+          </li>
+         </ol>
+         <p>
+          Count adjacent pairs over the corpus: (u,s)=7, (b,u)=6. Merge the most frequent pair first.
+         </p>
+        </figure>
+        <a class="slide-section-link" href="#byte-pair-encoding-with-a-tiny-example">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 02 · Section 5
+       </div>
+       <h3>
+        Bytes, subword algorithms, and SentencePiece
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Byte-level BPE starts from byte symbols rather than a separate initial symbol for every Unicode character.
+         </li>
+         <li>
+          BPE learns frequent pair merges.
+         </li>
+         <li>
+          Whitespace and digits are part of the input.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#bytes-subword-algorithms-and-sentencepiece">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 02 · Section 6
+       </div>
+       <h3>
+        English and Traditional Chinese use different token budgets
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          For a Hong Kong application, compare “I go to school by bus.” with a meaning-matched Traditional Chinese sentence such as “我搭巴士返學。
+         </li>
+         <li>
+          Tokenizers allocate vocabulary capacity differently, so there is no fixed English-to-Chinese token ratio.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#english-and-traditional-chinese-use-different-token-budgets">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 02 · Section 7
+       </div>
+       <h3>
+        IDs become vectors through a lookup table
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          An embedding table contains one learned vector per vocabulary entry.
+         </li>
+         <li>
+          For illustration, assign bus the vector [0.2,0.8,0.1] and school [0.9,0.1,0.4].
+         </li>
+         <li>
+          The six-token sentence now becomes a matrix with six rows and three columns.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#ids-become-vectors-through-a-lookup-table">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 02 · Section 8
+       </div>
+       <h3>
+        One hot encoding and lookup mean the same selection
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          A one-hot vector for ID 5 has six coordinates, all zero except a one at index 5.
+         </li>
+         <li>
+          An implementation normally performs an efficient indexing operation instead of materializing a huge one-hot matrix.
+         </li>
+         <li>
+          At this point, the vector for bus does not depend on its sentence.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#one-hot-encoding-and-lookup-mean-the-same-selection">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 02 · Section 9
+       </div>
+       <h3>
+        Length and decoding
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          If a word tokenizer produces six tokens but a character tokenizer produces twenty-one, a model processes sequences of different lengths for the same text.
+         </li>
+         <li>
+          Decoding converts IDs back to text under the tokenizer's rules.
+         </li>
+         <li>
+          Our tutorial compares a simple word tokenizer with UTF-8 bytes.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#length-and-decoding">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 02 · Section 10
+       </div>
+       <h3>
+        Worked practice and a readiness check
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Write a vocabulary for “I go to school by bus” and “You go to work by train.” Decide how you will represent a period and an end marker.
+         </li>
+         <li>
+          State your policy for the unknown token, and explain why another tokenizer could avoid that particular unknown by using smaller pieces.
+         </li>
+         <li>
+          You are ready when you can explain why IDs are labels, why the tokenizer must match the model, and how an ID selects a vector.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#worked-practice-and-a-readiness-check">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+     </div>
+     <div class="deck-controls">
+      <button class="slide-prev" type="button">
+       ← Previous
+      </button>
+      <span aria-live="polite" class="slide-counter">
+       1 / 10
+      </span>
+      <button class="slide-next" type="button">
+       Next →
+      </button>
+     </div>
+     <label class="slide-jump-label">
+      Go to slide
+      <select aria-label="Go to slide" class="slide-jump">
+       <option value="0">
+        1. Why the model needs a representation
+       </option>
+       <option value="1">
+        2. Punctuation reveals a weakness in word splitting
+       </option>
+       <option value="2">
+        3. A vocabulary is learned or chosen before use
+       </option>
+       <option value="3">
+        4. Byte pair encoding with a tiny example
+       </option>
+       <option value="4">
+        5. Bytes, subword algorithms, and SentencePiece
+       </option>
+       <option value="5">
+        6. English and Traditional Chinese use different token budgets
+       </option>
+       <option value="6">
+        7. IDs become vectors through a lookup table
+       </option>
+       <option value="7">
+        8. One hot encoding and lookup mean the same selection
+       </option>
+       <option value="8">
+        9. Length and decoding
+       </option>
+       <option value="9">
+        10. Worked practice and a readiness check
+       </option>
+      </select>
+     </label>
+     <button aria-pressed="false" class="deck-all" type="button">
+      Show all slides
+     </button>
+    </section>
+    <section aria-label="Words become row numbers" class="visual-lesson">
+     <div class="eyebrow">
+      Explore the mechanism
+     </div>
+     <h2>
+      Words become row numbers
+     </h2>
+     <p class="visual-intro">
+      Step through an ordinary sentence. Token IDs are arbitrary indices, not numerical meanings.
+     </p>
+     <div data-widget="tokens">
+      <p>
+       Enable JavaScript to use this illustration. The lecture notes below explain the same mechanism.
+      </p>
+     </div>
+    </section>
+    <nav aria-label="In this lesson" class="reader-toc">
+     <strong>
+      In this lesson
+     </strong>
+     <ol>
+      <li>
+       <a href="#why-the-model-needs-a-representation">
+        Why the model needs a representation
+       </a>
+      </li>
+      <li>
+       <a href="#punctuation-reveals-a-weakness-in-word-splitting">
+        Punctuation reveals a weakness in word splitting
+       </a>
+      </li>
+      <li>
+       <a href="#a-vocabulary-is-learned-or-chosen-before-use">
+        A vocabulary is learned or chosen before use
+       </a>
+      </li>
+      <li>
+       <a href="#byte-pair-encoding-with-a-tiny-example">
+        Byte pair encoding with a tiny example
+       </a>
+      </li>
+      <li>
+       <a href="#bytes-subword-algorithms-and-sentencepiece">
+        Bytes, subword algorithms, and SentencePiece
+       </a>
+      </li>
+      <li>
+       <a href="#english-and-traditional-chinese-use-different-token-budgets">
+        English and Traditional Chinese use different token budgets
+       </a>
+      </li>
+      <li>
+       <a href="#ids-become-vectors-through-a-lookup-table">
+        IDs become vectors through a lookup table
+       </a>
+      </li>
+      <li>
+       <a href="#one-hot-encoding-and-lookup-mean-the-same-selection">
+        One hot encoding and lookup mean the same selection
+       </a>
+      </li>
+      <li>
+       <a href="#length-and-decoding">
+        Length and decoding
+       </a>
+      </li>
+      <li>
+       <a href="#worked-practice-and-a-readiness-check">
+        Worked practice and a readiness check
+       </a>
+      </li>
+     </ol>
+    </nav>
+    <article class="prose full-notes" id="full-notes" role="tabpanel">
+     <div class="eyebrow">
+      Complete lecture reader
+     </div>
+     <h2>
+      Read the full explanation
+     </h2>
+     <h3 id="why-the-model-needs-a-representation">
+      Why the model needs a representation
+     </h3>
+     <p>
+      We can read “I go to school by bus,” but a numerical model needs a reproducible way to represent it. Start with the toy rule “split at spaces.” The sentence becomes six tokens: I, go, to, school, by, bus. A vocabulary lists the token types the model knows.
+     </p>
+     <p>
+      Assign IDs: I=0, go=1, to=2, school=3, by=4, bus=5. The sentence becomes [0,1,2,3,4,5]. An ID is a label. School does not become more meaningful because its ID is larger than the ID for go. If we consistently permuted the IDs and corresponding model tables, the labels themselves would not change the task.
+     </p>
+     <p>
+      Keep three objects separate: the original text, the token sequence, and the ID sequence. A tokenizer determines the conversion. A vocabulary determines which IDs correspond to which token strings. The model consumes those IDs through a representation layer.
+     </p>
+     <h3 id="punctuation-reveals-a-weakness-in-word-splitting">
+      Punctuation reveals a weakness in word splitting
+     </h3>
+     <p>
+      Compare “bus” and “bus.” A naive space splitter treats them as different strings. What about “school-bus,” “school bus,” or a misspelling? Treating every possible word form as a separate vocabulary item creates many rare entries and difficulty with unseen words.
+     </p>
+     <p>
+      A character tokenizer instead represents b, u, s, and punctuation separately. It has a smaller basic inventory but creates longer sequences. A subword tokenizer uses reusable pieces between whole words and characters. Common words may be single tokens while less common words break into several pieces.
+     </p>
+     <p>
+      There is no rule that one token equals one word. Once we use a real model, we must inspect its actual tokenizer. Word splitting remains useful as a teaching device because we can follow every ID by hand.
+     </p>
+     <h3 id="a-vocabulary-is-learned-or-chosen-before-use">
+      A vocabulary is learned or chosen before use
+     </h3>
+     <p>
+      Suppose the vocabulary includes school and schools as whole tokens but not schoolyard. A word-level system needs an unknown-token policy. A subword system might encode schoolyard using school and yard, or other pieces depending on the learned vocabulary.
+     </p>
+     <p>
+      Tokenization must stay compatible with the trained model. If ID 5 meant bus during training and means train during inference, the model receives the wrong representation even though both inputs are valid integers. A model checkpoint and its tokenizer therefore belong together.
+     </p>
+     <p>
+      Special tokens may mark the beginning or end of a sequence, padding, or conversation boundaries. Their exact meanings depend on the model. We will introduce conversation templates later rather than assuming that a visible word such as “assistant” automatically acts as a special role marker.
+     </p>
+     <h3 id="byte-pair-encoding-with-a-tiny-example">
+      Byte pair encoding with a tiny example
+     </h3>
+     <figure class="mechanism-figure">
+      <figcaption>
+       Count pairs across this corpus
+      </figcaption>
+      <ol class="mechanism-flow">
+       <li>
+        <span class="mechanism-number">
+         01
+        </span>
+        <strong>
+         b u s
+        </strong>
+        <small>
+         bus × 4
+        </small>
+       </li>
+       <li>
+        <span class="mechanism-number">
+         02
+        </span>
+        <strong>
+         b u s y
+        </strong>
+        <small>
+         busy × 2
+        </small>
+       </li>
+       <li>
+        <span class="mechanism-number">
+         03
+        </span>
+        <strong>
+         p l u s
+        </strong>
+        <small>
+         plus × 1
+        </small>
+       </li>
+      </ol>
+      <p>
+       Count adjacent pairs over the corpus: (u,s)=7, (b,u)=6. Merge the most frequent pair first.
+      </p>
+     </figure>
+     <p>
+      Use the invented training corpus bus four times, busy twice, and plus once. Split each word into characters and a visible end marker _. We count adjacent pairs with the word frequencies included: u,s occurs 7 times, b,u occurs 6 times, and s,_ occurs 5 times. The other pairs occur less often. Therefore u,s is the unique most frequent pair and becomes us.
+     </p>
+     <div class="table-wrap">
+      <table>
+       <thead>
+        <tr>
+         <th>
+          Word and frequency
+         </th>
+         <th>
+          Before the first merge
+         </th>
+         <th>
+          After u,s becomes us
+         </th>
+        </tr>
+       </thead>
+       <tbody>
+        <tr>
+         <td>
+          bus × 4
+         </td>
+         <td>
+          b u s _
+         </td>
+         <td>
+          b us _
+         </td>
+        </tr>
+        <tr>
+         <td>
+          busy × 2
+         </td>
+         <td>
+          b u s y _
+         </td>
+         <td>
+          b us y _
+         </td>
+        </tr>
+        <tr>
+         <td>
+          plus × 1
+         </td>
+         <td>
+          p l u s _
+         </td>
+         <td>
+          p l us _
+         </td>
+        </tr>
+       </tbody>
+      </table>
+     </div>
+     <p>
+      Count again after the merge. The pair b,us occurs 6 times, while us,_ occurs 5 times. The next merge is b,us into bus. BPE repeatedly merges the most frequent adjacent pair in the current representation; it does not choose the longest word or permanently keep the original pair counts. Ties in other corpora require a deterministic rule.
+     </p>
+     <p>
+      Save the learned vocabulary and merge order. Encoding a new sentence uses those saved rules; fitting a fresh tokenizer for every sentence would change the meaning of the model input IDs. The end marker in this hand calculation is a teaching convention, not a claim about a particular pretrained tokenizer.
+     </p>
+     <h3 id="bytes-subword-algorithms-and-sentencepiece">
+      Bytes, subword algorithms, and SentencePiece
+     </h3>
+     <p>
+      Byte-level BPE starts from byte symbols rather than a separate initial symbol for every Unicode character. The English word bus is the UTF-8 bytes [98,117,115]. A Chinese character can occupy several UTF-8 bytes; learned merges may combine those bytes into larger tokens. A complete byte alphabet can represent any UTF-8 input, although normalization and decoding settings still determine the final text round trip. Byte count and model token count are different measurements.
+     </p>
+     <p>
+      BPE learns frequent pair merges. WordPiece is another subword family: its vocabulary-training criterion differs from simple BPE frequency counting, and common implementations encode words by matching vocabulary pieces. Unigram begins with candidate pieces and learns a probabilistic segmentation model while pruning the vocabulary. SentencePiece is a tokenizer toolkit and text-processing approach that can train BPE or Unigram models directly from raw text; it is not a fourth mutually exclusive merge algorithm.
+     </p>
+     <p>
+      Whitespace and digits are part of the input. The strings bus and “ bus” can follow different tokenization paths, and 2026 may split into one or several pieces depending on the tokenizer. Visible markers such as a leading-space symbol are tokenizer conventions. Inspect token IDs and decoded pieces rather than removing spaces or assuming that every number is a single token.
+     </p>
+     <h3 id="english-and-traditional-chinese-use-different-token-budgets">
+      English and Traditional Chinese use different token budgets
+     </h3>
+     <p>
+      For a Hong Kong application, compare “I go to school by bus.” with a meaning-matched Traditional Chinese sentence such as “我搭巴士返學。” using the exact tokenizer of the chosen model. Record text, UTF-8 byte count, token IDs, number of tokens, and the tokenizer revision. Repeat with a code identifier, a date, and English mixed with Chinese. This separates language coverage from sentence length and formatting.
+     </p>
+     <p>
+      Tokenizers allocate vocabulary capacity differently, so there is no fixed English-to-Chinese token ratio. Some English-heavy vocabularies encode Chinese less compactly; a multilingual vocabulary may behave differently. More tokens use more context space and can increase model work and token-priced service cost. Translate first, measure with the deployed tokenizer, and budget input and output tokens separately.
+     </p>
+     <h3 id="ids-become-vectors-through-a-lookup-table">
+      IDs become vectors through a lookup table
+     </h3>
+     <p>
+      An embedding table contains one learned vector per vocabulary entry. If the table has six rows and each vector has three coordinates, its shape is [6,3]. Looking up bus, ID 5, selects row 5.
+     </p>
+     <p>
+      For illustration, assign bus the vector [0.2,0.8,0.1] and school [0.9,0.1,0.4]. These coordinates are invented numbers for tracing the computation. They are not a statement that the first coordinate literally means education or the second means transport.
+     </p>
+     <p>
+      The six-token sentence now becomes a matrix with six rows and three columns. Each row corresponds to one position in the sequence. Week 3 will examine vector geometry; attention will later combine information across these rows.
+     </p>
+     <h3 id="one-hot-encoding-and-lookup-mean-the-same-selection">
+      One hot encoding and lookup mean the same selection
+     </h3>
+     <p>
+      A one-hot vector for ID 5 has six coordinates, all zero except a one at index 5. Multiplying that row vector by the [6,3] embedding table selects the same row as a lookup. This equivalence explains the operation mathematically.
+     </p>
+     <p>
+      An implementation normally performs an efficient indexing operation instead of materializing a huge one-hot matrix. The distinction is between a mathematical description and an efficient implementation of the same selection.
+     </p>
+     <p>
+      At this point, the vector for bus does not depend on its sentence. The lookup produces the same starting row wherever bus appears. Contextual processing will change the representation using surrounding tokens.
+     </p>
+     <h3 id="length-and-decoding">
+      Length and decoding
+     </h3>
+     <p>
+      If a word tokenizer produces six tokens but a character tokenizer produces twenty-one, a model processes sequences of different lengths for the same text. Length influences how much computation and memory later stages need.
+     </p>
+     <p>
+      Decoding converts IDs back to text under the tokenizer's rules. Whitespace and special tokens deserve attention; joining token strings with spaces is not a universal decoding algorithm. Keep the original string when checking round-trip behavior.
+     </p>
+     <p>
+      Our tutorial compares a simple word tokenizer with UTF-8 bytes. Byte count is useful to inspect encoding, but it is not a substitute for the token count of a pretrained model.
+     </p>
+     <h3 id="worked-practice-and-a-readiness-check">
+      Worked practice and a readiness check
+     </h3>
+     <p>
+      Write a vocabulary for “I go to school by bus” and “You go to work by train.” Decide how you will represent a period and an end marker. Encode both sentences and decode them again. Then encode “I go to school by bicycle” when bicycle is absent.
+     </p>
+     <p>
+      State your policy for the unknown token, and explain why another tokenizer could avoid that particular unknown by using smaller pieces. Given a vocabulary of 100 entries and vector width 16, calculate 1600 embedding parameters. Given a sentence of seven tokens, write its representation shape as [7,16].
+     </p>
+     <p>
+      You are ready when you can explain why IDs are labels, why the tokenizer must match the model, and how an ID selects a vector. The lookup itself is an indexing operation on the embedding table.
+     </p>
+    </article>
+    <nav aria-label="Adjacent lectures" class="chapter-pagination">
+     <a href="01.html">
+      <small>
+       Previous week
+      </small>
+      What a language model is trying to learn
+     </a>
+     <a href="03.html">
+      <small>
+       Next week
+      </small>
+      What word vectors can represent
+     </a>
+    </nav>
+   </div>
+   <footer class="footer">
+    <span>
+     Applied AI · An independent self-study course
+    </span>
+    <span>
+     32 weeks · 10 hours per week
+    </span>
+    <a href="../resources.html#about-this-course">
+     About and sources
+    </a>
+   </footer>
+  </main>
+  <dialog aria-labelledby="search-title" class="search-dialog">
+   <div class="dialog-head">
+    <h2 id="search-title">
+     Find a concept
+    </h2>
+    <button aria-label="Close search" class="search-close" type="button">
+     Close
+    </button>
+   </div>
+   <label class="sr-only" for="course-search">
+    Search all lectures and tutorials
+   </label>
+   <input autocomplete="off" id="course-search" placeholder="Try attention, fine-tuning, or harness…" type="search"/>
+   <p aria-live="polite" class="search-status">
+    Search lecture notes, tutorials, tests and readings.
+   </p>
+   <div class="search-results">
+   </div>
+  </dialog>
+  <div aria-live="polite" class="toast" role="status">
+  </div>
+ </body>
+</html>
