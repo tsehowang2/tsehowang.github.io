@@ -469,7 +469,7 @@
         31
        </span>
        <span>
-        整合文件助手與進階延伸
+        整合及檢視 documentation assistant
        </span>
        <span class="week-tick" data-week-tick="31">
        </span>
@@ -588,7 +588,7 @@
       標準 multi-head attention 使用相同數目的 query head 和 KV head。Multi-query attention 讓多個 query head 共用一個 KV head；grouped-query attention 使用介乎兩者之間的數目。Cache 儲存量隨 KV head 數目增加，而非只看 query head。因此，model 可以有很多 query head，卻不必為每個 head 分別儲存 cached key／value。
      </p>
      <p>
-      使用 memory formula 前，務必檢查實際 architecture configuration。學到的 projection、head dimension 及 layer 數目都重要。第 9 週的 96 MiB 例子假設採用題目指定的 KV 數目、batch、precision 及 context length。
+      使用 memory formula 前，先核對實際 architecture configuration。Learned projections、head dimensions 和 layer 數量都影響估算。第 22 週的 96 MiB 例子假設指定 KV count、batch、precision 和 context length。
      </p>
      <h2 id="kv-cache-correctness">
       KV-cache 正確性

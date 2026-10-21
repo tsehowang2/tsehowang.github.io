@@ -463,7 +463,7 @@
         31
        </span>
        <span>
-        Integrating the documentation assistant and advanced extensions
+        Integrating and reviewing the documentation assistant
        </span>
        <span class="week-tick" data-week-tick="31">
        </span>
@@ -541,7 +541,7 @@
      </a>
     </div>
     <p class="save-note">
-     When you run this notebook, also
+     Tutorials 01–16 run without coursekit. The complete pack is optional for this notebook. When you need the support files,
      <a download="" href="../downloads/Applied_Generative_AI_Course.zip">
       download and extract the full course pack
      </a>
@@ -593,7 +593,7 @@
        Notebook environment and course files
       </summary>
       <p>
-       This cell finds the extracted course files. It is needed when running the notebook.
+       Run this setup first. Early tutorials create an output directory; later tutorials locate the extracted course support files.
       </p>
       <div class="code-block">
        <div class="code-bar">
@@ -604,20 +604,25 @@
          Copy code
         </button>
        </div>
-       <pre><code>from pathlib import Path
-import sys,json,time,random,hashlib,math
-if hasattr(sys.stdout,'reconfigure'): sys.stdout.reconfigure(encoding='utf-8')
-candidates=[Path.cwd(),Path.cwd().parent,Path.cwd()/'llm_course',Path.cwd()/'llm_course_v2',Path('/content/llm_course'),Path('/content/llm_course_v2')]
-COURSE=next((p for p in candidates if (p/'coursekit/core.py').exists()),None)
-if COURSE is None: raise RuntimeError('Extract the complete course pack; run from its root or notebooks directory.')
-if str(COURSE) not in sys.path:sys.path.insert(0,str(COURSE))
-RUNS=COURSE/'runs';RUNS.mkdir(exist_ok=True)
-from coursekit.core import *
+       <pre><code>import random
+from pathlib import Path
+import sys, json, math, time, random
+if hasattr(sys.stdout, 'reconfigure'):
+    sys.stdout.reconfigure(encoding='utf-8')
+COURSE = Path.cwd().parent if Path.cwd().name == 'notebooks' else Path.cwd()
+RUNS = COURSE / 'runs'
+RUNS.mkdir(exist_ok=True)
 random.seed(7)
-print('Course root:',COURSE)
+print('Outputs directory:', RUNS)
 </code></pre>
       </div>
      </details>
+     <h3 id="pause-before-the-next-step">
+      Pause before the next step
+     </h3>
+     <p>
+      Add two train sentences by hand. Predict the new denominator before running.
+     </p>
      <p>
       We first build a language model without a neural network. Each sentence is visible. Count only continuations of the same prefix, then turn counts into probabilities. These proportions describe this toy collection, not real commuting behavior.
      </p>
@@ -634,20 +639,26 @@ print('Course root:',COURSE)
        </button>
       </div>
       <pre><code>from collections import Counter
-sentences=['I go to school by bus']*3+['I go to school by train','I go to school by bicycle']
-prefix='I go to school by '
-counts=Counter(s[len(prefix):] for s in sentences if s.startswith(prefix))
-probs={word:count/sum(counts.values()) for word,count in counts.items()}
-print(counts,probs)
-assert probs=={'bus':.6,'train':.2,'bicycle':.2}
+sentences = ['I go to school by bus'] * 3 + ['I go to school by train', 'I go to school by bicycle']
+vocabulary = ['bus', 'train', 'bicycle']
+
+def continuation_probs(prefix, alpha=0.0):
+    observed = Counter((s[len(prefix):] for s in sentences if s.startswith(prefix)))
+    total = sum(observed.values())
+    if total == 0 and alpha == 0:
+        return None
+    return {w: (observed[w] + alpha) / (total + alpha * len(vocabulary)) for w in vocabulary}
+prefix = 'I go to school by '
+counts = Counter((s[len(prefix):] for s in sentences if s.startswith(prefix)))
+probs = continuation_probs(prefix)
+print(counts, probs)
+assert probs == {'bus': 0.6, 'train': 0.2, 'bicycle': 0.2}
+assert continuation_probs('I go to work by ') is None
+fallback = continuation_probs('I go to work by ', 1)
+assert fallback == dict.fromkeys(vocabulary, 1 / 3)
+print('Unseen prefix:', None, 'Add-one fallback:', fallback)
 </code></pre>
      </div>
-     <h3 id="pause-before-the-next-step">
-      Pause before the next step
-     </h3>
-     <p>
-      Add two train sentences by hand. Predict the new denominator before running.
-     </p>
      <h3>
       Code step 2
      </h3>
@@ -660,10 +671,10 @@ assert probs=={'bus':.6,'train':.2,'bicycle':.2}
         Copy code
        </button>
       </div>
-      <pre><code>counts['train']+=2
-print({w:c/sum(counts.values()) for w,c in counts.items()})
-assert sum(counts.values())==7
-print('Three-token chain probability:',.5*.4*.25)
+      <pre><code>counts['train'] += 2
+print({w: c / sum(counts.values()) for w, c in counts.items()})
+assert sum(counts.values()) == 7
+print('Three-token chain probability:', 0.5 * 0.4 * 0.25)
 </code></pre>
      </div>
      <h3 id="independent-experiment">
@@ -675,6 +686,26 @@ print('Three-token chain probability:',.5*.4*.25)
      <p>
       Submit a short report containing your prediction, the actual result, a comparison and a limitation. Record any environment or data changes. Do not substitute an illustrative number for a measured result.
      </p>
+     <h3 id="reference-output">
+      Reference output
+     </h3>
+     <p>
+      Reference output from the CPU teaching run (paths and timings vary). This is a comparison aid, not your experiment result.
+     </p>
+     <div class="code-block">
+      <div class="code-bar">
+       <span>
+        text
+       </span>
+       <button class="copy-code" type="button">
+        Copy code
+       </button>
+      </div>
+      <pre><code>Counter({'bus': 3, 'train': 1, 'bicycle': 1}) {'bus': 0.6, 'train': 0.2, 'bicycle': 0.2}
+Unseen prefix: None Add-one fallback: {'bus': 0.3333333333333333, 'train': 0.3333333333333333, 'bicycle': 0.3333333333333333}
+{'bus': 0.42857142857142855, 'train': 0.42857142857142855, 'bicycle': 0.14285714285714285}
+Three-token chain probability: 0.05</code></pre>
+     </div>
     </article>
     <div class="end-note">
      Reading the code is the first step. Complete the independent experiment and keep your actual results before marking this lab finished.

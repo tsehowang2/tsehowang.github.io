@@ -469,7 +469,7 @@
         31
        </span>
        <span>
-        整合文件助手與進階延伸
+        整合及檢視 documentation assistant
        </span>
        <span class="week-tick" data-week-tick="31">
        </span>
@@ -562,6 +562,9 @@
        <p>
         corpus／chunker、embeddings／index、tokenizer／adapter、prompt、tools、environment、evaluation records 及 configs；指出 dependency 改動的影響。
        </p>
+       <p>
+        評分：data/index (1)；model/tokenizer/adapter (1)；prompt/tools/environment/evaluation (1)。
+       </p>
       </details>
      </section>
      <section class="test-question">
@@ -582,6 +585,9 @@
        <p>
         在穩定且邊界一致的情況下，平均=6。這不能決定 worker count、p95 或 saturation 行為。
        </p>
+       <p>
+        評分：L=lambda×W (1)；six average in flight (1)；stability and boundary (1)。
+       </p>
       </details>
      </section>
      <section class="test-question">
@@ -589,7 +595,7 @@
        問題 3
       </div>
       <p>
-       設計 API／load／reproduction check，區分 extraction baseline timings 與真正 LLM service 結果。
+       應用程式先直接返回 retrieved excerpts，再把 response stage 改為 LLM。設計 API、load、reproduction checks，說明哪些 timing claims 可以沿用。
       </p>
       <label for="week-29-question-3">
        你的練習筆記
@@ -600,7 +606,10 @@
         顯示完整解答
        </summary>
        <p>
-        固定 artifacts，驗證 schema／scope／failures，量度真正 generator 的 lengths／concurrency／warm／cold 及 timeouts，保存 raw timings，並在新環境重現。適當標示教學 extractor。
+        固定各版本 artifacts，測試 schema、scope、invalid inputs 和 timeouts。LLM path 要記錄 prompt/output lengths、concurrency、warm/cold state 和 raw timings。Excerpt-return timings 只量 retrieval/API overhead，不能當作 LLM prefill/decode 或 tail latency。兩個 configurations 均應在 clean environment 重現。
+       </p>
+       <p>
+        評分：API controls (1)；LLM workload protocol (1)；timing distinction (1)；clean reproduction (1)。
        </p>
       </details>
      </section>

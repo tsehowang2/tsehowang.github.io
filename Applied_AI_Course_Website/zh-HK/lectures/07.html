@@ -469,7 +469,7 @@
         31
        </span>
        <span>
-        整合文件助手與進階延伸
+        整合及檢視 documentation assistant
        </span>
        <span class="week-tick" data-week-tick="31">
        </span>
@@ -574,6 +574,24 @@
         第 07 週 · 課節 1
        </div>
        <h3>
+        Row 和 column conventions 表達相同 map
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Attention 章節把 token vectors 儲存為 rows：y_row=x_row*W_row。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#row-and-column-conventions-describe-the-same-map">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 07 週 · 課節 2
+       </div>
+       <h3>
         同一 token 可以擔任多個計算角色
        </h3>
        <div class="slide-prose">
@@ -595,7 +613,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        第 07 週 · 課節 2
+        第 07 週 · 課節 3
        </div>
        <h3>
         用看得見的數字做 linear projection
@@ -619,7 +637,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        第 07 週 · 課節 3
+        第 07 週 · 課節 4
        </div>
        <h3>
         Attention dimensions 的共用 notation
@@ -637,7 +655,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        第 07 週 · 課節 4
+        第 07 週 · 課節 5
        </div>
        <h3>
         對整個句子套用 projection
@@ -661,7 +679,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        第 07 週 · 課節 5
+        第 07 週 · 課節 6
        </div>
        <h3>
         比較所有 query-key pair
@@ -685,7 +703,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        第 07 週 · 課節 6
+        第 07 週 · 課節 7
        </div>
        <h3>
         完整的 two-position 例子
@@ -709,7 +727,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        第 07 週 · 課節 7
+        第 07 週 · 課節 8
        </div>
        <h3>
         Self-attention 與 cross-attention 使用不同 source
@@ -733,7 +751,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        第 07 週 · 課節 8
+        第 07 週 · 課節 9
        </div>
        <h3>
         Training 可以改變甚麼
@@ -757,7 +775,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        第 07 週 · 課節 9
+        第 07 週 · 課節 10
        </div>
        <h3>
         實例練習與學習檢查
@@ -781,7 +799,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        第 07 週 · 課節 10
+        第 07 週 · 課節 11
        </div>
        <h3>
         改變 key 與改變 value 的分別
@@ -809,7 +827,7 @@
        ← 上一頁
       </button>
       <span aria-live="polite" class="slide-counter">
-       1 / 10
+       1 / 11
       </span>
       <button class="slide-next" type="button">
        下一頁 →
@@ -819,34 +837,37 @@
       前往 slide
       <select aria-label="跳至 slide" class="slide-jump">
        <option value="0">
-        1. 同一 token 可以擔任多個計算角色
+        1. Row 和 column conventions 表達相同 map
        </option>
        <option value="1">
-        2. 用看得見的數字做 linear projection
+        2. 同一 token 可以擔任多個計算角色
        </option>
        <option value="2">
-        3. Attention dimensions 的共用 notation
+        3. 用看得見的數字做 linear projection
        </option>
        <option value="3">
-        4. 對整個句子套用 projection
+        4. Attention dimensions 的共用 notation
        </option>
        <option value="4">
-        5. 比較所有 query-key pair
+        5. 對整個句子套用 projection
        </option>
        <option value="5">
-        6. 完整的 two-position 例子
+        6. 比較所有 query-key pair
        </option>
        <option value="6">
-        7. Self-attention 與 cross-attention 使用不同 source
+        7. 完整的 two-position 例子
        </option>
        <option value="7">
-        8. Training 可以改變甚麼
+        8. Self-attention 與 cross-attention 使用不同 source
        </option>
        <option value="8">
-        9. 實例練習與學習檢查
+        9. Training 可以改變甚麼
        </option>
        <option value="9">
-        10. 改變 key 與改變 value 的分別
+        10. 實例練習與學習檢查
+       </option>
+       <option value="10">
+        11. 改變 key 與改變 value 的分別
        </option>
       </select>
      </label>
@@ -859,6 +880,11 @@
       本課內容
      </strong>
      <ol>
+      <li>
+       <a href="#row-and-column-conventions-describe-the-same-map">
+        Row 和 column conventions 表達相同 map
+       </a>
+      </li>
       <li>
        <a href="#one-token-can-have-several-computational-roles">
         同一 token 可以擔任多個計算角色
@@ -926,6 +952,12 @@
        B: batch · T: tokens · d_model: model width · H: query heads · H_kv: key/value heads · d_head: query/key width per head · d_value: value width per head
       </p>
      </aside>
+     <h3 id="row-and-column-conventions-describe-the-same-map">
+      Row 和 column conventions 表達相同 map
+     </h3>
+     <p>
+      Attention 章節把 token vectors 儲存為 rows：y_row=x_row*W_row。第 25 週使用 column vectors，以配合常見 LoRA formula：y_col=W_col*x_col。兩者是同一計算的 transpose：x_col=x_row transpose、W_col=W_row transpose。因此 row convention 的 [d_in,d_out] matrix 會成為 column convention 的 [d_out,d_in]。H_kv 留待 grouped-query/cache 部分使用；本節普通 attention 每個 query head 都有一組 K/V。
+     </p>
      <h3 id="one-token-can-have-several-computational-roles">
       同一 token 可以擔任多個計算角色
      </h3>

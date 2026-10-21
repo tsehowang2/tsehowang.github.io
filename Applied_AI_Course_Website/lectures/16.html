@@ -463,7 +463,7 @@
         31
        </span>
        <span>
-        Integrating the documentation assistant and advanced extensions
+        Integrating and reviewing the documentation assistant
        </span>
        <span class="week-tick" data-week-tick="31">
        </span>
@@ -568,6 +568,147 @@
         Week 16 · Section 1
        </div>
        <h3>
+        An end-to-end numeric transformer trace
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Take two input tokens with IDs [0,1], one head and d_model=2.
+         </li>
+         <li>
+          The last row supplies the distribution for the next token.
+         </li>
+        </ul>
+        <div class="table-wrap">
+         <table>
+          <thead>
+           <tr>
+            <th>
+             Stage
+            </th>
+            <th>
+             Numeric value
+            </th>
+           </tr>
+          </thead>
+          <tbody>
+           <tr>
+            <td>
+             IDs
+            </td>
+            <td>
+             [0,1]
+            </td>
+           </tr>
+           <tr>
+            <td>
+             token embeddings
+            </td>
+            <td>
+             [[1,0],[0,1]]
+            </td>
+           </tr>
+           <tr>
+            <td>
+             position additions
+            </td>
+            <td>
+             [[0,0],[0.1,-0.1]]
+            </td>
+           </tr>
+           <tr>
+            <td>
+             input X
+            </td>
+            <td>
+             [[1.0, 0.0], [0.1, 0.9]]
+            </td>
+           </tr>
+           <tr>
+            <td>
+             Norm(X)=Q=K=V
+            </td>
+            <td>
+             [[1.0, -1.0], [-1.0, 1.0]]
+            </td>
+           </tr>
+           <tr>
+            <td>
+             causal attention weights
+            </td>
+            <td>
+             [[1.0, 0.0], [0.0558, 0.9442]]
+            </td>
+           </tr>
+           <tr>
+            <td>
+             attention output
+            </td>
+            <td>
+             [[1.0, -1.0], [-0.8883, 0.8883]]
+            </td>
+           </tr>
+           <tr>
+            <td>
+             first residual
+            </td>
+            <td>
+             [[2.0, -1.0], [-0.7883, 1.7883]]
+            </td>
+           </tr>
+           <tr>
+            <td>
+             ReLU MLP output
+            </td>
+            <td>
+             [[1.0, 0.0], [0.0, 1.0]]
+            </td>
+           </tr>
+           <tr>
+            <td>
+             second residual
+            </td>
+            <td>
+             [[3.0, -1.0], [-0.7883, 2.7883]]
+            </td>
+           </tr>
+           <tr>
+            <td>
+             final normalized state
+            </td>
+            <td>
+             [[1.0, -1.0], [-1.0, 1.0]]
+            </td>
+           </tr>
+           <tr>
+            <td>
+             vocabulary logits
+            </td>
+            <td>
+             [[1.0, -1.0, -1.0], [-1.0, 1.0, 1.0]]
+            </td>
+           </tr>
+           <tr>
+            <td>
+             next-token probabilities
+            </td>
+            <td>
+             [[0.787, 0.1065, 0.1065], [0.0634, 0.4683, 0.4683]]
+            </td>
+           </tr>
+          </tbody>
+         </table>
+        </div>
+        <a class="slide-section-link" href="#an-end-to-end-numeric-transformer-trace">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 16 · Section 2
+       </div>
+       <h3>
         The semester returns to one sentence
        </h3>
        <div class="slide-prose">
@@ -589,7 +730,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        Week 16 · Section 2
+        Week 16 · Section 3
        </div>
        <h3>
         Stage one text becomes representations
@@ -613,7 +754,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        Week 16 · Section 3
+        Week 16 · Section 4
        </div>
        <h3>
         Stage two each block mixes and transforms
@@ -637,7 +778,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        Week 16 · Section 4
+        Week 16 · Section 5
        </div>
        <h3>
         Stage three vocabulary predictions
@@ -661,7 +802,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        Week 16 · Section 5
+        Week 16 · Section 6
        </div>
        <h3>
         Stage four training and generation use the result differently
@@ -685,7 +826,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        Week 16 · Section 6
+        Week 16 · Section 7
        </div>
        <h3>
         Diagnosing mistakes at the correct boundary
@@ -709,7 +850,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        Week 16 · Section 7
+        Week 16 · Section 8
        </div>
        <h3>
         Reading the original architecture with preparation
@@ -733,7 +874,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        Week 16 · Section 8
+        Week 16 · Section 9
        </div>
        <h3>
         First semester assessment and the next step
@@ -757,7 +898,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        Week 16 · Section 9
+        Week 16 · Section 10
        </div>
        <h3>
         A final shape ledger
@@ -785,7 +926,7 @@
        ← Previous
       </button>
       <span aria-live="polite" class="slide-counter">
-       1 / 9
+       1 / 10
       </span>
       <button class="slide-next" type="button">
        Next →
@@ -795,31 +936,34 @@
       Go to slide
       <select aria-label="Go to slide" class="slide-jump">
        <option value="0">
-        1. The semester returns to one sentence
+        1. An end-to-end numeric transformer trace
        </option>
        <option value="1">
-        2. Stage one text becomes representations
+        2. The semester returns to one sentence
        </option>
        <option value="2">
-        3. Stage two each block mixes and transforms
+        3. Stage one text becomes representations
        </option>
        <option value="3">
-        4. Stage three vocabulary predictions
+        4. Stage two each block mixes and transforms
        </option>
        <option value="4">
-        5. Stage four training and generation use the result differently
+        5. Stage three vocabulary predictions
        </option>
        <option value="5">
-        6. Diagnosing mistakes at the correct boundary
+        6. Stage four training and generation use the result differently
        </option>
        <option value="6">
-        7. Reading the original architecture with preparation
+        7. Diagnosing mistakes at the correct boundary
        </option>
        <option value="7">
-        8. First semester assessment and the next step
+        8. Reading the original architecture with preparation
        </option>
        <option value="8">
-        9. A final shape ledger
+        9. First semester assessment and the next step
+       </option>
+       <option value="9">
+        10. A final shape ledger
        </option>
       </select>
      </label>
@@ -848,6 +992,11 @@
       In this lesson
      </strong>
      <ol>
+      <li>
+       <a href="#an-end-to-end-numeric-transformer-trace">
+        An end-to-end numeric transformer trace
+       </a>
+      </li>
       <li>
        <a href="#the-semester-returns-to-one-sentence">
         The semester returns to one sentence
@@ -902,6 +1051,135 @@
      <h2>
       Read the full explanation
      </h2>
+     <h3 id="an-end-to-end-numeric-transformer-trace">
+      An end-to-end numeric transformer trace
+     </h3>
+     <p>
+      Take two input tokens with IDs [0,1], one head and d_model=2. Q/K/V and attention output projections are identity matrices. Both MLP matrices are identity, with ReLU between them. Each normalization uses population variance, epsilon=0.00001, scale=1 and bias=0. The vocabulary head is [[1,0,-1],[0,1,0]] in row-vector convention. These fixed weights illustrate computation, not a trained language model.
+     </p>
+     <div class="table-wrap">
+      <table>
+       <thead>
+        <tr>
+         <th>
+          Stage
+         </th>
+         <th>
+          Numeric value
+         </th>
+        </tr>
+       </thead>
+       <tbody>
+        <tr>
+         <td>
+          IDs
+         </td>
+         <td>
+          [0,1]
+         </td>
+        </tr>
+        <tr>
+         <td>
+          token embeddings
+         </td>
+         <td>
+          [[1,0],[0,1]]
+         </td>
+        </tr>
+        <tr>
+         <td>
+          position additions
+         </td>
+         <td>
+          [[0,0],[0.1,-0.1]]
+         </td>
+        </tr>
+        <tr>
+         <td>
+          input X
+         </td>
+         <td>
+          [[1.0, 0.0], [0.1, 0.9]]
+         </td>
+        </tr>
+        <tr>
+         <td>
+          Norm(X)=Q=K=V
+         </td>
+         <td>
+          [[1.0, -1.0], [-1.0, 1.0]]
+         </td>
+        </tr>
+        <tr>
+         <td>
+          causal attention weights
+         </td>
+         <td>
+          [[1.0, 0.0], [0.0558, 0.9442]]
+         </td>
+        </tr>
+        <tr>
+         <td>
+          attention output
+         </td>
+         <td>
+          [[1.0, -1.0], [-0.8883, 0.8883]]
+         </td>
+        </tr>
+        <tr>
+         <td>
+          first residual
+         </td>
+         <td>
+          [[2.0, -1.0], [-0.7883, 1.7883]]
+         </td>
+        </tr>
+        <tr>
+         <td>
+          ReLU MLP output
+         </td>
+         <td>
+          [[1.0, 0.0], [0.0, 1.0]]
+         </td>
+        </tr>
+        <tr>
+         <td>
+          second residual
+         </td>
+         <td>
+          [[3.0, -1.0], [-0.7883, 2.7883]]
+         </td>
+        </tr>
+        <tr>
+         <td>
+          final normalized state
+         </td>
+         <td>
+          [[1.0, -1.0], [-1.0, 1.0]]
+         </td>
+        </tr>
+        <tr>
+         <td>
+          vocabulary logits
+         </td>
+         <td>
+          [[1.0, -1.0, -1.0], [-1.0, 1.0, 1.0]]
+         </td>
+        </tr>
+        <tr>
+         <td>
+          next-token probabilities
+         </td>
+         <td>
+          [[0.787, 0.1065, 0.1065], [0.0634, 0.4683, 0.4683]]
+         </td>
+        </tr>
+       </tbody>
+      </table>
+     </div>
+     <p>
+      The last row supplies the distribution for the next token. Select a vocabulary ID, append it, and run the next causal step. For training, a target for each position would instead select one probability for cross-entropy. The two residual additions and final normalization are included in the trace.
+     </p>
      <h3 id="the-semester-returns-to-one-sentence">
       The semester returns to one sentence
      </h3>

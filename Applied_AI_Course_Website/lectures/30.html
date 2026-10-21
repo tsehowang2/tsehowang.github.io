@@ -463,7 +463,7 @@
         31
        </span>
        <span>
-        Integrating the documentation assistant and advanced extensions
+        Integrating and reviewing the documentation assistant
        </span>
        <span class="week-tick" data-week-tick="31">
        </span>
@@ -568,6 +568,24 @@
         Week 30 · Section 1
        </div>
        <h3>
+        exfiltration
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Exfiltration means sending protected information outside its permitted boundary, for example encoding it into a generated URL that a client fetches.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#exfiltration">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 30 · Section 2
+       </div>
+       <h3>
         A wrong answer needs a trace
        </h3>
        <div class="slide-prose">
@@ -589,7 +607,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        Week 30 · Section 2
+        Week 30 · Section 3
        </div>
        <h3>
         Operational health and answer quality
@@ -604,30 +622,6 @@
          </li>
          <li>
           A refusal-rate change can mean improved coverage, new missing sources, changed traffic, or reckless answering.
-         </li>
-        </ul>
-        <a class="slide-section-link" href="#operational-health-and-answer-quality">
-         Read the worked explanation
-        </a>
-       </div>
-      </section>
-      <section class="lecture-slide" data-slide="" hidden="">
-       <div class="slide-stage">
-        Week 30 · Section 3
-       </div>
-       <h3>
-        Alerts need an action
-       </h3>
-       <div class="slide-prose">
-        <ul class="slide-keypoints">
-         <li>
-          Define a time window, denominator, minimum sample count, threshold, response, and recovery condition.
-         </li>
-         <li>
-          For example, a proposed alert could investigate empty retrieval above 20% over at least 50 requests in ten minutes.
-         </li>
-         <li>
-          A dashboard helps only if the signals lead to specific diagnostic steps and responsible follow-up.
          </li>
         </ul>
         <figure class="mechanism-figure">
@@ -673,7 +667,7 @@
           A link or image request can transmit data. Treat generated destinations and retrieved instructions as untrusted inputs.
          </p>
         </figure>
-        <a class="slide-section-link" href="#alerts-need-an-action">
+        <a class="slide-section-link" href="#operational-health-and-answer-quality">
          Read the worked explanation
         </a>
        </div>
@@ -681,6 +675,30 @@
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
         Week 30 · Section 4
+       </div>
+       <h3>
+        Alerts need an action
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Define a time window, denominator, minimum sample count, threshold, response, and recovery condition.
+         </li>
+         <li>
+          For example, a proposed alert could investigate empty retrieval above 20% over at least 50 requests in ten minutes.
+         </li>
+         <li>
+          A dashboard helps only if the signals lead to specific diagnostic steps and responsible follow-up.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#alerts-need-an-action">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 30 · Section 5
        </div>
        <h3>
         Retrieved instructions remain untrusted
@@ -704,7 +722,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        Week 30 · Section 5
+        Week 30 · Section 6
        </div>
        <h3>
         Jailbreaks, prompt injection, and exfiltration
@@ -725,7 +743,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        Week 30 · Section 6
+        Week 30 · Section 7
        </div>
        <h3>
         Use OWASP risks to inspect the whole application
@@ -872,7 +890,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        Week 30 · Section 7
+        Week 30 · Section 8
        </div>
        <h3>
         Personal data and Hong Kong PDPO basics
@@ -893,7 +911,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        Week 30 · Section 8
+        Week 30 · Section 9
        </div>
        <h3>
         Cache scope and source updates
@@ -917,7 +935,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        Week 30 · Section 9
+        Week 30 · Section 10
        </div>
        <h3>
         CI and quality gates
@@ -941,7 +959,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        Week 30 · Section 10
+        Week 30 · Section 11
        </div>
        <h3>
         A coherent rollback
@@ -965,7 +983,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        Week 30 · Section 11
+        Week 30 · Section 12
        </div>
        <h3>
         Worked practice and a readiness check
@@ -993,7 +1011,7 @@
        ← Previous
       </button>
       <span aria-live="polite" class="slide-counter">
-       1 / 11
+       1 / 12
       </span>
       <button class="slide-next" type="button">
        Next →
@@ -1003,37 +1021,40 @@
       Go to slide
       <select aria-label="Go to slide" class="slide-jump">
        <option value="0">
-        1. A wrong answer needs a trace
+        1. exfiltration
        </option>
        <option value="1">
-        2. Operational health and answer quality
+        2. A wrong answer needs a trace
        </option>
        <option value="2">
-        3. Alerts need an action
+        3. Operational health and answer quality
        </option>
        <option value="3">
-        4. Retrieved instructions remain untrusted
+        4. Alerts need an action
        </option>
        <option value="4">
-        5. Jailbreaks, prompt injection, and exfiltration
+        5. Retrieved instructions remain untrusted
        </option>
        <option value="5">
-        6. Use OWASP risks to inspect the whole application
+        6. Jailbreaks, prompt injection, and exfiltration
        </option>
        <option value="6">
-        7. Personal data and Hong Kong PDPO basics
+        7. Use OWASP risks to inspect the whole application
        </option>
        <option value="7">
-        8. Cache scope and source updates
+        8. Personal data and Hong Kong PDPO basics
        </option>
        <option value="8">
-        9. CI and quality gates
+        9. Cache scope and source updates
        </option>
        <option value="9">
-        10. A coherent rollback
+        10. CI and quality gates
        </option>
        <option value="10">
-        11. Worked practice and a readiness check
+        11. A coherent rollback
+       </option>
+       <option value="11">
+        12. Worked practice and a readiness check
        </option>
       </select>
      </label>
@@ -1046,6 +1067,11 @@
       In this lesson
      </strong>
      <ol>
+      <li>
+       <a href="#exfiltration">
+        exfiltration
+       </a>
+      </li>
       <li>
        <a href="#a-wrong-answer-needs-a-trace">
         A wrong answer needs a trace
@@ -1110,6 +1136,12 @@
      <h2>
       Read the full explanation
      </h2>
+     <h3 id="exfiltration">
+      exfiltration
+     </h3>
+     <p>
+      Exfiltration means sending protected information outside its permitted boundary, for example encoding it into a generated URL that a client fetches.
+     </p>
      <h3 id="a-wrong-answer-needs-a-trace">
       A wrong answer needs a trace
      </h3>
@@ -1124,18 +1156,6 @@
      </p>
      <h3 id="operational-health-and-answer-quality">
       Operational health and answer quality
-     </h3>
-     <p>
-      Latency, error rate, and queue depth describe service behavior. Empty retrieval, wrong-version evidence, unsupported answers, and tool exhaustion describe other important aspects.
-     </p>
-     <p>
-      If empty retrieval rises after an index update while model latency remains stable, inspect ingestion counts, filter types, and active artifact identity before blaming the generator.
-     </p>
-     <p>
-      A refusal-rate change can mean improved coverage, new missing sources, changed traffic, or reckless answering. Interpret signals together with tasks and quality checks.
-     </p>
-     <h3 id="alerts-need-an-action">
-      Alerts need an action
      </h3>
      <figure class="mechanism-figure">
       <figcaption>
@@ -1180,6 +1200,18 @@
        A link or image request can transmit data. Treat generated destinations and retrieved instructions as untrusted inputs.
       </p>
      </figure>
+     <p>
+      Latency, error rate, and queue depth describe service behavior. Empty retrieval, wrong-version evidence, unsupported answers, and tool exhaustion describe other important aspects.
+     </p>
+     <p>
+      If empty retrieval rises after an index update while model latency remains stable, inspect ingestion counts, filter types, and active artifact identity before blaming the generator.
+     </p>
+     <p>
+      A refusal-rate change can mean improved coverage, new missing sources, changed traffic, or reckless answering. Interpret signals together with tasks and quality checks.
+     </p>
+     <h3 id="alerts-need-an-action">
+      Alerts need an action
+     </h3>
      <p>
       Define a time window, denominator, minimum sample count, threshold, response, and recovery condition. A low-volume spike should not be presented as strong statistical evidence.
      </p>
@@ -1598,7 +1630,7 @@
       <small>
        Next week
       </small>
-      Integrating the documentation assistant and advanced extensions
+      Integrating and reviewing the documentation assistant
      </a>
     </nav>
    </div>

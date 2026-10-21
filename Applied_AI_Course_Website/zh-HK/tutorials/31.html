@@ -6,7 +6,7 @@
   <meta charset="utf-8"/>
   <meta content="width=device-width,initial-scale=1" name="viewport"/>
   <title>
-   整合文件助手與進階延伸 · Applied AI
+   整合及檢視 documentation assistant · Applied AI
   </title>
   <meta content="Applied generative AI and LLM systems course material" name="description"/>
   <meta content="#173c36" name="theme-color"/>
@@ -469,7 +469,7 @@
         31
        </span>
        <span>
-        整合文件助手與進階延伸
+        整合及檢視 documentation assistant
        </span>
        <span class="week-tick" data-week-tick="31">
        </span>
@@ -529,7 +529,7 @@
       Tutorial 31／第 31 週
      </div>
      <h1>
-      整合文件助手與進階延伸
+      整合及檢視 documentation assistant
      </h1>
      <p class="deck">
       先閱讀逐步解說、查看程式碼，準備好後再執行 notebook。
@@ -547,7 +547,7 @@
      </a>
     </div>
     <p class="save-note">
-     執行這份 notebook 時，亦請
+     本 notebook 需要完整 pack 的 support files。需要時，
      <a download="" href="../../downloads/Applied_Generative_AI_Course.zip">
       下載並解壓完整課程套件
      </a>
@@ -571,7 +571,7 @@
       <strong>
        執行前：
       </strong>
-      為每個 component 辨認實際 artifact，以及哪些 evaluation 依賴它。
+      列出 audit 會找到哪些 submitted artifacts，以及哪些尚未完成。
      </p>
      <p>
       <strong>
@@ -583,7 +583,7 @@
       <strong>
        獨立練習：
       </strong>
-      展示有支持、缺資料、錯版本、executable-tool 及 failure cases。用真正 task IDs 展示 paired evaluation table。移除只增加成本、沒有可靠收益的 components。準備答辯，不要加入無關 framework。
+      填寫真實 release manifest、40個 manually checked cases 和 paired outputs；使用相同 gates 比較 release candidates。
      </p>
      <p>
       <strong>
@@ -599,7 +599,7 @@
        notebook 環境及課程檔案
       </summary>
       <p>
-       這個 cell 尋找已解壓的課程檔案。執行 notebook 時需要它。
+       先執行 setup；早期 tutorials 建立 output directory，後期 tutorials 尋找已解壓的 course support files。
       </p>
       <div class="code-block">
        <div class="code-bar">
@@ -610,20 +610,31 @@
          複製 code
         </button>
        </div>
-       <pre><code>from pathlib import Path
-import sys,json,time,random,hashlib,math
-if hasattr(sys.stdout,'reconfigure'): sys.stdout.reconfigure(encoding='utf-8')
-candidates=[Path.cwd(),Path.cwd().parent,Path.cwd()/'llm_course',Path.cwd()/'llm_course_v2',Path('/content/llm_course'),Path('/content/llm_course_v2')]
-COURSE=next((p for p in candidates if (p/'coursekit/core.py').exists()),None)
-if COURSE is None: raise RuntimeError('Extract the complete course pack; run from its root or notebooks directory.')
-if str(COURSE) not in sys.path:sys.path.insert(0,str(COURSE))
-RUNS=COURSE/'runs';RUNS.mkdir(exist_ok=True)
+       <pre><code>import random
+from pathlib import Path
+import sys, json, time, random, hashlib, math
+if hasattr(sys.stdout, 'reconfigure'):
+    sys.stdout.reconfigure(encoding='utf-8')
+candidates = [Path.cwd(), Path.cwd().parent, Path.cwd() / 'llm_course', Path.cwd() / 'llm_course_v2', Path('/content/llm_course'), Path('/content/llm_course_v2')]
+COURSE = next((p for p in candidates if (p / 'coursekit/core.py').exists()), None)
+if COURSE is None:
+    raise RuntimeError('Extract the complete course pack; run from its root or notebooks directory.')
+if str(COURSE) not in sys.path:
+    sys.path.insert(0, str(COURSE))
+RUNS = COURSE / 'runs'
+RUNS.mkdir(exist_ok=True)
 from coursekit.core import *
 random.seed(7)
-print('Course root:',COURSE)
+print('Course root:', COURSE)
 </code></pre>
       </div>
      </details>
+     <h3 id="pause-before-the-next-step">
+      進入下一步前先停一停
+     </h3>
+     <p>
+      為每個 component 辨認實際 artifact，以及哪些 evaluation 依賴它。
+     </p>
      <p>
       只整合有證據支持的 components。這個 audit 記錄 release dependencies；檔案存在本身不能證明 quality。帶同 per-task measurements，用相同 protocol 比較 candidate 及 baseline。
      </p>
@@ -639,20 +650,14 @@ print('Course root:',COURSE)
         複製 code
        </button>
       </div>
-      <pre><code>required={'corpus_revision':None,'embedding_revision':None,'index_revision':None,'generator_revision':None,'prompt_revision':None,'tool_revision':None,'evaluation_run':None}
-draft=RUNS/'week31_release_draft.json'
-if not draft.exists():draft.write_text(json.dumps(required,indent=2))
-manifest=json.loads(draft.read_text());missing=[k for k,v in manifest.items() if not v]
-print('Unfilled fields:',missing)
-print('Draft only. Supply actual identities; a complete manifest is necessary but not sufficient for release.')
+      <pre><code>import json
+import sys
+from coursekit.release_audit import audit_release
+report = audit_release(COURSE, RUNS)
+print(json.dumps(report, indent=2))
+(RUNS / 'week31_audit.json').write_text(json.dumps(report, indent=2), encoding='utf-8')
 </code></pre>
      </div>
-     <h3 id="pause-before-the-next-step">
-      進入下一步前先停一停
-     </h3>
-     <p>
-      為每個 component 辨認實際 artifact，以及哪些 evaluation 依賴它。
-     </p>
      <h3 id="independent-experiment">
       獨立實驗
      </h3>
@@ -662,6 +667,45 @@ print('Draft only. Supply actual identities; a complete manifest is necessary bu
      <p>
       提交簡短報告，列出預測、實際結果、比較及限制。記錄環境或數據的改動。不要用示意數字代替實際量度結果。
      </p>
+     <h3 id="reference-output">
+      Reference output
+     </h3>
+     <p>
+      CPU 教學 run 的 reference output（paths 和 timings 會不同）。這只供比較，並非你的 experiment result。
+     </p>
+     <div class="code-block">
+      <div class="code-bar">
+       <span>
+        text
+       </span>
+       <button class="copy-code" type="button">
+        複製 code
+       </button>
+      </div>
+      <pre><code>{
+  "missing_artifacts": [
+    "week12_config.json",
+    "tiny_lm.pt",
+    "week18_retrieval.json",
+    "week26_training.json",
+    "week26_adapter",
+    "week28_agent.json",
+    "project_cases.json",
+    "project_results.json",
+    "manual_grades.json",
+    "environment.txt",
+    "release_manifest.json",
+    "limitations.md"
+  ],
+  "invalid_artifacts": [
+    "project_cases.json: need at least 40 manually checked cases",
+    "release_manifest.json: unfilled corpus_revision, chunker_revision, embedding_revision, index_revision, generator_revision, tokenizer_revision, adapter_revision, prompt_revision, tool_revision, environment_revision, evaluation_run"
+  ],
+  "checked_cases": 0,
+  "ready": false,
+  "scope": "Artifact checks only. Independently review quality, support, privacy and measurements."
+}</code></pre>
+     </div>
     </article>
     <div class="end-note">
      閱讀程式只是第一步。完成獨立實驗並保留實際結果，才把這個 lab 標記為完成。

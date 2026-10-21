@@ -463,7 +463,7 @@
         31
        </span>
        <span>
-        Integrating the documentation assistant and advanced extensions
+        Integrating and reviewing the documentation assistant
        </span>
        <span class="week-tick" data-week-tick="31">
        </span>
@@ -541,7 +541,7 @@
      </a>
     </div>
     <p class="save-note">
-     When you run this notebook, also
+     This notebook requires the support files from the complete pack. When you need the support files,
      <a download="" href="../downloads/Applied_Generative_AI_Course.zip">
       download and extract the full course pack
      </a>
@@ -565,7 +565,7 @@
       <strong>
        Before execution:
       </strong>
-      Inspect one complete input/output record before running the full path. Predict a normal result and one failure status.
+      Predict the ticket total and which calculator expressions must be rejected.
      </p>
      <p>
       <strong>
@@ -577,7 +577,7 @@
       <strong>
        Independent work:
       </strong>
-      Change one controlled factor, preserve raw outputs and explain the result. Use the lecture readiness check and capstone milestone to define the task; do not claim fixture success establishes production readiness.
+      Add a valid and invalid tool proposal, assert controller statuses and keep proposal, execution result and final answer distinct.
      </p>
      <p>
       <strong>
@@ -593,7 +593,7 @@
        Notebook environment and course files
       </summary>
       <p>
-       This cell finds the extracted course files. It is needed when running the notebook.
+       Run this setup first. Early tutorials create an output directory; later tutorials locate the extracted course support files.
       </p>
       <div class="code-block">
        <div class="code-bar">
@@ -604,17 +604,22 @@
          Copy code
         </button>
        </div>
-       <pre><code>from pathlib import Path
-import sys,json,time,random,hashlib,math
-if hasattr(sys.stdout,'reconfigure'): sys.stdout.reconfigure(encoding='utf-8')
-candidates=[Path.cwd(),Path.cwd().parent,Path.cwd()/'llm_course',Path.cwd()/'llm_course_v2',Path('/content/llm_course'),Path('/content/llm_course_v2')]
-COURSE=next((p for p in candidates if (p/'coursekit/core.py').exists()),None)
-if COURSE is None: raise RuntimeError('Extract the complete course pack; run from its root or notebooks directory.')
-if str(COURSE) not in sys.path:sys.path.insert(0,str(COURSE))
-RUNS=COURSE/'runs';RUNS.mkdir(exist_ok=True)
+       <pre><code>import random
+from pathlib import Path
+import sys, json, time, random, hashlib, math
+if hasattr(sys.stdout, 'reconfigure'):
+    sys.stdout.reconfigure(encoding='utf-8')
+candidates = [Path.cwd(), Path.cwd().parent, Path.cwd() / 'llm_course', Path.cwd() / 'llm_course_v2', Path('/content/llm_course'), Path('/content/llm_course_v2')]
+COURSE = next((p for p in candidates if (p / 'coursekit/core.py').exists()), None)
+if COURSE is None:
+    raise RuntimeError('Extract the complete course pack; run from its root or notebooks directory.')
+if str(COURSE) not in sys.path:
+    sys.path.insert(0, str(COURSE))
+RUNS = COURSE / 'runs'
+RUNS.mkdir(exist_ok=True)
 from coursekit.core import *
 random.seed(7)
-print('Course root:',COURSE)
+print('Course root:', COURSE)
 </code></pre>
       </div>
      </details>
@@ -633,24 +638,31 @@ print('Course root:',COURSE)
         Copy code
        </button>
       </div>
-      <pre><code>assert calculate('100+200+400')==700
-print(validate_config({'timeout_ms':30000,'retries':3}))
-for expression in ['1/0',"__import__('os')",'2**100']:
-    try: calculate(expression)
-    except ToolError as e: print('Rejected',expression,str(e))
+      <pre><code>import json
+assert calculate('100+200+400') == 700
+print(validate_config({'timeout_ms': 30000, 'retries': 3}))
+for expression in ['1/0', "__import__('os')", '2**100']:
+    try:
+        calculate(expression)
+    except ToolError as e:
+        print('Rejected', expression, str(e))
+    else:
+        raise AssertionError('Unsafe expression accepted')
+
 def planner(state):
-    if state['step']==0:
-        return {'type':'tool','name':'lookup','arguments':{'query':'retry policy backoff','version':state['version']}}
-    if state['step']==1:
-        return {'type':'tool','name':'calculate','arguments':{'expression':'100+200+400'}}
-    return {'type':'final','answer':'The fixture gives cumulative waiting time of 700 ms before attempt four.','citations':['retry-v2']}
-result=run_agent('What is cumulative retry wait before attempt four?',planner,max_steps=4)
-assert result['status']=='completed'
-print(json.dumps(result,indent=2));(RUNS/'week27_trace.json').write_text(json.dumps(result,indent=2))
-loop=lambda state:{'type':'tool','name':'calculate','arguments':{'expression':'1+1'}}
-assert run_agent('test',loop,max_steps=3)['status']=='budget_exhausted'
-hostile=lambda state:{'type':'tool','name':'export_secrets','arguments':{}}
-assert run_agent('test',hostile)['status']=='invalid_action'
+    if state['step'] == 0:
+        return {'type': 'tool', 'name': 'lookup', 'arguments': {'query': 'retry policy backoff', 'version': state['version']}}
+    if state['step'] == 1:
+        return {'type': 'tool', 'name': 'calculate', 'arguments': {'expression': '100+200+400'}}
+    return {'type': 'final', 'answer': 'The fixture gives cumulative waiting time of 700 ms before attempt four.', 'citations': ['retry-v2']}
+result = run_agent('What is cumulative retry wait before attempt four?', planner, max_steps=4)
+assert result['status'] == 'completed'
+print(json.dumps(result, indent=2))
+(RUNS / 'week27_trace.json').write_text(json.dumps(result, indent=2), encoding='utf-8')
+loop = lambda state: {'type': 'tool', 'name': 'calculate', 'arguments': {'expression': '1+1'}}
+assert run_agent('test', loop, max_steps=3)['status'] == 'budget_exhausted'
+hostile = lambda state: {'type': 'tool', 'name': 'export_secrets', 'arguments': {}}
+assert run_agent('test', hostile)['status'] == 'invalid_action'
 </code></pre>
      </div>
      <p>
@@ -674,17 +686,89 @@ assert run_agent('test',hostile)['status']=='invalid_action'
         Copy code
        </button>
       </div>
-      <pre><code>from concurrent.futures import ThreadPoolExecutor
-# Deterministic read-only fixtures: no network access or side effects.
-def fare():return 4
-def count():return 3
+      <pre><code># Deterministic read-only fixtures: no network access or side effects.
+from concurrent.futures import ThreadPoolExecutor
+
+def fare():
+    return 2
+
+def count():
+    return 3
 with ThreadPoolExecutor(max_workers=2) as pool:
-    fare_future=pool.submit(fare);count_future=pool.submit(count)
-    price,tickets=fare_future.result(),count_future.result()
-answer=price*tickets
-assert answer==12
-print('Two independent reads, then dependent multiply:',answer)
+    fare_future = pool.submit(fare)
+    count_future = pool.submit(count)
+    price, tickets = (fare_future.result(), count_future.result())
+answer = price * tickets
+assert answer == 6
+print('Two independent reads, then dependent multiply:', answer)
 </code></pre>
+     </div>
+     <h3 id="reference-output">
+      Reference output
+     </h3>
+     <p>
+      Reference output from the CPU teaching run (paths and timings vary). This is a comparison aid, not your experiment result.
+     </p>
+     <div class="code-block">
+      <div class="code-bar">
+       <span>
+        text
+       </span>
+       <button class="copy-code" type="button">
+        Copy code
+       </button>
+      </div>
+      <pre><code>{'valid': True, 'errors': []}
+Rejected 1/0 arithmetic failure
+Rejected __import__('os') operator or value not allowed
+Rejected 2**100 operator or value not allowed
+{
+  "status": "completed",
+  "answer": "The fixture gives cumulative waiting time of 700 ms before attempt four.",
+  "citations": [
+    "retry-v2"
+  ],
+  "trace": [
+    {
+      "step": 0,
+      "name": "lookup",
+      "arguments": {
+        "query": "retry policy backoff",
+        "version": "2"
+      },
+      "result": [
+        {
+          "id": "retry-v2",
+          "title": "Retry policy and backoff",
+          "version": "2",
+          "source": "fixture://atlas/2/retries",
+          "text": "Atlas SDK version 2 retries transient errors at most 3 times by default. For this example, the first retry waits 100 milliseconds, the next 200 milliseconds, then 400 milliseconds. There is no jitter in this teaching fixture.",
+          "score": 5.041719922280393
+        },
+        {
+          "id": "concurrency-v2",
+          "title": "Concurrent requests",
+          "version": "2",
+          "source": "fixture://atlas/2/concurrency",
+          "text": "The example client allows at most 4 simultaneous requests by default. Additional work should wait in a bounded queue. This statement concerns request concurrency, not the retry count.",
+          "score": 1.3814225730487937
+        }
+      ]
+    },
+    {
+      "step": 1,
+      "name": "calculate",
+      "arguments": {
+        "expression": "100+200+400"
+      },
+      "result": {
+        "value": 700
+      }
+    }
+  ],
+  "grounding_verified": false
+}
+Two independent reads, then dependent multiply: 6</code></pre>
      </div>
     </article>
     <div class="end-note">

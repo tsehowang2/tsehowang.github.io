@@ -463,7 +463,7 @@
         31
        </span>
        <span>
-        Integrating the documentation assistant and advanced extensions
+        Integrating and reviewing the documentation assistant
        </span>
        <span class="week-tick" data-week-tick="31">
        </span>
@@ -540,7 +540,7 @@
       Question 2 Fine-tuning study 15 points
      </h3>
      <p>
-      A new adapter improves exact tool JSON from 75% to 95% but increases incorrect tool arguments from 5% to 20%. Design a controlled evaluation and release decision (8), identify two possible dataset causes (4), and explain why training loss alone cannot resolve the question (3).
+      A new adapter improves exact tool JSON from 75% to 95% but increases incorrect tool arguments from 5% to 20%. Design a controlled evaluation and release decision (8), calculate DPO loss for preferred/reference log-ratio .4, rejected/reference log-ratio .1 and beta=.1 (4), and explain soft-target distillation versus SFT on a hard label (3).
      </p>
      <h3 id="question-3-agent-controller-20-points">
       Question 3 Agent controller 20 points
@@ -558,13 +558,13 @@
       Question 5 Performance and scaling 15 points
      </h3>
      <p>
-      Average arrival rate is 1.5 requests/s and average time in system is 4 s. Estimate average work in flight and state assumptions (4). Distinguish TTFT and end-to-end latency (3). Calculate ideal four-way speedup for 80% scalable and 20% serial work (4). Explain why this does not predict production p95 or communication cost (4).
+      Calculate KV-cache MiB for L=24 layers, B=1 batch, T=2048 tokens, H_kv=8 K/V heads, d_head=64 and 2-byte elements, explaining the K/V factor (4). For n=257 and 256 threads/block, give CUDA index, block count and bounds check (3). Calculate ideal four-way speedup for 80% scalable work and state why it does not predict p95 (4). For gold={A,B}, results=[C,A,D], calculate Recall@3 and reciprocal rank; explain why reranking cannot recover B (4).
      </p>
      <h3 id="question-6-capstone-defense-10-points">
       Question 6 Capstone defense 10 points
      </h3>
      <p>
-      Your agent is more expensive than the fixed workflow, your adapter shows no reliable improvement, and your retriever measurably improves paraphrase questions. Choose a default release and justify it with the evidence you would present (6). Name two limitations and a focused next experiment (4).
+      Your agent is more expensive than the fixed workflow, your adapter shows no reliable improvement, and your retriever measurably improves paraphrase questions. Choose a default release and justify it with the evidence you would present (6). With c=60 compare RRF for A at ranks(1,10) and B at ranks(2,2), and choose the higher fused result (4).
      </p>
      <details class="solution exam-solution">
       <summary>
@@ -580,7 +580,7 @@
        <strong>
         Q2 (15).
        </strong>
-       Same model/base/context/tasks/decoding/tool validator, separate prompt control, per-task valid JSON and semantic argument correctness, invalid/forbidden actions and budgets; reject if incorrect actions violate gate even though syntax improved (8). Dataset may reward valid format with wrong arguments, omit negative/refusal cases, include wrong-version labels or have leaked paraphrases; two diagnosed causes (4). Loss is fit to labels, and biased/wrong labels can be learned successfully (3).
+       Same model/base/context/tasks/decoding/tool validator, separate prompt control, per-task valid JSON and semantic argument correctness, invalid/forbidden actions and budgets; reject if incorrect actions violate gate even though syntax improved (8). DPO relative margin=.4−.1=.3, scaled=.03; loss=log(1+exp(−.03))≈.67826 (4). Soft-target distillation learns the teacher distribution across classes, including relative alternatives; hard-label SFT supervises one target. Teacher errors can transfer and require independent evaluation (3).
       </p>
       <p>
        <strong>
@@ -598,13 +598,13 @@
        <strong>
         Q5 (15).
        </strong>
-       L=1.5×4=6 average in system, assuming stable averages and correct boundary (4). TTFT until first output token; end-to-end until response finishes including all application stages (3). 1/(.2+.8/4)=2.5 ideal speedup (4). Tail latency depends on variance/load/queueing and distributed work has communication/coordination; no p95 prediction from these means (4).
+       K and V give factor2; 2×24×1×2048×8×64×2=100,663,296 bytes=96 MiB (4). CUDA i=blockIdx.x*blockDim.x+threadIdx.x; ceil(257/256)=2 blocks; access only if i&lt;257 (3). Amdahl=1/(.2+.8/4)=2.5; ignores communication and cannot predict queueing/tail latency (4). Recall=1/2; first relevant rank2 gives reciprocal rank1/2. B is absent from the candidate pool, so a reranker cannot add it (4).
       </p>
       <p>
        <strong>
         Q6 (10).
        </strong>
-       Prefer qualifying retriever plus fixed workflow/base generator if agent/adapter add no demonstrated value; retain experimental branches and raw comparisons, report budget/quality/safety and actual negative results (6). Limits could be task-set size, small model capability, lack of real users or untested high concurrency. Next experiment must target an observed failure with a control and metric, e.g. reranking the paraphrase misses under a fixed context budget (4).
+       Prefer qualifying retriever plus fixed workflow/base generator if agent/adapter add no demonstrated value; retain experimental branches and raw comparisons, report budget/quality/safety and actual negative results (6). RRF(A)=1/61+1/70≈.030679; RRF(B)=2/62≈.032258, so B wins (4).
       </p>
      </details>
     </article>

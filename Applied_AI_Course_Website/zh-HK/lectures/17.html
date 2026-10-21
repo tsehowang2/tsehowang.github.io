@@ -469,7 +469,7 @@
         31
        </span>
        <span>
-        整合文件助手與進階延伸
+        整合及檢視 documentation assistant
        </span>
        <span class="week-tick" data-week-tick="31">
        </span>
@@ -574,138 +574,12 @@
         第 17 週 · 課節 1
        </div>
        <h3>
-        一本簡單的學校手冊
+        contrastive
        </h3>
        <div class="slide-prose">
         <ul class="slide-keypoints">
          <li>
-          想像手冊有三段內容。H1 寫着 “School opens at 08:00.”，H2 寫着 “The school bus leaves at 07:30.”，H3 寫着 “A ticket for the school bus costs 4 dollars.”。一名學生問：“When does school start?”
-         </li>
-         <li>
-          Search 的任務，是為這條問題選出有用的段落。
-         </li>
-         <li>
-          我們刻意先學 representation 和 transformer，才開始這個應用。
-         </li>
-        </ul>
-        <a class="slide-section-link" href="#a-simple-school-handbook">
-         閱讀完整解說
-        </a>
-       </div>
-      </section>
-      <section class="lecture-slide" data-slide="" hidden="">
-       <div class="slide-stage">
-        第 17 週 · 課節 2
-       </div>
-       <h3>
-        先建立 lexical baseline
-       </h3>
-       <div class="slide-prose">
-        <ul class="slide-keypoints">
-         <li>
-          Lexical retriever 比較字詞或 term。
-         </li>
-         <li>
-          對於 school 何時開始這條問題，簡單的 overlap 方法可能同時給 H1 和 H2 分數。
-         </li>
-         <li>
-          BM25 是常用的 lexical scoring 方法系列，包含 term-frequency saturation 和 length normalization。
-         </li>
-        </ul>
-        <a class="slide-section-link" href="#a-lexical-baseline-first">
-         閱讀完整解說
-        </a>
-       </div>
-      </section>
-      <section class="lecture-slide" data-slide="" hidden="">
-       <div class="slide-stage">
-        第 17 週 · 課節 3
-       </div>
-       <h3>
-        Sentence embedding 為特定任務表示輸入
-       </h3>
-       <div class="slide-prose">
-        <ul class="slide-keypoints">
-         <li>
-          Transformer encoder 可以產生帶有 context 的 token vector。
-         </li>
-         <li>
-          為 retrieval 訓練的 embedding model，目標是讓相關的 question-passage pair 在選定的 similarity function 下取得好分數。
-         </li>
-         <li>
-          在 bi-encoder 中，question 和 passage 可以獨立 encode。
-         </li>
-        </ul>
-        <a class="slide-section-link" href="#a-sentence-embedding-represents-the-input-for-a-task">
-         閱讀完整解說
-        </a>
-       </div>
-      </section>
-      <section class="lecture-slide" data-slide="" hidden="">
-       <div class="slide-stage">
-        第 17 週 · 課節 4
-       </div>
-       <h3>
-        一個小型數值排名例子
-       </h3>
-       <div class="slide-prose">
-        <ul class="slide-keypoints">
-         <li>
-          使用設計出來的 unit question vector q=[1,0]。
-         </li>
-         <li>
-          H1 排第一。這些座標是為了方便計算而設計，並非真實 embedding model 的量測輸出。給定 vector 後，排名運算是確定的；但 vector 是否表達了正確的 relevance，仍需要實驗驗證。
-         </li>
-         <li>
-          在 tutorial 中，以真實 model embedding 取代人為座標。
-         </li>
-        </ul>
-        <a class="slide-section-link" href="#a-tiny-numerical-ranking">
-         閱讀完整解說
-        </a>
-       </div>
-      </section>
-      <section class="lecture-slide" data-slide="" hidden="">
-       <div class="slide-stage">
-        第 17 週 · 課節 5
-       </div>
-       <h3>
-        Retrieval embedding 可以怎樣訓練
-       </h3>
-       <div class="slide-prose">
-        <ul class="slide-keypoints">
-         <li>
-          Positive pair 由一條 question 和一段能支持答案的 passage 組成；negative pair 則不能支持答案。
-         </li>
-         <li>
-          Hard negative 與問題相似，但答案不對。
-         </li>
-         <li>
-          如果被標為 negative 的 passage 其實提供有用 evidence，就出現 false negative。
-         </li>
-        </ul>
-        <a class="slide-section-link" href="#how-retrieval-embeddings-can-be-trained">
-         閱讀完整解說
-        </a>
-       </div>
-      </section>
-      <section class="lecture-slide" data-slide="" hidden="">
-       <div class="slide-stage">
-        第 17 週 · 課節 6
-       </div>
-       <h3>
-        三個問題的 contrastive training 例子
-       </h3>
-       <div class="slide-prose">
-        <ul class="slide-keypoints">
-         <li>
-          回到 school handbook。Q1 是「When does school start?」，Q2 是「When does the school bus leave?」，Q3 是「How much does a ticket for the school bus cost?」。相應的支持 passage 分別是 H1、H2 和 H3。我們先標示這些 positive pairs，然後才 training。在這個小例子中，其他 passages 並不能回答該問題。
-         </li>
-         <li>
-          bi-encoder 分別 encode 每個問題和 passage。
-         </li>
-         <li>
-          Q1 的 positive passage 是 H1。
+          Contrastive learning 在同一 objective 內比較標記為 matching 的 pairs 和 alternatives。
          </li>
         </ul>
         <figure class="mechanism-figure">
@@ -762,7 +636,127 @@
           Candidate softmax 是 training 時的比較，並非 evidence 真實的 probability。
          </p>
         </figure>
-        <a class="slide-section-link" href="#a-contrastive-training-example-with-three-questions">
+        <a class="slide-section-link" href="#contrastive">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 17 週 · 課節 2
+       </div>
+       <h3>
+        一本簡單的學校手冊
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          想像手冊有三段內容。H1 寫着 “School opens at 08:00.”，H2 寫着 “The school bus leaves at 07:30.”，H3 寫着 “A ticket for the school bus costs 4 dollars.”。一名學生問：“When does school start?”
+         </li>
+         <li>
+          Search 的任務，是為這條問題選出有用的段落。
+         </li>
+         <li>
+          我們刻意先學 representation 和 transformer，才開始這個應用。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#a-simple-school-handbook">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 17 週 · 課節 3
+       </div>
+       <h3>
+        先建立 lexical baseline
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Lexical retriever 比較字詞或 term。
+         </li>
+         <li>
+          對於 school 何時開始這條問題，簡單的 overlap 方法可能同時給 H1 和 H2 分數。
+         </li>
+         <li>
+          BM25 是常用的 lexical scoring 方法系列，包含 term-frequency saturation 和 length normalization。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#a-lexical-baseline-first">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 17 週 · 課節 4
+       </div>
+       <h3>
+        Sentence embedding 為特定任務表示輸入
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Transformer encoder 可以產生帶有 context 的 token vector。
+         </li>
+         <li>
+          為 retrieval 訓練的 embedding model，目標是讓相關的 question-passage pair 在選定的 similarity function 下取得好分數。
+         </li>
+         <li>
+          在 bi-encoder 中，question 和 passage 可以獨立 encode。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#a-sentence-embedding-represents-the-input-for-a-task">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 17 週 · 課節 5
+       </div>
+       <h3>
+        一個小型數值排名例子
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          使用設計出來的 unit question vector q=[1,0]。
+         </li>
+         <li>
+          H1 排第一。這些座標是為了方便計算而設計，並非真實 embedding model 的量測輸出。給定 vector 後，排名運算是確定的；但 vector 是否表達了正確的 relevance，仍需要實驗驗證。
+         </li>
+         <li>
+          在 tutorial 中，以真實 model embedding 取代人為座標。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#a-tiny-numerical-ranking">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 17 週 · 課節 6
+       </div>
+       <h3>
+        Retrieval embedding 可以怎樣訓練
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Positive pair 由一條 question 和一段能支持答案的 passage 組成；negative pair 則不能支持答案。
+         </li>
+         <li>
+          Hard negative 與問題相似，但答案不對。
+         </li>
+         <li>
+          如果被標為 negative 的 passage 其實提供有用 evidence，就出現 false negative。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#how-retrieval-embeddings-can-be-trained">
          閱讀完整解說
         </a>
        </div>
@@ -770,6 +764,94 @@
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
         第 17 週 · 課節 7
+       </div>
+       <h3>
+        三個問題的 contrastive training 例子
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          回到 school handbook。Q1 是「When does school start?」，Q2 是「When does the school bus leave?」，Q3 是「How much does a ticket for the school bus cost?」。相應的支持 passage 分別是 H1、H2 和 H3。我們先標示這些 positive pairs，然後才 training。在這個小例子中，其他 passages 並不能回答該問題。
+         </li>
+         <li>
+          bi-encoder 分別 encode 每個問題和 passage。
+         </li>
+         <li>
+          Q1 的 positive passage 是 H1。
+         </li>
+        </ul>
+        <div class="table-wrap">
+         <table>
+          <thead>
+           <tr>
+            <th>
+             問題
+            </th>
+            <th>
+             H1
+            </th>
+            <th>
+             H2
+            </th>
+            <th>
+             H3
+            </th>
+           </tr>
+          </thead>
+          <tbody>
+           <tr>
+            <td>
+             Q1
+            </td>
+            <td>
+             2
+            </td>
+            <td>
+             1
+            </td>
+            <td>
+             0
+            </td>
+           </tr>
+           <tr>
+            <td>
+             Q2
+            </td>
+            <td>
+             0
+            </td>
+            <td>
+             2
+            </td>
+            <td>
+             1
+            </td>
+           </tr>
+           <tr>
+            <td>
+             Q3
+            </td>
+            <td>
+             1
+            </td>
+            <td>
+             0
+            </td>
+            <td>
+             2
+            </td>
+           </tr>
+          </tbody>
+         </table>
+        </div>
+        <a class="slide-section-link" href="#a-contrastive-training-example-with-three-questions">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 17 週 · 課節 8
        </div>
        <h3>
         三個問題的 contrastive training 例子 · 續
@@ -790,7 +872,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        第 17 週 · 課節 8
+        第 17 週 · 課節 9
        </div>
        <h3>
         Temperature 把 cosine similarity 連接到 training logits
@@ -811,7 +893,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        第 17 週 · 課節 9
+        第 17 週 · 課節 10
        </div>
        <h3>
         false negative 會改變 model 學到甚麼
@@ -829,7 +911,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        第 17 週 · 課節 10
+        第 17 週 · 課節 11
        </div>
        <h3>
         bi-encoder retrieval 與 cross-encoder reranking
@@ -850,7 +932,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        第 17 週 · 課節 11
+        第 17 週 · 課節 12
        </div>
        <h3>
         按 model 要求準備 query 和 passage
@@ -868,7 +950,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        第 17 週 · 課節 12
+        第 17 週 · 課節 13
        </div>
        <h3>
         一個 vector、多個 vectors，或 sparse term weights
@@ -892,7 +974,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        第 17 週 · 課節 13
+        第 17 週 · 課節 14
        </div>
        <h3>
         Relevance 需要 label 和明確定義
@@ -916,7 +998,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        第 17 週 · 課節 14
+        第 17 週 · 課節 15
        </div>
        <h3>
         逐步轉向 technical documentation
@@ -940,7 +1022,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        第 17 週 · 課節 15
+        第 17 週 · 課節 16
        </div>
        <h3>
         實例練習與學習檢查
@@ -968,7 +1050,7 @@
        ← 上一頁
       </button>
       <span aria-live="polite" class="slide-counter">
-       1 / 15
+       1 / 16
       </span>
       <button class="slide-next" type="button">
        下一頁 →
@@ -978,49 +1060,52 @@
       前往 slide
       <select aria-label="跳至 slide" class="slide-jump">
        <option value="0">
-        1. 一本簡單的學校手冊
+        1. contrastive
        </option>
        <option value="1">
-        2. 先建立 lexical baseline
+        2. 一本簡單的學校手冊
        </option>
        <option value="2">
-        3. Sentence embedding 為特定任務表示輸入
+        3. 先建立 lexical baseline
        </option>
        <option value="3">
-        4. 一個小型數值排名例子
+        4. Sentence embedding 為特定任務表示輸入
        </option>
        <option value="4">
-        5. Retrieval embedding 可以怎樣訓練
+        5. 一個小型數值排名例子
        </option>
        <option value="5">
-        6. 三個問題的 contrastive training 例子
+        6. Retrieval embedding 可以怎樣訓練
        </option>
        <option value="6">
-        7. 三個問題的 contrastive training 例子 · 續
+        7. 三個問題的 contrastive training 例子
        </option>
        <option value="7">
-        8. Temperature 把 cosine similarity 連接到 training logits
+        8. 三個問題的 contrastive training 例子 · 續
        </option>
        <option value="8">
-        9. false negative 會改變 model 學到甚麼
+        9. Temperature 把 cosine similarity 連接到 training logits
        </option>
        <option value="9">
-        10. bi-encoder retrieval 與 cross-encoder reranking
+        10. false negative 會改變 model 學到甚麼
        </option>
        <option value="10">
-        11. 按 model 要求準備 query 和 passage
+        11. bi-encoder retrieval 與 cross-encoder reranking
        </option>
        <option value="11">
-        12. 一個 vector、多個 vectors，或 sparse term weights
+        12. 按 model 要求準備 query 和 passage
        </option>
        <option value="12">
-        13. Relevance 需要 label 和明確定義
+        13. 一個 vector、多個 vectors，或 sparse term weights
        </option>
        <option value="13">
-        14. 逐步轉向 technical documentation
+        14. Relevance 需要 label 和明確定義
        </option>
        <option value="14">
-        15. 實例練習與學習檢查
+        15. 逐步轉向 technical documentation
+       </option>
+       <option value="15">
+        16. 實例練習與學習檢查
        </option>
       </select>
      </label>
@@ -1049,6 +1134,11 @@
       本課內容
      </strong>
      <ol>
+      <li>
+       <a href="#contrastive">
+        contrastive
+       </a>
+      </li>
       <li>
        <a href="#a-simple-school-handbook">
         一本簡單的學校手冊
@@ -1128,6 +1218,66 @@
      <h2>
       閱讀完整解說
      </h2>
+     <h3 id="contrastive">
+      contrastive
+     </h3>
+     <figure class="mechanism-figure">
+      <figcaption>
+       Contrastive training 比較甚麼
+      </figcaption>
+      <ol class="mechanism-flow">
+       <li>
+        <span class="mechanism-number">
+         01
+        </span>
+        <strong>
+         Encode
+        </strong>
+        <small>
+         question and passages
+        </small>
+       </li>
+       <li>
+        <span class="mechanism-number">
+         02
+        </span>
+        <strong>
+         Score
+        </strong>
+        <small>
+         pairwise similarity matrix
+        </small>
+       </li>
+       <li>
+        <span class="mechanism-number">
+         03
+        </span>
+        <strong>
+         Scale
+        </strong>
+        <small>
+         similarity / temperature
+        </small>
+       </li>
+       <li>
+        <span class="mechanism-number">
+         04
+        </span>
+        <strong>
+         Learn
+        </strong>
+        <small>
+         positive-pair cross-entropy
+        </small>
+       </li>
+      </ol>
+      <p>
+       Candidate softmax 是 training 時的比較，並非 evidence 真實的 probability。
+      </p>
+     </figure>
+     <p>
+      Contrastive learning 在同一 objective 內比較標記為 matching 的 pairs 和 alternatives。
+     </p>
      <h3 id="a-simple-school-handbook">
       一本簡單的學校手冊
      </h3>
@@ -1191,60 +1341,6 @@
      <h3 id="a-contrastive-training-example-with-three-questions">
       三個問題的 contrastive training 例子
      </h3>
-     <figure class="mechanism-figure">
-      <figcaption>
-       Contrastive training 比較甚麼
-      </figcaption>
-      <ol class="mechanism-flow">
-       <li>
-        <span class="mechanism-number">
-         01
-        </span>
-        <strong>
-         Encode
-        </strong>
-        <small>
-         question and passages
-        </small>
-       </li>
-       <li>
-        <span class="mechanism-number">
-         02
-        </span>
-        <strong>
-         Score
-        </strong>
-        <small>
-         pairwise similarity matrix
-        </small>
-       </li>
-       <li>
-        <span class="mechanism-number">
-         03
-        </span>
-        <strong>
-         Scale
-        </strong>
-        <small>
-         similarity / temperature
-        </small>
-       </li>
-       <li>
-        <span class="mechanism-number">
-         04
-        </span>
-        <strong>
-         Learn
-        </strong>
-        <small>
-         positive-pair cross-entropy
-        </small>
-       </li>
-      </ol>
-      <p>
-       Candidate softmax 是 training 時的比較，並非 evidence 真實的 probability。
-      </p>
-     </figure>
      <p>
       回到 school handbook。Q1 是「When does school start?」，Q2 是「When does the school bus leave?」，Q3 是「How much does a ticket for the school bus cost?」。相應的支持 passage 分別是 H1、H2 和 H3。我們先標示這些 positive pairs，然後才 training。在這個小例子中，其他 passages 並不能回答該問題。
      </p>

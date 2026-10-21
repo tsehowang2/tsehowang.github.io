@@ -463,7 +463,7 @@
         31
        </span>
        <span>
-        Integrating the documentation assistant and advanced extensions
+        Integrating and reviewing the documentation assistant
        </span>
        <span class="week-tick" data-week-tick="31">
        </span>
@@ -556,6 +556,9 @@
        <p>
         It sees only its candidate pool; absent necessary evidence cannot be restored by reordering.
        </p>
+       <p>
+        Marking: candidate-pool limit (1); missing evidence example (1); retrieval versus ranking distinction (1).
+       </p>
       </details>
      </section>
      <section class="test-question">
@@ -574,7 +577,10 @@
         Show worked solution
        </summary>
        <p>
-        A≈.030679, B≈.032258. B wins. Scores are rank-derived, not truth probabilities.
+        A=1/(60+1)+1/(60+10)=1/61+1/70≈.030679. B=1/62+1/62≈.032258. B wins because its summed reciprocal ranks are larger. Scores are rank-derived, not truth probabilities.
+       </p>
+       <p>
+        Marking: A=1/61+1/70≈.030679 (1); B=2/62≈.032258 (1); B wins (1).
        </p>
       </details>
      </section>
@@ -595,6 +601,9 @@
        </summary>
        <p>
         Hold corpus/chunks/tasks/filters/generator/budgets/evaluator fixed. Measure candidate recall and final claims, latency, calls and failures; tune on dev only.
+       </p>
+       <p>
+        Marking: fixed inputs (1); candidate recall (1); answer quality (1); costs and dev-only tuning (1).
        </p>
       </details>
      </section>

@@ -463,7 +463,7 @@
         31
        </span>
        <span>
-        Integrating the documentation assistant and advanced extensions
+        Integrating and reviewing the documentation assistant
        </span>
        <span class="week-tick" data-week-tick="31">
        </span>
@@ -568,6 +568,24 @@
         Week 11 · Section 1
        </div>
        <h3>
+        A numerical scaling-law planning example
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          In the Chinchilla study, the 70-billion-parameter model used about 1.4 trillion training tokens: roughly 20 tokens per parameter.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#a-numerical-scaling-law-planning-example">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 11 · Section 2
+       </div>
+       <h3>
         A block becomes part of a task specific arrangement
        </h3>
        <div class="slide-prose">
@@ -589,7 +607,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        Week 11 · Section 2
+        Week 11 · Section 3
        </div>
        <h3>
         An encoder reads a complete input
@@ -613,7 +631,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        Week 11 · Section 3
+        Week 11 · Section 4
        </div>
        <h3>
         A causal decoder predicts continuations
@@ -637,7 +655,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        Week 11 · Section 4
+        Week 11 · Section 5
        </div>
        <h3>
         An encoder decoder connects two sequences
@@ -661,7 +679,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        Week 11 · Section 5
+        Week 11 · Section 6
        </div>
        <h3>
         A visibility table clarifies the difference
@@ -685,7 +703,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        Week 11 · Section 6
+        Week 11 · Section 7
        </div>
        <h3>
         Training time parallelism does not remove causality
@@ -709,7 +727,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        Week 11 · Section 7
+        Week 11 · Section 8
        </div>
        <h3>
         Choosing the architecture for the learning exercise
@@ -733,7 +751,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        Week 11 · Section 8
+        Week 11 · Section 9
        </div>
        <h3>
         Attention variants keep different amounts of state
@@ -757,7 +775,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        Week 11 · Section 9
+        Week 11 · Section 10
        </div>
        <h3>
         MoE and state-space models change different parts
@@ -778,7 +796,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        Week 11 · Section 10
+        Week 11 · Section 11
        </div>
        <h3>
         Scaling laws connect model size, data, and compute
@@ -787,30 +805,6 @@
         <ul class="slide-keypoints">
          <li>
           Suppose you can afford a fixed number of training operations.
-         </li>
-         <li>
-          Source: DeepSeek-V2: MLA and MoE .
-         </li>
-         <li>
-          Source: Mamba: selective state-space models .
-         </li>
-        </ul>
-        <a class="slide-section-link" href="#scaling-laws-connect-model-size-data-and-compute">
-         Read the worked explanation
-        </a>
-       </div>
-      </section>
-      <section class="lecture-slide" data-slide="" hidden="">
-       <div class="slide-stage">
-        Week 11 · Section 11
-       </div>
-       <h3>
-        Scaling laws connect model size, data, and compute · continued
-       </h3>
-       <div class="slide-prose">
-        <ul class="slide-keypoints">
-         <li>
-          Source: Training compute-optimal language models .
          </li>
         </ul>
         <a class="slide-section-link" href="#scaling-laws-connect-model-size-data-and-compute">
@@ -882,37 +876,37 @@
       Go to slide
       <select aria-label="Go to slide" class="slide-jump">
        <option value="0">
-        1. A block becomes part of a task specific arrangement
+        1. A numerical scaling-law planning example
        </option>
        <option value="1">
-        2. An encoder reads a complete input
+        2. A block becomes part of a task specific arrangement
        </option>
        <option value="2">
-        3. A causal decoder predicts continuations
+        3. An encoder reads a complete input
        </option>
        <option value="3">
-        4. An encoder decoder connects two sequences
+        4. A causal decoder predicts continuations
        </option>
        <option value="4">
-        5. A visibility table clarifies the difference
+        5. An encoder decoder connects two sequences
        </option>
        <option value="5">
-        6. Training time parallelism does not remove causality
+        6. A visibility table clarifies the difference
        </option>
        <option value="6">
-        7. Choosing the architecture for the learning exercise
+        7. Training time parallelism does not remove causality
        </option>
        <option value="7">
-        8. Attention variants keep different amounts of state
+        8. Choosing the architecture for the learning exercise
        </option>
        <option value="8">
-        9. MoE and state-space models change different parts
+        9. Attention variants keep different amounts of state
        </option>
        <option value="9">
-        10. Scaling laws connect model size, data, and compute
+        10. MoE and state-space models change different parts
        </option>
        <option value="10">
-        11. Scaling laws connect model size, data, and compute · continued
+        11. Scaling laws connect model size, data, and compute
        </option>
        <option value="11">
         12. Worked practice and a readiness check
@@ -931,6 +925,11 @@
       In this lesson
      </strong>
      <ol>
+      <li>
+       <a href="#a-numerical-scaling-law-planning-example">
+        A numerical scaling-law planning example
+       </a>
+      </li>
       <li>
        <a href="#a-block-becomes-part-of-a-task-specific-arrangement">
         A block becomes part of a task specific arrangement
@@ -1000,6 +999,12 @@
      <h2>
       Read the full explanation
      </h2>
+     <h3 id="a-numerical-scaling-law-planning-example">
+      A numerical scaling-law planning example
+     </h3>
+     <p>
+      In the Chinchilla study, the 70-billion-parameter model used about 1.4 trillion training tokens: roughly 20 tokens per parameter. For an illustrative dense model with N=100 million parameters, that ratio suggests D=2 billion tokens. The rough training-compute estimate C≈6ND then gives 1.2×10^18 FLOPs. Here N is parameter count and D is training-token count, not d_model. These are historical compute-optimal planning approximations under the study assumptions; deployment cost, data quality and inference demands can favor other ratios.
+     </p>
      <h3 id="a-block-becomes-part-of-a-task-specific-arrangement">
       A block becomes part of a task specific arrangement
      </h3>

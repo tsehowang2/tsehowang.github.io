@@ -469,7 +469,7 @@
         31
        </span>
        <span>
-        整合文件助手與進階延伸
+        整合及檢視 documentation assistant
        </span>
        <span class="week-tick" data-week-tick="31">
        </span>
@@ -574,6 +574,27 @@
         第 24 週 · 課節 1
        </div>
        <h3>
+        具體 labels 與 serialized examples
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          對已 tokenize sequence [10,11,12,20,21]，假設前三個 tokens 是 prompt、最後兩個是 response（21 是 end-of-response token）。
+         </li>
+         <li>
+          JSONL training file 每行是一個 JSON object，例如 {"messages":[{"role":"user","content":"How do I go to school?"},{"role":"assistant","content":"Take the bus."}]}。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#visible-labels-and-serialized-examples">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 24 週 · 課節 2
+       </div>
+       <h3>
         一個反覆出現的 behavior 問題
        </h3>
        <div class="slide-prose">
@@ -595,7 +616,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        第 24 週 · 課節 2
+        第 24 週 · 課節 3
        </div>
        <h3>
         Input 與理想 output
@@ -619,7 +640,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        第 24 週 · 課節 3
+        第 24 週 · 課節 4
        </div>
        <h3>
         建立 model sequence
@@ -643,7 +664,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        第 24 週 · 課節 4
+        第 24 週 · 課節 5
        </div>
        <h3>
         Label mask 的計算例子
@@ -667,7 +688,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        第 24 週 · 課節 5
+        第 24 週 · 課節 6
        </div>
        <h3>
         先 split data，再做 paraphrase
@@ -691,7 +712,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        第 24 週 · 課節 6
+        第 24 週 · 課節 7
        </div>
        <h3>
         選擇 adaptation objective
@@ -715,7 +736,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        第 24 週 · 課節 7
+        第 24 週 · 課節 8
        </div>
        <h3>
         Training 前先寫實驗提案
@@ -739,7 +760,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        第 24 週 · 課節 8
+        第 24 週 · 課節 9
        </div>
        <h3>
         實例練習與學習檢查
@@ -767,7 +788,7 @@
        ← 上一頁
       </button>
       <span aria-live="polite" class="slide-counter">
-       1 / 8
+       1 / 9
       </span>
       <button class="slide-next" type="button">
        下一頁 →
@@ -777,28 +798,31 @@
       前往 slide
       <select aria-label="跳至 slide" class="slide-jump">
        <option value="0">
-        1. 一個反覆出現的 behavior 問題
+        1. 具體 labels 與 serialized examples
        </option>
        <option value="1">
-        2. Input 與理想 output
+        2. 一個反覆出現的 behavior 問題
        </option>
        <option value="2">
-        3. 建立 model sequence
+        3. Input 與理想 output
        </option>
        <option value="3">
-        4. Label mask 的計算例子
+        4. 建立 model sequence
        </option>
        <option value="4">
-        5. 先 split data，再做 paraphrase
+        5. Label mask 的計算例子
        </option>
        <option value="5">
-        6. 選擇 adaptation objective
+        6. 先 split data，再做 paraphrase
        </option>
        <option value="6">
-        7. Training 前先寫實驗提案
+        7. 選擇 adaptation objective
        </option>
        <option value="7">
-        8. 實例練習與學習檢查
+        8. Training 前先寫實驗提案
+       </option>
+       <option value="8">
+        9. 實例練習與學習檢查
        </option>
       </select>
      </label>
@@ -811,6 +835,11 @@
       本課內容
      </strong>
      <ol>
+      <li>
+       <a href="#visible-labels-and-serialized-examples">
+        具體 labels 與 serialized examples
+       </a>
+      </li>
       <li>
        <a href="#a-repeated-behavior-problem">
         一個反覆出現的 behavior 問題
@@ -860,6 +889,15 @@
      <h2>
       閱讀完整解說
      </h2>
+     <h3 id="visible-labels-and-serialized-examples">
+      具體 labels 與 serialized examples
+     </h3>
+     <p>
+      對已 tokenize sequence [10,11,12,20,21]，假設前三個 tokens 是 prompt、最後兩個是 response（21 是 end-of-response token）。未 shift label list 是 [-100,-100,-100,20,21]。若 loss 內部做 causal shift，logit position 2 預測 token 20，position 3 預測 token 21。必須核對實際 loss implementation 的 shift convention。
+     </p>
+     <p>
+      JSONL training file 每行是一個 JSON object，例如 {"messages":[{"role":"user","content":"How do I go to school?"},{"role":"assistant","content":"Take the bus."}]}。這是 data record，並非最終 token sequence。使用選定 tokenizer 的 chat template 加入 role boundaries 和正確 response-ending token，再檢查 IDs 和 assistant loss mask。不同 model 可以用不同方式 serialize 同一組 messages。
+     </p>
      <h3 id="a-repeated-behavior-problem">
       一個反覆出現的 behavior 問題
      </h3>

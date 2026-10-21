@@ -2,7 +2,7 @@
 
 Open `index.html` for English or `zh-HK/index.html` for 香港繁體中文. The language switch returns to the corresponding page. Technical terms, code, formulas and English example sentences stay in English.
 
-The course has 32 lecture readers, 32 tutorial pages and notebooks, weekly tests with worked solutions, semester examinations, a capstone, and linked primary references. Read lesson and Lesson slides are separate views. The 330 slides summarize key steps and link back to complete worked explanations. Reference details are collapsed by default, and inline diagrams and tables show the mechanisms directly.
+The course has 32 lecture readers, 32 tutorial pages and notebooks, weekly tests with worked solutions, semester examinations, a capstone, and linked primary references. Read lesson and Lesson slides are separate views. The 340 slides summarize key steps and link back to complete worked explanations. Reference details are collapsed by default, and inline diagrams and tables show the mechanisms directly.
 
 ## Publish to GitHub Pages
 
@@ -18,7 +18,7 @@ Editable source and one-command rebuild instructions are in `downloads/Course_We
 
 ## Validation
 
-All 212 HTML pages, local links, anchors and JavaScript syntax were checked. All 32 notebooks and companion scripts passed syntax checks. Thirteen CPU-safe complete tutorial paths, a separate DPO calculation and all 23 support contract tests passed. Numerical examples were independently recalculated. Updated model-download, training, CUDA and production-serving paths still require runtime verification. Empty distributed notebook outputs are intentional.
+All 212 HTML pages, local links, anchors and JavaScript syntax were checked. All 32 notebooks and companion scripts passed syntax checks. Twenty-eight CPU-safe notebook paths, targeted week-26 DPO/distillation and week-28 invalid-JSON checks, and all 25 support tests passed. Training-memory slider behavior was exercised with a DOM test double. Reference outputs are included as clearly labeled comparison material. Actual pretrained-model downloads, GPU training/reload, CUDA and production-serving performance were not executed in this revision. No final visual browser check was available. Distributed executable notebook outputs remain empty.
 
 ## 香港繁體中文
 

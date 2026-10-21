@@ -463,7 +463,7 @@
         31
        </span>
        <span>
-        Integrating the documentation assistant and advanced extensions
+        Integrating and reviewing the documentation assistant
        </span>
        <span class="week-tick" data-week-tick="31">
        </span>
@@ -568,6 +568,24 @@
         Week 25 · Section 1
        </div>
        <h3>
+        NF4
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          NF4 means NormalFloat 4-bit: a quantization codebook designed for approximately normally distributed weights.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#nf4">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 25 · Section 2
+       </div>
+       <h3>
         Training fewer parameters
        </h3>
        <div class="slide-prose">
@@ -589,7 +607,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        Week 25 · Section 2
+        Week 25 · Section 3
        </div>
        <h3>
         A two by two update by hand
@@ -656,7 +674,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        Week 25 · Section 3
+        Week 25 · Section 4
        </div>
        <h3>
         General shapes and the savings condition
@@ -680,7 +698,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        Week 25 · Section 4
+        Week 25 · Section 5
        </div>
        <h3>
         Scaling and zero update initialization
@@ -704,7 +722,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        Week 25 · Section 5
+        Week 25 · Section 6
        </div>
        <h3>
         What stays in memory
@@ -728,7 +746,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        Week 25 · Section 6
+        Week 25 · Section 7
        </div>
        <h3>
         QLoRA adds a quantized frozen base
@@ -752,7 +770,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        Week 25 · Section 7
+        Week 25 · Section 8
        </div>
        <h3>
         What NF4, double quantization, and paged optimizers do
@@ -773,7 +791,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        Week 25 · Section 8
+        Week 25 · Section 9
        </div>
        <h3>
         Two LoRA variants with different changes
@@ -791,7 +809,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        Week 25 · Section 9
+        Week 25 · Section 10
        </div>
        <h3>
         Saving and using an adapter
@@ -815,7 +833,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        Week 25 · Section 10
+        Week 25 · Section 11
        </div>
        <h3>
         Worked practice and a readiness check
@@ -843,7 +861,7 @@
        ← Previous
       </button>
       <span aria-live="polite" class="slide-counter">
-       1 / 10
+       1 / 11
       </span>
       <button class="slide-next" type="button">
        Next →
@@ -853,34 +871,37 @@
       Go to slide
       <select aria-label="Go to slide" class="slide-jump">
        <option value="0">
-        1. Training fewer parameters
+        1. NF4
        </option>
        <option value="1">
-        2. A two by two update by hand
+        2. Training fewer parameters
        </option>
        <option value="2">
-        3. General shapes and the savings condition
+        3. A two by two update by hand
        </option>
        <option value="3">
-        4. Scaling and zero update initialization
+        4. General shapes and the savings condition
        </option>
        <option value="4">
-        5. What stays in memory
+        5. Scaling and zero update initialization
        </option>
        <option value="5">
-        6. QLoRA adds a quantized frozen base
+        6. What stays in memory
        </option>
        <option value="6">
-        7. What NF4, double quantization, and paged optimizers do
+        7. QLoRA adds a quantized frozen base
        </option>
        <option value="7">
-        8. Two LoRA variants with different changes
+        8. What NF4, double quantization, and paged optimizers do
        </option>
        <option value="8">
-        9. Saving and using an adapter
+        9. Two LoRA variants with different changes
        </option>
        <option value="9">
-        10. Worked practice and a readiness check
+        10. Saving and using an adapter
+       </option>
+       <option value="10">
+        11. Worked practice and a readiness check
        </option>
       </select>
      </label>
@@ -909,6 +930,11 @@
       In this lesson
      </strong>
      <ol>
+      <li>
+       <a href="#nf4">
+        NF4
+       </a>
+      </li>
       <li>
        <a href="#training-fewer-parameters">
         Training fewer parameters
@@ -968,6 +994,12 @@
      <h2>
       Read the full explanation
      </h2>
+     <h3 id="nf4">
+      NF4
+     </h3>
+     <p>
+      NF4 means NormalFloat 4-bit: a quantization codebook designed for approximately normally distributed weights. It is not ordinary four-bit integer rounding.
+     </p>
      <h3 id="training-fewer-parameters">
       Training fewer parameters
      </h3>
@@ -1190,7 +1222,7 @@
       </h3>
       <p>
        <a href="../tutorials/25.html">
-        Tutorial 25: Lora and qlora from a small matrix
+        Tutorial 25: LoRA and QLoRA from a small matrix
        </a>
        calculates trainable parameter counts and inspects the LoRA initialization.
        <a href="../tutorials/26.html">

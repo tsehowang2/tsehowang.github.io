@@ -469,7 +469,7 @@
         31
        </span>
        <span>
-        整合文件助手與進階延伸
+        整合及檢視 documentation assistant
        </span>
        <span class="week-tick" data-week-tick="31">
        </span>
@@ -574,6 +574,24 @@
         第 30 週 · 課節 1
        </div>
        <h3>
+        exfiltration
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Exfiltration 是把受保護資料傳到允許範圍以外，例如把資料編入 generated URL，再由 client fetch。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#exfiltration">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 30 週 · 課節 2
+       </div>
+       <h3>
         錯誤 answer 需要 trace
        </h3>
        <div class="slide-prose">
@@ -595,7 +613,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        第 30 週 · 課節 2
+        第 30 週 · 課節 3
        </div>
        <h3>
         Operational health 與 answer quality
@@ -610,30 +628,6 @@
          </li>
          <li>
           Refusal-rate 改變，可能代表 coverage 改善、新增 missing sources、traffic 改變，或不顧 evidence 亂答。
-         </li>
-        </ul>
-        <a class="slide-section-link" href="#operational-health-and-answer-quality">
-         閱讀完整解說
-        </a>
-       </div>
-      </section>
-      <section class="lecture-slide" data-slide="" hidden="">
-       <div class="slide-stage">
-        第 30 週 · 課節 3
-       </div>
-       <h3>
-        Alerts 需要對應 action
-       </h3>
-       <div class="slide-prose">
-        <ul class="slide-keypoints">
-         <li>
-          定義 time window、denominator、minimum sample count、threshold、response 和 recovery condition。
-         </li>
-         <li>
-          例如，一個建議 alert 可以在十分鐘內、至少 50 requests 中，empty retrieval 超過 20% 時啟動調查。
-         </li>
-         <li>
-          Dashboard 只有在 signals 能引導具體診斷步驟和負責跟進時，才真正有幫助。
          </li>
         </ul>
         <figure class="mechanism-figure">
@@ -679,7 +673,7 @@
           Link 或 image request 可傳送資料。Generated destinations 和 retrieved instructions 應視為 untrusted inputs。
          </p>
         </figure>
-        <a class="slide-section-link" href="#alerts-need-an-action">
+        <a class="slide-section-link" href="#operational-health-and-answer-quality">
          閱讀完整解說
         </a>
        </div>
@@ -687,6 +681,30 @@
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
         第 30 週 · 課節 4
+       </div>
+       <h3>
+        Alerts 需要對應 action
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          定義 time window、denominator、minimum sample count、threshold、response 和 recovery condition。
+         </li>
+         <li>
+          例如，一個建議 alert 可以在十分鐘內、至少 50 requests 中，empty retrieval 超過 20% 時啟動調查。
+         </li>
+         <li>
+          Dashboard 只有在 signals 能引導具體診斷步驟和負責跟進時，才真正有幫助。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#alerts-need-an-action">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 30 週 · 課節 5
        </div>
        <h3>
         Retrieved instructions 仍不可信
@@ -710,7 +728,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        第 30 週 · 課節 5
+        第 30 週 · 課節 6
        </div>
        <h3>
         Jailbreak、prompt injection 與 exfiltration
@@ -731,7 +749,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        第 30 週 · 課節 6
+        第 30 週 · 課節 7
        </div>
        <h3>
         用 OWASP risks 檢查整個 application
@@ -878,7 +896,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        第 30 週 · 課節 7
+        第 30 週 · 課節 8
        </div>
        <h3>
         Personal data 與香港 PDPO 基礎
@@ -899,7 +917,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        第 30 週 · 課節 8
+        第 30 週 · 課節 9
        </div>
        <h3>
         Cache scope 與 source updates
@@ -923,7 +941,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        第 30 週 · 課節 9
+        第 30 週 · 課節 10
        </div>
        <h3>
         CI 與 quality gates
@@ -947,7 +965,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        第 30 週 · 課節 10
+        第 30 週 · 課節 11
        </div>
        <h3>
         一致完整的 rollback
@@ -971,7 +989,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        第 30 週 · 課節 11
+        第 30 週 · 課節 12
        </div>
        <h3>
         實例練習與學習檢查
@@ -999,7 +1017,7 @@
        ← 上一頁
       </button>
       <span aria-live="polite" class="slide-counter">
-       1 / 11
+       1 / 12
       </span>
       <button class="slide-next" type="button">
        下一頁 →
@@ -1009,37 +1027,40 @@
       前往 slide
       <select aria-label="跳至 slide" class="slide-jump">
        <option value="0">
-        1. 錯誤 answer 需要 trace
+        1. exfiltration
        </option>
        <option value="1">
-        2. Operational health 與 answer quality
+        2. 錯誤 answer 需要 trace
        </option>
        <option value="2">
-        3. Alerts 需要對應 action
+        3. Operational health 與 answer quality
        </option>
        <option value="3">
-        4. Retrieved instructions 仍不可信
+        4. Alerts 需要對應 action
        </option>
        <option value="4">
-        5. Jailbreak、prompt injection 與 exfiltration
+        5. Retrieved instructions 仍不可信
        </option>
        <option value="5">
-        6. 用 OWASP risks 檢查整個 application
+        6. Jailbreak、prompt injection 與 exfiltration
        </option>
        <option value="6">
-        7. Personal data 與香港 PDPO 基礎
+        7. 用 OWASP risks 檢查整個 application
        </option>
        <option value="7">
-        8. Cache scope 與 source updates
+        8. Personal data 與香港 PDPO 基礎
        </option>
        <option value="8">
-        9. CI 與 quality gates
+        9. Cache scope 與 source updates
        </option>
        <option value="9">
-        10. 一致完整的 rollback
+        10. CI 與 quality gates
        </option>
        <option value="10">
-        11. 實例練習與學習檢查
+        11. 一致完整的 rollback
+       </option>
+       <option value="11">
+        12. 實例練習與學習檢查
        </option>
       </select>
      </label>
@@ -1052,6 +1073,11 @@
       本課內容
      </strong>
      <ol>
+      <li>
+       <a href="#exfiltration">
+        exfiltration
+       </a>
+      </li>
       <li>
        <a href="#a-wrong-answer-needs-a-trace">
         錯誤 answer 需要 trace
@@ -1116,6 +1142,12 @@
      <h2>
       閱讀完整解說
      </h2>
+     <h3 id="exfiltration">
+      exfiltration
+     </h3>
+     <p>
+      Exfiltration 是把受保護資料傳到允許範圍以外，例如把資料編入 generated URL，再由 client fetch。
+     </p>
      <h3 id="a-wrong-answer-needs-a-trace">
       錯誤 answer 需要 trace
      </h3>
@@ -1130,18 +1162,6 @@
      </p>
      <h3 id="operational-health-and-answer-quality">
       Operational health 與 answer quality
-     </h3>
-     <p>
-      Latency、error rate 和 queue depth 描述 service behavior。Empty retrieval、wrong-version evidence、unsupported answers 和 tool exhaustion 則描述其他重要方面。
-     </p>
-     <p>
-      若 index update 後 empty retrieval 增加，但 model latency 穩定，應先檢查 ingestion counts、filter types 和 active artifact identity，再懷疑 generator。
-     </p>
-     <p>
-      Refusal-rate 改變，可能代表 coverage 改善、新增 missing sources、traffic 改變，或不顧 evidence 亂答。要結合 tasks 和 quality checks 解讀 signals。
-     </p>
-     <h3 id="alerts-need-an-action">
-      Alerts 需要對應 action
      </h3>
      <figure class="mechanism-figure">
       <figcaption>
@@ -1186,6 +1206,18 @@
        Link 或 image request 可傳送資料。Generated destinations 和 retrieved instructions 應視為 untrusted inputs。
       </p>
      </figure>
+     <p>
+      Latency、error rate 和 queue depth 描述 service behavior。Empty retrieval、wrong-version evidence、unsupported answers 和 tool exhaustion 則描述其他重要方面。
+     </p>
+     <p>
+      若 index update 後 empty retrieval 增加，但 model latency 穩定，應先檢查 ingestion counts、filter types 和 active artifact identity，再懷疑 generator。
+     </p>
+     <p>
+      Refusal-rate 改變，可能代表 coverage 改善、新增 missing sources、traffic 改變，或不顧 evidence 亂答。要結合 tasks 和 quality checks 解讀 signals。
+     </p>
+     <h3 id="alerts-need-an-action">
+      Alerts 需要對應 action
+     </h3>
      <p>
       定義 time window、denominator、minimum sample count、threshold、response 和 recovery condition。低流量 spike 不應被當成強 statistical evidence。
      </p>
@@ -1604,7 +1636,7 @@
       <small>
        下一週
       </small>
-      整合文件助手與進階延伸
+      整合及檢視 documentation assistant
      </a>
     </nav>
    </div>

@@ -469,7 +469,7 @@
         31
        </span>
        <span>
-        整合文件助手與進階延伸
+        整合及檢視 documentation assistant
        </span>
        <span class="week-tick" data-week-tick="31">
        </span>
@@ -602,7 +602,7 @@
       Evaluation 設計
      </h2>
      <p>
-      建立至少 40 個經獨立核對的 case，涵蓋 paraphrase、版本衝突、答案缺失及 tool request。這只是實習最低要求，並非統計上有定論的 benchmark。把相關變體分組，防止近乎重複的內容造成 leakage。調整系統時可以查閱 reference corpus，但須保留最終問題及 label，不可用於 tuning。
+      附送的 12 個 Atlas cases 是 smoke-test examples，未構成完整 project evaluation。請按所選 documentation 另外撰寫及人手核對至少 28 cases；不要把自動 paraphrases 當作獨立 evidence。完整集合儲存為 runs/project_cases.json，包含 unique id、question、expected facts、source IDs、group、version 和 checked=true。至少 40 個獨立 checked cases 應涵蓋 paraphrases、version conflicts、missing answers 和 tool requests。這是練習最低要求，並非統計上有定論的 benchmark。把相關 variants 分組，避免 near-duplicate leakage。可以存取 reference corpus，但 final questions 和 labels 不可用來 tuning。
      </p>
      <p>
       量度 evidence recall、answer correctness、citation support、版本錯誤、refusal、tool argument、latency、token 及失敗。儲存每個 task 的輸出，並比較同一批 task。分清 simulation 與真實 model 量度。報告 uncertainty 及 task set 的限制。
@@ -736,6 +736,12 @@
      </p>
      <p>
       事故報告欄位：觸發原因／時間；用戶影響；受影響版本；偵測訊號；診斷證據；緩解措施；root cause；促成因素；一個 regression test；一項可量度的預防行動；負責人及跟進條件。演練失敗是需要修補的發現，不應隱瞞。
+     </p>
+     <h2 id="submitted-release-audit">
+      提交 release audit
+     </h2>
+     <p>
+      把 runs/release_manifest.json、project_cases.json、project_results.json、manual_grades.json、environment.txt、limitations.md 與 notebook artifacts 一起儲存。Release audit 會列出缺少或無效的 submissions，並要求 40 checked cases。沒有使用的 components 標為 not_used。通過 artifact audit 後，仍需人手檢視 task quality 和 evidence。
      </p>
     </article>
    </div>

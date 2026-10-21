@@ -463,7 +463,7 @@
         31
        </span>
        <span>
-        Integrating the documentation assistant and advanced extensions
+        Integrating and reviewing the documentation assistant
        </span>
        <span class="week-tick" data-week-tick="31">
        </span>
@@ -568,6 +568,24 @@
         Week 18 · Section 1
        </div>
        <h3>
+        ANN and payload
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          ANN means approximate nearest neighbor: a search that may miss the exact nearest vectors to reduce search cost.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#ann-and-payload">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 18 · Section 2
+       </div>
+       <h3>
         Persistence becomes useful when the list changes
        </h3>
        <div class="slide-prose">
@@ -589,7 +607,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        Week 18 · Section 2
+        Week 18 · Section 3
        </div>
        <h3>
         A record you can inspect
@@ -613,7 +631,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        Week 18 · Section 3
+        Week 18 · Section 4
        </div>
        <h3>
         Exact search provides a reference
@@ -637,7 +655,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        Week 18 · Section 4
+        Week 18 · Section 5
        </div>
        <h3>
         A graph intuition for HNSW
@@ -661,7 +679,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        Week 18 · Section 5
+        Week 18 · Section 6
        </div>
        <h3>
         The three HNSW controls have different jobs
@@ -682,7 +700,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        Week 18 · Section 6
+        Week 18 · Section 7
        </div>
        <h3>
         Other index families start from different storage choices
@@ -706,7 +724,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        Week 18 · Section 7
+        Week 18 · Section 8
        </div>
        <h3>
         Filtering before or after candidate selection
@@ -730,7 +748,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        Week 18 · Section 8
+        Week 18 · Section 9
        </div>
        <h3>
         Storage arithmetic and compatibility
@@ -754,7 +772,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        Week 18 · Section 9
+        Week 18 · Section 10
        </div>
        <h3>
         Updates deletion and migration
@@ -778,7 +796,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        Week 18 · Section 10
+        Week 18 · Section 11
        </div>
        <h3>
         Worked practice and a readiness check
@@ -806,7 +824,7 @@
        ← Previous
       </button>
       <span aria-live="polite" class="slide-counter">
-       1 / 10
+       1 / 11
       </span>
       <button class="slide-next" type="button">
        Next →
@@ -816,34 +834,37 @@
       Go to slide
       <select aria-label="Go to slide" class="slide-jump">
        <option value="0">
-        1. Persistence becomes useful when the list changes
+        1. ANN and payload
        </option>
        <option value="1">
-        2. A record you can inspect
+        2. Persistence becomes useful when the list changes
        </option>
        <option value="2">
-        3. Exact search provides a reference
+        3. A record you can inspect
        </option>
        <option value="3">
-        4. A graph intuition for HNSW
+        4. Exact search provides a reference
        </option>
        <option value="4">
-        5. The three HNSW controls have different jobs
+        5. A graph intuition for HNSW
        </option>
        <option value="5">
-        6. Other index families start from different storage choices
+        6. The three HNSW controls have different jobs
        </option>
        <option value="6">
-        7. Filtering before or after candidate selection
+        7. Other index families start from different storage choices
        </option>
        <option value="7">
-        8. Storage arithmetic and compatibility
+        8. Filtering before or after candidate selection
        </option>
        <option value="8">
-        9. Updates deletion and migration
+        9. Storage arithmetic and compatibility
        </option>
        <option value="9">
-        10. Worked practice and a readiness check
+        10. Updates deletion and migration
+       </option>
+       <option value="10">
+        11. Worked practice and a readiness check
        </option>
       </select>
      </label>
@@ -872,6 +893,11 @@
       In this lesson
      </strong>
      <ol>
+      <li>
+       <a href="#ann-and-payload">
+        ANN and payload
+       </a>
+      </li>
       <li>
        <a href="#persistence-becomes-useful-when-the-list-changes">
         Persistence becomes useful when the list changes
@@ -931,6 +957,12 @@
      <h2>
       Read the full explanation
      </h2>
+     <h3 id="ann-and-payload">
+      ANN and payload
+     </h3>
+     <p>
+      ANN means approximate nearest neighbor: a search that may miss the exact nearest vectors to reduce search cost. A payload is the metadata or content stored with a vector, such as version and source ID.
+     </p>
      <h3 id="persistence-becomes-useful-when-the-list-changes">
       Persistence becomes useful when the list changes
      </h3>

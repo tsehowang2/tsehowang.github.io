@@ -469,7 +469,7 @@
         31
        </span>
        <span>
-        整合文件助手與進階延伸
+        整合及檢視 documentation assistant
        </span>
        <span class="week-tick" data-week-tick="31">
        </span>
@@ -540,7 +540,7 @@
       問題 1：language modeling 及 representations，15 分
      </h3>
      <p>
-      用 “I go to school by bus” 解釋 next-token training，寫出 shifted inputs／targets（5）。區分 token IDs 與 embedding vectors，並解釋為何不可把 IDs 平均後當作 meanings（5）。probabilities 為 [.6,.2,.2]，target 為 train，計算 negative log likelihood 並解釋較低 loss 的意思（5）。
+      以 “I go to school by bus” 解釋 next-token training，給出 shifted inputs/targets (5)。分辨 token IDs 與 embeddings，計算 cosine([3,4],[1,0]) 並解釋 (3)。Correct-token probabilities [.5,.25]，計 mean NLL 和 perplexity (2)。Label order [bus, train, bicycle]、probabilities [.6,.2,.2]，計 target train 的 NLL，解釋較低 loss 的意思 (5)。
      </p>
      <h3 id="question-2-attention-by-hand-20-points">
       問題 2：親手計算 attention，20 分
@@ -552,7 +552,7 @@
       問題 3：transformer architecture，20 分
      </h3>
      <p>
-      對 B=2、T=128、d_model=256、H=8，寫出 split Q／K／V、score、per-head output 及 merged output shapes（8）。計算明確儲存 float32 scores 所需的 bytes 及 MiB（4）。解釋 pre-normalized block 的 residual、normalization 及 positionwise MLP paths（4）。解釋 position information 與 causal mask 為何解決不同問題（4）。
+      B=2、T=128、d_model=256、H=8，給出 split Q/K/V、score、per-head output、merged output shapes (8)。計顯式 float32 score memory bytes 和 MiB (4)。解釋 pre-norm block 的 residual、normalization 和 positionwise MLP paths (4)。Standard MHA d_model=64、two-matrix MLP width256，忽略 biases/norms，計 attention+MLP matrix parameters，並指出一個會改變數量的 variant (4)。
      </p>
      <h3 id="question-4-training-a-tiny-transformer-20-points">
       問題 4：訓練 tiny transformer，20 分
@@ -564,13 +564,13 @@
       問題 5：generation 及 instruction following，15 分
      </h3>
      <p>
-      比較 greedy decoding 與 sampling，包括 temperature（5）。解釋 KV cache 儲存甚麼，以及為何不用學新事實也能加快 decoding（4）。區分 pretraining 與 instruction SFT（3）。解釋流暢 chain-of-thought text 為何不能證明正確（3）。
+      比較 greedy、sampling 和 temperature (2)。給定 [.5,.3,.15,.05]，計 top-k=2 和 top-p=.7 distributions；top-p 取 cumulative mass 達到 threshold 的最短 sorted prefix (3)。解釋 KV cache 儲存甚麼、為何加速但沒有學到新 facts (4)。分辨 pretraining 與 instruction SFT (3)。解釋 fluent chain-of-thought 不能證明 correctness (3)。
      </p>
      <h3 id="question-6-beyond-text-and-experimental-reasoning-10-points">
       問題 6：文字以外及實驗推理，10 分
      </h3>
      <p>
-      比較 autoregressive image-token generation 與 diffusion generation（4）。描述 transformer 的一項限制，並設計 controlled tiny-model experiment 研究它（6）。
+      比較 autoregressive image-token generation 和 diffusion (3)。解釋 recurrent state、vanishing gradients 和 LSTM/GRU gates 的用途 (3)。比較 encoder-only、decoder-only、encoder-decoder visibility (4)。
      </p>
      <details class="solution exam-solution">
       <summary>
@@ -580,7 +580,7 @@
        <strong>
         Q1（15）。
        </strong>
-       Inputs 為 I/go/to/school/by，targets 為 go/to/school/by/bus。每個 prefix 預測下一個 token（5）。IDs 是任意 row indices；vectors 是 learned representations。重新編排 IDs 時，同時排列對應 table rows，必須保留 meaning（5）。-ln(.2)=1.6094 nats。較低 loss 代表 observed target 得到較高 probability，不是真實性的證明（5）。
+       Inputs I/go/to/school/by，targets go/to/school/by/bus；每個 prefix 預測下一 token (5)。IDs 是 learned rows 的 indices (1)。Norm([3,4])=5，cosine=3/5=.6，比較方向 (2)。Mean NLL=(ln2+ln4)/2≈1.03972，perplexity≈2.82843 (2)。−ln(.2)=1.6094 nats。較低 loss 表示 observed target probability 較高，並非 factual truth 證明 (5)。
       </p>
       <p>
        <strong>
@@ -592,7 +592,7 @@
        <strong>
         Q3（20）。
        </strong>
-       Q/K/V [2,8,128,32]、scores [2,8,128,128]、head output [2,8,128,32]、merged [2,128,256]（8）。262144 elements 乘四 =1048576 bytes=1 MiB（4）。x 變成 x+Attention(LN(x))，再變成 x+MLP(LN(x))；MLP 逐個 position 運作，residual 保留直接路徑（4）。position 提供次序／位置；masking 防止 future leakage。兩者一般不能互相取代（4）。
+       Q/K/V [2,8,128,32]、scores [2,8,128,128]、head output [2,8,128,32]、merged [2,128,256] (8)。262144 elements×4=1048576 bytes=1 MiB (4)。x 先變成 x+Attention(LN(x))，再加 MLP(LN(x))；MLP 逐 position 處理，residual 保留直接 path (4)。Attention parameters=4×64²=16,384；MLP=2×64×256=32,768；合共49,152。GQA 改變 K/V count，gated MLP 多一個 matrix (4)。
       </p>
       <p>
        <strong>
@@ -604,13 +604,13 @@
        <strong>
         Q5（15）。
        </strong>
-       greedy 選最大值；sampling 從 distribution 抽樣。把 logits 除以正 temperature：較低使 distribution 尖銳，較高使它平坦。兩者均不保證 globally best sequence（5）。cache 儲存較早 keys／values，避免重新計算；parameters 不變（4）。pretraining 學 continuation；instruction SFT 從期望 responses 更新 parameters，通常只對 response tokens 計 loss（3）。rationale 是生成 text；應用 controlled comparisons 獨立核對答案（3）。
+       Greedy 選最大 probability；sampling 按 distribution 抽樣；較低 temperature 令分布更尖 (2)。Top-k=2 保留 .5、.3，除以 .8 得 [.625,.375,0,0]。Top-p=.7 由同兩項達到 threshold，故結果相同 (3)。Cache 保留先前 keys/values，避免重算；parameters 不變 (4)。Pretraining 學 continuation；instruction SFT 用 desired responses 更新 parameters，通常只對 response tokens 計 loss (3)。Rationale 是 generated text，答案要獨立驗證並作 controlled comparison (3)。
       </p>
       <p>
        <strong>
         Q6（10）。
        </strong>
-       autoregression 依次預測 discrete image tokens；diffusion 用 noise schedule 學 reverse／denoising process（4）。一個研究方法：把 synthetic dependency 移到越來越遠位置，固定 architecture、data count 及 training budget。報告 held-out accuracy、context constraints 及 tiny synthetic task 的限制。限制 2 分、controls／design 3 分、解讀 1 分（6）。
+       Autoregression 預測 image tokens；diffusion 學 reverse/noise-prediction process (3)。Recurrence 更新 compressed state，重複 Jacobians 可能令 gradients 縮小；LSTM/GRU gates 控制 information flow (3)。Encoder self-attention 看完整 input；decoder 看 prefix；encoder-decoder 加上 target queries 對 source K/V 的 cross-attention (4)。
       </p>
      </details>
     </article>

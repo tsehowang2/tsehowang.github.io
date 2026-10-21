@@ -469,7 +469,7 @@
         31
        </span>
        <span>
-        整合文件助手與進階延伸
+        整合及檢視 documentation assistant
        </span>
        <span class="week-tick" data-week-tick="31">
        </span>
@@ -562,6 +562,9 @@
        <p>
         找出 supporting passages；選取並標記放得下的內容；根據 question 及 evidence 生成 response。每個界線都可能獨立失敗。
        </p>
+       <p>
+        評分：retrieval (1)；selection/budget (1)；generation (1)。
+       </p>
       </details>
      </section>
      <section class="test-question">
@@ -582,6 +585,9 @@
        <p>
         說明有支持的時間及缺失的車費，或明確表示證據不足以完整回答。不可捏造車費，亦不可用時間 evidence 支持車費。
        </p>
+       <p>
+        評分：time supported (1)；fare absent (1)；partial answer or insufficiency (1)。
+       </p>
       </details>
      </section>
      <section class="test-question">
@@ -601,6 +607,9 @@
        </summary>
        <p>
         強制只使用 eligible sources；核對 cited IDs；審核每個 claim 是否由 sources 支持；確認所有 required facts 都有回應。JSON／IDs 有效並不能單獨證明 grounding。
+       </p>
+       <p>
+        評分：scope (1)；citation IDs (1)；semantic support (1)；completeness (1)。
        </p>
       </details>
      </section>

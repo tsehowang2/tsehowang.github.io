@@ -469,7 +469,7 @@
         31
        </span>
        <span>
-        整合文件助手與進階延伸
+        整合及檢視 documentation assistant
        </span>
        <span class="week-tick" data-week-tick="31">
        </span>
@@ -752,6 +752,8 @@ def run_agent(question, planner, version='2', max_steps=4, index=None):
         try:
             proposal = planner(state)
         except Exception as exc:
+            kind = 'invalid_json' if isinstance(exc, json.JSONDecodeError) else 'planner_exception'
+            trace.append({'step': step, 'event': kind, 'error': type(exc).__name__})
             return {'status': 'planner_error', 'trace': trace, 'error': type(exc).__name__}
         try:
             if not isinstance(proposal, dict):
@@ -851,13 +853,18 @@ class Handler(BaseHTTPRequestHandler):
             self.send_json(400, {'error': str(exc)})
 
     def log_message(self, fmt, *args):
-        # Avoid logging request bodies; extend with request IDs in lab 14.
+        # Avoid logging request bodies; extend with request IDs in tutorial 30.
         pass
 
 
 if __name__ == '__main__':
-    print('Instructional extraction API: http://127.0.0.1:8000')
-    ThreadingHTTPServer(('127.0.0.1', 8000), Handler).serve_forever()
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--port', type=int, default=0)
+    args = parser.parse_args()
+    server = ThreadingHTTPServer(('127.0.0.1', args.port), Handler)
+    print(json.dumps({'host':'127.0.0.1','port':server.server_port}), flush=True)
+    server.serve_forever()
 </code></pre>
       </div>
      </details>

@@ -463,7 +463,7 @@
         31
        </span>
        <span>
-        Integrating the documentation assistant and advanced extensions
+        Integrating and reviewing the documentation assistant
        </span>
        <span class="week-tick" data-week-tick="31">
        </span>
@@ -556,6 +556,9 @@
        <p>
         Weights, gradients, moments, optional master weights, activations/buffers; generation additionally has context-dependent KV state. Device/allocator behavior matters.
        </p>
+       <p>
+        Marking: parameters/gradients (1); optimizer/activations (1); generation cache (1).
+       </p>
       </details>
      </section>
      <section class="test-question">
@@ -563,7 +566,7 @@
        Question 2
       </div>
       <p>
-       Compute KV bytes for L24,B1,T2048,H_kv8,d_head=64,b2.
+       Compute KV-cache bytes for layers L=24, batch B=1, cached tokens T=2048, K/V heads H_kv=8, head width d_head=64 and b=2 bytes per element. Explain the leading factor 2.
       </p>
       <label for="week-22-question-2">
        Your working notes
@@ -574,7 +577,10 @@
         Show worked solution
        </summary>
        <p>
-        2×24×1×2048×8×64×2=100663296 bytes=96 MiB.
+        There are two tensors, K and V. Each stores L×B×T×H_kv×d_head elements. Bytes=2×24×1×2048×8×64×2=100,663,296. Divide by 2²⁰ to obtain 96 MiB. This excludes weights and other runtime allocations.
+       </p>
+       <p>
+        Marking: K and V factor (1); substitution/product (1); 96 MiB (1).
        </p>
       </details>
      </section>
@@ -595,6 +601,9 @@
        </summary>
        <p>
         Accumulation shrinks microbatch needs but not all persistent state or a single sequence minimum. Checkpointing trades recomputation for some activation storage. Identify the actual component.
+       </p>
+       <p>
+        Marking: persistent state (1); single sequence limit (1); recomputation tradeoff (1); diagnose component (1).
        </p>
       </details>
      </section>

@@ -469,7 +469,7 @@
         31
        </span>
        <span>
-        整合文件助手與進階延伸
+        整合及檢視 documentation assistant
        </span>
        <span class="week-tick" data-week-tick="31">
        </span>
@@ -574,6 +574,24 @@
         第 18 週 · 課節 1
        </div>
        <h3>
+        ANN and payload
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          ANN 是 approximate nearest neighbor：為減少 search 成本，可能漏掉 exact nearest vectors。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#ann-and-payload">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 18 週 · 課節 2
+       </div>
+       <h3>
         當清單改變時，persistence 就派上用場
        </h3>
        <div class="slide-prose">
@@ -595,7 +613,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        第 18 週 · 課節 2
+        第 18 週 · 課節 3
        </div>
        <h3>
         一筆可直接檢查的 record
@@ -619,7 +637,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        第 18 週 · 課節 3
+        第 18 週 · 課節 4
        </div>
        <h3>
         以 exact search 作參考
@@ -643,7 +661,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        第 18 週 · 課節 4
+        第 18 週 · 課節 5
        </div>
        <h3>
         用 graph 理解 HNSW
@@ -667,7 +685,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        第 18 週 · 課節 5
+        第 18 週 · 課節 6
        </div>
        <h3>
         三個 HNSW controls 各有不同作用
@@ -688,7 +706,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        第 18 週 · 課節 6
+        第 18 週 · 課節 7
        </div>
        <h3>
         其他 index families 從不同 storage 選擇開始
@@ -712,7 +730,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        第 18 週 · 課節 7
+        第 18 週 · 課節 8
        </div>
        <h3>
         在選 candidate 之前還是之後 filtering
@@ -736,7 +754,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        第 18 週 · 課節 8
+        第 18 週 · 課節 9
        </div>
        <h3>
         Storage 計算與 compatibility
@@ -760,7 +778,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        第 18 週 · 課節 9
+        第 18 週 · 課節 10
        </div>
        <h3>
         Update、deletion 與 migration
@@ -784,7 +802,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        第 18 週 · 課節 10
+        第 18 週 · 課節 11
        </div>
        <h3>
         實例練習與學習檢查
@@ -812,7 +830,7 @@
        ← 上一頁
       </button>
       <span aria-live="polite" class="slide-counter">
-       1 / 10
+       1 / 11
       </span>
       <button class="slide-next" type="button">
        下一頁 →
@@ -822,34 +840,37 @@
       前往 slide
       <select aria-label="跳至 slide" class="slide-jump">
        <option value="0">
-        1. 當清單改變時，persistence 就派上用場
+        1. ANN and payload
        </option>
        <option value="1">
-        2. 一筆可直接檢查的 record
+        2. 當清單改變時，persistence 就派上用場
        </option>
        <option value="2">
-        3. 以 exact search 作參考
+        3. 一筆可直接檢查的 record
        </option>
        <option value="3">
-        4. 用 graph 理解 HNSW
+        4. 以 exact search 作參考
        </option>
        <option value="4">
-        5. 三個 HNSW controls 各有不同作用
+        5. 用 graph 理解 HNSW
        </option>
        <option value="5">
-        6. 其他 index families 從不同 storage 選擇開始
+        6. 三個 HNSW controls 各有不同作用
        </option>
        <option value="6">
-        7. 在選 candidate 之前還是之後 filtering
+        7. 其他 index families 從不同 storage 選擇開始
        </option>
        <option value="7">
-        8. Storage 計算與 compatibility
+        8. 在選 candidate 之前還是之後 filtering
        </option>
        <option value="8">
-        9. Update、deletion 與 migration
+        9. Storage 計算與 compatibility
        </option>
        <option value="9">
-        10. 實例練習與學習檢查
+        10. Update、deletion 與 migration
+       </option>
+       <option value="10">
+        11. 實例練習與學習檢查
        </option>
       </select>
      </label>
@@ -878,6 +899,11 @@
       本課內容
      </strong>
      <ol>
+      <li>
+       <a href="#ann-and-payload">
+        ANN and payload
+       </a>
+      </li>
       <li>
        <a href="#persistence-becomes-useful-when-the-list-changes">
         當清單改變時，persistence 就派上用場
@@ -937,6 +963,12 @@
      <h2>
       閱讀完整解說
      </h2>
+     <h3 id="ann-and-payload">
+      ANN and payload
+     </h3>
+     <p>
+      ANN 是 approximate nearest neighbor：為減少 search 成本，可能漏掉 exact nearest vectors。Payload 是跟 vector 儲存的 metadata/content，例如 version 和 source ID。
+     </p>
      <h3 id="persistence-becomes-useful-when-the-list-changes">
       當清單改變時，persistence 就派上用場
      </h3>

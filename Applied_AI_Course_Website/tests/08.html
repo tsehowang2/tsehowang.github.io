@@ -463,7 +463,7 @@
         31
        </span>
        <span>
-        Integrating the documentation assistant and advanced extensions
+        Integrating and reviewing the documentation assistant
        </span>
        <span class="week-tick" data-week-tick="31">
        </span>
@@ -583,7 +583,7 @@
        Question 3
       </div>
       <p>
-       Why is zeroing a probability after softmax insufficient? Specify a causal property test.
+       Why does zeroing masked probabilities after softmax without renormalizing give the wrong mixture? Is zeroing followed by renormalization equivalent to masking scores before softmax? Specify a causal property test.
       </p>
       <label for="week-8-question-3">
        Your working notes
@@ -594,7 +594,7 @@
         Show worked solution
        </summary>
        <p>
-        Without renormalization the surviving weights no longer sum to one and output differs. Perturb a future token with fixed eval-mode computation; earlier outputs must remain equal within tolerance. Test the unmasked control to show sensitivity.
+        Without renormalization the surviving weights sum to less than one and shrink the mixture. For a nonempty allowed set, zeroing forbidden softmax probabilities and renormalizing the survivors is mathematically equivalent to assigning forbidden logits −infinity before softmax, up to numerical error. Perturb a future token with fixed eval-mode computation: earlier outputs must remain equal within tolerance. Verify that an unmasked control changes.
        </p>
       </details>
      </section>

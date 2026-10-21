@@ -469,7 +469,7 @@
         31
        </span>
        <span>
-        整合文件助手與進階延伸
+        整合及檢視 documentation assistant
        </span>
        <span class="week-tick" data-week-tick="31">
        </span>
@@ -589,7 +589,7 @@
        問題 3
       </div>
       <p>
-       為何展示出來的 reasoning steps，既非正確性證明，也不保證忠實描述內部 causality？
+       為何顯示的 reasoning steps 既非 correctness 證明，也不保證 faithful 地反映內部 causality？
       </p>
       <label for="week-14-question-3">
        你的練習筆記
@@ -600,7 +600,7 @@
         顯示完整解答
        </summary>
        <p>
-        它們是生成 outputs，可能錯誤或事後合理化。比較獨立 final checks 及完整 inference costs；reasoning training、prompts 及 verification 是不同 interventions。
+        顯示的 steps 是 generated text。Final answer 正確仍可附上錯誤 rationale；model 亦可能在選定答案後寫出貌似合理的解釋。因此單靠文字不能證明這些 steps 造成 output。Faithfulness 關注 explanation 是否反映實際 causal computation；correctness 關注 claims 和答案是否正確。應獨立驗證答案；研究 causality 時需要 controlled interventions。
        </p>
       </details>
      </section>

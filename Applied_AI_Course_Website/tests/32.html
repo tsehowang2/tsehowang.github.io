@@ -463,7 +463,7 @@
         31
        </span>
        <span>
-        Integrating the documentation assistant and advanced extensions
+        Integrating and reviewing the documentation assistant
        </span>
        <span class="week-tick" data-week-tick="31">
        </span>
@@ -543,7 +543,7 @@
        Question 1
       </div>
       <p>
-       Connect a sentence-completion transformer with a RAG/tool application while distinguishing their boundaries.
+       Explain how the prefix “I go to school by” becomes next-token probabilities, then how a handbook passage can supply evidence for a question about departure time.
       </p>
       <label for="week-32-question-1">
        Your working notes
@@ -554,7 +554,10 @@
         Show worked solution
        </summary>
        <p>
-        Explain token/position/block/logit/generation mechanism first, then external evidence selection and authorized execution around it. Model weights and application controls have distinct roles.
+        Tokenize the prefix, look up embeddings, add position information, run causally masked transformer blocks, normalize and project to vocabulary logits, then softmax/select the next token. A RAG application separately retrieves “[H2] The bus leaves at 07:30,” packs it with the question and asks the generator to cite H2. Model token prediction and external evidence selection are distinct boundaries.
+       </p>
+       <p>
+        Marking: token-to-logit mechanism (1); external evidence path (1); distinction between prediction and support (1).
        </p>
       </details>
      </section>
@@ -563,7 +566,7 @@
        Question 2
       </div>
       <p>
-       List artifacts and observations supporting an honest personal-project delivery claim.
+       On the same 20 tasks, A succeeds on 12 and B on 16. B fixes seven A failures and introduces three failures. Calculate both success rates and the net gain. A release gate forbids any wrong-version answer; B has one. Does B pass?
       </p>
       <label for="week-32-question-2">
        Your working notes
@@ -574,7 +577,10 @@
         Show worked solution
        </summary>
        <p>
-        Runnable code/manifest, actual data/model provenance, raw evaluations, controlled comparisons, observed API/operations/failure checks, clear contributions and limitations.
+        A=12/20=60%; B=16/20=80%. Net gain=(7−3)/20=20 percentage points, consistent with four additional successes. B fails the stated gate because it produces a wrong-version answer, even though average success is higher.
+       </p>
+       <p>
+        Marking: rates60%/80% (1); net20 percentage points (1); reject B under the stated gate (1).
        </p>
       </details>
      </section>
@@ -583,7 +589,7 @@
        Question 3
       </div>
       <p>
-       Give a defense and continuing-learning plan based on the project’s actual weaknesses.
+       Give a worked release defense when hybrid retrieval helps paraphrases but an adapter and agent add cost without reliable improvement. Include success, absence and failure examples, reproducibility evidence and one next experiment.
       </p>
       <label for="week-32-question-3">
        Your working notes
@@ -594,7 +600,10 @@
         Show worked solution
        </summary>
        <p>
-        Show baseline, one controlled change, success/absence/failure examples and reproduction. Choose a measured unresolved bottleneck, define next hypothesis/control/metric, and distinguish proposals from completed work.
+        Model defense: choose the qualifying hybrid retriever, base generator and fixed workflow. Demonstrate a supported departure answer with its source, an absent fare with an honest insufficiency response, and a wrong-version tool proposal rejected before execution. Supply pinned component identities, setup commands, checked task labels, paired raw outputs and traces from a clean reproduction. Retain the adapter/agent negative results. Next, test whether reranking fixes the observed paraphrase misses under the same context and latency budgets; record candidate recall and final support separately. This is an example defense, not a claim that these results were measured for the learner.
+       </p>
+       <p>
+        Marking: justified configuration (1); three concrete cases (1); reproduction/evidence (1); focused controlled next experiment (1).
        </p>
       </details>
      </section>

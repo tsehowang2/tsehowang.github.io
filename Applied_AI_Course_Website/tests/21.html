@@ -463,7 +463,7 @@
         31
        </span>
        <span>
-        Integrating the documentation assistant and advanced extensions
+        Integrating and reviewing the documentation assistant
        </span>
        <span class="week-tick" data-week-tick="31">
        </span>
@@ -556,6 +556,9 @@
        <p>
         Correct facts may be incomplete; supported claims must follow from sources; coverage is fraction answered; refusals must match actual absence. Give task-based examples.
        </p>
+       <p>
+        Marking: correctness/support distinction (1); completeness (1); coverage/refusal example (1).
+       </p>
       </details>
      </section>
      <section class="test-question">
@@ -563,7 +566,7 @@
        Question 2
       </div>
       <p>
-       A answers 15/20, with 12 correct answers. Calculate selective accuracy and coverage.
+       Of 20 tasks, A answers 15 and refuses 5. Exactly 12 of the 15 answered tasks are correct. Calculate selective accuracy and coverage.
       </p>
       <label for="week-21-question-2">
        Your working notes
@@ -574,7 +577,10 @@
         Show worked solution
        </summary>
        <p>
-        80% selective accuracy; 75% coverage. Need refusal labels to compute complete decision correctness.
+        Selective accuracy=12/15=.8=80%. Coverage=15/20=.75=75%. The denominator differs because selective accuracy conditions on answered tasks. Refusal labels are needed for overall decision correctness.
+       </p>
+       <p>
+        Marking: 12/15 (1); 15/20 (1); 80% and 75% with correct labels (1).
        </p>
       </details>
      </section>
@@ -595,6 +601,9 @@
        </summary>
        <p>
         Observed gap=5 points. Inspect fixes/new errors, resample matched tasks with correlation caveats, calibrate judge rubric against reviewed labels and retain failures.
+       </p>
+       <p>
+        Marking: paired units (1); fixes/regressions (1); uncertainty/correlation (1); judge calibration (1).
        </p>
       </details>
      </section>

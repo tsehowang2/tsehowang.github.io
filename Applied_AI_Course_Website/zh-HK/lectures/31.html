@@ -6,7 +6,7 @@
   <meta charset="utf-8"/>
   <meta content="width=device-width,initial-scale=1" name="viewport"/>
   <title>
-   整合文件助手與進階延伸 · Applied AI
+   整合及檢視 documentation assistant · Applied AI
   </title>
   <meta content="Applied generative AI and LLM systems course material" name="description"/>
   <meta content="#173c36" name="theme-color"/>
@@ -469,7 +469,7 @@
         31
        </span>
        <span>
-        整合文件助手與進階延伸
+        整合及檢視 documentation assistant
        </span>
        <span class="week-tick" data-week-tick="31">
        </span>
@@ -529,7 +529,7 @@
       第二學期 / 第 31 週
      </div>
      <h1>
-      整合文件助手與進階延伸
+      整合及檢視 documentation assistant
      </h1>
     </div>
     <div class="lesson-links">
@@ -574,6 +574,27 @@
         第 31 週 · 課節 1
        </div>
        <h3>
+        用具體決定檢視 release
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          用同一份 evidence table 做 release review，無需新增 module。
+         </li>
+         <li>
+          Scaling 和 multimodal extensions 保留為 optional second-pass notes。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#one-release-review-with-concrete-decisions">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 31 週 · 課節 2
+       </div>
+       <h3>
         Project 現在有已理解的 components
        </h3>
        <div class="slide-prose">
@@ -595,7 +616,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        第 31 週 · 課節 2
+        第 31 週 · 課節 3
        </div>
        <h3>
         由頭到尾處理 documentation question
@@ -619,7 +640,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        第 31 週 · 課節 3
+        第 31 週 · 課節 4
        </div>
        <h3>
         Baselines 讓整合 claims 有理據
@@ -643,7 +664,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        第 31 週 · 課節 4
+        第 31 週 · 課節 5
        </div>
        <h3>
         Data 與 final evaluation
@@ -667,7 +688,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        第 31 週 · 課節 5
+        第 31 週 · 課節 6
        </div>
        <h3>
         Tables、images 與遺失 structure
@@ -691,7 +712,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        第 31 週 · 課節 6
+        第 31 週 · 課節 7
        </div>
        <h3>
         Scaling 是選做 engineering decision
@@ -705,7 +726,7 @@
           State sharding 可減少重複 optimizer/gradient/parameter state，但增加 communication costs。
          </li>
          <li>
-          若 70% work 完美可擴展、30% serial，未計 communication 的理想 four-way speedup 為 1/(0.3+0.7/4)≈2.105。
+          假設 70% work 完美 scalable、30% serial，理想 four-way speedup 為 1/(0.3+0.7/4)≈2.11，尚未計 communication。
          </li>
         </ul>
         <a class="slide-section-link" href="#scaling-as-an-optional-engineering-decision">
@@ -715,7 +736,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        第 31 週 · 課節 7
+        第 31 週 · 課節 8
        </div>
        <h3>
         Release 前的 ethics 與 governance 檢查
@@ -739,7 +760,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        第 31 週 · 課節 8
+        第 31 週 · 課節 9
        </div>
        <h3>
         Release 前的 ethics 與 governance 檢查 · 續
@@ -760,7 +781,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        第 31 週 · 課節 9
+        第 31 週 · 課節 10
        </div>
        <h3>
         Final release candidate
@@ -784,7 +805,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        第 31 週 · 課節 10
+        第 31 週 · 課節 11
        </div>
        <h3>
         實例練習與學習檢查
@@ -812,7 +833,7 @@
        ← 上一頁
       </button>
       <span aria-live="polite" class="slide-counter">
-       1 / 10
+       1 / 11
       </span>
       <button class="slide-next" type="button">
        下一頁 →
@@ -822,34 +843,37 @@
       前往 slide
       <select aria-label="跳至 slide" class="slide-jump">
        <option value="0">
-        1. Project 現在有已理解的 components
+        1. 用具體決定檢視 release
        </option>
        <option value="1">
-        2. 由頭到尾處理 documentation question
+        2. Project 現在有已理解的 components
        </option>
        <option value="2">
-        3. Baselines 讓整合 claims 有理據
+        3. 由頭到尾處理 documentation question
        </option>
        <option value="3">
-        4. Data 與 final evaluation
+        4. Baselines 讓整合 claims 有理據
        </option>
        <option value="4">
-        5. Tables、images 與遺失 structure
+        5. Data 與 final evaluation
        </option>
        <option value="5">
-        6. Scaling 是選做 engineering decision
+        6. Tables、images 與遺失 structure
        </option>
        <option value="6">
-        7. Release 前的 ethics 與 governance 檢查
+        7. Scaling 是選做 engineering decision
        </option>
        <option value="7">
-        8. Release 前的 ethics 與 governance 檢查 · 續
+        8. Release 前的 ethics 與 governance 檢查
        </option>
        <option value="8">
-        9. Final release candidate
+        9. Release 前的 ethics 與 governance 檢查 · 續
        </option>
        <option value="9">
-        10. 實例練習與學習檢查
+        10. Final release candidate
+       </option>
+       <option value="10">
+        11. 實例練習與學習檢查
        </option>
       </select>
      </label>
@@ -862,6 +886,11 @@
       本課內容
      </strong>
      <ol>
+      <li>
+       <a href="#one-release-review-with-concrete-decisions">
+        用具體決定檢視 release
+       </a>
+      </li>
       <li>
        <a href="#the-project-now-has-understood-components">
         Project 現在有已理解的 components
@@ -907,6 +936,11 @@
         實例練習與學習檢查
        </a>
       </li>
+      <li>
+       <a href="#optional-second-pass-extensions">
+        選讀：第二次閱讀的延伸內容
+       </a>
+      </li>
      </ol>
     </nav>
     <article class="prose full-notes" id="full-notes" role="tabpanel">
@@ -916,6 +950,15 @@
      <h2>
       閱讀完整解說
      </h2>
+     <h3 id="one-release-review-with-concrete-decisions">
+      用具體決定檢視 release
+     </h3>
+     <p>
+      用同一份 evidence table 做 release review，無需新增 module。每次 release 記錄：data 和 model license、誰可存取 source 和 logs、English/Chinese task slices 的錯誤、附 hardware/workload 的實測 resource use，以及 deployment 尚需的 legal review。缺少 license permission 或 source 未獲授權，都會阻止 release。細小 quality 差距要檢查 cases 和 uncertainty。Energy 估算必須清楚界定 measurement boundary；單靠 parameter count 不足。
+     </p>
+     <p>
+      Scaling 和 multimodal extensions 保留為 optional second-pass notes。本週 required work 是 integration：固定 component versions、重跑相同 checked tasks、檢查 failures，並按結果選擇 release。
+     </p>
      <h3 id="the-project-now-has-understood-components">
       Project 現在有已理解的 components
      </h3>
@@ -986,7 +1029,7 @@
       State sharding 可減少重複 optimizer/gradient/parameter state，但增加 communication costs。Activation checkpointing 處理的是另一 memory component。
      </p>
      <p>
-      若 70% work 完美可擴展、30% serial，未計 communication 的理想 four-way speedup 為 1/(0.3+0.7/4)≈2.105。若沒實測 multiple GPUs，寫 theoretical memo 亦可。
+      假設 70% work 完美 scalable、30% serial，理想 four-way speedup 為 1/(0.3+0.7/4)≈2.11，尚未計 communication。沒有實測多 GPUs 時，可以提交清楚標示的 theoretical memo。
      </p>
      <h3 id="an-ethics-and-governance-check-before-release">
       Release 前的 ethics 與 governance 檢查
@@ -1030,76 +1073,30 @@
      <p>
       當整合 system 的 claims 都能追溯至你理解的 artifacts、examples 和 tests，就已準備好。
      </p>
+     <h3 id="optional-second-pass-extensions">
+      選讀：第二次閱讀的延伸內容
+     </h3>
      <details class="reference-details" id="reference-details">
       <summary>
        參考細節與學習檢查
       </summary>
-      <h3 id="review-a-intuition">
-       複習 A：直觀理解
+      <h3 id="review-a-integration-contracts">
+       複習 A：Integration contracts
       </h3>
       <p>
-       一張 GPU 可能 memory 不足，或執行太慢。Distributed techniques 分割 data、parameters 或 computation，但 communication 亦成為 cost 的一部分。本週建立 decision framework，不要求有多張 GPUs。
+       一起固定 corpus、chunking、embedding、index、tokenizer、generator、adapter、prompt 和 tool versions。追蹤同一 request 經 retrieval、context packing、generation、tool execution 和 claim checks 的流程，在每個 boundary 記錄 source 和 configuration。
       </p>
-      <p>
-       Data parallelism 複製 model、處理不同 batches，並 synchronize gradients。當工作量足以攤分 communication，便可改善 throughput；但每個 replica 仍需 model state。Sharding optimizer state、gradients 或 parameters，可減少 per-device memory，但增加 communication。Tensor parallelism 分割 layers 內的 operations。Pipeline parallelism 分割 layers，再排程 microbatches，帶來 bubbles 和 coordination。
-      </p>
-      <h3 id="review-a-efficiency-mechanisms">
-       複習 A：效率機制
+      <h3 id="review-a-worked-release-decision">
+       複習 A：Release decision 例子
       </h3>
       <p>
-       Activation checkpointing 在 backward 期間重新計算部分 forward work，以節省 activation memory。Gradient accumulation 減少達到 effective batch 所需的 microbatch，但不會減少所有 optimizer/model state。Mixed precision 在支援情況下改變 storage 和 arithmetic；float16 可能需要 gradient scaling，bfloat16 可用性取決於 hardware。Quantization 和 adapters 處理不同 resource budget 部分。
+       假設 hybrid retrieval 改善 checked paraphrase tasks，但 adapter 和 agent 增加成本、沒有可靠提升，就以 hybrid retrieval 配合合格 base model 和 fixed workflow 為 default。保留 adapter/agent outputs，作為負面 experimental results。以下 Amdahl 例子是 optional capacity note。
       </p>
-      <h3 id="review-a-worked-scaling-estimate">
-       複習 A：Scaling 估算實例
+      <h3 id="review-a-reproduction-check">
+       複習 A：Reproduction check
       </h3>
       <p>
-       在相同 global batch 下，若一張 device 每步 100 ms、兩張 60 ms，speedup 為 100/60，約 1.67；two-device scaling efficiency 約 83%。若 global batch 改變，報告每秒 examples 或 tokens，以及改變了的 optimization conditions。只比較 step times，會混合不同工作量。
-      </p>
-      <p>
-       另一例子：若 70% time 可完美擴展，30% 不可，four-way ideal speedup 是
-       <code>
-        1/(0.3+0.7/4) ≈ 2.11
-       </code>
-       。真正 communication 可令它進一步下降。這些估算是 planning aids，不是實測預測。
-      </p>
-      <h3 id="review-a-experiment">
-       複習 A：實驗
-      </h3>
-      <p>
-       使用
-       <a href="../tutorials/22.html">
-        Tutorial 22: CPU、GPU、memory 及 model 資源計算
-       </a>
-       的 memory estimates，以及
-       <a href="../tutorials/23.html">
-        Tutorial 23: CUDA kernels 及 profiling
-       </a>
-       的 profiling measurements，撰寫 capacity memo：第二個 GPU 會解決哪個 bottleneck？哪些資料仍 replicated？會增加哪些 communication？用甚麼實驗驗證方案？分清 inference model parallelism 與 training-state sharding。
-       <a href="../tutorials/31.html">
-        Tutorial 31: 整合文件助手與進階延伸
-       </a>
-       審核 release artifacts，並不量度 multi-GPU scaling。
-      </p>
-      <p>
-       <strong>
-        完成標準：
-       </strong>
-       針對指定 memory/throughput bottleneck，選擇合理 technique，並說明 costs。
-       <strong>
-        閱讀材料：
-       </strong>
-       <a class="inline-reading" href="../resources.html#reference-r01">
-        Stanford CS336 Language Modeling from Scratch (R01)
-       </a>
-       parallelism 主題；
-       <a class="inline-reading" href="../resources.html#reference-r18">
-        PyTorch automatic mixed precision recipe (R18)
-       </a>
-       。
-       <strong>
-        Tutorial：
-       </strong>
-       31.
+       由 clean directory 開始，核對 component identities，重跑 checked questions 而不以它們 tuning，儲存 raw per-task outputs，並與上一 release 比較 failures。單靠 manifest 不能證明 answer support 或 permission correctness。
       </p>
       <h3 id="review-b-intuition">
        複習 B：直觀理解

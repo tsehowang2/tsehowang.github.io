@@ -463,7 +463,7 @@
         31
        </span>
        <span>
-        Integrating the documentation assistant and advanced extensions
+        Integrating and reviewing the documentation assistant
        </span>
        <span class="week-tick" data-week-tick="31">
        </span>
@@ -556,6 +556,9 @@
        <p>
         A=[8,4096], B=[4096,8]; 65536 parameters versus 16777216 dense, .390625%.
        </p>
+       <p>
+        Marking: factor shapes (1); 65,536 adapter parameters (1); 16,777,216 dense comparison (1).
+       </p>
       </details>
      </section>
      <section class="test-question">
@@ -563,7 +566,7 @@
        Question 2
       </div>
       <p>
-       For A=[.1,.2] and B=[[1],[2]], compute BA and BA×[1,1].
+       Using column-vector convention, A=[[.1,.2]], B=[[1],[2]] and x=[[1],[1]]. Calculate BA and (BA)x. Set alpha=2 and rank r=1; then calculate the scaled adapter output (alpha/r)(BA)x.
       </p>
       <label for="week-25-question-2">
        Your working notes
@@ -574,7 +577,10 @@
         Show worked solution
        </summary>
        <p>
-        BA=[[.1,.2],[.2,.4]], output=[.3,.6]. Tiny 2×2 rank1 uses four factor entries, so it does not yet save parameter count.
+        BA=[[.1,.2],[.2,.4]]. Multiplying by the [2,1] column x gives [[.3],[.6]]. Scale alpha/r=2, so the adapter output is [[.6],[1.2]]. These are update-path outputs, before adding frozen Wx.
+       </p>
+       <p>
+        Marking: BA (1); column output (1); alpha/r scaled output (1).
        </p>
       </details>
      </section>
@@ -595,6 +601,9 @@
        </summary>
        <p>
         Standard initialization uses random A and zero B. The first gradient can update B; A starts learning after B becomes nonzero. Both factors zero blocks both initial gradients. Frozen-base storage and activations remain. QLoRA adds NF4 base storage, double quantization of quantization constants, and paged optimizers while retaining suitable higher-precision compute and adapter state.
+       </p>
+       <p>
+        Marking: zero B/random A (1); first gradients (1); remaining memory (1); QLoRA distinctions (1).
        </p>
       </details>
      </section>

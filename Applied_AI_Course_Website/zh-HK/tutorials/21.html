@@ -469,7 +469,7 @@
         31
        </span>
        <span>
-        整合文件助手與進階延伸
+        整合及檢視 documentation assistant
        </span>
        <span class="week-tick" data-week-tick="31">
        </span>
@@ -547,7 +547,7 @@
      </a>
     </div>
     <p class="save-note">
-     執行這份 notebook 時，亦請
+     本 notebook 需要完整 pack 的 support files。需要時，
      <a download="" href="../../downloads/Applied_Generative_AI_Course.zip">
       下載並解壓完整課程套件
      </a>
@@ -571,7 +571,7 @@
       <strong>
        執行前：
       </strong>
-      執行完整流程前，先查看一組完整 input／output record。預測正常結果及一種 failure status。
+      指出 recall、selective accuracy、coverage 的 denominator。
      </p>
      <p>
       <strong>
@@ -583,7 +583,7 @@
       <strong>
        獨立練習：
       </strong>
-      改變一個受控因素，保留 raw outputs 並解釋結果。用 lecture readiness check 及 capstone milestone 定義任務；不要聲稱 fixture 成功就代表 production readiness。
+      人手評 support 和 completeness，保留 paired outcomes，報告一次 controlled comparison 的 uncertainty。
      </p>
      <p>
       <strong>
@@ -599,7 +599,7 @@
        notebook 環境及課程檔案
       </summary>
       <p>
-       這個 cell 尋找已解壓的課程檔案。執行 notebook 時需要它。
+       先執行 setup；早期 tutorials 建立 output directory，後期 tutorials 尋找已解壓的 course support files。
       </p>
       <div class="code-block">
        <div class="code-bar">
@@ -610,17 +610,22 @@
          複製 code
         </button>
        </div>
-       <pre><code>from pathlib import Path
-import sys,json,time,random,hashlib,math
-if hasattr(sys.stdout,'reconfigure'): sys.stdout.reconfigure(encoding='utf-8')
-candidates=[Path.cwd(),Path.cwd().parent,Path.cwd()/'llm_course',Path.cwd()/'llm_course_v2',Path('/content/llm_course'),Path('/content/llm_course_v2')]
-COURSE=next((p for p in candidates if (p/'coursekit/core.py').exists()),None)
-if COURSE is None: raise RuntimeError('Extract the complete course pack; run from its root or notebooks directory.')
-if str(COURSE) not in sys.path:sys.path.insert(0,str(COURSE))
-RUNS=COURSE/'runs';RUNS.mkdir(exist_ok=True)
+       <pre><code>import random
+from pathlib import Path
+import sys, json, time, random, hashlib, math
+if hasattr(sys.stdout, 'reconfigure'):
+    sys.stdout.reconfigure(encoding='utf-8')
+candidates = [Path.cwd(), Path.cwd().parent, Path.cwd() / 'llm_course', Path.cwd() / 'llm_course_v2', Path('/content/llm_course'), Path('/content/llm_course_v2')]
+COURSE = next((p for p in candidates if (p / 'coursekit/core.py').exists()), None)
+if COURSE is None:
+    raise RuntimeError('Extract the complete course pack; run from its root or notebooks directory.')
+if str(COURSE) not in sys.path:
+    sys.path.insert(0, str(COURSE))
+RUNS = COURSE / 'runs'
+RUNS.mkdir(exist_ok=True)
 from coursekit.core import *
 random.seed(7)
-print('Course root:',COURSE)
+print('Course root:', COURSE)
 </code></pre>
       </div>
      </details>
@@ -639,16 +644,16 @@ print('Course root:',COURSE)
         複製 code
        </button>
       </div>
-      <pre><code>tasks=json.loads((COURSE/'data/queries.json').read_text());index=LexicalIndex(load_docs())
-records=[]
+      <pre><code>import json
+tasks = json.loads((COURSE / 'data/queries.json').read_text(encoding='utf-8'))
+index = LexicalIndex(load_docs())
+records = []
 for t in tasks:
-    result=extract_answer(t['question'],index,t['version'])
-    records.append({'task_id':t['id'],'group':t['group'],'expected':t['relevant'],'result':result,
-                    'retrieval':retrieval_metrics(result['citations'],t['relevant'],3),
-                    'manual_correct':None,'manual_supported':None,'manual_refusal_appropriate':None})
-(RUNS/'week21_to_grade.json').write_text(json.dumps(records,indent=2))
-assert retrieval_metrics(['C','A','D'],['A','B'],3)=={'recall':.5,'hit':1,'rr':.5}
-print('Illustrative paired data, NOT model results:',paired_bootstrap([1,1,0,0,1,0],[1,1,1,0,1,0]))
+    result = extract_answer(t['question'], index, t['version'])
+    records.append({'task_id': t['id'], 'group': t['group'], 'expected': t['relevant'], 'result': result, 'retrieval': retrieval_metrics(result['citations'], t['relevant'], 3), 'manual_correct': None, 'manual_supported': None, 'manual_refusal_appropriate': None})
+(RUNS / 'week21_to_grade.json').write_text(json.dumps(records, indent=2), encoding='utf-8')
+assert retrieval_metrics(['C', 'A', 'D'], ['A', 'B'], 3) == {'recall': 0.5, 'hit': 1, 'rr': 0.5}
+print('Illustrative paired data, NOT model results:', paired_bootstrap([1, 1, 0, 0, 1, 0], [1, 1, 1, 0, 1, 0]))
 print('Fill manual fields; preserve failures and evaluate unsupported cases separately.')
 </code></pre>
      </div>
@@ -674,15 +679,37 @@ print('Fill manual fields; preserve failures and evaluate unsupported cases sepa
        </button>
       </div>
       <pre><code>import math
-labels=[3,1,2]
-def dcg(values):return sum((2**rel-1)/math.log2(rank+2) for rank,rel in enumerate(values))
-ndcg=dcg(labels)/dcg(sorted(labels,reverse=True))
-assert 0&lt;ndcg&lt;=1
-b,c=1,9;n=b+c
-p_exact=min(1.,2*sum(math.comb(n,i) for i in range(min(b,c)+1))/2**n)
-assert math.isclose(p_exact,.021484375)
-print('nDCG using gain 2**rel-1:',ndcg,'Exact two-sided McNemar p:',p_exact)
+labels = [3, 1, 2]
+
+def dcg(values):
+    return sum(((2 ** rel - 1) / math.log2(rank + 2) for rank, rel in enumerate(values)))
+ndcg = dcg(labels) / dcg(sorted(labels, reverse=True))
+assert 0 &lt; ndcg &lt;= 1
+b, c = (1, 9)
+n = b + c
+p_exact = min(1.0, 2 * sum((math.comb(n, i) for i in range(min(b, c) + 1))) / 2 ** n)
+assert math.isclose(p_exact, 0.021484375)
+print('nDCG using gain 2**rel-1:', ndcg, 'Exact two-sided McNemar p:', p_exact)
 </code></pre>
+     </div>
+     <h3 id="reference-output">
+      Reference output
+     </h3>
+     <p>
+      CPU 教學 run 的 reference output（paths 和 timings 會不同）。這只供比較，並非你的 experiment result。
+     </p>
+     <div class="code-block">
+      <div class="code-bar">
+       <span>
+        text
+       </span>
+       <button class="copy-code" type="button">
+        複製 code
+       </button>
+      </div>
+      <pre><code>Illustrative paired data, NOT model results: {'difference': 0.16666666666666666, 'ci95': [0.0, 0.5], 'n': 6, 'seed': 7}
+Fill manual fields; preserve failures and evaluate unsupported cases separately.
+nDCG using gain 2**rel-1: 0.9721212198129313 Exact two-sided McNemar p: 0.021484375</code></pre>
      </div>
     </article>
     <div class="end-note">

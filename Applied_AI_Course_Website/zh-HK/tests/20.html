@@ -469,7 +469,7 @@
         31
        </span>
        <span>
-        整合文件助手與進階延伸
+        整合及檢視 documentation assistant
        </span>
        <span class="week-tick" data-week-tick="31">
        </span>
@@ -562,6 +562,9 @@
        <p>
         它只能看 candidate pool；必要 evidence 缺席時，重新排序也無法補回。
        </p>
+       <p>
+        評分：candidate-pool limit (1)；missing evidence example (1)；retrieval versus ranking distinction (1)。
+       </p>
       </details>
      </section>
      <section class="test-question">
@@ -580,7 +583,10 @@
         顯示完整解答
        </summary>
        <p>
-        A≈.030679、B≈.032258，所以 B 較高。scores 由 ranks 得出，並非真實性的 probabilities。
+        A=1/(60+1)+1/(60+10)=1/61+1/70≈.030679。B=1/62+1/62≈.032258。B 的 reciprocal ranks 總和較大，故勝出。這些是 rank-derived scores，並非 truth probabilities。
+       </p>
+       <p>
+        評分：A=1/61+1/70≈.030679 (1)；B=2/62≈.032258 (1)；B wins (1)。
        </p>
       </details>
      </section>
@@ -601,6 +607,9 @@
        </summary>
        <p>
         固定 corpus／chunks／tasks／filters／generator／budgets／evaluator。量度 candidate recall、final claims、latency、calls 及 failures；只在 dev 上調整。
+       </p>
+       <p>
+        評分：fixed inputs (1)；candidate recall (1)；answer quality (1)；costs and dev-only tuning (1)。
        </p>
       </details>
      </section>

@@ -469,7 +469,7 @@
         31
        </span>
        <span>
-        整合文件助手與進階延伸
+        整合及檢視 documentation assistant
        </span>
        <span class="week-tick" data-week-tick="31">
        </span>
@@ -547,7 +547,7 @@
      </a>
     </div>
     <p class="save-note">
-     執行這份 notebook 時，亦請
+     Tutorials 01–16 不需要 coursekit；完整 pack 是可選的。需要 support files 時，
      <a download="" href="../../downloads/Applied_Generative_AI_Course.zip">
       下載並解壓完整課程套件
      </a>
@@ -599,7 +599,7 @@
        notebook 環境及課程檔案
       </summary>
       <p>
-       這個 cell 尋找已解壓的課程檔案。執行 notebook 時需要它。
+       先執行 setup；早期 tutorials 建立 output directory，後期 tutorials 尋找已解壓的 course support files。
       </p>
       <div class="code-block">
        <div class="code-bar">
@@ -610,20 +610,25 @@
          複製 code
         </button>
        </div>
-       <pre><code>from pathlib import Path
-import sys,json,time,random,hashlib,math
-if hasattr(sys.stdout,'reconfigure'): sys.stdout.reconfigure(encoding='utf-8')
-candidates=[Path.cwd(),Path.cwd().parent,Path.cwd()/'llm_course',Path.cwd()/'llm_course_v2',Path('/content/llm_course'),Path('/content/llm_course_v2')]
-COURSE=next((p for p in candidates if (p/'coursekit/core.py').exists()),None)
-if COURSE is None: raise RuntimeError('Extract the complete course pack; run from its root or notebooks directory.')
-if str(COURSE) not in sys.path:sys.path.insert(0,str(COURSE))
-RUNS=COURSE/'runs';RUNS.mkdir(exist_ok=True)
-from coursekit.core import *
+       <pre><code>import random
+from pathlib import Path
+import sys, json, math, time, random
+if hasattr(sys.stdout, 'reconfigure'):
+    sys.stdout.reconfigure(encoding='utf-8')
+COURSE = Path.cwd().parent if Path.cwd().name == 'notebooks' else Path.cwd()
+RUNS = COURSE / 'runs'
+RUNS.mkdir(exist_ok=True)
 random.seed(7)
-print('Course root:',COURSE)
+print('Outputs directory:', RUNS)
 </code></pre>
       </div>
      </details>
+     <h3 id="pause-before-the-next-step">
+      進入下一步前先停一停
+     </h3>
+     <p>
+      追蹤第二個位置的第六個 feature，看看 split 及 merge 如何移動它。
+     </p>
      <p>
       multi-head layer 把 projected features 分成平行 heads。reshape 本身不會學習，projection matrices 才會。這裏先查看 shape transformation，再展示 positional vectors 如何區分原本相同的 tokens。
      </p>
@@ -640,25 +645,23 @@ print('Course root:',COURSE)
        </button>
       </div>
       <pre><code>import numpy as np
-B,T,d_model,H=1,6,8,2;d_head=d_model//H
-x=np.arange(B*T*d_model).reshape(B,T,d_model)
-heads=x.reshape(B,T,H,d_head).transpose(0,2,1,3)
-merged=heads.transpose(0,2,1,3).reshape(B,T,d_model)
-print('Original',x.shape,'split',heads.shape,'merged',merged.shape)
-assert np.array_equal(x,merged)
-pos=np.arange(T)[:,None];dims=np.arange(0,d_model,2)
-angles=pos/(10000**(dims/d_model))
-pe=np.zeros((T,d_model));pe[:,0::2]=np.sin(angles);pe[:,1::2]=np.cos(angles)
-print('Position vectors:',pe[:3])
-assert not np.allclose(pe[0],pe[1])
+B, T, d_model, H = (1, 6, 8, 2)
+d_head = d_model // H
+x = np.arange(B * T * d_model).reshape(B, T, d_model)
+heads = x.reshape(B, T, H, d_head).transpose(0, 2, 1, 3)
+merged = heads.transpose(0, 2, 1, 3).reshape(B, T, d_model)
+print('Original', x.shape, 'split', heads.shape, 'merged', merged.shape)
+assert np.array_equal(x, merged)
+pos = np.arange(T)[:, None]
+dims = np.arange(0, d_model, 2)
+angles = pos / 10000 ** (dims / d_model)
+pe = np.zeros((T, d_model))
+pe[:, 0::2] = np.sin(angles)
+pe[:, 1::2] = np.cos(angles)
+print('Position vectors:', pe[:3])
+assert not np.allclose(pe[0], pe[1])
 </code></pre>
      </div>
-     <h3 id="pause-before-the-next-step">
-      進入下一步前先停一停
-     </h3>
-     <p>
-      追蹤第二個位置的第六個 feature，看看 split 及 merge 如何移動它。
-     </p>
      <h3 id="rope-with-different-position-angles">
       不同 position angles 的 RoPE
      </h3>
@@ -678,15 +681,19 @@ assert not np.allclose(pe[0],pe[1])
        </button>
       </div>
       <pre><code>import math
-def rotate(v,theta):
-    c,s=math.cos(theta),math.sin(theta);return [v[0]*c-v[1]*s,v[0]*s+v[1]*c]
-def dp(a,b):return sum(x*y for x,y in zip(a,b))
-q=k=[1.,0.]
-for q_deg,k_deg in [(0,0),(30,90),(60,120)]:
-    value=dp(rotate(q,math.radians(q_deg)),rotate(k,math.radians(k_deg)))
-    expected=math.cos(math.radians(k_deg-q_deg))
-    assert math.isclose(value,expected,abs_tol=1e-12)
-    print(q_deg,k_deg,'relative offset',k_deg-q_deg,'dot',value)
+
+def rotate(v, theta):
+    c, s = (math.cos(theta), math.sin(theta))
+    return [v[0] * c - v[1] * s, v[0] * s + v[1] * c]
+
+def dp(a, b):
+    return sum((x * y for x, y in zip(a, b)))
+q = k = [1.0, 0.0]
+for q_deg, k_deg in [(0, 0), (30, 90), (60, 120)]:
+    value = dp(rotate(q, math.radians(q_deg)), rotate(k, math.radians(k_deg)))
+    expected = math.cos(math.radians(k_deg - q_deg))
+    assert math.isclose(value, expected, abs_tol=1e-12)
+    print(q_deg, k_deg, 'relative offset', k_deg - q_deg, 'dot', value)
 </code></pre>
      </div>
      <h3 id="independent-experiment">
@@ -698,6 +705,32 @@ for q_deg,k_deg in [(0,0),(30,90),(60,120)]:
      <p>
       提交簡短報告，列出預測、實際結果、比較及限制。記錄環境或數據的改動。不要用示意數字代替實際量度結果。
      </p>
+     <h3 id="reference-output">
+      Reference output
+     </h3>
+     <p>
+      CPU 教學 run 的 reference output（paths 和 timings 會不同）。這只供比較，並非你的 experiment result。
+     </p>
+     <div class="code-block">
+      <div class="code-bar">
+       <span>
+        text
+       </span>
+       <button class="copy-code" type="button">
+        複製 code
+       </button>
+      </div>
+      <pre><code>Original (1, 6, 8) split (1, 2, 6, 4) merged (1, 6, 8)
+Position vectors: [[ 0.00000000e+00  1.00000000e+00  0.00000000e+00  1.00000000e+00
+   0.00000000e+00  1.00000000e+00  0.00000000e+00  1.00000000e+00]
+ [ 8.41470985e-01  5.40302306e-01  9.98334166e-02  9.95004165e-01
+   9.99983333e-03  9.99950000e-01  9.99999833e-04  9.99999500e-01]
+ [ 9.09297427e-01 -4.16146837e-01  1.98669331e-01  9.80066578e-01
+   1.99986667e-02  9.99800007e-01  1.99999867e-03  9.99998000e-01]]
+0 0 relative offset 0 dot 1.0
+30 90 relative offset 60 dot 0.5
+60 120 relative offset 60 dot 0.5</code></pre>
+     </div>
     </article>
     <div class="end-note">
      閱讀程式只是第一步。完成獨立實驗並保留實際結果，才把這個 lab 標記為完成。

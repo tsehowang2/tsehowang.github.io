@@ -469,7 +469,7 @@
         31
        </span>
        <span>
-        整合文件助手與進階延伸
+        整合及檢視 documentation assistant
        </span>
        <span class="week-tick" data-week-tick="31">
        </span>
@@ -547,7 +547,7 @@
      </a>
     </div>
     <p class="save-note">
-     執行這份 notebook 時，亦請
+     本 notebook 需要完整 pack 的 support files。需要時，
      <a download="" href="../../downloads/Applied_Generative_AI_Course.zip">
       下載並解壓完整課程套件
      </a>
@@ -571,7 +571,7 @@
       <strong>
        執行前：
       </strong>
-      執行完整流程前，先查看一組完整 input／output record。預測正常結果及一種 failure status。
+      檢查包含 distractors 的 prompt 和簡短 reviewed answer，包括 cross-version record。
      </p>
      <p>
       <strong>
@@ -583,7 +583,7 @@
       <strong>
        獨立練習：
       </strong>
-      改變一個受控因素，保留 raw outputs 並解釋結果。用 lecture readiness check 及 capstone milestone 定義任務；不要聲稱 fixture 成功就代表 production readiness。
+      核對每個 target 和 citation；增加獨立 question families，在 grouped splits 保留 missing-answer 和 comparison cases。
      </p>
      <p>
       <strong>
@@ -599,7 +599,7 @@
        notebook 環境及課程檔案
       </summary>
       <p>
-       這個 cell 尋找已解壓的課程檔案。執行 notebook 時需要它。
+       先執行 setup；早期 tutorials 建立 output directory，後期 tutorials 尋找已解壓的 course support files。
       </p>
       <div class="code-block">
        <div class="code-bar">
@@ -610,17 +610,22 @@
          複製 code
         </button>
        </div>
-       <pre><code>from pathlib import Path
-import sys,json,time,random,hashlib,math
-if hasattr(sys.stdout,'reconfigure'): sys.stdout.reconfigure(encoding='utf-8')
-candidates=[Path.cwd(),Path.cwd().parent,Path.cwd()/'llm_course',Path.cwd()/'llm_course_v2',Path('/content/llm_course'),Path('/content/llm_course_v2')]
-COURSE=next((p for p in candidates if (p/'coursekit/core.py').exists()),None)
-if COURSE is None: raise RuntimeError('Extract the complete course pack; run from its root or notebooks directory.')
-if str(COURSE) not in sys.path:sys.path.insert(0,str(COURSE))
-RUNS=COURSE/'runs';RUNS.mkdir(exist_ok=True)
+       <pre><code>import random
+from pathlib import Path
+import sys, json, time, random, hashlib, math
+if hasattr(sys.stdout, 'reconfigure'):
+    sys.stdout.reconfigure(encoding='utf-8')
+candidates = [Path.cwd(), Path.cwd().parent, Path.cwd() / 'llm_course', Path.cwd() / 'llm_course_v2', Path('/content/llm_course'), Path('/content/llm_course_v2')]
+COURSE = next((p for p in candidates if (p / 'coursekit/core.py').exists()), None)
+if COURSE is None:
+    raise RuntimeError('Extract the complete course pack; run from its root or notebooks directory.')
+if str(COURSE) not in sys.path:
+    sys.path.insert(0, str(COURSE))
+RUNS = COURSE / 'runs'
+RUNS.mkdir(exist_ok=True)
 from coursekit.core import *
 random.seed(7)
-print('Course root:',COURSE)
+print('Course root:', COURSE)
 </code></pre>
       </div>
      </details>
@@ -639,30 +644,75 @@ print('Course root:',COURSE)
         複製 code
        </button>
       </div>
-      <pre><code>docs=load_docs();byid={d['id']:d for d in docs};records=[]
-for t in json.loads((COURSE/'data/queries.json').read_text()):
-    if t['version']=='all': continue
-    context='\n'.join('['+i+'] '+byid[i]['text'] for i in t['relevant'])
-    target={'answer':' '.join(byid[i]['text'] for i in t['relevant']) if t['relevant'] else 'Insufficient evidence.',
-            'citations':t['relevant']}
-    records.append({'group':t['group'],'messages':[
-        {'role':'user','content':'Use this evidence only:\n'+context+'\nQuestion: '+t['question']},
-        {'role':'assistant','content':json.dumps(target)}]})
-groups=sorted({r['group'] for r in records});random.shuffle(groups);held_groups=set(groups[:2])
-train=[r for r in records if r['group'] not in held_groups];dev=[r for r in records if r['group'] in held_groups]
-assert not ({r['group'] for r in train}&amp;{r['group'] for r in dev})
+      <pre><code># Include eligible distractors; never select context using the gold labels.
+import json
+import random
+docs = load_docs()
+byid = {d['id']: d for d in docs}
+records = []
+answers = {'q01': 'The default request timeout is 30000 milliseconds.', 'q02': 'The default request timeout is 10000 milliseconds.', 'q03': 'The first retry backoff is 100 milliseconds.', 'q04': 'The API token is held in ATLAS_TOKEN.', 'q05': 'The allowed timeout_ms range is 1 to 120000.', 'q06': 'Invalidate cached responses after source deletion.', 'q07': 'Use next_cursor to fetch the next pagination results.', 'q08': 'Insufficient evidence.', 'q09': 'The default simultaneous request limit is 4.', 'q10': 'Version 1 uses 10000 milliseconds; version 2 uses 30000 milliseconds.', 'q11': 'Insufficient evidence.', 'q12': 'AUTH_EXPIRED indicates an expired token.'}
+for t in json.loads((COURSE / 'data/queries.json').read_text(encoding='utf-8')):
+    candidates = [d for d in docs if t['version'] == 'all' or d['version'] == t['version']]
+    context = '\n'.join(('[' + d['id'] + '] version=' + d['version'] + ' ' + d['text'] for d in candidates))
+    target = {'answer': answers[t['id']], 'citations': t['relevant']}
+    records.append({'task_id': t['id'], 'group': t['group'], 'version': t['version'], 'messages': [{'role': 'user', 'content': 'Use this evidence only:\n' + context + '\nQuestion: ' + t['question']}, {'role': 'assistant', 'content': json.dumps(target)}]})
+assert len(records) == 12 and any((r['version'] == 'all' for r in records))
+groups = sorted({r['group'] for r in records})
+random.shuffle(groups)
+held_groups = set(groups[:2])
+train = [r for r in records if r['group'] not in held_groups]
+dev = [r for r in records if r['group'] in held_groups]
+assert not {r['group'] for r in train} &amp; {r['group'] for r in dev}
 assert train and dev
-(RUNS/'week24_train.json').write_text(json.dumps(train,indent=2))
-(RUNS/'week24_dev.json').write_text(json.dumps(dev,indent=2))
-print('Tiny demonstration split',len(train),len(dev),'held groups',held_groups)
-din=dout=4096;r=8
-print('Dense params',din*dout,'LoRA params',r*(din+dout),'fraction',r*(din+dout)/(din*dout))
+(RUNS / 'week24_train.json').write_text(json.dumps(train, indent=2), encoding='utf-8')
+(RUNS / 'week24_dev.json').write_text(json.dumps(dev, indent=2), encoding='utf-8')
+print('Tiny demonstration split', len(train), len(dev), 'held groups', held_groups)
+din = dout = 4096
+r = 8
+print('Dense params', din * dout, 'LoRA params', r * (din + dout), 'fraction', r * (din + dout) / (din * dout))
 print('Visible synthetic records are not an independent benchmark or a useful-size SFT dataset.')
+print('Example prompt and reviewed target:', json.dumps(records[0], indent=2))
 </code></pre>
      </div>
      <p>
       審核 targets，為真正 project 建立較大的 narrow-task dataset。最終 task questions 要分開保留。寫出 SFT 為何可能解決量度到的 failure。分析 adapter counts 不等於 training run；tutorial 26 才會實際訓練。
      </p>
+     <h3 id="reference-output">
+      Reference output
+     </h3>
+     <p>
+      CPU 教學 run 的 reference output（paths 和 timings 會不同）。這只供比較，並非你的 experiment result。
+     </p>
+     <div class="code-block">
+      <div class="code-bar">
+       <span>
+        text
+       </span>
+       <button class="copy-code" type="button">
+        複製 code
+       </button>
+      </div>
+      <pre><code>Tiny demonstration split 10 2 held groups {'retry', 'cache'}
+Dense params 16777216 LoRA params 65536 fraction 0.00390625
+Visible synthetic records are not an independent benchmark or a useful-size SFT dataset.
+Example prompt and reviewed target: {
+  "task_id": "q01",
+  "group": "timeout",
+  "version": "2",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Use this evidence only:\n[timeout-v2] version=2 Atlas SDK version 2 uses timeout_ms. The default request timeout is 30000 milliseconds. Set timeout_ms when creating the Client.\n[retry-v2] version=2 Atlas SDK version 2 retries transient errors at most 3 times by default. For this example, the first retry waits 100 milliseconds, the next 200 milliseconds, then 400 milliseconds. There is no jitter in this teaching fixture.\n[auth-v2] version=2 Provide an API token in the ATLAS_TOKEN environment variable. Never place the token in documentation examples, source control or request logs. An expired token produces error AUTH_EXPIRED.\n[config-v2] version=2 A version 2 configuration has exactly two fields: timeout_ms and retries. timeout_ms must be an integer from 1 through 120000 inclusive. retries must be an integer from 0 through 5 inclusive. Extra fields are rejected.\n[cache-v2] version=2 Cache keys include tenant scope, requested version, corpus revision, prompt revision and model revision. Invalidate dependent cached responses after a source deletion. This fixture does not implement a distributed cache.\n[pages-v2] version=2 List endpoints return next_cursor when additional results exist. Supply the returned nex
+[report excerpt; inspect the saved full JSON for every record]
+o call any tool.\n[concurrency-v2] version=2 The example client allows at most 4 simultaneous requests by default. Additional work should wait in a bounded queue. This statement concerns request concurrency, not the retry count.\nQuestion: What is the default request timeout?"
+    },
+    {
+      "role": "assistant",
+      "content": "{\"answer\": \"The default request timeout is 30000 milliseconds.\", \"citations\": [\"timeout-v2\"]}"
+    }
+  ]
+}</code></pre>
+     </div>
     </article>
     <div class="end-note">
      閱讀程式只是第一步。完成獨立實驗並保留實際結果，才把這個 lab 標記為完成。

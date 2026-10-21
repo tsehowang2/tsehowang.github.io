@@ -463,7 +463,7 @@
         31
        </span>
        <span>
-        Integrating the documentation assistant and advanced extensions
+        Integrating and reviewing the documentation assistant
        </span>
        <span class="week-tick" data-week-tick="31">
        </span>
@@ -568,6 +568,24 @@
         Week 28 · Section 1
        </div>
        <h3>
+        harness
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          A harness is the application code around a model: it prepares inputs, validates and runs actions, tracks state and budgets, and records outcomes.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#harness">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 28 · Section 2
+       </div>
+       <h3>
         The controller makes the agent a runnable system
        </h3>
        <div class="slide-prose">
@@ -589,7 +607,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        Week 28 · Section 2
+        Week 28 · Section 3
        </div>
        <h3>
         A complete small loop
@@ -613,7 +631,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        Week 28 · Section 3
+        Week 28 · Section 4
        </div>
        <h3>
         A three proposal trace
@@ -628,6 +646,54 @@
          </li>
          <li>
           Checking a citation ID against previously retrieved evidence establishes a structural boundary.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#a-three-proposal-trace">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 28 · Section 5
+       </div>
+       <h3>
+        Time and resource limits
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          A step cap bounds loop iterations but cannot interrupt a blocking network call.
+         </li>
+         <li>
+          Use client timeouts and cancellation for appropriate dependencies, and process/container controls for execution that needs isolation.
+         </li>
+         <li>
+          The synchronous reference controller demonstrates step limits and narrow arithmetic safety.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#time-and-resource-limits">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 28 · Section 6
+       </div>
+       <h3>
+        MCP connects the application to a tool provider
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          MCP means Model Context Protocol.
+         </li>
+         <li>
+          After the connection is set up, the client can request tools/list.
+         </li>
+         <li>
+          The host checks the proposal and sends the permitted request through its MCP client using tools/call.
          </li>
         </ul>
         <figure class="mechanism-figure">
@@ -673,94 +739,6 @@
           MCP standardizes communication. The harness still manages state, permissions, and termination.
          </p>
         </figure>
-        <a class="slide-section-link" href="#a-three-proposal-trace">
-         Read the worked explanation
-        </a>
-       </div>
-      </section>
-      <section class="lecture-slide" data-slide="" hidden="">
-       <div class="slide-stage">
-        Week 28 · Section 4
-       </div>
-       <h3>
-        Time and resource limits
-       </h3>
-       <div class="slide-prose">
-        <ul class="slide-keypoints">
-         <li>
-          A step cap bounds loop iterations but cannot interrupt a blocking network call.
-         </li>
-         <li>
-          Use client timeouts and cancellation for appropriate dependencies, and process/container controls for execution that needs isolation.
-         </li>
-         <li>
-          The synchronous reference controller demonstrates step limits and narrow arithmetic safety.
-         </li>
-        </ul>
-        <a class="slide-section-link" href="#time-and-resource-limits">
-         Read the worked explanation
-        </a>
-       </div>
-      </section>
-      <section class="lecture-slide" data-slide="" hidden="">
-       <div class="slide-stage">
-        Week 28 · Section 5
-       </div>
-       <h3>
-        MCP connects the application to a tool provider
-       </h3>
-       <div class="slide-prose">
-        <ul class="slide-keypoints">
-         <li>
-          MCP means Model Context Protocol.
-         </li>
-         <li>
-          After the connection is set up, the client can request tools/list.
-         </li>
-         <li>
-          The host checks the proposal and sends the permitted request through its MCP client using tools/call.
-         </li>
-        </ul>
-        <div class="table-wrap">
-         <table>
-          <thead>
-           <tr>
-            <th>
-             Role
-            </th>
-            <th>
-             Meaning in our example
-            </th>
-           </tr>
-          </thead>
-          <tbody>
-           <tr>
-            <td>
-             Host
-            </td>
-            <td>
-             The documentation-assistant application that manages the model, user interaction, and tool policy.
-            </td>
-           </tr>
-           <tr>
-            <td>
-             Client
-            </td>
-            <td>
-             The component in the host that communicates with one MCP server.
-            </td>
-           </tr>
-           <tr>
-            <td>
-             Server
-            </td>
-            <td>
-             The program that exposes the calculator and handles its requests; it may run locally or remotely.
-            </td>
-           </tr>
-          </tbody>
-         </table>
-        </div>
         <a class="slide-section-link" href="#mcp-connects-the-application-to-a-tool-provider">
          Read the worked explanation
         </a>
@@ -768,7 +746,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        Week 28 · Section 6
+        Week 28 · Section 7
        </div>
        <h3>
         MCP connects the application to a tool provider · continued
@@ -792,7 +770,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        Week 28 · Section 7
+        Week 28 · Section 8
        </div>
        <h3>
         Planning methods
@@ -816,7 +794,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        Week 28 · Section 8
+        Week 28 · Section 9
        </div>
        <h3>
         Memory has several meanings
@@ -840,7 +818,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        Week 28 · Section 9
+        Week 28 · Section 10
        </div>
        <h3>
         Task evaluation inspects traces
@@ -864,7 +842,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        Week 28 · Section 10
+        Week 28 · Section 11
        </div>
        <h3>
         Worked practice and a readiness check
@@ -892,7 +870,7 @@
        ← Previous
       </button>
       <span aria-live="polite" class="slide-counter">
-       1 / 10
+       1 / 11
       </span>
       <button class="slide-next" type="button">
        Next →
@@ -902,34 +880,37 @@
       Go to slide
       <select aria-label="Go to slide" class="slide-jump">
        <option value="0">
-        1. The controller makes the agent a runnable system
+        1. harness
        </option>
        <option value="1">
-        2. A complete small loop
+        2. The controller makes the agent a runnable system
        </option>
        <option value="2">
-        3. A three proposal trace
+        3. A complete small loop
        </option>
        <option value="3">
-        4. Time and resource limits
+        4. A three proposal trace
        </option>
        <option value="4">
-        5. MCP connects the application to a tool provider
+        5. Time and resource limits
        </option>
        <option value="5">
-        6. MCP connects the application to a tool provider · continued
+        6. MCP connects the application to a tool provider
        </option>
        <option value="6">
-        7. Planning methods
+        7. MCP connects the application to a tool provider · continued
        </option>
        <option value="7">
-        8. Memory has several meanings
+        8. Planning methods
        </option>
        <option value="8">
-        9. Task evaluation inspects traces
+        9. Memory has several meanings
        </option>
        <option value="9">
-        10. Worked practice and a readiness check
+        10. Task evaluation inspects traces
+       </option>
+       <option value="10">
+        11. Worked practice and a readiness check
        </option>
       </select>
      </label>
@@ -958,6 +939,11 @@
       In this lesson
      </strong>
      <ol>
+      <li>
+       <a href="#harness">
+        harness
+       </a>
+      </li>
       <li>
        <a href="#the-controller-makes-the-agent-a-runnable-system">
         The controller makes the agent a runnable system
@@ -1012,6 +998,12 @@
      <h2>
       Read the full explanation
      </h2>
+     <h3 id="harness">
+      harness
+     </h3>
+     <p>
+      A harness is the application code around a model: it prepares inputs, validates and runs actions, tracks state and budgets, and records outcomes.
+     </p>
      <h3 id="the-controller-makes-the-agent-a-runnable-system">
       The controller makes the agent a runnable system
      </h3>
@@ -1038,6 +1030,30 @@
      </p>
      <h3 id="a-three-proposal-trace">
       A three proposal trace
+     </h3>
+     <p>
+      Proposal one retrieves the retry rule. Proposal two calculates the cumulative delay. Proposal three returns the result with observed source IDs.
+     </p>
+     <p>
+      If instead the planner keeps requesting another calculation, a three-proposal budget eventually returns budget_exhausted. The controller does not keep going simply because the model asks politely.
+     </p>
+     <p>
+      Checking a citation ID against previously retrieved evidence establishes a structural boundary. Whether that passage supports the final claim remains an evaluation question.
+     </p>
+     <h3 id="time-and-resource-limits">
+      Time and resource limits
+     </h3>
+     <p>
+      A step cap bounds loop iterations but cannot interrupt a blocking network call. Checking elapsed time after a call returns does not impose a real call deadline.
+     </p>
+     <p>
+      Use client timeouts and cancellation for appropriate dependencies, and process/container controls for execution that needs isolation. Bound tool output and model context as well.
+     </p>
+     <p>
+      The synchronous reference controller demonstrates step limits and narrow arithmetic safety. It does not claim to be a complete arbitrary-code sandbox.
+     </p>
+     <h3 id="mcp-connects-the-application-to-a-tool-provider">
+      MCP connects the application to a tool provider
      </h3>
      <figure class="mechanism-figure">
       <figcaption>
@@ -1082,30 +1098,6 @@
        MCP standardizes communication. The harness still manages state, permissions, and termination.
       </p>
      </figure>
-     <p>
-      Proposal one retrieves the retry rule. Proposal two calculates the cumulative delay. Proposal three returns the result with observed source IDs.
-     </p>
-     <p>
-      If instead the planner keeps requesting another calculation, a three-proposal budget eventually returns budget_exhausted. The controller does not keep going simply because the model asks politely.
-     </p>
-     <p>
-      Checking a citation ID against previously retrieved evidence establishes a structural boundary. Whether that passage supports the final claim remains an evaluation question.
-     </p>
-     <h3 id="time-and-resource-limits">
-      Time and resource limits
-     </h3>
-     <p>
-      A step cap bounds loop iterations but cannot interrupt a blocking network call. Checking elapsed time after a call returns does not impose a real call deadline.
-     </p>
-     <p>
-      Use client timeouts and cancellation for appropriate dependencies, and process/container controls for execution that needs isolation. Bound tool output and model context as well.
-     </p>
-     <p>
-      The synchronous reference controller demonstrates step limits and narrow arithmetic safety. It does not claim to be a complete arbitrary-code sandbox.
-     </p>
-     <h3 id="mcp-connects-the-application-to-a-tool-provider">
-      MCP connects the application to a tool provider
-     </h3>
      <p>
       MCP means Model Context Protocol. Think about the calculator you already used: the model proposes a calculation, while application code checks the proposal and runs an allowed function. MCP gives an application a standard way to discover and call capabilities supplied by another program. It does not change the arithmetic or the need to validate a request [
       <a class="inline-reading" href="../resources.html#reference-r29">

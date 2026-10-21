@@ -469,7 +469,7 @@
         31
        </span>
        <span>
-        整合文件助手與進階延伸
+        整合及檢視 documentation assistant
        </span>
        <span class="week-tick" data-week-tick="31">
        </span>
@@ -547,7 +547,7 @@
      </a>
     </div>
     <p class="save-note">
-     執行這份 notebook 時，亦請
+     本 notebook 需要完整 pack 的 support files。需要時，
      <a download="" href="../../downloads/Applied_Generative_AI_Course.zip">
       下載並解壓完整課程套件
      </a>
@@ -599,7 +599,7 @@
        notebook 環境及課程檔案
       </summary>
       <p>
-       這個 cell 尋找已解壓的課程檔案。執行 notebook 時需要它。
+       先執行 setup；早期 tutorials 建立 output directory，後期 tutorials 尋找已解壓的 course support files。
       </p>
       <div class="code-block">
        <div class="code-bar">
@@ -610,20 +610,31 @@
          複製 code
         </button>
        </div>
-       <pre><code>from pathlib import Path
-import sys,json,time,random,hashlib,math
-if hasattr(sys.stdout,'reconfigure'): sys.stdout.reconfigure(encoding='utf-8')
-candidates=[Path.cwd(),Path.cwd().parent,Path.cwd()/'llm_course',Path.cwd()/'llm_course_v2',Path('/content/llm_course'),Path('/content/llm_course_v2')]
-COURSE=next((p for p in candidates if (p/'coursekit/core.py').exists()),None)
-if COURSE is None: raise RuntimeError('Extract the complete course pack; run from its root or notebooks directory.')
-if str(COURSE) not in sys.path:sys.path.insert(0,str(COURSE))
-RUNS=COURSE/'runs';RUNS.mkdir(exist_ok=True)
+       <pre><code>import random
+from pathlib import Path
+import sys, json, time, random, hashlib, math
+if hasattr(sys.stdout, 'reconfigure'):
+    sys.stdout.reconfigure(encoding='utf-8')
+candidates = [Path.cwd(), Path.cwd().parent, Path.cwd() / 'llm_course', Path.cwd() / 'llm_course_v2', Path('/content/llm_course'), Path('/content/llm_course_v2')]
+COURSE = next((p for p in candidates if (p / 'coursekit/core.py').exists()), None)
+if COURSE is None:
+    raise RuntimeError('Extract the complete course pack; run from its root or notebooks directory.')
+if str(COURSE) not in sys.path:
+    sys.path.insert(0, str(COURSE))
+RUNS = COURSE / 'runs'
+RUNS.mkdir(exist_ok=True)
 from coursekit.core import *
 random.seed(7)
-print('Course root:',COURSE)
+print('Course root:', COURSE)
 </code></pre>
       </div>
      </details>
+     <h3 id="pause-before-the-next-step">
+      進入下一步前先停一停
+     </h3>
+     <p>
+      自行標記 relevant document。解釋這種人手設計的 geometry，為何不能證明 embedding model 理解 query。
+     </p>
      <h3 id="current-embedding-recipe">
       目前 embedding recipe
      </h3>
@@ -645,15 +656,17 @@ print('Course root:',COURSE)
         複製 code
        </button>
       </div>
-      <pre><code>texts=['The school bus leaves at eight.','Lunch starts at noon.','The library closes at five.']
-query='When can I catch the bus?'
-print('Query:',query)
-for i,t in enumerate(texts):print(i,t)
+      <pre><code># Invented normalized geometry to inspect exact search, NOT model embeddings.
+texts = ['The school bus leaves at eight.', 'Lunch starts at noon.', 'The library closes at five.']
+query = 'At what time does the morning transport depart?'
+print('Query:', query)
+for i, t in enumerate(texts):
+    print(i, t)
 import numpy as np
-# Invented normalized geometry to inspect exact search, NOT model embeddings.
-vectors=np.array([[1.,0.],[0.,1.],[.6,.8]])
-q=np.array([1.,0.]);scores=vectors@q
-print('Illustrative ranking:',np.argsort(-scores).tolist())
+vectors = np.array([[1.0, 0.0], [0.0, 1.0], [0.6, 0.8]])
+q = np.array([1.0, 0.0])
+scores = vectors @ q
+print('Illustrative ranking:', np.argsort(-scores).tolist())
 </code></pre>
      </div>
      <h3 id="calculate-the-contrastive-example">
@@ -675,23 +688,18 @@ print('Illustrative ranking:',np.argsort(-scores).tolist())
        </button>
       </div>
       <pre><code>import math
-scores = [[2., 1., 0.], [0., 2., 1.], [1., 0., 2.]]
+scores = [[2.0, 1.0, 0.0], [0.0, 2.0, 1.0], [1.0, 0.0, 2.0]]
+
 def candidate_probs(row):
     exps = [math.exp(x - max(row)) for x in row]
     return [x / sum(exps) for x in exps]
 probs = [candidate_probs(row) for row in scores]
 losses = [-math.log(row[i]) for i, row in enumerate(probs)]
-print("Candidate probabilities:", probs)
-print("Mean contrastive loss:", sum(losses) / len(losses))
-print("False-negative example Q1 loss:", -math.log(candidate_probs([2., 2., 0.])[0]))
+print('Candidate probabilities:', probs)
+print('Mean contrastive loss:', sum(losses) / len(losses))
+print('False-negative example Q1 loss:', -math.log(candidate_probs([2.0, 2.0, 0.0])[0]))
 </code></pre>
      </div>
-     <h3 id="pause-before-the-next-step">
-      進入下一步前先停一停
-     </h3>
-     <p>
-      自行標記 relevant document。解釋這種人手設計的 geometry，為何不能證明 embedding model 理解 query。
-     </p>
      <h3>
       程式步驟 3
      </h3>
@@ -704,17 +712,19 @@ print("False-negative example Q1 loss:", -math.log(candidate_probs([2., 2., 0.])
         複製 code
        </button>
       </div>
-      <pre><code>RUN_EMBEDDINGS=False
+      <pre><code>import sys
+RUN_EMBEDDINGS = False
 if RUN_EMBEDDINGS:
     import subprocess
-    subprocess.check_call([sys.executable,'-m','pip','install','sentence-transformers&gt;=3,&lt;6'])
+    subprocess.check_call([sys.executable, '-m', 'pip', 'install', 'sentence-transformers&gt;=3,&lt;6'])
     from sentence_transformers import SentenceTransformer
-    encoder=SentenceTransformer('intfloat/multilingual-e5-small')
-    matrix=encoder.encode(['passage: '+t for t in texts],normalize_embeddings=True)
-    q=encoder.encode(['query: '+query],normalize_embeddings=True)[0]
-    print('Actual model scores:',matrix@q)
-    print('Actual ranking:',np.argsort(-(matrix@q)).tolist())
-else:print('Actual embedding model skipped; enable RUN_EMBEDDINGS for model results.')
+    encoder = SentenceTransformer('intfloat/multilingual-e5-small')
+    matrix = encoder.encode(['passage: ' + t for t in texts], normalize_embeddings=True)
+    q = encoder.encode(['query: ' + query], normalize_embeddings=True)[0]
+    print('Actual model scores:', matrix @ q)
+    print('Actual ranking:', np.argsort(-(matrix @ q)).tolist())
+else:
+    print('Actual embedding model skipped; enable RUN_EMBEDDINGS for model results.')
 </code></pre>
      </div>
      <h3 id="cosine-scores-and-temperature">
@@ -736,13 +746,17 @@ else:print('Actual embedding model skipped; enable RUN_EMBEDDINGS for model resu
        </button>
       </div>
       <pre><code>import math
-cosines=[.8,.6,.2]
-def probs_at_temperature(xs,tau):
-    logits=[x/tau for x in xs];m=max(logits);e=[math.exp(x-m) for x in logits]
-    return [x/sum(e) for x in e]
-for tau in [1.,.05]:
-    p=probs_at_temperature(cosines,tau);print('tau',tau,'p',p,'positive loss',-math.log(p[0]))
-assert -math.log(probs_at_temperature(cosines,.05)[0]) &lt; -math.log(probs_at_temperature(cosines,1.)[0])
+cosines = [0.8, 0.6, 0.2]
+
+def probs_at_temperature(xs, tau):
+    logits = [x / tau for x in xs]
+    m = max(logits)
+    e = [math.exp(x - m) for x in logits]
+    return [x / sum(e) for x in e]
+for tau in [1.0, 0.05]:
+    p = probs_at_temperature(cosines, tau)
+    print('tau', tau, 'p', p, 'positive loss', -math.log(p[0]))
+assert -math.log(probs_at_temperature(cosines, 0.05)[0]) &lt; -math.log(probs_at_temperature(cosines, 1.0)[0])
 </code></pre>
      </div>
      <h3 id="independent-experiment">
@@ -754,6 +768,33 @@ assert -math.log(probs_at_temperature(cosines,.05)[0]) &lt; -math.log(probs_at_t
      <p>
       提交簡短報告，列出預測、實際結果、比較及限制。記錄環境或數據的改動。不要用示意數字代替實際量度結果。
      </p>
+     <h3 id="reference-output">
+      Reference output
+     </h3>
+     <p>
+      CPU 教學 run 的 reference output（paths 和 timings 會不同）。這只供比較，並非你的 experiment result。
+     </p>
+     <div class="code-block">
+      <div class="code-bar">
+       <span>
+        text
+       </span>
+       <button class="copy-code" type="button">
+        複製 code
+       </button>
+      </div>
+      <pre><code>Query: At what time does the morning transport depart?
+0 The school bus leaves at eight.
+1 Lunch starts at noon.
+2 The library closes at five.
+Illustrative ranking: [0, 2, 1]
+Candidate probabilities: [[0.6652409557748218, 0.24472847105479764, 0.09003057317038046], [0.09003057317038046, 0.6652409557748218, 0.24472847105479764], [0.24472847105479764, 0.09003057317038046, 0.6652409557748218]]
+Mean contrastive loss: 0.4076059644443804
+False-negative example Q1 loss: 0.7586236756795135
+Actual embedding model skipped; enable RUN_EMBEDDINGS for model results.
+tau 1.0 p [0.42237892110127173, 0.34581461215750964, 0.23180646674121863] positive loss 0.8618524505311191
+tau 0.05 p [0.9820078648958167, 0.01798610143932861, 6.033664854558337e-06] positive loss 0.01815596160086702</code></pre>
+     </div>
     </article>
     <div class="end-note">
      閱讀程式只是第一步。完成獨立實驗並保留實際結果，才把這個 lab 標記為完成。

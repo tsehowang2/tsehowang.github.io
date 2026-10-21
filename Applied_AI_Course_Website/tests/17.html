@@ -463,7 +463,7 @@
         31
        </span>
        <span>
-        Integrating the documentation assistant and advanced extensions
+        Integrating and reviewing the documentation assistant
        </span>
        <span class="week-tick" data-week-tick="31">
        </span>
@@ -556,6 +556,9 @@
        <p>
         Lookup row represents token identity; contextual row depends on permitted context; a sentence embedding uses a representation/pooling objective suited to whole-input comparison.
        </p>
+       <p>
+        Marking: token lookup (1); context dependence (1); retrieval objective/pooling (1).
+       </p>
       </details>
      </section>
      <section class="test-question">
@@ -574,7 +577,10 @@
         Show worked solution
        </summary>
        <p>
-        Hit=1 and Recall=1/2. A related passage need not provide every required fact.
+        The returned IDs intersect gold={H2,H3} in {H2}, so there is one hit. Hit@3=1 because the intersection is nonempty. Recall@3=1 retrieved relevant item / 2 gold items=1/2. A related passage need not provide every required fact.
+       </p>
+       <p>
+        Marking: one relevant hit (1); Hit@3=1 (1); Recall@3=1/2 (1).
        </p>
       </details>
      </section>
@@ -595,6 +601,9 @@
        </summary>
        <p>
         Exact API/error names can favor lexical matching; paraphrases can favor semantic representations. Use same-subject wrong-version or bus-departure versus school-opening distractors. Measure actual outcomes.
+       </p>
+       <p>
+        Marking: lexical case (1); semantic paraphrase (1); hard negative (1); measured comparison (1).
        </p>
       </details>
      </section>

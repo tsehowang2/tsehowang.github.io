@@ -463,7 +463,7 @@
         31
        </span>
        <span>
-        Integrating the documentation assistant and advanced extensions
+        Integrating and reviewing the documentation assistant
        </span>
        <span class="week-tick" data-week-tick="31">
        </span>
@@ -568,12 +568,30 @@
         Week 05 · Section 1
        </div>
        <h3>
+        Why recurrent gradients can fade
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          The update h_t=0.5*h_(t-1)+x_t multiplies the influence of an earlier state by 0.5 at each step.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#why-recurrent-gradients-can-fade">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 05 · Section 2
+       </div>
+       <h3>
         The same word can appear in different situations
        </h3>
        <div class="slide-prose">
         <ul class="slide-keypoints">
          <li>
-          Read “I go to school by bus” and “The bus is late because it broke down.” The token bus participates in different relationships.
+          Read “I go to school by bus” and “The bus is late because it broke down.” The pronoun it needs context to identify its referent, the bus.
          </li>
          <li>
           The word order also matters.
@@ -589,7 +607,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        Week 05 · Section 2
+        Week 05 · Section 3
        </div>
        <h3>
         A fixed window sees only part of the sentence
@@ -613,7 +631,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        Week 05 · Section 3
+        Week 05 · Section 4
        </div>
        <h3>
         A recurrent model carries a state
@@ -637,7 +655,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        Week 05 · Section 4
+        Week 05 · Section 5
        </div>
        <h3>
         A simple state update illustrates information loss
@@ -661,7 +679,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        Week 05 · Section 5
+        Week 05 · Section 6
        </div>
        <h3>
         Reading a source and producing a target
@@ -685,7 +703,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        Week 05 · Section 6
+        Week 05 · Section 7
        </div>
        <h3>
         What the current position is allowed to see
@@ -709,7 +727,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        Week 05 · Section 7
+        Week 05 · Section 8
        </div>
        <h3>
         The bridge to attention
@@ -733,7 +751,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        Week 05 · Section 8
+        Week 05 · Section 9
        </div>
        <h3>
         Worked practice and a readiness check
@@ -757,7 +775,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        Week 05 · Section 9
+        Week 05 · Section 10
        </div>
        <h3>
         Context access as a diagram you can test
@@ -785,7 +803,7 @@
        ← Previous
       </button>
       <span aria-live="polite" class="slide-counter">
-       1 / 9
+       1 / 10
       </span>
       <button class="slide-next" type="button">
        Next →
@@ -795,31 +813,34 @@
       Go to slide
       <select aria-label="Go to slide" class="slide-jump">
        <option value="0">
-        1. The same word can appear in different situations
+        1. Why recurrent gradients can fade
        </option>
        <option value="1">
-        2. A fixed window sees only part of the sentence
+        2. The same word can appear in different situations
        </option>
        <option value="2">
-        3. A recurrent model carries a state
+        3. A fixed window sees only part of the sentence
        </option>
        <option value="3">
-        4. A simple state update illustrates information loss
+        4. A recurrent model carries a state
        </option>
        <option value="4">
-        5. Reading a source and producing a target
+        5. A simple state update illustrates information loss
        </option>
        <option value="5">
-        6. What the current position is allowed to see
+        6. Reading a source and producing a target
        </option>
        <option value="6">
-        7. The bridge to attention
+        7. What the current position is allowed to see
        </option>
        <option value="7">
-        8. Worked practice and a readiness check
+        8. The bridge to attention
        </option>
        <option value="8">
-        9. Context access as a diagram you can test
+        9. Worked practice and a readiness check
+       </option>
+       <option value="9">
+        10. Context access as a diagram you can test
        </option>
       </select>
      </label>
@@ -832,6 +853,11 @@
       In this lesson
      </strong>
      <ol>
+      <li>
+       <a href="#why-recurrent-gradients-can-fade">
+        Why recurrent gradients can fade
+       </a>
+      </li>
       <li>
        <a href="#the-same-word-can-appear-in-different-situations">
         The same word can appear in different situations
@@ -886,11 +912,17 @@
      <h2>
       Read the full explanation
      </h2>
+     <h3 id="why-recurrent-gradients-can-fade">
+      Why recurrent gradients can fade
+     </h3>
+     <p>
+      The update h_t=0.5*h_(t-1)+x_t multiplies the influence of an earlier state by 0.5 at each step. Its derivative across k steps is 0.5^k: at ten steps it is about 0.00098. This is a simple example of vanishing gradients, which can make distant dependencies hard to learn. Other repeated transformations can produce exploding gradients. LSTM (long short-term memory) and GRU (gated recurrent unit) use learned gates to control state updates and help preserve useful signals; they do not make every long dependency easy.
+     </p>
      <h3 id="the-same-word-can-appear-in-different-situations">
       The same word can appear in different situations
      </h3>
      <p>
-      Read “I go to school by bus” and “The bus is late because it broke down.” The token bus participates in different relationships. In the second sentence, it refers back to the bus. A model that processes each token independently cannot use the sentence to resolve that relationship.
+      Read “I go to school by bus” and “The bus is late because it broke down.” The pronoun it needs context to identify its referent, the bus. This example illustrates contextual interpretation of it. A model that processes each token independently cannot use the sentence to resolve that relationship.
      </p>
      <p>
       The word order also matters. “The boy follows the bus” and “The bus follows the boy” contain the same words but describe different events. A representation based only on which words are present loses this distinction.

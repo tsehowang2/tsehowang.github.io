@@ -469,7 +469,7 @@
         31
        </span>
        <span>
-        整合文件助手與進階延伸
+        整合及檢視 documentation assistant
        </span>
        <span class="week-tick" data-week-tick="31">
        </span>
@@ -574,6 +574,24 @@
         第 28 週 · 課節 1
        </div>
        <h3>
+        harness
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Harness 是包圍 model 的 application code：準備 inputs、validate 和執行 actions、追蹤 state/budgets、記錄 outcomes。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#harness">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 28 週 · 課節 2
+       </div>
+       <h3>
         Controller 令 agent 成為可運行 system
        </h3>
        <div class="slide-prose">
@@ -595,7 +613,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        第 28 週 · 課節 2
+        第 28 週 · 課節 3
        </div>
        <h3>
         一個完整小型 loop
@@ -619,7 +637,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        第 28 週 · 課節 3
+        第 28 週 · 課節 4
        </div>
        <h3>
         三個 proposals 的 trace
@@ -634,6 +652,54 @@
          </li>
          <li>
           把 citation ID 與先前 retrieved evidence 比對，是一項 structural boundary。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#a-three-proposal-trace">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 28 週 · 課節 5
+       </div>
+       <h3>
+        Time 與 resource limits
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Step cap 限制 loop iterations，卻無法中斷 blocking network call。
+         </li>
+         <li>
+          對適當 dependencies 使用 client timeouts 和 cancellation；需要 isolation 的 execution 則使用 process/container controls。
+         </li>
+         <li>
+          Synchronous reference controller 示範 step limits 和狹窄 arithmetic safety。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#time-and-resource-limits">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 28 週 · 課節 6
+       </div>
+       <h3>
+        MCP 連接 application 與 tool provider
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          MCP 即 Model Context Protocol。
+         </li>
+         <li>
+          連線設定完成後，client 可以提出 tools/list request。
+         </li>
+         <li>
+          host 檢查 proposal 後，透過其 MCP client 以 tools/call 傳送允許的 request。
          </li>
         </ul>
         <figure class="mechanism-figure">
@@ -679,94 +745,6 @@
           MCP 標準化通訊；harness 仍管理 state、permissions 和 termination。
          </p>
         </figure>
-        <a class="slide-section-link" href="#a-three-proposal-trace">
-         閱讀完整解說
-        </a>
-       </div>
-      </section>
-      <section class="lecture-slide" data-slide="" hidden="">
-       <div class="slide-stage">
-        第 28 週 · 課節 4
-       </div>
-       <h3>
-        Time 與 resource limits
-       </h3>
-       <div class="slide-prose">
-        <ul class="slide-keypoints">
-         <li>
-          Step cap 限制 loop iterations，卻無法中斷 blocking network call。
-         </li>
-         <li>
-          對適當 dependencies 使用 client timeouts 和 cancellation；需要 isolation 的 execution 則使用 process/container controls。
-         </li>
-         <li>
-          Synchronous reference controller 示範 step limits 和狹窄 arithmetic safety。
-         </li>
-        </ul>
-        <a class="slide-section-link" href="#time-and-resource-limits">
-         閱讀完整解說
-        </a>
-       </div>
-      </section>
-      <section class="lecture-slide" data-slide="" hidden="">
-       <div class="slide-stage">
-        第 28 週 · 課節 5
-       </div>
-       <h3>
-        MCP 連接 application 與 tool provider
-       </h3>
-       <div class="slide-prose">
-        <ul class="slide-keypoints">
-         <li>
-          MCP 即 Model Context Protocol。
-         </li>
-         <li>
-          連線設定完成後，client 可以提出 tools/list request。
-         </li>
-         <li>
-          host 檢查 proposal 後，透過其 MCP client 以 tools/call 傳送允許的 request。
-         </li>
-        </ul>
-        <div class="table-wrap">
-         <table>
-          <thead>
-           <tr>
-            <th>
-             角色
-            </th>
-            <th>
-             在本例中的意思
-            </th>
-           </tr>
-          </thead>
-          <tbody>
-           <tr>
-            <td>
-             Host
-            </td>
-            <td>
-             管理 model、使用者互動和 tool policy 的 documentation-assistant application。
-            </td>
-           </tr>
-           <tr>
-            <td>
-             Client
-            </td>
-            <td>
-             host 內負責與一個 MCP server 通訊的 component。
-            </td>
-           </tr>
-           <tr>
-            <td>
-             Server
-            </td>
-            <td>
-             提供 calculator 並處理 request 的程式；可以在本機或遠端執行。
-            </td>
-           </tr>
-          </tbody>
-         </table>
-        </div>
         <a class="slide-section-link" href="#mcp-connects-the-application-to-a-tool-provider">
          閱讀完整解說
         </a>
@@ -774,7 +752,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        第 28 週 · 課節 6
+        第 28 週 · 課節 7
        </div>
        <h3>
         MCP 連接 application 與 tool provider · 續
@@ -798,7 +776,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        第 28 週 · 課節 7
+        第 28 週 · 課節 8
        </div>
        <h3>
         Planning 方法
@@ -822,7 +800,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        第 28 週 · 課節 8
+        第 28 週 · 課節 9
        </div>
        <h3>
         Memory 有多種意思
@@ -846,7 +824,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        第 28 週 · 課節 9
+        第 28 週 · 課節 10
        </div>
        <h3>
         Task evaluation 要檢查 traces
@@ -870,7 +848,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        第 28 週 · 課節 10
+        第 28 週 · 課節 11
        </div>
        <h3>
         實例練習與學習檢查
@@ -898,7 +876,7 @@
        ← 上一頁
       </button>
       <span aria-live="polite" class="slide-counter">
-       1 / 10
+       1 / 11
       </span>
       <button class="slide-next" type="button">
        下一頁 →
@@ -908,34 +886,37 @@
       前往 slide
       <select aria-label="跳至 slide" class="slide-jump">
        <option value="0">
-        1. Controller 令 agent 成為可運行 system
+        1. harness
        </option>
        <option value="1">
-        2. 一個完整小型 loop
+        2. Controller 令 agent 成為可運行 system
        </option>
        <option value="2">
-        3. 三個 proposals 的 trace
+        3. 一個完整小型 loop
        </option>
        <option value="3">
-        4. Time 與 resource limits
+        4. 三個 proposals 的 trace
        </option>
        <option value="4">
-        5. MCP 連接 application 與 tool provider
+        5. Time 與 resource limits
        </option>
        <option value="5">
-        6. MCP 連接 application 與 tool provider · 續
+        6. MCP 連接 application 與 tool provider
        </option>
        <option value="6">
-        7. Planning 方法
+        7. MCP 連接 application 與 tool provider · 續
        </option>
        <option value="7">
-        8. Memory 有多種意思
+        8. Planning 方法
        </option>
        <option value="8">
-        9. Task evaluation 要檢查 traces
+        9. Memory 有多種意思
        </option>
        <option value="9">
-        10. 實例練習與學習檢查
+        10. Task evaluation 要檢查 traces
+       </option>
+       <option value="10">
+        11. 實例練習與學習檢查
        </option>
       </select>
      </label>
@@ -964,6 +945,11 @@
       本課內容
      </strong>
      <ol>
+      <li>
+       <a href="#harness">
+        harness
+       </a>
+      </li>
       <li>
        <a href="#the-controller-makes-the-agent-a-runnable-system">
         Controller 令 agent 成為可運行 system
@@ -1018,6 +1004,12 @@
      <h2>
       閱讀完整解說
      </h2>
+     <h3 id="harness">
+      harness
+     </h3>
+     <p>
+      Harness 是包圍 model 的 application code：準備 inputs、validate 和執行 actions、追蹤 state/budgets、記錄 outcomes。
+     </p>
      <h3 id="the-controller-makes-the-agent-a-runnable-system">
       Controller 令 agent 成為可運行 system
      </h3>
@@ -1044,6 +1036,30 @@
      </p>
      <h3 id="a-three-proposal-trace">
       三個 proposals 的 trace
+     </h3>
+     <p>
+      第一個 proposal retrieve retry rule。第二個計算 cumulative delay。第三個回傳 result，並附已觀察到的 source IDs。
+     </p>
+     <p>
+      若 planner 不斷要求再做 calculation，三個 proposals 的 budget 最終會回傳 budget_exhausted。Controller 不會只因 model 客氣地要求就繼續。
+     </p>
+     <p>
+      把 citation ID 與先前 retrieved evidence 比對，是一項 structural boundary。該 passage 是否支持 final claim，仍是 evaluation 問題。
+     </p>
+     <h3 id="time-and-resource-limits">
+      Time 與 resource limits
+     </h3>
+     <p>
+      Step cap 限制 loop iterations，卻無法中斷 blocking network call。Call 返回後才檢查 elapsed time，不等於真正設下 call deadline。
+     </p>
+     <p>
+      對適當 dependencies 使用 client timeouts 和 cancellation；需要 isolation 的 execution 則使用 process/container controls。Tool output 和 model context 也要限制。
+     </p>
+     <p>
+      Synchronous reference controller 示範 step limits 和狹窄 arithmetic safety。它不聲稱是完整的 arbitrary-code sandbox。
+     </p>
+     <h3 id="mcp-connects-the-application-to-a-tool-provider">
+      MCP 連接 application 與 tool provider
      </h3>
      <figure class="mechanism-figure">
       <figcaption>
@@ -1088,30 +1104,6 @@
        MCP 標準化通訊；harness 仍管理 state、permissions 和 termination。
       </p>
      </figure>
-     <p>
-      第一個 proposal retrieve retry rule。第二個計算 cumulative delay。第三個回傳 result，並附已觀察到的 source IDs。
-     </p>
-     <p>
-      若 planner 不斷要求再做 calculation，三個 proposals 的 budget 最終會回傳 budget_exhausted。Controller 不會只因 model 客氣地要求就繼續。
-     </p>
-     <p>
-      把 citation ID 與先前 retrieved evidence 比對，是一項 structural boundary。該 passage 是否支持 final claim，仍是 evaluation 問題。
-     </p>
-     <h3 id="time-and-resource-limits">
-      Time 與 resource limits
-     </h3>
-     <p>
-      Step cap 限制 loop iterations，卻無法中斷 blocking network call。Call 返回後才檢查 elapsed time，不等於真正設下 call deadline。
-     </p>
-     <p>
-      對適當 dependencies 使用 client timeouts 和 cancellation；需要 isolation 的 execution 則使用 process/container controls。Tool output 和 model context 也要限制。
-     </p>
-     <p>
-      Synchronous reference controller 示範 step limits 和狹窄 arithmetic safety。它不聲稱是完整的 arbitrary-code sandbox。
-     </p>
-     <h3 id="mcp-connects-the-application-to-a-tool-provider">
-      MCP 連接 application 與 tool provider
-     </h3>
      <p>
       MCP 即 Model Context Protocol。回想你已用過的 calculator：model 提議計算，application code 檢查 proposal，然後執行允許的 function。MCP 為 application 提供一套標準方式，以發現及呼叫另一個程式提供的 capabilities。它不會改變算術本身，亦不會取代 request validation [
       <a class="inline-reading" href="../resources.html#reference-r29">

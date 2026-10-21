@@ -469,7 +469,7 @@
         31
        </span>
        <span>
-        整合文件助手與進階延伸
+        整合及檢視 documentation assistant
        </span>
        <span class="week-tick" data-week-tick="31">
        </span>
@@ -547,7 +547,7 @@
      </a>
     </div>
     <p class="save-note">
-     執行這份 notebook 時，亦請
+     本 notebook 需要完整 pack 的 support files。需要時，
      <a download="" href="../../downloads/Applied_Generative_AI_Course.zip">
       下載並解壓完整課程套件
      </a>
@@ -571,7 +571,7 @@
       <strong>
        執行前：
       </strong>
-      執行完整流程前，先查看一組完整 input／output record。預測正常結果及一種 failure status。
+      計 DPO loss，以及一次 distillation gradient step 後的 student distribution。
      </p>
      <p>
       <strong>
@@ -583,7 +583,7 @@
       <strong>
        獨立練習：
       </strong>
-      改變一個受控因素，保留 raw outputs 並解釋結果。用 lecture readiness check 及 capstone milestone 定義任務；不要聲稱 fixture 成功就代表 production readiness。
+      執行 LoRA pilot，比較 paired base/adapter outputs，固定 revisions 並驗證 save/reload logits 相等。
      </p>
      <p>
       <strong>
@@ -599,7 +599,7 @@
        notebook 環境及課程檔案
       </summary>
       <p>
-       這個 cell 尋找已解壓的課程檔案。執行 notebook 時需要它。
+       先執行 setup；早期 tutorials 建立 output directory，後期 tutorials 尋找已解壓的 course support files。
       </p>
       <div class="code-block">
        <div class="code-bar">
@@ -610,17 +610,22 @@
          複製 code
         </button>
        </div>
-       <pre><code>from pathlib import Path
-import sys,json,time,random,hashlib,math
-if hasattr(sys.stdout,'reconfigure'): sys.stdout.reconfigure(encoding='utf-8')
-candidates=[Path.cwd(),Path.cwd().parent,Path.cwd()/'llm_course',Path.cwd()/'llm_course_v2',Path('/content/llm_course'),Path('/content/llm_course_v2')]
-COURSE=next((p for p in candidates if (p/'coursekit/core.py').exists()),None)
-if COURSE is None: raise RuntimeError('Extract the complete course pack; run from its root or notebooks directory.')
-if str(COURSE) not in sys.path:sys.path.insert(0,str(COURSE))
-RUNS=COURSE/'runs';RUNS.mkdir(exist_ok=True)
+       <pre><code>import random
+from pathlib import Path
+import sys, json, time, random, hashlib, math
+if hasattr(sys.stdout, 'reconfigure'):
+    sys.stdout.reconfigure(encoding='utf-8')
+candidates = [Path.cwd(), Path.cwd().parent, Path.cwd() / 'llm_course', Path.cwd() / 'llm_course_v2', Path('/content/llm_course'), Path('/content/llm_course_v2')]
+COURSE = next((p for p in candidates if (p / 'coursekit/core.py').exists()), None)
+if COURSE is None:
+    raise RuntimeError('Extract the complete course pack; run from its root or notebooks directory.')
+if str(COURSE) not in sys.path:
+    sys.path.insert(0, str(COURSE))
+RUNS = COURSE / 'runs'
+RUNS.mkdir(exist_ok=True)
 from coursekit.core import *
 random.seed(7)
-print('Course root:',COURSE)
+print('Course root:', COURSE)
 </code></pre>
       </div>
      </details>
@@ -628,7 +633,7 @@ print('Course root:',COURSE)
       目前 generator recipe
      </h3>
      <p>
-      目前的小型 instruction model 是 Qwen/Qwen3-0.6B。這些 cells 需要所選 major version 中的 Transformers 4.51 或之後版本，並在 apply chat template 時設定 enable_thinking=False。這是 instruction-model path，並非 raw base-model completion。記錄實際 model revision。CPU checks 並沒有驗證 model downloads 或 GPU training。
+      小型 instruction model 是 Qwen/Qwen3-0.6B。此 recipe 固定 Transformers4.56.2、PyTorch2.8.0，chat template 設 enable_thinking=False。用公開 API resolve model revision，tokenizer 和 weights 固定同一 revision。CPU checks 不包含 model downloads 和 GPU training。
      </p>
      <h3 id="dpo-scale-calculation-before-training">
       Training 前先計算 DPO scale
@@ -648,13 +653,20 @@ print('Course root:',COURSE)
         複製 code
        </button>
       </div>
-      <pre><code>beta=.1;relative_margin=.4-.1;scaled_margin=beta*relative_margin;dpo_loss=math.log1p(math.exp(-scaled_margin))
-assert abs(dpo_loss-.6782596763414483)&lt;1e-12
-print('Illustrative DPO loss (not DPO training)',dpo_loss)
+      <pre><code>import math
+beta = 0.1
+relative_margin = 0.4 - 0.1
+scaled_margin = beta * relative_margin
+dpo_loss = math.log1p(math.exp(-scaled_margin))
+assert abs(dpo_loss - 0.6782596763414483) &lt; 1e-12
+print('Illustrative DPO loss (not DPO training)', dpo_loss)
 </code></pre>
      </div>
+     <h3 id="distillation-on-a-visible-teacher-distribution">
+      可見 teacher distribution 的 distillation
+     </h3>
      <p>
-      從第 25 週 factorization 及第 24 週已審核 targets 開始。以下 pilot 會訓練真正 LoRA weights。啟動 optimizer 前，先理解 masking、frozen weights 及 trainable parameters。保留負面結果。
+      Teacher 提供 soft probabilities。計算 cross-entropy 和 KL，再對 student logits 做一次 gradient step。這是三 classes 的教學例子。
      </p>
      <h3>
       程式步驟 2
@@ -668,22 +680,29 @@ print('Illustrative DPO loss (not DPO training)',dpo_loss)
         複製 code
        </button>
       </div>
-      <pre><code>import subprocess
-subprocess.check_call([sys.executable,'-m','pip','install','-q','torch&gt;=2.4,&lt;3','transformers&gt;=4.51,&lt;5','peft&gt;=0.13,&lt;1'])
-import torch
-from transformers import AutoTokenizer,AutoModelForCausalLM
-from peft import LoraConfig,get_peft_model,PeftModel
-if not (RUNS/'week24_train.json').exists(): raise RuntimeError('Run tutorial 24 first.')
-torch.manual_seed(7);device='cuda' if torch.cuda.is_available() else 'cpu'
-MODEL_ID='Qwen/Qwen3-0.6B';tokenizer=AutoTokenizer.from_pretrained(MODEL_ID)
-# Float32 keeps this beginner training path simple. Use a small model and short input.
-base=AutoModelForCausalLM.from_pretrained(MODEL_ID,torch_dtype=torch.float32).to(device)
-base.config.use_cache=False;base_revision=base.config._commit_hash
-model=get_peft_model(base,LoraConfig(r=4,lora_alpha=8,lora_dropout=0,
-                                    target_modules=['q_proj','v_proj'],task_type='CAUSAL_LM'))
-model.print_trainable_parameters()
+      <pre><code>import numpy as np
+teacher = np.array([0.7, 0.2, 0.1])
+student_logits = np.zeros(3)
+
+def sm(z):
+    e = np.exp(z - z.max())
+    return e / e.sum()
+
+def distill_loss(z):
+    return -np.sum(teacher * np.log(sm(z)))
+before = distill_loss(student_logits)
+student_logits -= 0.5 * (sm(student_logits) - teacher)
+after = distill_loss(student_logits)
+kl = after + np.sum(teacher * np.log(teacher))
+assert after &lt; before and kl &gt;= 0
+print('Teacher:', teacher, 'Student after step:', sm(student_logits).round(4))
+print('Distillation CE before/after:', before, after, 'KL:', kl)
+print('Training LoRA alpha/r:', 8 / 4)
 </code></pre>
      </div>
+     <p>
+      從第 25 週 factorization 及第 24 週已審核 targets 開始。以下 pilot 會訓練真正 LoRA weights。啟動 optimizer 前，先理解 masking、frozen weights 及 trainable parameters。保留負面結果。
+     </p>
      <h3>
       程式步驟 3
      </h3>
@@ -696,47 +715,26 @@ model.print_trainable_parameters()
         複製 code
        </button>
       </div>
-      <pre><code>def prepare(record,max_length=384):
-    messages=record['messages']
-    prefix=tokenizer.apply_chat_template(messages[:-1],tokenize=True,add_generation_prompt=True,enable_thinking=False)
-    full=tokenizer.apply_chat_template(messages,tokenize=True,add_generation_prompt=False,enable_thinking=False)
-    if full[:len(prefix)]!=prefix: raise ValueError('Template prefix mismatch: use a proper assistant-token mask.')
-    ids=full[:max_length];labels=ids.copy()
-    for i in range(min(len(prefix),len(labels))): labels[i]=-100
-    if all(v==-100 for v in labels): raise ValueError('All answer tokens truncated: shorten prompt or increase limit.')
-    return {'input_ids':torch.tensor([ids],device=device),
-            'attention_mask':torch.ones(1,len(ids),dtype=torch.long,device=device),
-            'labels':torch.tensor([labels],device=device)}
-train=json.loads((RUNS/'week24_train.json').read_text());dev=json.loads((RUNS/'week24_dev.json').read_text())
-train_batches=[prepare(r) for r in train];dev_batches=[prepare(r) for r in dev]
-def score(batches,disable=False):
-    model.eval();total,n=0.,0
-    context=model.disable_adapter() if disable else __import__('contextlib').nullcontext()
-    with context,torch.no_grad():
-        for b in batches:
-            count=int((b['labels'][:,1:]!=-100).sum())
-            total+=model(**b).loss.item()*count;n+=count
-    return total/n
-before=score(dev_batches,disable=True)
-optimizer=torch.optim.AdamW([p for p in model.parameters() if p.requires_grad],lr=1e-4)
-steps=20 if device=='cuda' else 2
-if device=='cuda': torch.cuda.reset_peak_memory_stats()
-start=time.perf_counter();losses=[];model.train()
-for step in range(steps):
-    b=train_batches[step%len(train_batches)];optimizer.zero_grad();loss=model(**b).loss
-    if not torch.isfinite(loss): raise RuntimeError('Nonfinite training loss')
-    loss.backward()
-    if step==0:
-        assert any(p.grad is not None and p.grad.abs().sum()&gt;0 for p in model.parameters() if p.requires_grad)
-        assert all(p.grad is None for p in model.parameters() if not p.requires_grad)
-    torch.nn.utils.clip_grad_norm_([p for p in model.parameters() if p.requires_grad],1.0)
-    optimizer.step();losses.append(loss.item());print(step,loss.item())
-after=score(dev_batches)
-adapter=RUNS/'week26_adapter';model.save_pretrained(adapter);tokenizer.save_pretrained(adapter)
-report={'base_model':MODEL_ID,'base_revision':base_revision,'steps':steps,'device':device,
-        'base_dev_nll':before,'adapter_dev_nll':after,'losses':losses,'seconds':time.perf_counter()-start,
-        'peak_allocated_bytes':torch.cuda.max_memory_allocated() if device=='cuda' else None}
-(RUNS/'week26_training.json').write_text(json.dumps(report,indent=2));print(report)
+      <pre><code># Float32 keeps this beginner training path simple. Use a small model and short input.
+import sys
+import subprocess
+subprocess.check_call([sys.executable, '-m', 'pip', 'install', '-q', 'torch==2.8.0', 'transformers==4.56.2', 'peft&gt;=0.13,&lt;1'])
+import torch
+from transformers import AutoTokenizer, AutoModelForCausalLM
+from peft import LoraConfig, get_peft_model, PeftModel
+if not (RUNS / 'week24_train.json').exists():
+    raise RuntimeError('Run tutorial 24 first.')
+torch.manual_seed(7)
+device = 'cuda' if torch.cuda.is_available() else 'cpu'
+MODEL_ID = 'Qwen/Qwen3-0.6B'
+from huggingface_hub import model_info
+resolved_revision = model_info(MODEL_ID).sha
+tokenizer = AutoTokenizer.from_pretrained(MODEL_ID, revision=resolved_revision)
+base = AutoModelForCausalLM.from_pretrained(MODEL_ID, revision=resolved_revision, dtype=torch.float32).to(device)
+base.config.use_cache = False
+base_revision = resolved_revision
+model = get_peft_model(base, LoraConfig(r=4, lora_alpha=8, lora_dropout=0, target_modules=['q_proj', 'v_proj'], task_type='CAUSAL_LM'))
+model.print_trainable_parameters()
 </code></pre>
      </div>
      <h3>
@@ -751,21 +749,125 @@ report={'base_model':MODEL_ID,'base_revision':base_revision,'steps':steps,'devic
         複製 code
        </button>
       </div>
+      <pre><code>import json
+import time
+
+def prepare(record, max_length=2048):
+    messages = record['messages']
+    prefix = tokenizer.apply_chat_template(messages[:-1], tokenize=True, add_generation_prompt=True, enable_thinking=False)
+    # Qwen3-specific completion: generation prefix includes its empty think block.
+    # Supervise the response and the tokenizer's response-ending EOS, not the prompt.
+    response = tokenizer.encode(messages[-1]['content'], add_special_tokens=False)
+    response.append(tokenizer.eos_token_id)
+    full = prefix + response
+    if len(full) &gt; max_length:
+        raise ValueError('Example exceeds budget: shorten evidence without dropping response/EOS.')
+    ids = full
+    labels = [-100] * len(prefix) + response
+    assert labels[-1] == tokenizer.eos_token_id
+    assert sum(value != -100 for value in labels[1:]) &gt; 0
+    return {'input_ids': torch.tensor([ids], device=device), 'attention_mask': torch.ones(1, len(ids), dtype=torch.long, device=device), 'labels': torch.tensor([labels], device=device)}
+train = json.loads((RUNS / 'week24_train.json').read_text(encoding='utf-8'))
+dev = json.loads((RUNS / 'week24_dev.json').read_text(encoding='utf-8'))
+train_batches = [prepare(r) for r in train]
+dev_batches = [prepare(r) for r in dev]
+
+def score(batches, disable=False):
+    model.eval()
+    total, n = (0.0, 0)
+    context = model.disable_adapter() if disable else __import__('contextlib').nullcontext()
+    with context, torch.no_grad():
+        for b in batches:
+            count = int((b['labels'][:, 1:] != -100).sum())
+            total += model(**b).loss.item() * count
+            n += count
+    return total / n
+before = score(dev_batches, disable=True)
+optimizer = torch.optim.AdamW([p for p in model.parameters() if p.requires_grad], lr=0.0001)
+steps = 20 if device == 'cuda' else 2
+if device == 'cuda':
+    torch.cuda.reset_peak_memory_stats()
+start = time.perf_counter()
+losses = []
+model.train()
+for step in range(steps):
+    b = train_batches[step % len(train_batches)]
+    optimizer.zero_grad()
+    loss = model(**b).loss
+    if not torch.isfinite(loss):
+        raise RuntimeError('Nonfinite training loss')
+    loss.backward()
+    if step == 0:
+        assert any((p.grad is not None and p.grad.abs().sum() &gt; 0 for p in model.parameters() if p.requires_grad))
+        assert all((p.grad is None for p in model.parameters() if not p.requires_grad))
+    torch.nn.utils.clip_grad_norm_([p for p in model.parameters() if p.requires_grad], 1.0)
+    optimizer.step()
+    losses.append(loss.item())
+    print(step, loss.item())
+after = score(dev_batches)
+model.eval()
+with torch.no_grad():
+    expected_logits = model(**{k: v for k, v in dev_batches[0].items() if k != 'labels'}).logits.detach().cpu()
+adapter = RUNS / 'week26_adapter'
+model.save_pretrained(adapter)
+tokenizer.save_pretrained(adapter)
+report = {'base_model': MODEL_ID, 'base_revision': base_revision, 'steps': steps, 'device': device, 'base_dev_nll': before, 'adapter_dev_nll': after, 'losses': losses, 'seconds': time.perf_counter() - start, 'peak_allocated_bytes': torch.cuda.max_memory_allocated() if device == 'cuda' else None}
+(RUNS / 'week26_training.json').write_text(json.dumps(report, indent=2), encoding='utf-8')
+print(report)
+</code></pre>
+     </div>
+     <h3>
+      程式步驟 5
+     </h3>
+     <div class="code-block">
+      <div class="code-bar">
+       <span>
+        Python
+       </span>
+       <button class="copy-code" type="button">
+        複製 code
+       </button>
+      </div>
       <pre><code># Release the first model before reloading to avoid two full GPU copies.
-del optimizer,train_batches,dev_batches,model,base,loss
-import gc;gc.collect()
-if device=='cuda': torch.cuda.empty_cache()
-reloaded_base=AutoModelForCausalLM.from_pretrained(MODEL_ID,revision=base_revision,torch_dtype=torch.float32).to(device)
-reloaded=PeftModel.from_pretrained(reloaded_base,adapter).eval()
-sample=prepare(dev[0])
-with torch.no_grad(): reload_loss=reloaded(**sample).loss.item()
-assert math.isfinite(reload_loss)
-print('Reload finite-loss smoke check',reload_loss)
+del optimizer, train_batches, dev_batches, model, base, loss
+import gc
+gc.collect()
+if device == 'cuda':
+    torch.cuda.empty_cache()
+reloaded_base = AutoModelForCausalLM.from_pretrained(MODEL_ID, revision=base_revision, dtype=torch.float32).to(device)
+reloaded = PeftModel.from_pretrained(reloaded_base, adapter).eval()
+sample = prepare(dev[0])
+with torch.no_grad():
+    reload_output = reloaded(**sample)
+assert torch.allclose(expected_logits, reload_output.logits.cpu(), rtol=1e-05, atol=1e-05)
+print('Reload logits match saved adapter; loss:', reload_output.loss.item())
 </code></pre>
      </div>
      <p>
       最後在獨立 task cases 上，用固定 decoding 及相同 parser 生成 base／adapter outputs。上面的 NLL 是 training diagnostic。兩個 CPU steps 展示機制，並非有用 adaptation。保存確切 packages／config／data hashes。QLoRA 需要明確檢查 backend，屬可選部分。
      </p>
+     <h3 id="reference-output">
+      Reference output
+     </h3>
+     <p>
+      CPU 教學 run 的 reference output（paths 和 timings 會不同）。這只供比較，並非你的 experiment result。
+     </p>
+     <div class="code-block">
+      <div class="code-bar">
+       <span>
+        text
+       </span>
+       <button class="copy-code" type="button">
+        複製 code
+       </button>
+      </div>
+      <pre><code>Illustrative DPO loss: 0.6782596763414483
+Student after distillation step: [0.3969 0.3091 0.2940]
+Distillation CE: 1.0986122886681098 -&gt; 1.004107701106269
+KL: 0.20228914856293168
+LoRA alpha/r: 2.0
+Model training and reload: not run in this revision.</code></pre>
+     </div>
     </article>
     <div class="end-note">
      閱讀程式只是第一步。完成獨立實驗並保留實際結果，才把這個 lab 標記為完成。

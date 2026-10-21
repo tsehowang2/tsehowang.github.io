@@ -469,7 +469,7 @@
         31
        </span>
        <span>
-        整合文件助手與進階延伸
+        整合及檢視 documentation assistant
        </span>
        <span class="week-tick" data-week-tick="31">
        </span>
@@ -562,6 +562,9 @@
        <p>
         weights、gradients、moments、可選 master weights、activations／buffers；generation 另有依賴 context 的 KV state。device／allocator 行為亦有影響。
        </p>
+       <p>
+        評分：parameters/gradients (1)；optimizer/activations (1)；generation cache (1)。
+       </p>
       </details>
      </section>
      <section class="test-question">
@@ -569,7 +572,7 @@
        問題 2
       </div>
       <p>
-       對 L24、B1、T2048、H_kv8、d_head=64、b2，計算 KV bytes。
+       給定 L=24 layers、B=1 batch、T=2048 cached tokens、H_kv=8 K/V heads、d_head=64、每 element b=2 bytes，計算 KV-cache bytes，並解釋最前的 factor 2。
       </p>
       <label for="week-22-question-2">
        你的練習筆記
@@ -580,7 +583,10 @@
         顯示完整解答
        </summary>
        <p>
-        2×24×1×2048×8×64×2=100663296 bytes=96 MiB。
+        K、V 是兩個 tensors，各有 L×B×T×H_kv×d_head elements。Bytes=2×24×1×2048×8×64×2=100,663,296；除以 2²⁰ 得 96 MiB，不包括 weights 和其他 runtime allocations。
+       </p>
+       <p>
+        評分：K and V factor (1)；substitution/product (1)；96 MiB (1)。
        </p>
       </details>
      </section>
@@ -601,6 +607,9 @@
        </summary>
        <p>
         accumulation 減少 microbatch 需求，但不會減少所有 persistent state 或單一 sequence 的最低需求。checkpointing 用 recomputation 換取部分 activation storage。先找出真正佔 memory 的 component。
+       </p>
+       <p>
+        評分：persistent state (1)；single sequence limit (1)；recomputation tradeoff (1)；diagnose component (1)。
        </p>
       </details>
      </section>

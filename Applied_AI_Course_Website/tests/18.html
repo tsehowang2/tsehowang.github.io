@@ -463,7 +463,7 @@
         31
        </span>
        <span>
-        Integrating the documentation assistant and advanced extensions
+        Integrating and reviewing the documentation assistant
        </span>
        <span class="week-tick" data-week-tick="31">
        </span>
@@ -556,6 +556,9 @@
        <p>
         Stable IDs, payload/source references, scope/version and content lineage. Mislabeling survives even a correct nearest-neighbor computation.
        </p>
+       <p>
+        Marking: stable identity (1); metadata (1); lineage/scope consequence (1).
+       </p>
       </details>
      </section>
      <section class="test-question">
@@ -574,7 +577,10 @@
         Show worked solution
        </summary>
        <p>
-        1,536,000,000 bytes, before graph, payloads, IDs, replicas, text, and overhead.
+        1,000,000×384=384,000,000 scalar elements. Float32 uses four bytes each, so storage=384,000,000×4=1,536,000,000 bytes, before graph, payloads, IDs, replicas, text, and overhead.
+       </p>
+       <p>
+        Marking: 1e6×384 elements (1); four bytes/element (1); 1,536,000,000 bytes excluding overhead (1).
        </p>
       </details>
      </section>
@@ -595,6 +601,9 @@
        </summary>
        <p>
         Build compatible re-embedded collection, verify/benchmark, switch with rollback. Unfiltered top-k may omit eligible relevant points before invalid candidates are removed.
+       </p>
+       <p>
+        Marking: compatible re-embedding (1); verification (1); switch/rollback (1); post-filter candidate loss (1).
        </p>
       </details>
      </section>

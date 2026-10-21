@@ -463,7 +463,7 @@
         31
        </span>
        <span>
-        Integrating the documentation assistant and advanced extensions
+        Integrating and reviewing the documentation assistant
        </span>
        <span class="week-tick" data-week-tick="31">
        </span>
@@ -598,7 +598,7 @@
       ].
      </p>
      <p>
-      The newer small generator route uses Qwen/Qwen3-0.6B. It requires Transformers 4.51.0 or later. For the ordinary answer and JSON-tool exercises, pass enable_thinking=False to apply_chat_template, because this model otherwise enables thinking by default. Keep the model ID, model revision and chat-template settings together in the run record [
+      The small generator route uses Qwen/Qwen3-0.6B with the pinned Transformers 4.56.2/PyTorch 2.8.0 recipe. For ordinary answer and JSON-tool exercises, pass enable_thinking=False to apply_chat_template. Resolve the public model revision and use it for both tokenizer and weights. Keep model ID, revision and template settings in the run record [
       <a class="inline-reading" href="resources.html#reference-r34">
        Qwen3 0.6B model card (R34)
       </a>
@@ -1929,7 +1929,7 @@
       Validation and limits
      </h2>
      <p>
-      All 32 notebooks and companion scripts passed syntax checks. In this revision, 13 CPU-safe complete tutorial paths and a separate DPO arithmetic check passed. The tutorial-30 run also passed all 23 support contract tests. Optional model-download blocks were disabled for these CPU checks. Hand calculations for attention, RoPE, parameter counts, contrastive loss, nDCG, McNemar, memory, bandwidth, DPO and energy were independently recomputed.
+      All 32 notebooks and companion scripts passed syntax checks. Twenty-eight CPU-safe notebook paths, targeted week-26 DPO/distillation and week-28 invalid-JSON checks, and all 25 support tests passed. Optional model-download blocks were disabled. Reference outputs are labeled comparison material. Memory-widget batch/token behavior was exercised using a DOM test double; no visual browser verification was available.
      </p>
      <p>
       Model downloads, actual transformer/adapter training, Qdrant model execution, CUDA compilation/profiling, production serving and actual model-agent runs were not executed in this revision environment. Their updated recipes are syntax checked. Hardware, package and model compatibility must still be verified in the runtime used for the exercise. Fixture results and paper calculations are labeled separately from trained-model measurements. Notebook outputs are distributed empty.

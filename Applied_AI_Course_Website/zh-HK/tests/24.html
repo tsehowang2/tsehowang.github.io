@@ -469,7 +469,7 @@
         31
        </span>
        <span>
-        整合文件助手與進階延伸
+        整合及檢視 documentation assistant
        </span>
        <span class="week-tick" data-week-tick="31">
        </span>
@@ -562,6 +562,9 @@
        <p>
         改善 ingestion／retrieval；針對持續 format gaps 改 prompt／schema 或作 targeted SFT；arithmetic 則使用經檢查的 narrow tool。training 前先診斷。
        </p>
+       <p>
+        評分：retrieval intervention (1)；format intervention (1)；calculator tool (1)。
+       </p>
       </details>
      </section>
      <section class="test-question">
@@ -582,6 +585,9 @@
        <p>
         保留 prompt 為 context，但忽略其 labels；依 library shift convention 對 answer 提供 supervision；確保 valid target count 非零，template prefix 相容。
        </p>
+       <p>
+        評分：prompt ignored (1)；answer and ending supervised (1)；shift/truncation check (1)。
+       </p>
       </details>
      </section>
      <section class="test-question">
@@ -601,6 +607,9 @@
        </summary>
        <p>
         先 split families，後寫 paraphrases；審核有 source 支持的 targets、保留 provenance、檢查 uncertainty／absence 及 wrong versions；最終 tasks 不可用於 tuning／adaptation。
+       </p>
+       <p>
+        評分：grouped split (1)；reviewed targets/provenance (1)；absence/version cases (1)；independent evaluation (1)。
        </p>
       </details>
      </section>

@@ -469,7 +469,7 @@
         31
        </span>
        <span>
-        整合文件助手與進階延伸
+        整合及檢視 documentation assistant
        </span>
        <span class="week-tick" data-week-tick="31">
        </span>
@@ -562,6 +562,9 @@
        <p>
         execution 管理受控 state／actions；evaluation 檢查 tasks。history、structured current task state 及 persistent memory 有不同 provenance／retention／trust。
        </p>
+       <p>
+        評分：execution/evaluation (1)；task state/history (1)；persistent memory (1)。
+       </p>
       </details>
      </section>
      <section class="test-question">
@@ -582,6 +585,9 @@
        <p>
         最多允許的 proposals 後，以 budget_exhausted 停止。單有 step cap 不會中斷 blocking calls，也不會限制所有 time／memory／token use。
        </p>
+       <p>
+        評分：at most cap (1)；budget_exhausted (1)；blocking/resource limits (1)。
+       </p>
       </details>
      </section>
      <section class="test-question">
@@ -601,6 +607,9 @@
        </summary>
        <p>
         相同 tasks／tools／budgets；獨立 state／result predicates；檢查 call／scope failures、forbidden actions、costs 及 termination。審核 traces，包括看似意外成功的 final result 及不必要 actions。
+       </p>
+       <p>
+        評分：fixed comparison (1)；independent predicates (1)；forbidden actions/termination (1)；cost and traces (1)。
        </p>
       </details>
      </section>

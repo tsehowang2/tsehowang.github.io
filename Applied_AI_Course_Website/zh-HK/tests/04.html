@@ -469,7 +469,7 @@
         31
        </span>
        <span>
-        整合文件助手與進階延伸
+        整合及檢視 documentation assistant
        </span>
        <span class="week-tick" data-week-tick="31">
        </span>
@@ -569,7 +569,7 @@
        問題 2
       </div>
       <p>
-       logits 為 [2,1,0]，target train 在 index 1。估算 probability 及 cross entropy。
+       Label order 是 [bus, train, bicycle]，zero-based indices 是 [0,1,2]。Logits [2,1,0]、target train (index 1)，計算 softmax、cross-entropy 和 logit gradient。
       </p>
       <label for="week-4-question-2">
        你的練習筆記
@@ -580,7 +580,7 @@
         顯示完整解答
        </summary>
        <p>
-        exponentials normalize 後約為 [.66524,.24473,.09003]。target loss=-ln(.24473)≈1.4076 nats。
+        Exponentials 為 [e²,e,1]≈[7.3891,2.7183,1]，總和約 11.1073。故 p≈[.66524,.24473,.09003]。Cross-entropy=−ln(.24473)≈1.4076 nats。減去 target one-hot [0,1,0]，gradient≈[.66524,−.75527,.09003]。
        </p>
       </details>
      </section>

@@ -469,7 +469,7 @@
         31
        </span>
        <span>
-        整合文件助手與進階延伸
+        整合及檢視 documentation assistant
        </span>
        <span class="week-tick" data-week-tick="31">
        </span>
@@ -574,6 +574,24 @@
         第 11 週 · 課節 1
        </div>
        <h3>
+        Scaling-law 的數值規劃例子
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Chinchilla 研究的 700 億 parameters model 使用約 1.4 萬億 training tokens，即每 parameter 約 20 tokens。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#a-numerical-scaling-law-planning-example">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 11 週 · 課節 2
+       </div>
+       <h3>
         block 成為特定任務設計的一部分
        </h3>
        <div class="slide-prose">
@@ -595,7 +613,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        第 11 週 · 課節 2
+        第 11 週 · 課節 3
        </div>
        <h3>
         encoder 讀取完整 input
@@ -619,7 +637,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        第 11 週 · 課節 3
+        第 11 週 · 課節 4
        </div>
        <h3>
         causal decoder 預測續寫內容
@@ -643,7 +661,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        第 11 週 · 課節 4
+        第 11 週 · 課節 5
        </div>
        <h3>
         encoder-decoder 連接兩個 sequence
@@ -667,7 +685,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        第 11 週 · 課節 5
+        第 11 週 · 課節 6
        </div>
        <h3>
         用可見範圍表釐清分別
@@ -691,7 +709,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        第 11 週 · 課節 6
+        第 11 週 · 課節 7
        </div>
        <h3>
         training 時的平行計算並不會移除 causality
@@ -715,7 +733,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        第 11 週 · 課節 7
+        第 11 週 · 課節 8
        </div>
        <h3>
         為學習練習選擇 architecture
@@ -739,7 +757,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        第 11 週 · 課節 8
+        第 11 週 · 課節 9
        </div>
        <h3>
         Attention variants 保留不同數量的 state
@@ -763,7 +781,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        第 11 週 · 課節 9
+        第 11 週 · 課節 10
        </div>
        <h3>
         MoE 和 state-space models 改變不同部分
@@ -784,7 +802,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        第 11 週 · 課節 10
+        第 11 週 · 課節 11
        </div>
        <h3>
         Scaling laws 連結 model size、data 和 compute
@@ -793,30 +811,6 @@
         <ul class="slide-keypoints">
          <li>
           假設 training operations 的 budget 固定。
-         </li>
-         <li>
-          來源： DeepSeek-V2: MLA and MoE .
-         </li>
-         <li>
-          來源： Mamba: selective state-space models .
-         </li>
-        </ul>
-        <a class="slide-section-link" href="#scaling-laws-connect-model-size-data-and-compute">
-         閱讀完整解說
-        </a>
-       </div>
-      </section>
-      <section class="lecture-slide" data-slide="" hidden="">
-       <div class="slide-stage">
-        第 11 週 · 課節 11
-       </div>
-       <h3>
-        Scaling laws 連結 model size、data 和 compute · 續
-       </h3>
-       <div class="slide-prose">
-        <ul class="slide-keypoints">
-         <li>
-          來源： Training compute-optimal language models .
          </li>
         </ul>
         <a class="slide-section-link" href="#scaling-laws-connect-model-size-data-and-compute">
@@ -888,37 +882,37 @@
       前往 slide
       <select aria-label="跳至 slide" class="slide-jump">
        <option value="0">
-        1. block 成為特定任務設計的一部分
+        1. Scaling-law 的數值規劃例子
        </option>
        <option value="1">
-        2. encoder 讀取完整 input
+        2. block 成為特定任務設計的一部分
        </option>
        <option value="2">
-        3. causal decoder 預測續寫內容
+        3. encoder 讀取完整 input
        </option>
        <option value="3">
-        4. encoder-decoder 連接兩個 sequence
+        4. causal decoder 預測續寫內容
        </option>
        <option value="4">
-        5. 用可見範圍表釐清分別
+        5. encoder-decoder 連接兩個 sequence
        </option>
        <option value="5">
-        6. training 時的平行計算並不會移除 causality
+        6. 用可見範圍表釐清分別
        </option>
        <option value="6">
-        7. 為學習練習選擇 architecture
+        7. training 時的平行計算並不會移除 causality
        </option>
        <option value="7">
-        8. Attention variants 保留不同數量的 state
+        8. 為學習練習選擇 architecture
        </option>
        <option value="8">
-        9. MoE 和 state-space models 改變不同部分
+        9. Attention variants 保留不同數量的 state
        </option>
        <option value="9">
-        10. Scaling laws 連結 model size、data 和 compute
+        10. MoE 和 state-space models 改變不同部分
        </option>
        <option value="10">
-        11. Scaling laws 連結 model size、data 和 compute · 續
+        11. Scaling laws 連結 model size、data 和 compute
        </option>
        <option value="11">
         12. 實例練習與學習檢查
@@ -937,6 +931,11 @@
       本課內容
      </strong>
      <ol>
+      <li>
+       <a href="#a-numerical-scaling-law-planning-example">
+        Scaling-law 的數值規劃例子
+       </a>
+      </li>
       <li>
        <a href="#a-block-becomes-part-of-a-task-specific-arrangement">
         block 成為特定任務設計的一部分
@@ -1006,6 +1005,12 @@
      <h2>
       閱讀完整解說
      </h2>
+     <h3 id="a-numerical-scaling-law-planning-example">
+      Scaling-law 的數值規劃例子
+     </h3>
+     <p>
+      Chinchilla 研究的 700 億 parameters model 使用約 1.4 萬億 training tokens，即每 parameter 約 20 tokens。假設 dense model 有 N=1 億 parameters，按此比例 D=20 億 tokens。粗略 training-compute 估算 C≈6ND 為 1.2×10^18 FLOPs。這裏 N 是 parameter count、D 是 training-token count，並非 d_model。這是該研究假設下的歷史 compute-optimal 估算；deployment 成本、data quality 和 inference 需求可以令其他比例更合適。
+     </p>
      <h3 id="a-block-becomes-part-of-a-task-specific-arrangement">
       block 成為特定任務設計的一部分
      </h3>

@@ -463,7 +463,7 @@
         31
        </span>
        <span>
-        Integrating the documentation assistant and advanced extensions
+        Integrating and reviewing the documentation assistant
        </span>
        <span class="week-tick" data-week-tick="31">
        </span>
@@ -582,7 +582,7 @@
       Standard multi-head attention uses the same number of query and KV heads. Multi-query attention shares one KV head among multiple query heads; grouped-query attention uses an intermediate number. Cache storage scales with KV heads, not merely query heads. A model can therefore have many query heads without storing separate cached keys/values for all of them.
      </p>
      <p>
-      Always inspect the actual architecture configuration before using a memory formula. Learned projections, head dimensions and number of layers matter. The 96 MiB week-9 example assumes the stated KV count, batch, precision and context length.
+      Always inspect the actual architecture configuration before using a memory formula. Learned projections, head dimensions and number of layers matter. The 96 MiB week-22 example assumes the stated KV count, batch, precision and context length.
      </p>
      <h2 id="kv-cache-correctness">
       KV-cache correctness

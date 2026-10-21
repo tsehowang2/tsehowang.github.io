@@ -463,7 +463,7 @@
         31
        </span>
        <span>
-        Integrating the documentation assistant and advanced extensions
+        Integrating and reviewing the documentation assistant
        </span>
        <span class="week-tick" data-week-tick="31">
        </span>
@@ -568,6 +568,24 @@
         Week 01 · Section 1
        </div>
        <h3>
+        Unseen continuations and smoothing
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Exact counting assigns zero probability to a vocabulary item with no observations.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#unseen-continuations-and-smoothing">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 01 · Section 2
+       </div>
+       <h3>
         An ordinary sentence with one missing word
        </h3>
        <div class="slide-prose">
@@ -589,7 +607,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        Week 01 · Section 2
+        Week 01 · Section 3
        </div>
        <h3>
         A tiny collection that we can inspect
@@ -613,7 +631,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        Week 01 · Section 3
+        Week 01 · Section 4
        </div>
        <h3>
         A prediction becomes a sequence
@@ -637,7 +655,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        Week 01 · Section 4
+        Week 01 · Section 5
        </div>
        <h3>
         Conditional probability in familiar notation
@@ -661,7 +679,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        Week 01 · Section 5
+        Week 01 · Section 6
        </div>
        <h3>
         Training and using a model are different activities
@@ -685,7 +703,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        Week 01 · Section 6
+        Week 01 · Section 7
        </div>
        <h3>
         A small model can be useful for understanding
@@ -709,7 +727,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        Week 01 · Section 7
+        Week 01 · Section 8
        </div>
        <h3>
         Worked practice and a readiness check
@@ -737,7 +755,7 @@
        ← Previous
       </button>
       <span aria-live="polite" class="slide-counter">
-       1 / 7
+       1 / 8
       </span>
       <button class="slide-next" type="button">
        Next →
@@ -747,25 +765,28 @@
       Go to slide
       <select aria-label="Go to slide" class="slide-jump">
        <option value="0">
-        1. An ordinary sentence with one missing word
+        1. Unseen continuations and smoothing
        </option>
        <option value="1">
-        2. A tiny collection that we can inspect
+        2. An ordinary sentence with one missing word
        </option>
        <option value="2">
-        3. A prediction becomes a sequence
+        3. A tiny collection that we can inspect
        </option>
        <option value="3">
-        4. Conditional probability in familiar notation
+        4. A prediction becomes a sequence
        </option>
        <option value="4">
-        5. Training and using a model are different activities
+        5. Conditional probability in familiar notation
        </option>
        <option value="5">
-        6. A small model can be useful for understanding
+        6. Training and using a model are different activities
        </option>
        <option value="6">
-        7. Worked practice and a readiness check
+        7. A small model can be useful for understanding
+       </option>
+       <option value="7">
+        8. Worked practice and a readiness check
        </option>
       </select>
      </label>
@@ -794,6 +815,11 @@
       In this lesson
      </strong>
      <ol>
+      <li>
+       <a href="#unseen-continuations-and-smoothing">
+        Unseen continuations and smoothing
+       </a>
+      </li>
       <li>
        <a href="#an-ordinary-sentence-with-one-missing-word">
         An ordinary sentence with one missing word
@@ -838,6 +864,12 @@
      <h2>
       Read the full explanation
      </h2>
+     <h3 id="unseen-continuations-and-smoothing">
+      Unseen continuations and smoothing
+     </h3>
+     <p>
+      Exact counting assigns zero probability to a vocabulary item with no observations. If a prefix has no matching examples at all, the empirical conditional distribution is undefined, rather than every next word having probability zero. One simple fallback is add-alpha smoothing: p(w|prefix)=(count(w)+alpha)/(total+alpha*V), for a fixed vocabulary of size V and alpha&gt;0. With no matches and three allowed words, alpha=1 gives 1/3 each. This shares probability mass, but it does not learn that school and work are related.
+     </p>
      <h3 id="an-ordinary-sentence-with-one-missing-word">
       An ordinary sentence with one missing word
      </h3>

@@ -469,7 +469,7 @@
         31
        </span>
        <span>
-        整合文件助手與進階延伸
+        整合及檢視 documentation assistant
        </span>
        <span class="week-tick" data-week-tick="31">
        </span>
@@ -604,7 +604,7 @@
       ]。
      </p>
      <p>
-      較新的小型 generator route 使用 Qwen/Qwen3-0.6B，需要 Transformers 4.51.0 或以上版本。一般答案及 JSON-tool 練習應在 apply_chat_template 傳入 enable_thinking=False，因為這個 model 預設啟用 thinking。Run record 要一併記錄 model ID、model revision 及 chat-template settings [
+      小型 generator route 使用 Qwen/Qwen3-0.6B，以及固定 Transformers4.56.2/PyTorch2.8.0 recipe。一般答案及 JSON-tool exercises，在 apply_chat_template 設 enable_thinking=False。透過公開 API resolve revision，tokenizer 和 weights 使用同一 revision。Run record 記錄 model ID、revision 和 template settings [
       <a class="inline-reading" href="resources.html#reference-r34">
        Qwen3 0.6B model card (R34)
       </a>
@@ -1935,7 +1935,7 @@
       驗證與限制
      </h2>
      <p>
-      32 份 notebooks 及 companion scripts 均通過 syntax checks。本次修訂已執行 13 條完整 CPU-safe tutorial paths，以及獨立 DPO 算術檢查，全部通過。Tutorial 30 亦通過全部 23 項 support contract tests。CPU 檢查期間關閉了 optional model-download blocks。Attention、RoPE、parameter count、contrastive loss、nDCG、McNemar、memory、bandwidth、DPO 和 energy 的手算例子已獨立重算。
+      全部32 notebooks 和 companion scripts 通過 syntax checks；28條 CPU-safe paths、第26週 DPO/distillation、第28週 invalid-JSON checks，以及25個 support tests 均通過。Optional model-download blocks 關閉；reference outputs 清楚標示為比較資料。Memory widget 的 batch/token 行為以 DOM test double 驗證；未有 visual browser verification。
      </p>
      <p>
       本次環境並未執行 model downloads、實際 transformer／adapter training、Qdrant model execution、CUDA compilation／profiling、production serving 或實際 model-agent runs。更新的 recipes 已通過 syntax checks；使用練習 runtime 時，仍需確認 hardware、package 和 model compatibility。Fixture results 和手算會與 trained-model measurements 分開標示。發佈的 notebook outputs 保持空白。

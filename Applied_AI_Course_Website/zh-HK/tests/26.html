@@ -469,7 +469,7 @@
         31
        </span>
        <span>
-        整合文件助手與進階延伸
+        整合及檢視 documentation assistant
        </span>
        <span class="week-tick" data-week-tick="31">
        </span>
@@ -562,6 +562,9 @@
        <p>
         它量度對提供 targets 的 fit。獨立 correctness、refusals、semantic arguments 及 regressions 才決定 release quality。
        </p>
+       <p>
+        評分：fit to targets (1)；independent task quality (1)；regression example (1)。
+       </p>
       </details>
      </section>
      <section class="test-question">
@@ -569,7 +572,7 @@
        問題 2
       </div>
       <p>
-       Preferred/reference log change=.4；rejected=.1；beta=.1。計算 DPO scaled margin 和 loss。
+       同一 prompt 下，log pi(chosen)−log pi_ref(chosen)=0.4，log pi(rejected)−log pi_ref(rejected)=0.1。Beta=0.1，計 DPO scaled margin 和 loss。
       </p>
       <label for="week-26-question-2">
        你的練習筆記
@@ -580,7 +583,10 @@
         顯示完整解答
        </summary>
        <p>
-        Relative margin=.3；scaled margin=.03；loss=−ln(sigmoid(.03))≈.67826。beta=.1 是例子和常見 implementation default，並非通用最佳設定。這個計算不能證明 label quality。
+        Relative margin=0.4−0.1=0.3；scaled margin=0.1×0.3=0.03；sigmoid(0.03)≈0.507499，loss≈0.67826。已知數值均為相對 reference model 的 log-ratios，並非 raw probabilities。
+       </p>
+       <p>
+        評分：relative margin (1)；scaled margin (1)；sigmoid/loss (1)。
        </p>
       </details>
      </section>
@@ -601,6 +607,9 @@
        </summary>
        <p>
         固定 base／data／templates／decoding，控制 prompt 改動，保留 paired outputs 及 failures，保存並 reload 確切 artifacts，再作 smoke test／evaluation。如無收益，release 較強且符合條件的 baseline。
+       </p>
+       <p>
+        評分：controlled comparison (1)；paired outputs/failures (1)；reload equality (1)；baseline release if no gain (1)。
        </p>
       </details>
      </section>

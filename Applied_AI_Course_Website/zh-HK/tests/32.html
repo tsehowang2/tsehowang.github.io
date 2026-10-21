@@ -469,7 +469,7 @@
         31
        </span>
        <span>
-        整合文件助手與進階延伸
+        整合及檢視 documentation assistant
        </span>
        <span class="week-tick" data-week-tick="31">
        </span>
@@ -549,7 +549,7 @@
        問題 1
       </div>
       <p>
-       連結 sentence-completion transformer 與 RAG／tool application，同時區分兩者界線。
+       解釋 prefix “I go to school by” 如何變成 next-token probabilities，再說明 handbook passage 如何為 departure-time 問題提供 evidence。
       </p>
       <label for="week-32-question-1">
        你的練習筆記
@@ -560,7 +560,10 @@
         顯示完整解答
        </summary>
        <p>
-        先解釋 token／position／block／logit／generation 機制，再解釋外圍 external evidence selection 及 authorized execution。model weights 與 application controls 角色不同。
+        把 prefix tokenize、lookup embeddings、加入 position information、執行 causally masked blocks、normalize 並 project 到 vocabulary logits，再 softmax/select next token。RAG application 另外 retrieve “[H2] The bus leaves at 07:30”，與 question 一起 pack，要求 generator cite H2。Token prediction 和 external evidence selection 是不同 boundaries。
+       </p>
+       <p>
+        評分： token-to-logit mechanism (1); external evidence path (1); distinction between prediction and support (1).
        </p>
       </details>
      </section>
@@ -569,7 +572,7 @@
        問題 2
       </div>
       <p>
-       列出支持誠實 personal-project delivery 聲稱的 artifacts 及 observations。
+       同一20 tasks，A 成功12次、B 成功16次。B 修正7個 A failures，同時引入3個 failures。計兩者 success rates 和 net gain。Release gate 禁止任何 wrong-version answer；B 有一個，是否通過？
       </p>
       <label for="week-32-question-2">
        你的練習筆記
@@ -580,7 +583,10 @@
         顯示完整解答
        </summary>
        <p>
-        可執行 code／manifest、真正 data／model provenance、raw evaluations、controlled comparisons、實際觀察的 API／operations／failure checks，以及清晰 contributions 及 limitations。
+        A=12/20=60%；B=16/20=80%。Net gain=(7−3)/20=20 percentage points，與增加4個 successes 一致。即使 average success 較高，B 仍因 wrong-version answer 而未通過指定 gate。
+       </p>
+       <p>
+        評分： rates60%/80% (1); net20 percentage points (1); reject B under the stated gate (1).
        </p>
       </details>
      </section>
@@ -589,7 +595,7 @@
        問題 3
       </div>
       <p>
-       根據 project 真正弱點，提出答辯及持續學習計劃。
+       Hybrid retrieval 改善 paraphrases，但 adapter/agent 增加成本、沒有可靠提升。提供 worked release defense，包含 success、absence、failure examples、reproducibility evidence 和下一個 experiment。
       </p>
       <label for="week-32-question-3">
        你的練習筆記
@@ -600,7 +606,10 @@
         顯示完整解答
        </summary>
        <p>
-        展示 baseline、一項 controlled change、success／absence／failure examples 及 reproduction。選擇實測而未解決的 bottleneck，定義下一個 hypothesis／control／metric，並區分建議與已完成工作。
+        示範 defense：選合格 hybrid retriever、base generator、fixed workflow。展示有 source 的 departure answer、fare 缺失時的 insufficiency response，以及 wrong-version tool proposal 在 execution 前被拒絕。提交 pinned component identities、setup commands、checked labels、paired raw outputs 和 clean reproduction traces。保留 adapter/agent 負面結果。下一 experiment 在相同 context/latency budgets 測試 reranking 是否修正已觀察的 paraphrase misses，分開記錄 candidate recall 和 final support。這是示範 defense，並非聲稱 learner 已實測這些結果。
+       </p>
+       <p>
+        評分： justified configuration (1); three concrete cases (1); reproduction/evidence (1); focused controlled next experiment (1).
        </p>
       </details>
      </section>

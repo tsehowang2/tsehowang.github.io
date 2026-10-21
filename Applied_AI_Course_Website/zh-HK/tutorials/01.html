@@ -469,7 +469,7 @@
         31
        </span>
        <span>
-        整合文件助手與進階延伸
+        整合及檢視 documentation assistant
        </span>
        <span class="week-tick" data-week-tick="31">
        </span>
@@ -547,7 +547,7 @@
      </a>
     </div>
     <p class="save-note">
-     執行這份 notebook 時，亦請
+     Tutorials 01–16 不需要 coursekit；完整 pack 是可選的。需要 support files 時，
      <a download="" href="../../downloads/Applied_Generative_AI_Course.zip">
       下載並解壓完整課程套件
      </a>
@@ -599,7 +599,7 @@
        notebook 環境及課程檔案
       </summary>
       <p>
-       這個 cell 尋找已解壓的課程檔案。執行 notebook 時需要它。
+       先執行 setup；早期 tutorials 建立 output directory，後期 tutorials 尋找已解壓的 course support files。
       </p>
       <div class="code-block">
        <div class="code-bar">
@@ -610,20 +610,25 @@
          複製 code
         </button>
        </div>
-       <pre><code>from pathlib import Path
-import sys,json,time,random,hashlib,math
-if hasattr(sys.stdout,'reconfigure'): sys.stdout.reconfigure(encoding='utf-8')
-candidates=[Path.cwd(),Path.cwd().parent,Path.cwd()/'llm_course',Path.cwd()/'llm_course_v2',Path('/content/llm_course'),Path('/content/llm_course_v2')]
-COURSE=next((p for p in candidates if (p/'coursekit/core.py').exists()),None)
-if COURSE is None: raise RuntimeError('Extract the complete course pack; run from its root or notebooks directory.')
-if str(COURSE) not in sys.path:sys.path.insert(0,str(COURSE))
-RUNS=COURSE/'runs';RUNS.mkdir(exist_ok=True)
-from coursekit.core import *
+       <pre><code>import random
+from pathlib import Path
+import sys, json, math, time, random
+if hasattr(sys.stdout, 'reconfigure'):
+    sys.stdout.reconfigure(encoding='utf-8')
+COURSE = Path.cwd().parent if Path.cwd().name == 'notebooks' else Path.cwd()
+RUNS = COURSE / 'runs'
+RUNS.mkdir(exist_ok=True)
 random.seed(7)
-print('Course root:',COURSE)
+print('Outputs directory:', RUNS)
 </code></pre>
       </div>
      </details>
+     <h3 id="pause-before-the-next-step">
+      進入下一步前先停一停
+     </h3>
+     <p>
+      自行加入兩句 train 句子。執行前先預測新的分母。
+     </p>
      <p>
       我們先建立一個沒有 neural network 的 language model。每句句子都看得見。只計算相同 prefix 的 continuation，再把 counts 轉為 probabilities。這些比例描述這個小型教學資料集，並非真實通勤行為。
      </p>
@@ -640,20 +645,26 @@ print('Course root:',COURSE)
        </button>
       </div>
       <pre><code>from collections import Counter
-sentences=['I go to school by bus']*3+['I go to school by train','I go to school by bicycle']
-prefix='I go to school by '
-counts=Counter(s[len(prefix):] for s in sentences if s.startswith(prefix))
-probs={word:count/sum(counts.values()) for word,count in counts.items()}
-print(counts,probs)
-assert probs=={'bus':.6,'train':.2,'bicycle':.2}
+sentences = ['I go to school by bus'] * 3 + ['I go to school by train', 'I go to school by bicycle']
+vocabulary = ['bus', 'train', 'bicycle']
+
+def continuation_probs(prefix, alpha=0.0):
+    observed = Counter((s[len(prefix):] for s in sentences if s.startswith(prefix)))
+    total = sum(observed.values())
+    if total == 0 and alpha == 0:
+        return None
+    return {w: (observed[w] + alpha) / (total + alpha * len(vocabulary)) for w in vocabulary}
+prefix = 'I go to school by '
+counts = Counter((s[len(prefix):] for s in sentences if s.startswith(prefix)))
+probs = continuation_probs(prefix)
+print(counts, probs)
+assert probs == {'bus': 0.6, 'train': 0.2, 'bicycle': 0.2}
+assert continuation_probs('I go to work by ') is None
+fallback = continuation_probs('I go to work by ', 1)
+assert fallback == dict.fromkeys(vocabulary, 1 / 3)
+print('Unseen prefix:', None, 'Add-one fallback:', fallback)
 </code></pre>
      </div>
-     <h3 id="pause-before-the-next-step">
-      進入下一步前先停一停
-     </h3>
-     <p>
-      自行加入兩句 train 句子。執行前先預測新的分母。
-     </p>
      <h3>
       程式步驟 2
      </h3>
@@ -666,10 +677,10 @@ assert probs=={'bus':.6,'train':.2,'bicycle':.2}
         複製 code
        </button>
       </div>
-      <pre><code>counts['train']+=2
-print({w:c/sum(counts.values()) for w,c in counts.items()})
-assert sum(counts.values())==7
-print('Three-token chain probability:',.5*.4*.25)
+      <pre><code>counts['train'] += 2
+print({w: c / sum(counts.values()) for w, c in counts.items()})
+assert sum(counts.values()) == 7
+print('Three-token chain probability:', 0.5 * 0.4 * 0.25)
 </code></pre>
      </div>
      <h3 id="independent-experiment">
@@ -681,6 +692,26 @@ print('Three-token chain probability:',.5*.4*.25)
      <p>
       提交簡短報告，列出預測、實際結果、比較及限制。記錄環境或數據的改動。不要用示意數字代替實際量度結果。
      </p>
+     <h3 id="reference-output">
+      Reference output
+     </h3>
+     <p>
+      CPU 教學 run 的 reference output（paths 和 timings 會不同）。這只供比較，並非你的 experiment result。
+     </p>
+     <div class="code-block">
+      <div class="code-bar">
+       <span>
+        text
+       </span>
+       <button class="copy-code" type="button">
+        複製 code
+       </button>
+      </div>
+      <pre><code>Counter({'bus': 3, 'train': 1, 'bicycle': 1}) {'bus': 0.6, 'train': 0.2, 'bicycle': 0.2}
+Unseen prefix: None Add-one fallback: {'bus': 0.3333333333333333, 'train': 0.3333333333333333, 'bicycle': 0.3333333333333333}
+{'bus': 0.42857142857142855, 'train': 0.42857142857142855, 'bicycle': 0.14285714285714285}
+Three-token chain probability: 0.05</code></pre>
+     </div>
     </article>
     <div class="end-note">
      閱讀程式只是第一步。完成獨立實驗並保留實際結果，才把這個 lab 標記為完成。

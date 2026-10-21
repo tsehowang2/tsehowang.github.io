@@ -469,7 +469,7 @@
         31
        </span>
        <span>
-        整合文件助手與進階延伸
+        整合及檢視 documentation assistant
        </span>
        <span class="week-tick" data-week-tick="31">
        </span>
@@ -547,7 +547,7 @@
      </a>
     </div>
     <p class="save-note">
-     執行這份 notebook 時，亦請
+     Tutorials 01–16 不需要 coursekit；完整 pack 是可選的。需要 support files 時，
      <a download="" href="../../downloads/Applied_Generative_AI_Course.zip">
       下載並解壓完整課程套件
      </a>
@@ -599,7 +599,7 @@
        notebook 環境及課程檔案
       </summary>
       <p>
-       這個 cell 尋找已解壓的課程檔案。執行 notebook 時需要它。
+       先執行 setup；早期 tutorials 建立 output directory，後期 tutorials 尋找已解壓的 course support files。
       </p>
       <div class="code-block">
        <div class="code-bar">
@@ -610,20 +610,25 @@
          複製 code
         </button>
        </div>
-       <pre><code>from pathlib import Path
-import sys,json,time,random,hashlib,math
-if hasattr(sys.stdout,'reconfigure'): sys.stdout.reconfigure(encoding='utf-8')
-candidates=[Path.cwd(),Path.cwd().parent,Path.cwd()/'llm_course',Path.cwd()/'llm_course_v2',Path('/content/llm_course'),Path('/content/llm_course_v2')]
-COURSE=next((p for p in candidates if (p/'coursekit/core.py').exists()),None)
-if COURSE is None: raise RuntimeError('Extract the complete course pack; run from its root or notebooks directory.')
-if str(COURSE) not in sys.path:sys.path.insert(0,str(COURSE))
-RUNS=COURSE/'runs';RUNS.mkdir(exist_ok=True)
-from coursekit.core import *
+       <pre><code>import random
+from pathlib import Path
+import sys, json, math, time, random
+if hasattr(sys.stdout, 'reconfigure'):
+    sys.stdout.reconfigure(encoding='utf-8')
+COURSE = Path.cwd().parent if Path.cwd().name == 'notebooks' else Path.cwd()
+RUNS = COURSE / 'runs'
+RUNS.mkdir(exist_ok=True)
 random.seed(7)
-print('Course root:',COURSE)
+print('Outputs directory:', RUNS)
 </code></pre>
       </div>
      </details>
+     <h3 id="pause-before-the-next-step">
+      進入下一步前先停一停
+     </h3>
+     <p>
+      解釋從較長 sequence 取出的六位置 input，為何可以有六個 next-token targets，而獨立的六 token 句子只提供五組 adjacent pairs。
+     </p>
      <p>
       這是一份整合工作紙。我們在完整 model path 旁列出 dimensions 及 operation counts。這些計算不能代替第 12 週真正 tiny-model run。帶同那份報告，解釋每個階段。
      </p>
@@ -639,22 +644,44 @@ print('Course root:',COURSE)
         複製 code
        </button>
       </div>
-      <pre><code>B,T,D,H,V=2,6,8,2,20
-dh=D//H
-trace={'token IDs':(B,T),'embeddings':(B,T,D),'split Q/K/V':(B,H,T,dh),'scores':(B,H,T,T),'merged attention':(B,T,D),'vocabulary logits':(B,T,V),'shifted targets':(B,T)}
-for name,shape in trace.items():print(name,shape)
-score_bytes=B*H*T*T*4
-assert score_bytes==576
-print('Explicit float32 scores in this example:',score_bytes,'bytes')
+      <pre><code>B, T, D, H, V = (2, 6, 8, 2, 20)
+dh = D // H
+trace = {'token IDs': (B, T), 'embeddings': (B, T, D), 'split Q/K/V': (B, H, T, dh), 'scores': (B, H, T, T), 'merged attention': (B, T, D), 'vocabulary logits': (B, T, V), 'shifted targets': (B, T)}
+for name, shape in trace.items():
+    print(name, shape)
+score_bytes = B * H * T * T * 4
+assert score_bytes == 576
+print('Explicit float32 scores in this example:', score_bytes, 'bytes')
 print('Use the week-12 implementation to verify these shapes on a live model.')
 </code></pre>
      </div>
-     <h3 id="pause-before-the-next-step">
-      進入下一步前先停一停
+     <h3 id="count-the-matrix-multiplications">
+      計算 matrix multiplications
      </h3>
      <p>
-      解釋從較長 sequence 取出的六位置 input，為何可以有六個 next-token targets，而獨立的六 token 句子只提供五組 adjacent pairs。
+      計算 multiply-accumulates (MACs)，每次約為兩次 FLOPs。忽略 normalization、softmax、biases 和 activations。
      </p>
+     <h3>
+      程式步驟 2
+     </h3>
+     <div class="code-block">
+      <div class="code-bar">
+       <span>
+        Python
+       </span>
+       <button class="copy-code" type="button">
+        複製 code
+       </button>
+      </div>
+      <pre><code>B, T, d_model, H, V = (2, 6, 8, 2, 20)
+d_head = d_model // H
+counts = {'QKV': 3 * B * T * d_model * d_model, 'QK and weights-V': 2 * B * H * T * T * d_head, 'output projection': B * T * d_model * d_model, 'MLP': 8 * B * T * d_model * d_model, 'vocabulary': B * T * d_model * V}
+for name, macs in counts.items():
+    print(name, macs, 'MACs')
+print('Total:', sum(counts.values()), 'MACs; approximate FLOPs:', 2 * sum(counts.values()))
+assert sum(counts.values()) == 12288
+</code></pre>
+     </div>
      <h3 id="independent-experiment">
       獨立實驗
      </h3>
@@ -664,6 +691,37 @@ print('Use the week-12 implementation to verify these shapes on a live model.')
      <p>
       提交簡短報告，列出預測、實際結果、比較及限制。記錄環境或數據的改動。不要用示意數字代替實際量度結果。
      </p>
+     <h3 id="reference-output">
+      Reference output
+     </h3>
+     <p>
+      CPU 教學 run 的 reference output（paths 和 timings 會不同）。這只供比較，並非你的 experiment result。
+     </p>
+     <div class="code-block">
+      <div class="code-bar">
+       <span>
+        text
+       </span>
+       <button class="copy-code" type="button">
+        複製 code
+       </button>
+      </div>
+      <pre><code>token IDs (2, 6)
+embeddings (2, 6, 8)
+split Q/K/V (2, 2, 6, 4)
+scores (2, 2, 6, 6)
+merged attention (2, 6, 8)
+vocabulary logits (2, 6, 20)
+shifted targets (2, 6)
+Explicit float32 scores in this example: 576 bytes
+Use the week-12 implementation to verify these shapes on a live model.
+QKV 2304 MACs
+QK and weights-V 1152 MACs
+output projection 768 MACs
+MLP 6144 MACs
+vocabulary 1920 MACs
+Total: 12288 MACs; approximate FLOPs: 24576</code></pre>
+     </div>
     </article>
     <div class="end-note">
      閱讀程式只是第一步。完成獨立實驗並保留實際結果，才把這個 lab 標記為完成。

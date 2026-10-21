@@ -469,7 +469,7 @@
         31
        </span>
        <span>
-        整合文件助手與進階延伸
+        整合及檢視 documentation assistant
        </span>
        <span class="week-tick" data-week-tick="31">
        </span>
@@ -562,6 +562,9 @@
        <p>
         i=blockIdx.x×blockDim.x+threadIdx.x；兩個 blocks 提供 512 threads；只有 i&lt;257 才存取 arrays。
        </p>
+       <p>
+        評分：index (1)；bounds check (1)；two blocks/512 threads (1)。
+       </p>
       </details>
      </section>
      <section class="test-question">
@@ -580,7 +583,10 @@
         顯示完整解答
        </summary>
        <p>
-        新 total=18.5 ms，speedup=20/18.5≈1.081。
+        不受影響部分=20−3=17 ms。優化後 kernel=3/2=1.5 ms。新 total=17+1.5=18.5 ms；speedup=20/18.5≈1.081。
+       </p>
+       <p>
+        評分：kernel now 1.5 ms (1)；total18.5 ms (1)；speedup≈1.081 (1)。
        </p>
       </details>
      </section>
@@ -601,6 +607,9 @@
        </summary>
        <p>
         CPU reference／tolerances 及特殊 sizes、warmup、synchronization／events、重複 timings／spread、transfer boundary、實際 device／software metadata，以及保存 workload／trace。
+       </p>
+       <p>
+        評分：correctness (1)；warmup and synchronization (1)；repeats/spread (1)；device/workload/transfer metadata (1)。
        </p>
       </details>
      </section>

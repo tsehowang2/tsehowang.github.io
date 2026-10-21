@@ -463,7 +463,7 @@
         31
        </span>
        <span>
-        Integrating the documentation assistant and advanced extensions
+        Integrating and reviewing the documentation assistant
        </span>
        <span class="week-tick" data-week-tick="31">
        </span>
@@ -596,7 +596,7 @@
       Evaluation design
      </h2>
      <p>
-      Create at least 40 independently checked cases with paraphrases, version conflicts, missing answers and tool requests. This is a practical exercise minimum, not a statistically conclusive benchmark. Group related variants to prevent near-duplicate leakage. Permit access to the reference corpus while withholding final questions and labels from tuning.
+      The supplied 12 Atlas cases are smoke-test examples, not a completed project evaluation. Author and manually check at least 28 additional cases from your chosen documentation; do not count automatic paraphrases as independent evidence. Save the full set as runs/project_cases.json with unique id, question, expected facts, source IDs, group, version and checked=true. Create at least 40 independently checked cases with paraphrases, version conflicts, missing answers and tool requests. This is a practical exercise minimum, not a statistically conclusive benchmark. Group related variants to prevent near-duplicate leakage. Permit access to the reference corpus while withholding final questions and labels from tuning.
      </p>
      <p>
       Measure evidence recall, answer correctness, citation support, version mistakes, refusals, tool arguments, latency, tokens and failures. Save per-task outputs and compare the same tasks. Separate simulations from actual model measurements. Report uncertainty and task-set limitations.
@@ -730,6 +730,12 @@
      </p>
      <p>
       Incident report fields: trigger/time; user impact; affected version; detection signal; diagnostic evidence; mitigation; root cause; contributing factors; one regression test; one measurable prevention action; owner and follow-up condition. A failed drill is a finding to repair, not a result to hide.
+     </p>
+     <h2 id="submitted-release-audit">
+      Submitted release audit
+     </h2>
+     <p>
+      Save runs/release_manifest.json, project_cases.json, project_results.json, manual_grades.json, environment.txt and limitations.md alongside the notebook artifacts. The release audit lists missing or invalid submissions and requires 40 checked cases. Mark unused components as not_used. A passing artifact audit still requires human review of task quality and evidence.
      </p>
     </article>
    </div>

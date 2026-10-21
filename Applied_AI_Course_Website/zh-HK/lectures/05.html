@@ -469,7 +469,7 @@
         31
        </span>
        <span>
-        整合文件助手與進階延伸
+        整合及檢視 documentation assistant
        </span>
        <span class="week-tick" data-week-tick="31">
        </span>
@@ -574,12 +574,30 @@
         第 05 週 · 課節 1
        </div>
        <h3>
+        Recurrent gradients 為何衰減
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          更新 h_t=0.5*h_(t-1)+x_t 每 step 都把較早 state 的影響乘以 0.5。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#why-recurrent-gradients-can-fade">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 05 週 · 課節 2
+       </div>
+       <h3>
         同一個字可以出現在不同情況
        </h3>
        <div class="slide-prose">
         <ul class="slide-keypoints">
          <li>
-          讀「I go to school by bus」和「The bus is late because it broke down.」。
+          閱讀 “I go to school by bus” 和 “The bus is late because it broke down.”。
          </li>
          <li>
           字的順序也很重要。「The boy follows the bus」和「The bus follows the boy」包含相同單字，卻描述不同事件。只根據出現了哪些字建立 representation，會失去這個分別。
@@ -595,7 +613,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        第 05 週 · 課節 2
+        第 05 週 · 課節 3
        </div>
        <h3>
         固定 window 只看到句子的一部分
@@ -619,7 +637,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        第 05 週 · 課節 3
+        第 05 週 · 課節 4
        </div>
        <h3>
         Recurrent model 會攜帶 state
@@ -643,7 +661,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        第 05 週 · 課節 4
+        第 05 週 · 課節 5
        </div>
        <h3>
         用簡單 state update 展示資訊流失
@@ -667,7 +685,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        第 05 週 · 課節 5
+        第 05 週 · 課節 6
        </div>
        <h3>
         讀取 source，產生 target
@@ -691,7 +709,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        第 05 週 · 課節 6
+        第 05 週 · 課節 7
        </div>
        <h3>
         當前 position 可以看到甚麼
@@ -715,7 +733,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        第 05 週 · 課節 7
+        第 05 週 · 課節 8
        </div>
        <h3>
         通往 attention 的橋樑
@@ -739,7 +757,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        第 05 週 · 課節 8
+        第 05 週 · 課節 9
        </div>
        <h3>
         實例練習與學習檢查
@@ -763,7 +781,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        第 05 週 · 課節 9
+        第 05 週 · 課節 10
        </div>
        <h3>
         把 context access 畫成可測試的圖
@@ -791,7 +809,7 @@
        ← 上一頁
       </button>
       <span aria-live="polite" class="slide-counter">
-       1 / 9
+       1 / 10
       </span>
       <button class="slide-next" type="button">
        下一頁 →
@@ -801,31 +819,34 @@
       前往 slide
       <select aria-label="跳至 slide" class="slide-jump">
        <option value="0">
-        1. 同一個字可以出現在不同情況
+        1. Recurrent gradients 為何衰減
        </option>
        <option value="1">
-        2. 固定 window 只看到句子的一部分
+        2. 同一個字可以出現在不同情況
        </option>
        <option value="2">
-        3. Recurrent model 會攜帶 state
+        3. 固定 window 只看到句子的一部分
        </option>
        <option value="3">
-        4. 用簡單 state update 展示資訊流失
+        4. Recurrent model 會攜帶 state
        </option>
        <option value="4">
-        5. 讀取 source，產生 target
+        5. 用簡單 state update 展示資訊流失
        </option>
        <option value="5">
-        6. 當前 position 可以看到甚麼
+        6. 讀取 source，產生 target
        </option>
        <option value="6">
-        7. 通往 attention 的橋樑
+        7. 當前 position 可以看到甚麼
        </option>
        <option value="7">
-        8. 實例練習與學習檢查
+        8. 通往 attention 的橋樑
        </option>
        <option value="8">
-        9. 把 context access 畫成可測試的圖
+        9. 實例練習與學習檢查
+       </option>
+       <option value="9">
+        10. 把 context access 畫成可測試的圖
        </option>
       </select>
      </label>
@@ -838,6 +859,11 @@
       本課內容
      </strong>
      <ol>
+      <li>
+       <a href="#why-recurrent-gradients-can-fade">
+        Recurrent gradients 為何衰減
+       </a>
+      </li>
       <li>
        <a href="#the-same-word-can-appear-in-different-situations">
         同一個字可以出現在不同情況
@@ -892,11 +918,17 @@
      <h2>
       閱讀完整解說
      </h2>
+     <h3 id="why-recurrent-gradients-can-fade">
+      Recurrent gradients 為何衰減
+     </h3>
+     <p>
+      更新 h_t=0.5*h_(t-1)+x_t 每 step 都把較早 state 的影響乘以 0.5。跨 k steps 的 derivative 是 0.5^k，十 steps 後約為 0.00098。這是 vanishing gradients 的簡單例子，會令遠距 dependencies 難以學習；其他反覆 transformations 亦可能造成 exploding gradients。LSTM (long short-term memory) 和 GRU (gated recurrent unit) 使用 learned gates 控制 state updates，幫助保留有用 signals，但不代表所有長距 dependencies 都容易學習。
+     </p>
      <h3 id="the-same-word-can-appear-in-different-situations">
       同一個字可以出現在不同情況
      </h3>
      <p>
-      讀「I go to school by bus」和「The bus is late because it broke down.」。Token bus 參與了不同關係。第二句中，it 指回 bus。若 model 獨立處理每個 token，就無法利用句子解決這個指代關係。
+      閱讀 “I go to school by bus” 和 “The bus is late because it broke down.”。Pronoun it 需要 context 才能辨認 referent 是 bus；這個例子示範 it 的 contextual interpretation。逐個 token 獨立處理的 model 無法使用句子來理解此關係。
      </p>
      <p>
       字的順序也很重要。「The boy follows the bus」和「The bus follows the boy」包含相同單字，卻描述不同事件。只根據出現了哪些字建立 representation，會失去這個分別。

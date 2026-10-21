@@ -463,7 +463,7 @@
         31
        </span>
        <span>
-        Integrating the documentation assistant and advanced extensions
+        Integrating and reviewing the documentation assistant
        </span>
        <span class="week-tick" data-week-tick="31">
        </span>
@@ -556,6 +556,9 @@
        <p>
         Execution runs controlled state/actions; evaluation checks tasks. History, structured current task state, and persistent memory have different provenance/retention/trust.
        </p>
+       <p>
+        Marking: execution/evaluation (1); task state/history (1); persistent memory (1).
+       </p>
       </details>
      </section>
      <section class="test-question">
@@ -576,6 +579,9 @@
        <p>
         Stop with budget_exhausted after at most the allowed proposals. A step cap alone does not interrupt blocking calls or bound all time/memory/token use.
        </p>
+       <p>
+        Marking: at most cap (1); budget_exhausted (1); blocking/resource limits (1).
+       </p>
       </details>
      </section>
      <section class="test-question">
@@ -595,6 +601,9 @@
        </summary>
        <p>
         Same tasks/tools/budgets; independent state/result predicates; call/scope failures, forbidden actions, costs and termination. Audit traces, including accidental-looking final success and unnecessary actions.
+       </p>
+       <p>
+        Marking: fixed comparison (1); independent predicates (1); forbidden actions/termination (1); cost and traces (1).
        </p>
       </details>
      </section>

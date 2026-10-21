@@ -463,7 +463,7 @@
         31
        </span>
        <span>
-        Integrating the documentation assistant and advanced extensions
+        Integrating and reviewing the documentation assistant
        </span>
        <span class="week-tick" data-week-tick="31">
        </span>
@@ -568,6 +568,24 @@
         Week 07 · Section 1
        </div>
        <h3>
+        Row and column conventions describe the same map
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Attention chapters store token vectors as rows: y_row=x_row*W_row.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#row-and-column-conventions-describe-the-same-map">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 07 · Section 2
+       </div>
+       <h3>
         One token can have several computational roles
        </h3>
        <div class="slide-prose">
@@ -589,7 +607,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        Week 07 · Section 2
+        Week 07 · Section 3
        </div>
        <h3>
         Linear projection with visible numbers
@@ -613,7 +631,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        Week 07 · Section 3
+        Week 07 · Section 4
        </div>
        <h3>
         A shared notation for attention dimensions
@@ -631,7 +649,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        Week 07 · Section 4
+        Week 07 · Section 5
        </div>
        <h3>
         Applying projections to the whole sentence
@@ -655,7 +673,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        Week 07 · Section 5
+        Week 07 · Section 6
        </div>
        <h3>
         Comparing all query key pairs
@@ -679,7 +697,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        Week 07 · Section 6
+        Week 07 · Section 7
        </div>
        <h3>
         A complete two-position example
@@ -703,7 +721,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        Week 07 · Section 7
+        Week 07 · Section 8
        </div>
        <h3>
         Self attention and cross attention use different sources
@@ -727,7 +745,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        Week 07 · Section 8
+        Week 07 · Section 9
        </div>
        <h3>
         What training can change
@@ -751,7 +769,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        Week 07 · Section 9
+        Week 07 · Section 10
        </div>
        <h3>
         Worked practice and a readiness check
@@ -775,7 +793,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        Week 07 · Section 10
+        Week 07 · Section 11
        </div>
        <h3>
         Changing a key versus changing a value
@@ -803,7 +821,7 @@
        ← Previous
       </button>
       <span aria-live="polite" class="slide-counter">
-       1 / 10
+       1 / 11
       </span>
       <button class="slide-next" type="button">
        Next →
@@ -813,34 +831,37 @@
       Go to slide
       <select aria-label="Go to slide" class="slide-jump">
        <option value="0">
-        1. One token can have several computational roles
+        1. Row and column conventions describe the same map
        </option>
        <option value="1">
-        2. Linear projection with visible numbers
+        2. One token can have several computational roles
        </option>
        <option value="2">
-        3. A shared notation for attention dimensions
+        3. Linear projection with visible numbers
        </option>
        <option value="3">
-        4. Applying projections to the whole sentence
+        4. A shared notation for attention dimensions
        </option>
        <option value="4">
-        5. Comparing all query key pairs
+        5. Applying projections to the whole sentence
        </option>
        <option value="5">
-        6. A complete two-position example
+        6. Comparing all query key pairs
        </option>
        <option value="6">
-        7. Self attention and cross attention use different sources
+        7. A complete two-position example
        </option>
        <option value="7">
-        8. What training can change
+        8. Self attention and cross attention use different sources
        </option>
        <option value="8">
-        9. Worked practice and a readiness check
+        9. What training can change
        </option>
        <option value="9">
-        10. Changing a key versus changing a value
+        10. Worked practice and a readiness check
+       </option>
+       <option value="10">
+        11. Changing a key versus changing a value
        </option>
       </select>
      </label>
@@ -853,6 +874,11 @@
       In this lesson
      </strong>
      <ol>
+      <li>
+       <a href="#row-and-column-conventions-describe-the-same-map">
+        Row and column conventions describe the same map
+       </a>
+      </li>
       <li>
        <a href="#one-token-can-have-several-computational-roles">
         One token can have several computational roles
@@ -920,6 +946,12 @@
        B: batch · T: tokens · d_model: model width · H: query heads · H_kv: key/value heads · d_head: query/key width per head · d_value: value width per head
       </p>
      </aside>
+     <h3 id="row-and-column-conventions-describe-the-same-map">
+      Row and column conventions describe the same map
+     </h3>
+     <p>
+      Attention chapters store token vectors as rows: y_row=x_row*W_row. Week 25 uses column vectors to match the common LoRA formula: y_col=W_col*x_col. They are transposes of the same calculation: x_col=x_row transpose and W_col=W_row transpose. A [d_in,d_out] row-convention matrix therefore becomes [d_out,d_in] in column convention. H_kv is reserved for the later grouped-query/cache discussion; ordinary attention here has one K/V set per query head.
+     </p>
      <h3 id="one-token-can-have-several-computational-roles">
       One token can have several computational roles
      </h3>

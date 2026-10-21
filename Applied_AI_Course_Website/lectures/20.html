@@ -463,7 +463,7 @@
         31
        </span>
        <span>
-        Integrating the documentation assistant and advanced extensions
+        Integrating and reviewing the documentation assistant
        </span>
        <span class="week-tick" data-week-tick="31">
        </span>
@@ -568,6 +568,24 @@
         Week 20 · Section 1
        </div>
        <h3>
+        RRF
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          RRF means reciprocal rank fusion: combine ordered result lists using reciprocal ranks, rather than directly adding incompatible raw scores.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#rrf">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 20 · Section 2
+       </div>
+       <h3>
         A basic pipeline gives us observable failures
        </h3>
        <div class="slide-prose">
@@ -589,7 +607,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        Week 20 · Section 2
+        Week 20 · Section 3
        </div>
        <h3>
         Combining lexical and dense candidates
@@ -613,7 +631,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        Week 20 · Section 3
+        Week 20 · Section 4
        </div>
        <h3>
         A worked fusion comparison
@@ -637,7 +655,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        Week 20 · Section 4
+        Week 20 · Section 5
        </div>
        <h3>
         Reranking spends more work on selected pairs
@@ -661,7 +679,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        Week 20 · Section 5
+        Week 20 · Section 6
        </div>
        <h3>
         Context construction after ranking
@@ -685,7 +703,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        Week 20 · Section 6
+        Week 20 · Section 7
        </div>
        <h3>
         Query rewriting and multi step retrieval
@@ -709,7 +727,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        Week 20 · Section 7
+        Week 20 · Section 8
        </div>
        <h3>
         A controlled experiment
@@ -733,7 +751,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        Week 20 · Section 8
+        Week 20 · Section 9
        </div>
        <h3>
         Worked practice and a readiness check
@@ -761,7 +779,7 @@
        ← Previous
       </button>
       <span aria-live="polite" class="slide-counter">
-       1 / 8
+       1 / 9
       </span>
       <button class="slide-next" type="button">
        Next →
@@ -771,28 +789,31 @@
       Go to slide
       <select aria-label="Go to slide" class="slide-jump">
        <option value="0">
-        1. A basic pipeline gives us observable failures
+        1. RRF
        </option>
        <option value="1">
-        2. Combining lexical and dense candidates
+        2. A basic pipeline gives us observable failures
        </option>
        <option value="2">
-        3. A worked fusion comparison
+        3. Combining lexical and dense candidates
        </option>
        <option value="3">
-        4. Reranking spends more work on selected pairs
+        4. A worked fusion comparison
        </option>
        <option value="4">
-        5. Context construction after ranking
+        5. Reranking spends more work on selected pairs
        </option>
        <option value="5">
-        6. Query rewriting and multi step retrieval
+        6. Context construction after ranking
        </option>
        <option value="6">
-        7. A controlled experiment
+        7. Query rewriting and multi step retrieval
        </option>
        <option value="7">
-        8. Worked practice and a readiness check
+        8. A controlled experiment
+       </option>
+       <option value="8">
+        9. Worked practice and a readiness check
        </option>
       </select>
      </label>
@@ -821,6 +842,11 @@
       In this lesson
      </strong>
      <ol>
+      <li>
+       <a href="#rrf">
+        RRF
+       </a>
+      </li>
       <li>
        <a href="#a-basic-pipeline-gives-us-observable-failures">
         A basic pipeline gives us observable failures
@@ -870,6 +896,12 @@
      <h2>
       Read the full explanation
      </h2>
+     <h3 id="rrf">
+      RRF
+     </h3>
+     <p>
+      RRF means reciprocal rank fusion: combine ordered result lists using reciprocal ranks, rather than directly adding incompatible raw scores.
+     </p>
      <h3 id="a-basic-pipeline-gives-us-observable-failures">
       A basic pipeline gives us observable failures
      </h3>

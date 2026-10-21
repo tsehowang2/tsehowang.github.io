@@ -469,7 +469,7 @@
         31
        </span>
        <span>
-        整合文件助手與進階延伸
+        整合及檢視 documentation assistant
        </span>
        <span class="week-tick" data-week-tick="31">
        </span>
@@ -574,6 +574,147 @@
         第 16 週 · 課節 1
        </div>
        <h3>
+        完整 numeric transformer trace
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          使用 IDs [0,1]、一個 head、d_model=2。
+         </li>
+         <li>
+          最後一個 row 提供 next-token distribution。
+         </li>
+        </ul>
+        <div class="table-wrap">
+         <table>
+          <thead>
+           <tr>
+            <th>
+             步驟
+            </th>
+            <th>
+             數值
+            </th>
+           </tr>
+          </thead>
+          <tbody>
+           <tr>
+            <td>
+             IDs
+            </td>
+            <td>
+             [0,1]
+            </td>
+           </tr>
+           <tr>
+            <td>
+             token embeddings
+            </td>
+            <td>
+             [[1,0],[0,1]]
+            </td>
+           </tr>
+           <tr>
+            <td>
+             position additions
+            </td>
+            <td>
+             [[0,0],[0.1,-0.1]]
+            </td>
+           </tr>
+           <tr>
+            <td>
+             input X
+            </td>
+            <td>
+             [[1.0, 0.0], [0.1, 0.9]]
+            </td>
+           </tr>
+           <tr>
+            <td>
+             Norm(X)=Q=K=V
+            </td>
+            <td>
+             [[1.0, -1.0], [-1.0, 1.0]]
+            </td>
+           </tr>
+           <tr>
+            <td>
+             causal attention weights
+            </td>
+            <td>
+             [[1.0, 0.0], [0.0558, 0.9442]]
+            </td>
+           </tr>
+           <tr>
+            <td>
+             attention output
+            </td>
+            <td>
+             [[1.0, -1.0], [-0.8883, 0.8883]]
+            </td>
+           </tr>
+           <tr>
+            <td>
+             first residual
+            </td>
+            <td>
+             [[2.0, -1.0], [-0.7883, 1.7883]]
+            </td>
+           </tr>
+           <tr>
+            <td>
+             ReLU MLP output
+            </td>
+            <td>
+             [[1.0, 0.0], [0.0, 1.0]]
+            </td>
+           </tr>
+           <tr>
+            <td>
+             second residual
+            </td>
+            <td>
+             [[3.0, -1.0], [-0.7883, 2.7883]]
+            </td>
+           </tr>
+           <tr>
+            <td>
+             final normalized state
+            </td>
+            <td>
+             [[1.0, -1.0], [-1.0, 1.0]]
+            </td>
+           </tr>
+           <tr>
+            <td>
+             vocabulary logits
+            </td>
+            <td>
+             [[1.0, -1.0, -1.0], [-1.0, 1.0, 1.0]]
+            </td>
+           </tr>
+           <tr>
+            <td>
+             next-token probabilities
+            </td>
+            <td>
+             [[0.787, 0.1065, 0.1065], [0.0634, 0.4683, 0.4683]]
+            </td>
+           </tr>
+          </tbody>
+         </table>
+        </div>
+        <a class="slide-section-link" href="#an-end-to-end-numeric-transformer-trace">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 16 週 · 課節 2
+       </div>
+       <h3>
         本學期回到一句話
        </h3>
        <div class="slide-prose">
@@ -595,7 +736,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        第 16 週 · 課節 2
+        第 16 週 · 課節 3
        </div>
        <h3>
         第一階段：text 變成 representation
@@ -619,7 +760,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        第 16 週 · 課節 3
+        第 16 週 · 課節 4
        </div>
        <h3>
         第二階段：每個 block 混合並轉換資訊
@@ -643,7 +784,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        第 16 週 · 課節 4
+        第 16 週 · 課節 5
        </div>
        <h3>
         第三階段：vocabulary prediction
@@ -667,7 +808,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        第 16 週 · 課節 5
+        第 16 週 · 課節 6
        </div>
        <h3>
         第四階段：training 與 generation 以不同方式使用結果
@@ -691,7 +832,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        第 16 週 · 課節 6
+        第 16 週 · 課節 7
        </div>
        <h3>
         在正確邊界診斷錯誤
@@ -715,7 +856,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        第 16 週 · 課節 7
+        第 16 週 · 課節 8
        </div>
        <h3>
         做好準備後閱讀原版 architecture
@@ -739,7 +880,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        第 16 週 · 課節 8
+        第 16 週 · 課節 9
        </div>
        <h3>
         semester one 評核及下一步
@@ -763,7 +904,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        第 16 週 · 課節 9
+        第 16 週 · 課節 10
        </div>
        <h3>
         最後的 shape 紀錄表
@@ -791,7 +932,7 @@
        ← 上一頁
       </button>
       <span aria-live="polite" class="slide-counter">
-       1 / 9
+       1 / 10
       </span>
       <button class="slide-next" type="button">
        下一頁 →
@@ -801,31 +942,34 @@
       前往 slide
       <select aria-label="跳至 slide" class="slide-jump">
        <option value="0">
-        1. 本學期回到一句話
+        1. 完整 numeric transformer trace
        </option>
        <option value="1">
-        2. 第一階段：text 變成 representation
+        2. 本學期回到一句話
        </option>
        <option value="2">
-        3. 第二階段：每個 block 混合並轉換資訊
+        3. 第一階段：text 變成 representation
        </option>
        <option value="3">
-        4. 第三階段：vocabulary prediction
+        4. 第二階段：每個 block 混合並轉換資訊
        </option>
        <option value="4">
-        5. 第四階段：training 與 generation 以不同方式使用結果
+        5. 第三階段：vocabulary prediction
        </option>
        <option value="5">
-        6. 在正確邊界診斷錯誤
+        6. 第四階段：training 與 generation 以不同方式使用結果
        </option>
        <option value="6">
-        7. 做好準備後閱讀原版 architecture
+        7. 在正確邊界診斷錯誤
        </option>
        <option value="7">
-        8. semester one 評核及下一步
+        8. 做好準備後閱讀原版 architecture
        </option>
        <option value="8">
-        9. 最後的 shape 紀錄表
+        9. semester one 評核及下一步
+       </option>
+       <option value="9">
+        10. 最後的 shape 紀錄表
        </option>
       </select>
      </label>
@@ -854,6 +998,11 @@
       本課內容
      </strong>
      <ol>
+      <li>
+       <a href="#an-end-to-end-numeric-transformer-trace">
+        完整 numeric transformer trace
+       </a>
+      </li>
       <li>
        <a href="#the-semester-returns-to-one-sentence">
         本學期回到一句話
@@ -908,6 +1057,135 @@
      <h2>
       閱讀完整解說
      </h2>
+     <h3 id="an-end-to-end-numeric-transformer-trace">
+      完整 numeric transformer trace
+     </h3>
+     <p>
+      使用 IDs [0,1]、一個 head、d_model=2。Q/K/V 和 attention output projections 是 identity matrices；兩個 MLP matrices 亦是 identity，中間用 ReLU。每次 normalization 使用 population variance、epsilon=0.00001、scale=1、bias=0。Vocabulary head 在 row-vector convention 下為 [[1,0,-1],[0,1,0]]。固定 weights 示範計算，並非 trained language model。
+     </p>
+     <div class="table-wrap">
+      <table>
+       <thead>
+        <tr>
+         <th>
+          步驟
+         </th>
+         <th>
+          數值
+         </th>
+        </tr>
+       </thead>
+       <tbody>
+        <tr>
+         <td>
+          IDs
+         </td>
+         <td>
+          [0,1]
+         </td>
+        </tr>
+        <tr>
+         <td>
+          token embeddings
+         </td>
+         <td>
+          [[1,0],[0,1]]
+         </td>
+        </tr>
+        <tr>
+         <td>
+          position additions
+         </td>
+         <td>
+          [[0,0],[0.1,-0.1]]
+         </td>
+        </tr>
+        <tr>
+         <td>
+          input X
+         </td>
+         <td>
+          [[1.0, 0.0], [0.1, 0.9]]
+         </td>
+        </tr>
+        <tr>
+         <td>
+          Norm(X)=Q=K=V
+         </td>
+         <td>
+          [[1.0, -1.0], [-1.0, 1.0]]
+         </td>
+        </tr>
+        <tr>
+         <td>
+          causal attention weights
+         </td>
+         <td>
+          [[1.0, 0.0], [0.0558, 0.9442]]
+         </td>
+        </tr>
+        <tr>
+         <td>
+          attention output
+         </td>
+         <td>
+          [[1.0, -1.0], [-0.8883, 0.8883]]
+         </td>
+        </tr>
+        <tr>
+         <td>
+          first residual
+         </td>
+         <td>
+          [[2.0, -1.0], [-0.7883, 1.7883]]
+         </td>
+        </tr>
+        <tr>
+         <td>
+          ReLU MLP output
+         </td>
+         <td>
+          [[1.0, 0.0], [0.0, 1.0]]
+         </td>
+        </tr>
+        <tr>
+         <td>
+          second residual
+         </td>
+         <td>
+          [[3.0, -1.0], [-0.7883, 2.7883]]
+         </td>
+        </tr>
+        <tr>
+         <td>
+          final normalized state
+         </td>
+         <td>
+          [[1.0, -1.0], [-1.0, 1.0]]
+         </td>
+        </tr>
+        <tr>
+         <td>
+          vocabulary logits
+         </td>
+         <td>
+          [[1.0, -1.0, -1.0], [-1.0, 1.0, 1.0]]
+         </td>
+        </tr>
+        <tr>
+         <td>
+          next-token probabilities
+         </td>
+         <td>
+          [[0.787, 0.1065, 0.1065], [0.0634, 0.4683, 0.4683]]
+         </td>
+        </tr>
+       </tbody>
+      </table>
+     </div>
+     <p>
+      最後一個 row 提供 next-token distribution。選取 vocabulary ID、append，再做下一個 causal step。Training 則按每 position target 選出 probability 計 cross-entropy。Trace 包括兩次 residual addition 和 final normalization。
+     </p>
      <h3 id="the-semester-returns-to-one-sentence">
       本學期回到一句話
      </h3>

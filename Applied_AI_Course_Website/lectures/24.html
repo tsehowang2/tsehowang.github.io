@@ -463,7 +463,7 @@
         31
        </span>
        <span>
-        Integrating the documentation assistant and advanced extensions
+        Integrating and reviewing the documentation assistant
        </span>
        <span class="week-tick" data-week-tick="31">
        </span>
@@ -568,6 +568,27 @@
         Week 24 · Section 1
        </div>
        <h3>
+        Visible labels and serialized examples
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          For the already-tokenized sequence [10,11,12,20,21], suppose the first three tokens are prompt and the final two are response (21 is the end-of-response token).
+         </li>
+         <li>
+          A JSONL training file has one JSON object per line, for example {"messages":[{"role":"user","content":"How do I go to school?"},{"role":"assistant","content":"Take the bus."}]}.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#visible-labels-and-serialized-examples">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 24 · Section 2
+       </div>
+       <h3>
         A repeated behavior problem
        </h3>
        <div class="slide-prose">
@@ -589,7 +610,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        Week 24 · Section 2
+        Week 24 · Section 3
        </div>
        <h3>
         Inputs and desired outputs
@@ -613,7 +634,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        Week 24 · Section 3
+        Week 24 · Section 4
        </div>
        <h3>
         Constructing the model sequence
@@ -637,7 +658,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        Week 24 · Section 4
+        Week 24 · Section 5
        </div>
        <h3>
         A worked label mask
@@ -661,7 +682,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        Week 24 · Section 5
+        Week 24 · Section 6
        </div>
        <h3>
         Data splits before paraphrases
@@ -685,7 +706,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        Week 24 · Section 6
+        Week 24 · Section 7
        </div>
        <h3>
         Choosing the adaptation objective
@@ -709,7 +730,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        Week 24 · Section 7
+        Week 24 · Section 8
        </div>
        <h3>
         An experiment proposal before training
@@ -733,7 +754,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        Week 24 · Section 8
+        Week 24 · Section 9
        </div>
        <h3>
         Worked practice and a readiness check
@@ -761,7 +782,7 @@
        ← Previous
       </button>
       <span aria-live="polite" class="slide-counter">
-       1 / 8
+       1 / 9
       </span>
       <button class="slide-next" type="button">
        Next →
@@ -771,28 +792,31 @@
       Go to slide
       <select aria-label="Go to slide" class="slide-jump">
        <option value="0">
-        1. A repeated behavior problem
+        1. Visible labels and serialized examples
        </option>
        <option value="1">
-        2. Inputs and desired outputs
+        2. A repeated behavior problem
        </option>
        <option value="2">
-        3. Constructing the model sequence
+        3. Inputs and desired outputs
        </option>
        <option value="3">
-        4. A worked label mask
+        4. Constructing the model sequence
        </option>
        <option value="4">
-        5. Data splits before paraphrases
+        5. A worked label mask
        </option>
        <option value="5">
-        6. Choosing the adaptation objective
+        6. Data splits before paraphrases
        </option>
        <option value="6">
-        7. An experiment proposal before training
+        7. Choosing the adaptation objective
        </option>
        <option value="7">
-        8. Worked practice and a readiness check
+        8. An experiment proposal before training
+       </option>
+       <option value="8">
+        9. Worked practice and a readiness check
        </option>
       </select>
      </label>
@@ -805,6 +829,11 @@
       In this lesson
      </strong>
      <ol>
+      <li>
+       <a href="#visible-labels-and-serialized-examples">
+        Visible labels and serialized examples
+       </a>
+      </li>
       <li>
        <a href="#a-repeated-behavior-problem">
         A repeated behavior problem
@@ -854,6 +883,15 @@
      <h2>
       Read the full explanation
      </h2>
+     <h3 id="visible-labels-and-serialized-examples">
+      Visible labels and serialized examples
+     </h3>
+     <p>
+      For the already-tokenized sequence [10,11,12,20,21], suppose the first three tokens are prompt and the final two are response (21 is the end-of-response token). The unshifted label list is [-100,-100,-100,20,21]. With an internal causal shift, logit position 2 predicts token 20 and position 3 predicts token 21. Verify the shift convention of the actual loss implementation.
+     </p>
+     <p>
+      A JSONL training file has one JSON object per line, for example {"messages":[{"role":"user","content":"How do I go to school?"},{"role":"assistant","content":"Take the bus."}]}. This is a data record, not the final token sequence. Apply the selected tokenizer chat template to add role boundaries and the correct response-ending token; inspect the resulting IDs and assistant loss mask. A different model can serialize the same messages differently.
+     </p>
      <h3 id="a-repeated-behavior-problem">
       A repeated behavior problem
      </h3>

@@ -4,7 +4,7 @@
   <meta charset="utf-8"/>
   <meta content="width=device-width,initial-scale=1" name="viewport"/>
   <title>
-   Tutorial 23 Cuda kernels and profiling · Applied AI
+   Tutorial 23 CUDA kernels and profiling · Applied AI
   </title>
   <meta content="Applied generative AI and LLM systems course material" name="description"/>
   <meta content="#173c36" name="theme-color"/>
@@ -463,7 +463,7 @@
         31
        </span>
        <span>
-        Integrating the documentation assistant and advanced extensions
+        Integrating and reviewing the documentation assistant
        </span>
        <span class="week-tick" data-week-tick="31">
        </span>
@@ -523,7 +523,7 @@
       Tutorial 23 / Week 23
      </div>
      <h1>
-      Cuda kernels and profiling
+      CUDA kernels and profiling
      </h1>
      <p class="deck">
       Read the walkthrough, inspect the code, then run the notebook when you are ready.
@@ -541,7 +541,7 @@
      </a>
     </div>
     <p class="save-note">
-     When you run this notebook, also
+     This notebook requires the support files from the complete pack. When you need the support files,
      <a download="" href="../downloads/Applied_Generative_AI_Course.zip">
       download and extract the full course pack
      </a>
@@ -565,7 +565,7 @@
       <strong>
        Before execution:
       </strong>
-      Inspect one complete input/output record before running the full path. Predict a normal result and one failure status.
+      For n=257, predict valid indices, extra threads and required blocks.
      </p>
      <p>
       <strong>
@@ -577,7 +577,7 @@
       <strong>
        Independent work:
       </strong>
-      Change one controlled factor, preserve raw outputs and explain the result. Use the lecture readiness check and capstone milestone to define the task; do not claim fixture success establishes production readiness.
+      Run awkward vector sizes against the CPU reference; save synchronized timings, warmup details and device metadata.
      </p>
      <p>
       <strong>
@@ -593,7 +593,7 @@
        Notebook environment and course files
       </summary>
       <p>
-       This cell finds the extracted course files. It is needed when running the notebook.
+       Run this setup first. Early tutorials create an output directory; later tutorials locate the extracted course support files.
       </p>
       <div class="code-block">
        <div class="code-bar">
@@ -604,22 +604,27 @@
          Copy code
         </button>
        </div>
-       <pre><code>from pathlib import Path
-import sys,json,time,random,hashlib,math
-if hasattr(sys.stdout,'reconfigure'): sys.stdout.reconfigure(encoding='utf-8')
-candidates=[Path.cwd(),Path.cwd().parent,Path.cwd()/'llm_course',Path.cwd()/'llm_course_v2',Path('/content/llm_course'),Path('/content/llm_course_v2')]
-COURSE=next((p for p in candidates if (p/'coursekit/core.py').exists()),None)
-if COURSE is None: raise RuntimeError('Extract the complete course pack; run from its root or notebooks directory.')
-if str(COURSE) not in sys.path:sys.path.insert(0,str(COURSE))
-RUNS=COURSE/'runs';RUNS.mkdir(exist_ok=True)
+       <pre><code>import random
+from pathlib import Path
+import sys, json, time, random, hashlib, math
+if hasattr(sys.stdout, 'reconfigure'):
+    sys.stdout.reconfigure(encoding='utf-8')
+candidates = [Path.cwd(), Path.cwd().parent, Path.cwd() / 'llm_course', Path.cwd() / 'llm_course_v2', Path('/content/llm_course'), Path('/content/llm_course_v2')]
+COURSE = next((p for p in candidates if (p / 'coursekit/core.py').exists()), None)
+if COURSE is None:
+    raise RuntimeError('Extract the complete course pack; run from its root or notebooks directory.')
+if str(COURSE) not in sys.path:
+    sys.path.insert(0, str(COURSE))
+RUNS = COURSE / 'runs'
+RUNS.mkdir(exist_ok=True)
 from coursekit.core import *
 random.seed(7)
-print('Course root:',COURSE)
+print('Course root:', COURSE)
 </code></pre>
       </div>
      </details>
      <p>
-      Inspect the vector-add kernel before compiling: each thread calculates one index and must check its bound. Predict output for five elements. Then compile only if nvcc exists and profile with explicit synchronization.
+      Inspect the vector-add kernel before compiling: each thread calculates one index and must check its bound. Predict bounds behavior for n=1, 257, and 1048576. Then compile only if nvcc exists and profile with explicit synchronization.
      </p>
      <h3>
       Code step 1
@@ -633,15 +638,17 @@ print('Course root:',COURSE)
         Copy code
        </button>
       </div>
-      <pre><code>import shutil,subprocess
-print('KV cache bytes',2*24*1*2048*8*64*2)
-assert 2*24*1*2048*8*64*2/2**20==96
-if shutil.which('nvidia-smi'): subprocess.run(['nvidia-smi'],check=True)
+      <pre><code>import sys
+import shutil, subprocess
+if shutil.which('nvidia-smi'):
+    subprocess.run(['nvidia-smi'], check=True)
 if shutil.which('nvcc'):
-    target=RUNS/('vector_add.exe' if sys.platform=='win32' else 'vector_add')
-    subprocess.check_call(['nvcc','-O2',str(COURSE/'cuda/vector_add.cu'),'-o',str(target)])
-    for n in [1,257,1048576]: subprocess.check_call([str(target),str(n)])
-else: print('CUDA kernel NOT executed: nvcc unavailable. Schedule a compatible runtime.')
+    target = RUNS / ('vector_add.exe' if sys.platform == 'win32' else 'vector_add')
+    subprocess.check_call(['nvcc', '-O2', str(COURSE / 'cuda/vector_add.cu'), '-o', str(target)])
+    for n in [1, 257, 1048576]:
+        subprocess.check_call([str(target), str(n)])
+else:
+    print('CUDA kernel NOT executed: nvcc unavailable. Schedule a compatible runtime.')
 </code></pre>
      </div>
      <h3>
@@ -656,26 +663,57 @@ else: print('CUDA kernel NOT executed: nvcc unavailable. Schedule a compatible r
         Copy code
        </button>
       </div>
-      <pre><code>import torch
-from torch.profiler import profile,ProfilerActivity
-print('torch',torch.__version__,'CUDA runtime',torch.version.cuda)
-if torch.cuda.is_available():
-    print(torch.cuda.get_device_name(0),torch.cuda.get_device_properties(0).total_memory)
-    x=torch.randn(1024,1024,device='cuda');y=torch.randn_like(x)
-    for _ in range(10): z=x@y
-    torch.cuda.synchronize();torch.cuda.reset_peak_memory_stats()
-    start,stop=torch.cuda.Event(enable_timing=True),torch.cuda.Event(enable_timing=True)
-    times=[]
-    for _ in range(20):
-        start.record();z=x@y;stop.record();stop.synchronize();times.append(start.elapsed_time(stop))
-    assert torch.allclose(z.cpu(),x.cpu()@y.cpu(),atol=.003,rtol=.003)
-    with profile(activities=[ProfilerActivity.CPU,ProfilerActivity.CUDA],record_shapes=True,profile_memory=True) as prof:
-        z=x@y;torch.cuda.synchronize()
-    prof.export_chrome_trace(str(RUNS/'week23_trace.json'))
-    print(prof.key_averages().table(sort_by='self_cuda_time_total',row_limit=8))
-    print('Median kernel interval ms',sorted(times)[len(times)//2],'peak allocated bytes',torch.cuda.max_memory_allocated())
-else: print('GPU profiling NOT executed. Memory arithmetic is not a hardware measurement.')
+      <pre><code>import importlib.util
+if importlib.util.find_spec('torch') is None:
+    print('PyTorch profiling skipped: install the pinned course environment first.')
+else:
+    import torch
+    from torch.profiler import profile, ProfilerActivity
+    print('torch', torch.__version__, 'CUDA runtime', torch.version.cuda)
+    if torch.cuda.is_available():
+        print(torch.cuda.get_device_name(0), torch.cuda.get_device_properties(0).total_memory)
+        x = torch.randn(1024, 1024, device='cuda')
+        y = torch.randn_like(x)
+        for _ in range(10):
+            z = x @ y
+        torch.cuda.synchronize()
+        torch.cuda.reset_peak_memory_stats()
+        start, stop = (torch.cuda.Event(enable_timing=True), torch.cuda.Event(enable_timing=True))
+        times = []
+        for _ in range(20):
+            start.record()
+            z = x @ y
+            stop.record()
+            stop.synchronize()
+            times.append(start.elapsed_time(stop))
+        assert torch.allclose(z.cpu(), x.cpu() @ y.cpu(), atol=0.003, rtol=0.003)
+        with profile(activities=[ProfilerActivity.CPU, ProfilerActivity.CUDA], record_shapes=True, profile_memory=True) as prof:
+            z = x @ y
+            torch.cuda.synchronize()
+        prof.export_chrome_trace(str(RUNS / 'week23_trace.json'))
+        print(prof.key_averages().table(sort_by='self_device_time_total', row_limit=8))
+        print('Median kernel interval ms', sorted(times)[len(times) // 2], 'peak allocated bytes', torch.cuda.max_memory_allocated())
+    else:
+        print('GPU profiling NOT executed. Memory arithmetic is not a hardware measurement.')
 </code></pre>
+     </div>
+     <h3 id="reference-output">
+      Reference output
+     </h3>
+     <p>
+      Reference output from the CPU teaching run (paths and timings vary). This is a comparison aid, not your experiment result.
+     </p>
+     <div class="code-block">
+      <div class="code-bar">
+       <span>
+        text
+       </span>
+       <button class="copy-code" type="button">
+        Copy code
+       </button>
+      </div>
+      <pre><code>CUDA kernel NOT executed: nvcc unavailable. Schedule a compatible runtime.
+PyTorch profiling skipped: install the pinned course environment first.</code></pre>
      </div>
     </article>
     <div class="end-note">

@@ -469,7 +469,7 @@
         31
        </span>
        <span>
-        整合文件助手與進階延伸
+        整合及檢視 documentation assistant
        </span>
        <span class="week-tick" data-week-tick="31">
        </span>
@@ -547,7 +547,7 @@
      </a>
     </div>
     <p class="save-note">
-     執行這份 notebook 時，亦請
+     Tutorials 01–16 不需要 coursekit；完整 pack 是可選的。需要 support files 時，
      <a download="" href="../../downloads/Applied_Generative_AI_Course.zip">
       下載並解壓完整課程套件
      </a>
@@ -599,7 +599,7 @@
        notebook 環境及課程檔案
       </summary>
       <p>
-       這個 cell 尋找已解壓的課程檔案。執行 notebook 時需要它。
+       先執行 setup；早期 tutorials 建立 output directory，後期 tutorials 尋找已解壓的 course support files。
       </p>
       <div class="code-block">
        <div class="code-bar">
@@ -610,20 +610,25 @@
          複製 code
         </button>
        </div>
-       <pre><code>from pathlib import Path
-import sys,json,time,random,hashlib,math
-if hasattr(sys.stdout,'reconfigure'): sys.stdout.reconfigure(encoding='utf-8')
-candidates=[Path.cwd(),Path.cwd().parent,Path.cwd()/'llm_course',Path.cwd()/'llm_course_v2',Path('/content/llm_course'),Path('/content/llm_course_v2')]
-COURSE=next((p for p in candidates if (p/'coursekit/core.py').exists()),None)
-if COURSE is None: raise RuntimeError('Extract the complete course pack; run from its root or notebooks directory.')
-if str(COURSE) not in sys.path:sys.path.insert(0,str(COURSE))
-RUNS=COURSE/'runs';RUNS.mkdir(exist_ok=True)
-from coursekit.core import *
+       <pre><code>import random
+from pathlib import Path
+import sys, json, math, time, random
+if hasattr(sys.stdout, 'reconfigure'):
+    sys.stdout.reconfigure(encoding='utf-8')
+COURSE = Path.cwd().parent if Path.cwd().name == 'notebooks' else Path.cwd()
+RUNS = COURSE / 'runs'
+RUNS.mkdir(exist_ok=True)
 random.seed(7)
-print('Course root:',COURSE)
+print('Outputs directory:', RUNS)
 </code></pre>
       </div>
      </details>
+     <h3 id="pause-before-the-next-step">
+      進入下一步前先停一停
+     </h3>
+     <p>
+      解釋 shift 後，第一個 response token 為何由最後的 prompt position 預測。
+     </p>
      <p>
       instruction training 仍是 token prediction，但 supervision 由期望 responses 決定。我們用教學 whitespace tokenizer 分開觀察 label masking。正式 model 的 serialization 及 token boundaries 必須使用該 model 真正的 chat template。
      </p>
@@ -639,22 +644,23 @@ print('Course root:',COURSE)
         複製 code
        </button>
       </div>
-      <pre><code>prompt='User How do I go to school Assistant'
-answer='Take the bus'
-words=(prompt+' '+answer).split();vocab={w:i for i,w in enumerate(dict.fromkeys(words))}
-ids=[vocab[w] for w in words];n=len(prompt.split())
-labels=[-100]*n+ids[n:]
-print(list(zip(words,ids,labels)))
-assert all(x==-100 for x in labels[:n])
-print('At causal logit position',n-1,'the next-token target is',words[n])
+      <pre><code># Explicit shift: logit at i predicts label at i+1.
+prompt = 'User How do I go to school Assistant'
+answer = 'Take the bus &lt;eos&gt;'
+words = (prompt + ' ' + answer).split()
+vocab = {w: i for i, w in enumerate(dict.fromkeys(words))}
+ids = [vocab[w] for w in words]
+n = len(prompt.split())
+labels = [-100] * n + ids[n:]
+shifted_inputs = ids[:-1]
+shifted_targets = labels[1:]
+assert shifted_targets[n - 1] == vocab['Take']
+assert shifted_targets[-1] == vocab['&lt;eos&gt;'] and labels[-1] != -100
+print(list(zip(words, ids, labels)))
+print('First supervised pair:', words[n - 1], '-&gt;', words[n])
+print('Last supervised pair: bus -&gt; &lt;eos&gt;')
 </code></pre>
      </div>
-     <h3 id="pause-before-the-next-step">
-      進入下一步前先停一停
-     </h3>
-     <p>
-      解釋 shift 後，第一個 response token 為何由最後的 prompt position 預測。
-     </p>
      <h3 id="independent-experiment">
       獨立實驗
      </h3>
@@ -664,6 +670,25 @@ print('At causal logit position',n-1,'the next-token target is',words[n])
      <p>
       提交簡短報告，列出預測、實際結果、比較及限制。記錄環境或數據的改動。不要用示意數字代替實際量度結果。
      </p>
+     <h3 id="reference-output">
+      Reference output
+     </h3>
+     <p>
+      CPU 教學 run 的 reference output（paths 和 timings 會不同）。這只供比較，並非你的 experiment result。
+     </p>
+     <div class="code-block">
+      <div class="code-bar">
+       <span>
+        text
+       </span>
+       <button class="copy-code" type="button">
+        複製 code
+       </button>
+      </div>
+      <pre><code>[('User', 0, -100), ('How', 1, -100), ('do', 2, -100), ('I', 3, -100), ('go', 4, -100), ('to', 5, -100), ('school', 6, -100), ('Assistant', 7, -100), ('Take', 8, 8), ('the', 9, 9), ('bus', 10, 10), ('&lt;eos&gt;', 11, 11)]
+First supervised pair: Assistant -&gt; Take
+Last supervised pair: bus -&gt; &lt;eos&gt;</code></pre>
+     </div>
     </article>
     <div class="end-note">
      閱讀程式只是第一步。完成獨立實驗並保留實際結果，才把這個 lab 標記為完成。

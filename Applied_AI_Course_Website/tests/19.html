@@ -463,7 +463,7 @@
         31
        </span>
        <span>
-        Integrating the documentation assistant and advanced extensions
+        Integrating and reviewing the documentation assistant
        </span>
        <span class="week-tick" data-week-tick="31">
        </span>
@@ -556,6 +556,9 @@
        <p>
         Find supporting passages; choose/label what fits; generate a response conditioned on question and evidence. Each boundary can fail independently.
        </p>
+       <p>
+        Marking: retrieval (1); selection/budget (1); generation (1).
+       </p>
       </details>
      </section>
      <section class="test-question">
@@ -576,6 +579,9 @@
        <p>
         State the supported time and missing fare, or explicitly say the complete question lacks sufficient evidence. Do not fabricate fare or cite time evidence for it.
        </p>
+       <p>
+        Marking: time supported (1); fare absent (1); partial answer or insufficiency (1).
+       </p>
       </details>
      </section>
      <section class="test-question">
@@ -595,6 +601,9 @@
        </summary>
        <p>
         Enforce eligible sources; verify cited IDs; audit whether each claim follows from them; verify required facts are all addressed. Valid JSON/IDs alone cannot prove grounding.
+       </p>
+       <p>
+        Marking: scope (1); citation IDs (1); semantic support (1); completeness (1).
        </p>
       </details>
      </section>

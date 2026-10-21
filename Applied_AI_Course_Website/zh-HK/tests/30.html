@@ -469,7 +469,7 @@
         31
        </span>
        <span>
-        整合文件助手與進階延伸
+        整合及檢視 documentation assistant
        </span>
        <span class="week-tick" data-week-tick="31">
        </span>
@@ -562,6 +562,9 @@
        <p>
         latency／errors／queues；evidence／answer／refusal measures；event logs；每個 request 相連的 spans。解讀 traffic／corpus 變化，並保護記錄內容。
        </p>
+       <p>
+        評分：operational signals (1)；quality signals (1)；logs versus spans (1)。
+       </p>
       </details>
      </section>
      <section class="test-question">
@@ -582,6 +585,9 @@
        <p>
         source／index／context／cache dependencies 可能仍帶惡意內容。恢復完整一致 release，或移除／重建／invalidate 受影響 artifacts，再驗證。
        </p>
+       <p>
+        評分：source/index persists (1)；cache/context persists (1)；coherent restoration and verification (1)。
+       </p>
       </details>
      </section>
      <section class="test-question">
@@ -601,6 +607,9 @@
        </summary>
        <p>
         在 text 以外 authorize／validate，限制 caches 及 source fetches 的 scope，強制 typed tools，執行 invariant 及 quality gates，保留相容 rollback 及有意義的 incident regression tests。
+       </p>
+       <p>
+        評分：authorization outside text (1)；cache/source scope (1)；tool validation (1)；gates/rollback regression (1)。
        </p>
       </details>
      </section>

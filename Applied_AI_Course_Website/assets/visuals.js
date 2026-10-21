@@ -28,7 +28,7 @@
     function weights(row){return softmax(K.map((k,j)=>$('.causal',root).checked&&j>row?-Infinity:(Q[row][0]*k[0]+Q[row][1]*k[1])/Math.sqrt(2)));}
     function render(){
       const causal=$('.causal',root).checked,scores=K.map(k=>(Q[query][0]*k[0]+Q[query][1]*k[1])/Math.sqrt(2)),w=weights(query);
-      text(root,'.viz-step',['01 / Score the query against each key','02 / Remove positions the query cannot see','03 / Normalize visible scores with softmax','04 / Mix values using these weights'][stage]);
+      text(root,'.viz-step',['01 / Score the query against each key',causal?'02 / Remove positions the query cannot see':'02 / No causal restriction: all keys remain visible','03 / Normalize visible scores with softmax','04 / Mix values using these weights'][stage]);
       $$('.weight-row',root).forEach((row,j)=>{
         const masked=causal&&j>query&&stage>=1;
         row.classList.toggle('masked',masked);
@@ -63,7 +63,7 @@
       const radius=scale;
       $('.geometry-svg',root).innerHTML='<svg viewBox="0 0 '+width+' '+height+'" role="img" aria-label="Two passage vectors differ in direction and length; query direction is adjustable."><line x1="15" y1="'+oy+'" x2="'+(width-15)+'" y2="'+oy+'" stroke="#b4c2b0"/><line x1="'+ox+'" y1="10" x2="'+ox+'" y2="'+(height-13)+'" stroke="#b4c2b0"/><circle cx="'+ox+'" cy="'+oy+'" r="'+radius+'" fill="none" stroke="#c5d2bf" stroke-dasharray="4 4"/>'+vector(b,unit?'B (unit)':'B','#b76738',-7)+vector(a,unit?'A (unit)':'A','#375f82',-7)+vector(q,'query','#2d6a56',17)+'<text x="'+(width-36)+'" y="'+(oy+20)+'" style="font-size:10px">x</text><text x="'+(ox-15)+'" y="15" style="font-size:10px">y</text></svg>';
       const da=q[0]*.8+q[1]*.6,db=q[0]*3+q[1]*4;
-      $('.geometry-metrics',root).innerHTML='<span>Dot A <strong>'+da.toFixed(3)+'</strong></span><span>Dot B <strong>'+db.toFixed(3)+'</strong></span><span>Cosine A <strong>'+da.toFixed(3)+'</strong></span><span>Cosine B <strong>'+(db/5).toFixed(3)+'</strong></span>';
+      $('.geometry-metrics',root).innerHTML='<span>Dot winner <strong>'+(da>db?'A':da<db?'B':'tie')+'</strong></span><span>Cosine winner <strong>'+(da>db/5?'A':da<db/5?'B':'tie')+'</strong></span><span>Dot A <strong>'+da.toFixed(3)+'</strong></span><span>Dot B <strong>'+db.toFixed(3)+'</strong></span><span>Cosine A <strong>'+da.toFixed(3)+'</strong></span><span>Cosine B <strong>'+(db/5).toFixed(3)+'</strong></span>';
     }
     $('.angle',root).addEventListener('input',render);$('.normalize',root).addEventListener('change',render);
     new ResizeObserver(render).observe(root);render();
@@ -153,11 +153,11 @@
 
   factories.memory=root=>{
     const colors=['#2d6a56','#63879a','#b2904c','#9b725b','#b2be9d'];
-    root.innerHTML='<div class="viz-controls"><label>Mode <select class="mode"><option value="inference">Inference</option><option value="training">Full training</option></select></label><label>Parameters <input class="params" type="range" min="100" max="3000" step="100" value="500"><output class="p-value">500M</output></label><label>Sequence tokens <input class="tokens" type="range" min="128" max="4096" step="128" value="2048"><output class="t-value">2048</output></label><label>Batch <select class="batch"><option>1</option><option>2</option><option>4</option></select></label><label>Illustrative VRAM <select class="capacity"><option value="4">4 GiB</option><option value="16">16 GiB</option></select></label></div><div class="viz-display"><div class="viz-step"></div><div class="memory-track"></div><div class="capacity-label"></div><div class="viz-legend"></div><div class="metric-readout"></div><div class="viz-output" aria-live="polite"></div><div class="viz-formula"></div></div>'+note('A partial resource worksheet, not a measured fit prediction. Inference includes 2-byte weights plus a KV cache with 24 layers, 8 KV heads and head dimension 64. Example full training state uses 16 bytes per parameter. Activations, temporary buffers, allocator reserve and other runtime costs are omitted. Parameter count and cache geometry are independent worksheet inputs.');
+    root.innerHTML='<div class="viz-controls"><label>Mode <select class="mode"><option value="inference">Inference</option><option value="training">Full training</option></select></label><label>Parameters <input class="params" type="range" min="100" max="3000" step="100" value="500"><output class="p-value">500M</output></label><label>Sequence tokens <input class="tokens" type="range" min="128" max="4096" step="128" value="2048"><output class="t-value">2048</output></label><label>Batch <select class="batch"><option>1</option><option>2</option><option>4</option></select></label><label>Illustrative VRAM <select class="capacity"><option value="4">4 GiB</option><option value="16">16 GiB</option></select></label></div><div class="viz-display"><div class="viz-step"></div><div class="memory-track"></div><div class="capacity-label"></div><div class="viz-legend"></div><div class="metric-readout"></div><div class="viz-output" aria-live="polite"></div><div class="viz-formula"></div></div>'+note('A partial resource worksheet, not a measured fit prediction. Inference includes 2-byte weights plus a KV cache with 24 layers, 8 KV heads and head dimension 64. Example full training state uses 16 bytes per parameter plus one illustrative 2-byte residual of width 1024 per layer/token, for 24 layers. This is only a partial activation count; other activations, temporary buffers and allocator costs are omitted. Parameter count and cache geometry are independent worksheet inputs.');
     function render(){
       const p=+$('.params',root).value*1e6,t=+$('.tokens',root).value,b=+$('.batch',root).value,training=$('.mode',root).value==='training',capacity=+$('.capacity',root).value*2**30;
       text(root,'.p-value',fmt(p/1e6)+'M');text(root,'.t-value',t);
-      const parts=training?[['Weights',2*p],['Gradients',2*p],['Master weights',4*p],['Optimizer moments',8*p]]:[['Weights',2*p],['KV cache',2*24*b*t*8*64*2]];
+      const parts=training?[['Weights',2*p],['Gradients',2*p],['Master weights',4*p],['Optimizer moments',8*p],['Saved residuals (illustration)',24*b*t*1024*2]]:[['Weights',2*p],['KV cache',2*24*b*t*8*64*2]];
       const total=parts.reduce((sum,x)=>sum+x[1],0),domain=Math.max(total,capacity)*1.08;
       $('.memory-track',root).innerHTML=parts.map(([name,value],i)=>'<div class="memory-part" style="width:'+100*value/domain+'%;background:'+colors[i]+'" aria-label="'+name+' '+(value/2**30).toFixed(2)+' GiB"></div>').join('')+'<span class="capacity-line" style="left:'+100*capacity/domain+'%"></span>';
       $('.viz-legend',root).innerHTML=parts.map(([name,value],i)=>'<span><i style="background:'+colors[i]+'"></i>'+name+' '+(value/2**30).toFixed(2)+' GiB</span>').join('');
@@ -165,7 +165,7 @@
       text(root,'.viz-step',training?'Training keeps more than model weights':'Inference reuses earlier keys and values');
       text(root,'.metric-readout',(total/2**30).toFixed(2)+' GiB of counted state');
       text(root,'.viz-output',total>capacity?'Already above the selected budget before omitted runtime costs.':'Below the budget in this partial estimate; omitted runtime costs still need headroom.');
-      text(root,'.viz-formula',training?'State = parameters × (2 + 2 + 4 + 8) bytes':'KV bytes = 2 × layers × batch × tokens × KV heads × head dimension × 2');
+      text(root,'.viz-formula',training?'State = parameters × 16 + saved residuals: 24 × batch × tokens × 1024 × 2 bytes':'KV bytes = 2 × layers × batch × tokens × KV heads × head dimension × 2');
     }
     $$('input,select',root).forEach(e=>e.addEventListener('input',render));render();
   };
@@ -173,7 +173,7 @@
   factories.agent=root=>{
     let phase=0,round=0,finished=false,status='ready',proposal={},observation='',trace=[],timer=null;
     const names=['Propose an action','Validate schema and scope','Execute the allowed tool','Record the observation','Finish or stop'];
-    root.innerHTML='<div class="viz-controls"><label>Scenario <select class="scenario"><option value="success">Lookup and calculate</option><option value="unknown">Unknown tool</option><option value="version">Wrong version</option><option value="loop">Planner never stops</option><option value="config">Invalid configuration</option></select></label><button class="reset" type="button">Reset trace</button><button class="next" type="button">Next step →</button><button class="play" type="button">Play trace</button></div><div class="viz-display"><div class="flow-grid">'+names.map((name,i)=>'<div class="flow-node"><span>0'+(i+1)+'</span><strong>'+name+'</strong></div>').join('')+'</div><div class="viz-step"></div><div class="agent-proposal"></div><ol class="agent-trace"></ol><div class="viz-output agent-status" aria-live="polite"></div></div>'+note('A deterministic controller simulation, not a running model. The request allows version 2 and at most three proposals. A valid validator call can return an invalid configuration. Step limits do not interrupt a blocking call, and accepted final text still needs task-level checking.');
+    root.innerHTML='<div class="viz-controls"><label>Scenario <select class="scenario"><option value="success">Lookup and calculate</option><option value="unknown">Unknown tool</option><option value="version">Wrong version</option><option value="loop">Planner never stops</option><option value="config">Invalid configuration</option></select></label><button class="reset" type="button">Reset trace</button><button class="next" type="button">Next step →</button><button class="play" type="button">Play trace</button></div><div class="viz-display"><div class="flow-grid">'+names.map((name,i)=>'<div class="flow-node"><span>0'+(i+1)+'</span><strong>'+name+'</strong></div>').join('')+'</div><div class="viz-step"></div><div class="agent-proposal"></div><ol class="agent-trace"></ol><div class="viz-output agent-status" aria-live="polite"></div></div>'+note('A deterministic controller simulation, not a running model. The request allows version 2 and at most four proposals. A valid validator call can return an invalid configuration. Step limits do not interrupt a blocking call, and accepted final text still needs task-level checking.');
     function scenario(){return $('.scenario',root).value;}
     function propose(){
       if(scenario()==='unknown')return {type:'tool',name:'export_secrets',arguments:{}};
@@ -186,7 +186,7 @@
     }
     function render(){
       $$('.flow-node',root).forEach((e,i)=>e.classList.toggle('active',i===phase));
-      text(root,'.viz-step','Proposal '+Math.min(round+1,3)+' of 3 · '+names[phase]);
+      text(root,'.viz-step','Proposal '+Math.min(round+1,4)+' of 4 · '+names[phase]);
       text(root,'.agent-proposal',phase===0?'The planner is ready to propose the next action.':JSON.stringify(proposal,null,2));
       $('.agent-trace',root).replaceChildren();
       trace.forEach(line=>{const li=document.createElement('li');li.textContent=line;$('.agent-trace',root).append(li);});
@@ -207,7 +207,7 @@
         status='tool returned '+observation;phase=3;
       }else if(phase===3){
         trace.push('Action '+(round+1)+': '+proposal.name+' → '+observation);round++;
-        if(round>=3){status='budget_exhausted: stopped after three allowed proposals';finished=true;phase=4;}
+        if(round>=4){status='budget_exhausted: stopped after four allowed proposals';finished=true;phase=4;}
         else{status='observation recorded; select the next action';phase=0;}
       }
       render();
@@ -235,10 +235,10 @@
     $('.clean',root).innerHTML=original.map(v=>'<span class="noise-cell" style="background:'+color(v)+'"></span>').join('');
     $('.mixed',root).innerHTML=original.map(()=>'<span class="noise-cell"></span>').join('');
     function render(){
-      const level=+$('.noise',root).value/100,alpha=1-level;
+      const level=+$('.noise',root).value/100,alpha=Math.exp(-.0001-10*level);
       text(root,'.noise-value',Math.round(100*level)+'%');
       $$('.mixed .noise-cell',root).forEach((e,i)=>e.style.background=color(Math.sqrt(alpha)*original[i]+Math.sqrt(1-alpha)*noise[i]));
-      text(root,'.viz-output','Signal coefficient '+Math.sqrt(alpha).toFixed(2)+' · noise coefficient '+Math.sqrt(1-alpha).toFixed(2));
+      text(root,'.viz-output','Signal coefficient '+Math.sqrt(alpha).toFixed(2)+' · noise coefficient '+Math.sqrt(1-alpha).toFixed(2)+' · alpha_bar='+alpha.toExponential(3));
     }
     function stop(){if(timer)clearInterval(timer);timer=null;$('.play',root).textContent='Play forward noising';}
     $('.noise',root).addEventListener('input',()=>{stop();render();});

@@ -469,7 +469,7 @@
         31
        </span>
        <span>
-        整合文件助手與進階延伸
+        整合及檢視 documentation assistant
        </span>
        <span class="week-tick" data-week-tick="31">
        </span>
@@ -546,7 +546,7 @@
       問題 2：fine-tuning 研究，15 分
      </h3>
      <p>
-      新 adapter 把 exact tool JSON 從 75% 提升至 95%，但 incorrect tool arguments 從 5% 增至 20%。設計 controlled evaluation 及 release decision（8），指出兩個可能 dataset 原因（4），解釋為何 training loss 無法單獨解答問題（3）。
+      新 adapter 把 tool JSON 正確格式率從75%升至95%，但錯誤 tool arguments 從5%升至20%。設計 controlled evaluation 和 release decision (8)。Preferred/reference log-ratio=.4、rejected/reference=.1、beta=.1，計 DPO loss (4)。比較 soft-target distillation 與 hard-label SFT (3)。
      </p>
      <h3 id="question-3-agent-controller-20-points">
       問題 3：agent controller，20 分
@@ -564,13 +564,13 @@
       問題 5：performance 及 scaling，15 分
      </h3>
      <p>
-      平均 arrival rate 是每秒 1.5 requests，平均在 system 停留 4 秒。估計平均 in-flight work 並列出假設（4）。區分 TTFT 與 end-to-end latency（3）。80% work 可 scalable、20% serial，計算理想四路 speedup（4）。解釋為何不能據此預測 production p95 或 communication cost（4）。
+      L=24 layers、B=1 batch、T=2048 tokens、H_kv=8 K/V heads、d_head=64、2-byte elements，計 KV-cache MiB，解釋 K/V factor (4)。n=257、256 threads/block，給 CUDA index、block count 和 bounds check (3)。80% work scalable，計理想 four-way speedup，說明為何不能預測 p95 (4)。Gold={A,B}、results=[C,A,D]，計 Recall@3 和 reciprocal rank，解釋 reranking 為何不能補回 B (4)。
      </p>
      <h3 id="question-6-capstone-defense-10-points">
       問題 6：capstone 答辯，10 分
      </h3>
      <p>
-      agent 比固定 workflow 更昂貴，adapter 沒有可靠改善，而 retriever 可量度地改善 paraphrase questions。選擇 default release，並用會展示的 evidence 支持選擇（6）。指出兩項限制及一個聚焦的下一步 experiment（4）。
+      Agent 比 fixed workflow 更昂貴，adapter 沒有可靠提升，retriever 則實測改善 paraphrases。選 default release，解釋會提供的 evidence (6)。c=60，計 A ranks(1,10) 與 B ranks(2,2) 的 RRF，選較高結果 (4)。
      </p>
      <details class="solution exam-solution">
       <summary>
@@ -586,7 +586,7 @@
        <strong>
         Q2（15）。
        </strong>
-       固定 model／base／context／tasks／decoding／tool validator，另設 prompt control；逐個 task 評 valid JSON 及 semantic argument correctness、invalid／forbidden actions 及 budgets；即使 syntax 改善，incorrect actions 若違反 gate 仍拒絕（8）。dataset 可能獎勵格式有效但 arguments 錯誤、欠 negative／refusal cases、有 wrong-version labels，或 paraphrases leakage；診斷兩項原因（4）。loss 只是對 labels 的 fit，有偏差／錯誤 labels 也能被成功學會（3）。
+       固定 model/base/context/tasks/decoding/tool validator，另設 prompt control；逐 task 檢查 JSON、semantic arguments、invalid/forbidden actions 和 budgets。即使 syntax 改善，只要錯誤 actions 違反 gate 就拒絕 release (8)。DPO relative margin=.3、scaled=.03，loss=log(1+exp(−.03))≈.67826 (4)。Soft-target distillation 學 teacher 在各 classes 的 distribution；hard-label SFT 只監督一個 target。Teacher errors 亦可能傳入 student，需獨立 evaluation (3)。
       </p>
       <p>
        <strong>
@@ -604,13 +604,13 @@
        <strong>
         Q5（15）。
        </strong>
-       L=1.5×4=6，平均有六項在 system 內，假設 averages 穩定且 boundary 正確（4）。TTFT 直到第一個 output token；end-to-end 直到 response 完成，包括所有 application stages（3）。1/(.2+.8/4)=2.5 理想 speedup（4）。tail latency 依賴 variance／load／queueing，而 distributed work 有 communication／coordination；不能從這些 means 預測 p95（4）。
+       K、V 兩個 tensors 產生 factor2；2×24×1×2048×8×64×2=100,663,296 bytes=96 MiB (4)。CUDA i=blockIdx.x*blockDim.x+threadIdx.x；ceil(257/256)=2 blocks；只有 i&lt;257 才存取 arrays (3)。Amdahl=1/(.2+.8/4)=2.5，忽略 communication，不能預測 queueing/tail latency (4)。Recall=1/2，第一個 relevant rank=2，reciprocal rank=1/2。B 不在 candidate pool，reranker 無法加入它 (4)。
       </p>
       <p>
        <strong>
         Q6（10）。
        </strong>
-       如 agent／adapter 沒有證實價值，應選符合條件的 retriever 配固定 workflow／base generator；保留 experimental branches 及 raw comparisons，報告 budget／quality／safety 及實際 negative results（6）。限制可包括 task-set size、small model capability、缺乏真正 users 或未測 high concurrency。下一步 experiment 必須用 control 及 metric 針對觀察到的 failure，例如在固定 context budget 下 rerank 未命中的 paraphrases（4）。
+       若 agent/adapter 無實證價值，選合格 retriever、fixed workflow/base generator，保留 experimental branches、raw comparisons、budget/quality/safety 和負面結果 (6)。RRF(A)=1/61+1/70≈.030679；RRF(B)=2/62≈.032258，故 B 勝出 (4)。
       </p>
      </details>
     </article>

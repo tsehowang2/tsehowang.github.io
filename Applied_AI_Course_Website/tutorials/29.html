@@ -4,7 +4,7 @@
   <meta charset="utf-8"/>
   <meta content="width=device-width,initial-scale=1" name="viewport"/>
   <title>
-   Tutorial 29 From a notebook to mlops and inference serving · Applied AI
+   Tutorial 29 From a notebook to MLOps and inference serving · Applied AI
   </title>
   <meta content="Applied generative AI and LLM systems course material" name="description"/>
   <meta content="#173c36" name="theme-color"/>
@@ -463,7 +463,7 @@
         31
        </span>
        <span>
-        Integrating the documentation assistant and advanced extensions
+        Integrating and reviewing the documentation assistant
        </span>
        <span class="week-tick" data-week-tick="31">
        </span>
@@ -523,7 +523,7 @@
       Tutorial 29 / Week 29
      </div>
      <h1>
-      From a notebook to mlops and inference serving
+      From a notebook to MLOps and inference serving
      </h1>
      <p class="deck">
       Read the walkthrough, inspect the code, then run the notebook when you are ready.
@@ -541,7 +541,7 @@
      </a>
     </div>
     <p class="save-note">
-     When you run this notebook, also
+     This notebook requires the support files from the complete pack. When you need the support files,
      <a download="" href="../downloads/Applied_Generative_AI_Course.zip">
       download and extract the full course pack
      </a>
@@ -565,7 +565,7 @@
       <strong>
        Before execution:
       </strong>
-      Inspect one complete input/output record before running the full path. Predict a normal result and one failure status.
+      Identify how the child process announces its own free port.
      </p>
      <p>
       <strong>
@@ -577,7 +577,7 @@
       <strong>
        Independent work:
       </strong>
-      Change one controlled factor, preserve raw outputs and explain the result. Use the lecture readiness check and capstone milestone to define the task; do not claim fixture success establishes production readiness.
+      Save 200 local sequential request timings, explain their limited tail-latency meaning, and compare separately with any actual LLM service.
      </p>
      <p>
       <strong>
@@ -593,7 +593,7 @@
        Notebook environment and course files
       </summary>
       <p>
-       This cell finds the extracted course files. It is needed when running the notebook.
+       Run this setup first. Early tutorials create an output directory; later tutorials locate the extracted course support files.
       </p>
       <div class="code-block">
        <div class="code-bar">
@@ -604,17 +604,22 @@
          Copy code
         </button>
        </div>
-       <pre><code>from pathlib import Path
-import sys,json,time,random,hashlib,math
-if hasattr(sys.stdout,'reconfigure'): sys.stdout.reconfigure(encoding='utf-8')
-candidates=[Path.cwd(),Path.cwd().parent,Path.cwd()/'llm_course',Path.cwd()/'llm_course_v2',Path('/content/llm_course'),Path('/content/llm_course_v2')]
-COURSE=next((p for p in candidates if (p/'coursekit/core.py').exists()),None)
-if COURSE is None: raise RuntimeError('Extract the complete course pack; run from its root or notebooks directory.')
-if str(COURSE) not in sys.path:sys.path.insert(0,str(COURSE))
-RUNS=COURSE/'runs';RUNS.mkdir(exist_ok=True)
+       <pre><code>import random
+from pathlib import Path
+import sys, json, time, random, hashlib, math
+if hasattr(sys.stdout, 'reconfigure'):
+    sys.stdout.reconfigure(encoding='utf-8')
+candidates = [Path.cwd(), Path.cwd().parent, Path.cwd() / 'llm_course', Path.cwd() / 'llm_course_v2', Path('/content/llm_course'), Path('/content/llm_course_v2')]
+COURSE = next((p for p in candidates if (p / 'coursekit/core.py').exists()), None)
+if COURSE is None:
+    raise RuntimeError('Extract the complete course pack; run from its root or notebooks directory.')
+if str(COURSE) not in sys.path:
+    sys.path.insert(0, str(COURSE))
+RUNS = COURSE / 'runs'
+RUNS.mkdir(exist_ok=True)
 from coursekit.core import *
 random.seed(7)
-print('Course root:',COURSE)
+print('Course root:', COURSE)
 </code></pre>
       </div>
      </details>
@@ -633,16 +638,20 @@ print('Course root:',COURSE)
         Copy code
        </button>
       </div>
-      <pre><code>manifest=make_manifest({'prompt_revision':'baseline-extractor-v1','tool_revision':'strict-tools-v1'})
+      <pre><code>import json
+manifest = make_manifest({'prompt_revision': 'baseline-extractor-v1', 'tool_revision': 'strict-tools-v1'})
 assert verify_manifest(manifest)
-(RUNS/'week29_manifest.json').write_text(json.dumps(manifest,indent=2))
-bad=dict(manifest);bad['corpus_sha256']='changed'
-try: verify_manifest(bad)
-except ValueError as e: print('Rejected incompatible manifest:',e)
+(RUNS / 'week29_manifest.json').write_text(json.dumps(manifest, indent=2), encoding='utf-8')
+bad = dict(manifest)
+bad['corpus_sha256'] = 'changed'
+try:
+    verify_manifest(bad)
+except ValueError as e:
+    print('Rejected incompatible manifest:', e)
 </code></pre>
      </div>
      <p>
-      The next cell starts a loopback extraction API as a subprocess and stops it afterward. It is not an LLM inference benchmark. Use a free port if another service occupies 8000; do not measure an unrelated server.
+      The next cell starts a loopback extraction API as a subprocess and stops it afterward. It is not an LLM inference benchmark. The OS selects a free loopback port; server errors are preserved in week29_server.stderr.log.
      </p>
      <h3>
       Code step 2
@@ -656,30 +665,38 @@ except ValueError as e: print('Rejected incompatible manifest:',e)
         Copy code
        </button>
       </div>
-      <pre><code>import subprocess,urllib.request,urllib.error
-process=subprocess.Popen([sys.executable,'-m','coursekit.server'],cwd=COURSE,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
+      <pre><code>import sys
+import json
+import math
+import time
+import subprocess, urllib.request, urllib.error
+import queue, threading
+stderr_log = open(RUNS / 'week29_server.stderr.log', 'w', encoding='utf-8')
+process = subprocess.Popen([sys.executable, '-u', '-m', 'coursekit.server', '--port', '0'], cwd=COURSE, stdout=subprocess.PIPE, stderr=stderr_log, text=True, encoding='utf-8')
+line_queue = queue.Queue()
+threading.Thread(target=lambda: line_queue.put(process.stdout.readline()), daemon=True).start()
 try:
-    for attempt in range(30):
-        if process.poll() is not None: raise RuntimeError('Server exited; check whether port 8000 is occupied.')
-        try:
-            with urllib.request.urlopen('http://127.0.0.1:8000/health',timeout=1) as response:
-                assert json.load(response)['status']=='ok'
-            break
-        except (OSError,AssertionError): time.sleep(.1)
-    else: raise RuntimeError('Server did not become healthy')
-    payload=json.dumps({'question':'default request timeout','version':'2'}).encode()
-    timings=[]
-    for _ in range(20):
-        start=time.perf_counter()
-        request=urllib.request.Request('http://127.0.0.1:8000/ask',data=payload,headers={'Content-Type':'application/json'})
-        with urllib.request.urlopen(request,timeout=3) as response: result=json.load(response)
-        timings.append((time.perf_counter()-start)*1000)
+    announcement = json.loads(line_queue.get(timeout=10))
+    url = 'http://127.0.0.1:' + str(announcement['port'])
+    with urllib.request.urlopen(url + '/health', timeout=3) as response:
+        assert json.load(response)['status'] == 'ok'
+    payload = json.dumps({'question': 'default request timeout', 'version': '2'}).encode()
+    timings = []
+    for _ in range(200):
+        start = time.perf_counter()
+        request = urllib.request.Request(url + '/ask', data=payload, headers={'Content-Type': 'application/json'})
+        with urllib.request.urlopen(request, timeout=3) as response:
+            result = json.load(response)
+        timings.append((time.perf_counter() - start) * 1000)
     assert 'timeout-v2' in result['citations'] and 'timeout-v1' not in result['citations']
-    ordered=sorted(timings)
-    print('Local extractor median ms',ordered[len(ordered)//2],'nearest-rank p95',ordered[math.ceil(.95*len(ordered))-1])
-    (RUNS/'week29_latency.json').write_text(json.dumps({'milliseconds':timings,'result':result,'service':'local extractor'},indent=2))
+    ordered = sorted(timings)
+    print('Local extractor median ms', ordered[len(ordered) // 2], 'descriptive sample p95 (200 sequential local requests; not production tail latency)', ordered[math.ceil(0.95 * len(ordered)) - 1])
+    (RUNS / 'week29_latency.json').write_text(json.dumps({'milliseconds': timings, 'result': result, 'service': 'local extractor'}, indent=2), encoding='utf-8')
 finally:
-    process.terminate();process.wait(timeout=5)
+    process.terminate()
+    process.wait(timeout=5)
+    process.stdout.close()
+    stderr_log.close()
 </code></pre>
      </div>
      <h3 id="continuous-batching-admission-trace">
@@ -700,18 +717,41 @@ finally:
         Copy code
        </button>
       </div>
-      <pre><code>requests={'A':3,'B':1};completed=[];trace=[]
-for step in range(1,4):
-    if step==2:requests['C']=2
-    active=list(requests)
+      <pre><code>requests = {'A': 3, 'B': 1}
+completed = []
+trace = []
+for step in range(1, 4):
+    if step == 2:
+        requests['C'] = 2
+    active = list(requests)
     for request in active:
-        requests[request]-=1
-        if requests[request]==0:completed.append(request)
-    trace.append((step,active,completed.copy()))
-    requests={key:value for key,value in requests.items() if value&gt;0}
-assert trace[1][1]==['A','C'] and set(completed)=={'A','B','C'}
-print('Decode-step scheduling fixture:',trace)
+        requests[request] -= 1
+        if requests[request] == 0:
+            completed.append(request)
+    trace.append((step, active, completed.copy()))
+    requests = {key: value for key, value in requests.items() if value &gt; 0}
+assert trace[1][1] == ['A', 'C'] and set(completed) == {'A', 'B', 'C'}
+print('Decode-step scheduling fixture:', trace)
 </code></pre>
+     </div>
+     <h3 id="reference-output">
+      Reference output
+     </h3>
+     <p>
+      Reference output from the CPU teaching run (paths and timings vary). This is a comparison aid, not your experiment result.
+     </p>
+     <div class="code-block">
+      <div class="code-bar">
+       <span>
+        text
+       </span>
+       <button class="copy-code" type="button">
+        Copy code
+       </button>
+      </div>
+      <pre><code>Rejected incompatible manifest: corpus hash mismatch; rebuild/re-evaluate dependent artifacts
+Local extractor median ms 5.970099940896034 descriptive sample p95 (200 sequential local requests; not production tail latency) 19.920799881219864
+Decode-step scheduling fixture: [(1, ['A', 'B'], ['B']), (2, ['A', 'C'], ['B']), (3, ['A', 'C'], ['B', 'A', 'C'])]</code></pre>
      </div>
     </article>
     <div class="end-note">

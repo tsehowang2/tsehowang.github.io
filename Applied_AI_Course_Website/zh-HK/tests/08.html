@@ -469,7 +469,7 @@
         31
        </span>
        <span>
-        整合文件助手與進階延伸
+        整合及檢視 documentation assistant
        </span>
        <span class="week-tick" data-week-tick="31">
        </span>
@@ -589,7 +589,7 @@
        問題 3
       </div>
       <p>
-       為何 softmax 後把一個 probability 歸零仍不足夠？設計 causal property test。
+       為何在 softmax 後把 masked probabilities 設零、但不重新 normalize，會得到錯誤 mixture？若設零後重新 normalize，是否等同在 softmax 前 mask scores？提出 causal property test。
       </p>
       <label for="week-8-question-3">
        你的練習筆記
@@ -600,7 +600,7 @@
         顯示完整解答
        </summary>
        <p>
-        沒有 renormalization，剩餘 weights 總和不再是一，output 也不同。在固定 eval-mode computation 下改動 future token；較早 outputs 必須在 tolerance 內相同。測試 unmasked control，展示測試能偵測變化。
+        不重新 normalize 時，剩餘 weights 總和小於一，mixture 會縮小。只要 allowed set 非空，把 forbidden probabilities 設零再 normalize，在數學上等同先把 forbidden logits 設為 −infinity 再 softmax（容許 numerical error）。固定 model、eval mode，改變 future token：較早 outputs 應在 tolerance 內相等；unmasked control 則應改變。
        </p>
       </details>
      </section>

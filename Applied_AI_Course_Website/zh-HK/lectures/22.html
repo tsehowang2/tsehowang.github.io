@@ -469,7 +469,7 @@
         31
        </span>
        <span>
-        整合文件助手與進階延伸
+        整合及檢視 documentation assistant
        </span>
        <span class="week-tick" data-week-tick="31">
        </span>
@@ -1224,11 +1224,11 @@
       </h3>
       <p>
        <a href="../tutorials/22.html">
-        Tutorial 22: CPU、GPU、memory 及 model 資源計算
+        Tutorial 22: CPU/GPU memory 與 model resource accounting
        </a>
        計算 weights、optimizer 和 KV-cache estimates。
        <a href="../tutorials/23.html">
-        Tutorial 23: CUDA kernels 及 profiling
+        Tutorial 23: CUDA kernel 與 profiling
        </a>
        提供 device profiling 練習，把 estimates 與 allocated、peak memory 比較。計入 warmup 和 allocator reservations。遇到 out-of-memory 時，先減少 sequence length 和 microbatch，再考慮更換 framework。Gradient accumulation 會改變 effective batch，但不會縮小單一 microbatch 所需的 memory。
       </p>

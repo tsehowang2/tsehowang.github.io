@@ -469,7 +469,7 @@
         31
        </span>
        <span>
-        整合文件助手與進階延伸
+        整合及檢視 documentation assistant
        </span>
        <span class="week-tick" data-week-tick="31">
        </span>
@@ -540,20 +540,20 @@
       Checkpoint A：第 4 週後
      </h2>
      <p>
-      二十分鐘。(1) 從三句 bus、一句 train 及一句 bicycle 句子估計 next-word probabilities。(2) tokenize school 句子，展示 shifted input／target IDs。(3) 比較 [1,0] 與 [2,0]、[1,1] 的 dot product 及 cosine。(4) 對兩個相同 logits 計算 softmax 及 target negative log likelihood。第 5 週前先補好不清楚的 concepts。
+      20 分鐘。(1) 從三句 bus、一句 train、一句 bicycle 估計 next-word probabilities。(2) Vocabulary：I=0、go=1、to=2、school=3、by=4、bus=5。對 “I go to school by bus” 中每個在 bus 前結束的 prefix，給出 next-token target ID。(3) 比較 [1,0] 與 [2,0]、[1,1] 的 dot product 和 cosine。(4) 計算兩個相同 logits 的 softmax 和 target NLL。第 5 週前補回未掌握概念。
      </p>
      <h2 id="checkpoint-b">
       Checkpoint B：第 8 週後
      </h2>
      <p>
-      二十分鐘。(1) 用 weights .25 及 .75 混合 [2,0] 及 [0,4]。(2) 對 T=8、d_model=32、d_head=16 寫出 Q／K／V 及 score shapes。(3) 解釋 softmax 前 masking。(4) 描述 future-token perturbation check。第 9 週前先補好不清楚的 concepts。
+      20 分鐘。(1) 以 weights .25、.75 混合 [2,0]、[0,4]。(2) T=8、d_model=32、d_head=16，給出 Q/K/V 和 score shapes。(3) 比較 softmax 前 mask scores，與 softmax 後設零（有或沒有重新 normalize）。(4) 說明 future-token perturbation check。第 9 週前補回未掌握概念。
      </p>
      <details class="solution">
       <summary>
        顯示 checkpoint 計算指引
       </summary>
       <p>
-       A1：[.6,.2,.2]。A2：一種 vocabulary 是 I=0、go=1、to=2、school=3、by=4、bus=5；inputs [0,1,2,3,4]、targets [1,2,3,4,5]。A3：dot products 為 2 及 1；cosines 為 1 及 1/sqrt(2)。A4：[.5,.5]、loss ln(2)=.6931。B1：[.5,3]。B2：Q/K/V [8,16]、scores [8,8]、output [8,16]。B3：future positions 在 normalization 後必須有零 probability；softmax 後刪除但不 renormalize 會破壞 mixture。B4：固定 model 於 eval mode，改動 future token，在 numerical tolerance 內比較較早 outputs。
+       A1：[.6,.2,.2]。A2：I→go(1)；I go→to(2)；I go to→school(3)；I go to school→by(4)；I go to school by→bus(5)。A3：dot products 2、1；cosines 1、1/sqrt(2)。A4：[.5,.5]，loss ln(2)=.6931。B1：[.5,3]。B2：Q/K/V [8,16]、scores [8,8]、output [8,16]。B3：softmax 前 mask 令 forbidden positions probability 為零；softmax 後設零但不 normalize 會縮小總 probability mass。若 allowed set 非空，設零後 normalize 在 numerical tolerance 內等價。B4：固定 model、eval mode，改變 future token，比較 earlier outputs 是否在 tolerance 內相同。
       </p>
       <p>
        conceptual questions 請參考相應每週練習解答：

@@ -6,7 +6,7 @@
   <meta charset="utf-8"/>
   <meta content="width=device-width,initial-scale=1" name="viewport"/>
   <title>
-   從小型 matrix 理解 LoRA 及 QLoRA · Applied AI
+   從小型 matrix 理解 LoRA 和 QLoRA · Applied AI
   </title>
   <meta content="Applied generative AI and LLM systems course material" name="description"/>
   <meta content="#173c36" name="theme-color"/>
@@ -469,7 +469,7 @@
         31
        </span>
        <span>
-        整合文件助手與進階延伸
+        整合及檢視 documentation assistant
        </span>
        <span class="week-tick" data-week-tick="31">
        </span>
@@ -529,7 +529,7 @@
       Tutorial 25／第 25 週
      </div>
      <h1>
-      從小型 matrix 理解 LoRA 及 QLoRA
+      從小型 matrix 理解 LoRA 和 QLoRA
      </h1>
      <p class="deck">
       先閱讀逐步解說、查看程式碼，準備好後再執行 notebook。
@@ -547,7 +547,7 @@
      </a>
     </div>
     <p class="save-note">
-     執行這份 notebook 時，亦請
+     本 notebook 需要完整 pack 的 support files。需要時，
      <a download="" href="../../downloads/Applied_Generative_AI_Course.zip">
       下載並解壓完整課程套件
      </a>
@@ -599,7 +599,7 @@
        notebook 環境及課程檔案
       </summary>
       <p>
-       這個 cell 尋找已解壓的課程檔案。執行 notebook 時需要它。
+       先執行 setup；早期 tutorials 建立 output directory，後期 tutorials 尋找已解壓的 course support files。
       </p>
       <div class="code-block">
        <div class="code-bar">
@@ -610,20 +610,31 @@
          複製 code
         </button>
        </div>
-       <pre><code>from pathlib import Path
-import sys,json,time,random,hashlib,math
-if hasattr(sys.stdout,'reconfigure'): sys.stdout.reconfigure(encoding='utf-8')
-candidates=[Path.cwd(),Path.cwd().parent,Path.cwd()/'llm_course',Path.cwd()/'llm_course_v2',Path('/content/llm_course'),Path('/content/llm_course_v2')]
-COURSE=next((p for p in candidates if (p/'coursekit/core.py').exists()),None)
-if COURSE is None: raise RuntimeError('Extract the complete course pack; run from its root or notebooks directory.')
-if str(COURSE) not in sys.path:sys.path.insert(0,str(COURSE))
-RUNS=COURSE/'runs';RUNS.mkdir(exist_ok=True)
+       <pre><code>import random
+from pathlib import Path
+import sys, json, time, random, hashlib, math
+if hasattr(sys.stdout, 'reconfigure'):
+    sys.stdout.reconfigure(encoding='utf-8')
+candidates = [Path.cwd(), Path.cwd().parent, Path.cwd() / 'llm_course', Path.cwd() / 'llm_course_v2', Path('/content/llm_course'), Path('/content/llm_course_v2')]
+COURSE = next((p for p in candidates if (p / 'coursekit/core.py').exists()), None)
+if COURSE is None:
+    raise RuntimeError('Extract the complete course pack; run from its root or notebooks directory.')
+if str(COURSE) not in sys.path:
+    sys.path.insert(0, str(COURSE))
+RUNS = COURSE / 'runs'
+RUNS.mkdir(exist_ok=True)
 from coursekit.core import *
 random.seed(7)
-print('Course root:',COURSE)
+print('Course root:', COURSE)
 </code></pre>
       </div>
      </details>
+     <h3 id="pause-before-the-next-step">
+      進入下一步前先停一停
+     </h3>
+     <p>
+      為何 low rank 並非對每個 tiny matrix 都 parameter efficient？檢查三乘四、rank 為二的例子。
+     </p>
      <p>
       LoRA 為 frozen matrix 加上 low-rank update。這個小例子讓你看清 factors 及 scaling，並非證明 low rank 總能保留 model quality。
      </p>
@@ -640,22 +651,24 @@ print('Course root:',COURSE)
        </button>
       </div>
       <pre><code>import numpy as np
-rng=np.random.default_rng(7);din,dout,rank=4,3,2
-W=rng.normal(size=(dout,din));A=rng.normal(size=(rank,din));B=np.zeros((dout,rank))
-x=rng.normal(size=din);scale=1.
-assert np.allclose(W@x,(W+scale*B@A)@x)
-B=rng.normal(size=(dout,rank))
-assert np.allclose((W+scale*B@A)@x,W@x+scale*B@(A@x))
-print('Dense parameters',W.size,'adapter parameters',A.size+B.size,'delta rank',np.linalg.matrix_rank(B@A))
-for r in [1,2,4,16]:print('2048x4096 rank',r,'adapter count',r*(2048+4096))
+rng = np.random.default_rng(7)
+din, dout, rank = (4, 3, 2)
+W = rng.normal(size=(dout, din))
+A = rng.normal(size=(rank, din))
+B = np.zeros((dout, rank))
+x = rng.normal(size=din)
+alpha = 4
+scale = alpha / rank
+assert scale == 2
+assert np.allclose(W @ x, (W + scale * B @ A) @ x)
+B = rng.normal(size=(dout, rank))
+assert np.allclose((W + scale * B @ A) @ x, W @ x + scale * B @ (A @ x))
+print('Dense parameters', W.size, 'adapter parameters', A.size + B.size, 'delta rank', np.linalg.matrix_rank(B @ A))
+for r in [1, 2, 4, 16]:
+    print('2048x4096 rank', r, 'adapter count', r * (2048 + 4096))
+print('alpha/r scaling:',alpha,'/',rank,'=',scale)
 </code></pre>
      </div>
-     <h3 id="pause-before-the-next-step">
-      進入下一步前先停一停
-     </h3>
-     <p>
-      為何 low rank 並非對每個 tiny matrix 都 parameter efficient？檢查三乘四、rank 為二的例子。
-     </p>
      <h3 id="check-the-first-lora-gradient-path">
       檢查首次 LoRA gradient path
      </h3>
@@ -675,12 +688,15 @@ for r in [1,2,4,16]:print('2048x4096 rank',r,'adapter count',r*(2048+4096))
        </button>
       </div>
       <pre><code>import numpy as np
-A=np.array([[.1,.2]]);B=np.zeros((2,1));G=np.ones((2,2))
-grad_B=G@A.T;grad_A=B.T@G
-assert np.any(grad_B!=0) and np.all(grad_A==0)
-B=B-.01*grad_B
-assert np.any(B.T@G!=0)
-print('Initial grad_B:',grad_B,'Initial grad_A:',grad_A)
+A = np.array([[0.1, 0.2]])
+B = np.zeros((2, 1))
+G = np.ones((2, 2))
+grad_B = G @ A.T
+grad_A = B.T @ G
+assert np.any(grad_B != 0) and np.all(grad_A == 0)
+B = B - 0.01 * grad_B
+assert np.any(B.T @ G != 0)
+print('Initial grad_B:', grad_B, 'Initial grad_A:', grad_A)
 </code></pre>
      </div>
      <h3 id="independent-experiment">
@@ -692,6 +708,29 @@ print('Initial grad_B:',grad_B,'Initial grad_A:',grad_A)
      <p>
       提交簡短報告，列出預測、實際結果、比較及限制。記錄環境或數據的改動。不要用示意數字代替實際量度結果。
      </p>
+     <h3 id="reference-output">
+      Reference output
+     </h3>
+     <p>
+      CPU 教學 run 的 reference output（paths 和 timings 會不同）。這只供比較，並非你的 experiment result。
+     </p>
+     <div class="code-block">
+      <div class="code-bar">
+       <span>
+        text
+       </span>
+       <button class="copy-code" type="button">
+        複製 code
+       </button>
+      </div>
+      <pre><code>Dense parameters 12 adapter parameters 14 delta rank 2
+2048x4096 rank 1 adapter count 6144
+2048x4096 rank 2 adapter count 12288
+2048x4096 rank 4 adapter count 24576
+2048x4096 rank 16 adapter count 98304
+Initial grad_B: [[0.3]
+ [0.3]] Initial grad_A: [[0. 0.]]</code></pre>
+     </div>
     </article>
     <div class="end-note">
      閱讀程式只是第一步。完成獨立實驗並保留實際結果，才把這個 lab 標記為完成。

@@ -469,7 +469,7 @@
         31
        </span>
        <span>
-        整合文件助手與進階延伸
+        整合及檢視 documentation assistant
        </span>
        <span class="week-tick" data-week-tick="31">
        </span>
@@ -562,6 +562,9 @@
        <p>
         tool 提供有 contract 的能力；workflow 大致固定 action 次序；agent 讓 model outputs 影響下一步 actions，但 enforcement 仍由 controller 掌握。
        </p>
+       <p>
+        評分：tool contract (1)；fixed workflow (1)；adaptive agent (1)。
+       </p>
       </details>
      </section>
      <section class="test-question">
@@ -582,6 +585,9 @@
        <p>
         提出 expression 2*4+1*2；經驗證 calculator 返回 10；final response 必須相符，並使用正確 price evidence。
        </p>
+       <p>
+        評分：expression (1)；observation 10 (1)；price evidence/final answer (1)。
+       </p>
       </details>
      </section>
      <section class="test-question">
@@ -601,6 +607,9 @@
        </summary>
        <p>
         拒絕 unknown tools、extra keys、把 booleans 當 strict integers、不支援 AST nodes、違反 numeric／size 限制及 wrong scope。domain-invalid config 不同於 invalid call schema；絕不可 eval model code。
+       </p>
+       <p>
+        評分：schema/name (1)；strict types/scope (1)；AST/numeric bounds (1)；negative tests (1)。
        </p>
       </details>
      </section>

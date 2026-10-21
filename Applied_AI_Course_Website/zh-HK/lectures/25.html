@@ -469,7 +469,7 @@
         31
        </span>
        <span>
-        整合文件助手與進階延伸
+        整合及檢視 documentation assistant
        </span>
        <span class="week-tick" data-week-tick="31">
        </span>
@@ -574,6 +574,24 @@
         第 25 週 · 課節 1
        </div>
        <h3>
+        NF4
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          NF4 是 NormalFloat 4-bit：針對近似 normal distribution weights 設計的 quantization codebook，並非普通四-bit integer rounding。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#nf4">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 25 週 · 課節 2
+       </div>
+       <h3>
         Training 更少 parameters
        </h3>
        <div class="slide-prose">
@@ -595,7 +613,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        第 25 週 · 課節 2
+        第 25 週 · 課節 3
        </div>
        <h3>
         手算一個 two-by-two update
@@ -610,30 +628,6 @@
          </li>
          <li>
           這個小例子讓計算看得見，但尚未節省 parameters：A 和 B 共有四個 entries，與 2×2 dense matrix 相同。
-         </li>
-        </ul>
-        <a class="slide-section-link" href="#a-two-by-two-update-by-hand">
-         閱讀完整解說
-        </a>
-       </div>
-      </section>
-      <section class="lecture-slide" data-slide="" hidden="">
-       <div class="slide-stage">
-        第 25 週 · 課節 3
-       </div>
-       <h3>
-        一般 shapes 與節省的條件
-       </h3>
-       <div class="slide-prose">
-        <ul class="slide-keypoints">
-         <li>
-          W 的 shape 是 [d_out,d_in] 時，選擇 A 為 [r,d_in]、B 為 [d_out,r]。
-         </li>
-         <li>
-          當 d_in=d_out=1000、r=4 時，adapter 有 8000 個 parameters；dense matrix 則有一百萬個。
-         </li>
-         <li>
-          增加 r 會增加 capacity 和可訓練 state，但不保證 held-out quality 一直變好。
          </li>
         </ul>
         <figure class="mechanism-figure">
@@ -679,7 +673,7 @@
           A random、B 為零時，初始 adapter update 為零；B 可收到第一次非零 gradient。
          </p>
         </figure>
-        <a class="slide-section-link" href="#general-shapes-and-the-savings-condition">
+        <a class="slide-section-link" href="#a-two-by-two-update-by-hand">
          閱讀完整解說
         </a>
        </div>
@@ -687,6 +681,30 @@
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
         第 25 週 · 課節 4
+       </div>
+       <h3>
+        一般 shapes 與節省的條件
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          W 的 shape 是 [d_out,d_in] 時，選擇 A 為 [r,d_in]、B 為 [d_out,r]。
+         </li>
+         <li>
+          當 d_in=d_out=1000、r=4 時，adapter 有 8000 個 parameters；dense matrix 則有一百萬個。
+         </li>
+         <li>
+          增加 r 會增加 capacity 和可訓練 state，但不保證 held-out quality 一直變好。
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#general-shapes-and-the-savings-condition">
+         閱讀完整解說
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        第 25 週 · 課節 5
        </div>
        <h3>
         Scaling 與 zero-update initialization
@@ -710,7 +728,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        第 25 週 · 課節 5
+        第 25 週 · 課節 6
        </div>
        <h3>
         哪些東西仍佔用 memory
@@ -734,7 +752,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        第 25 週 · 課節 6
+        第 25 週 · 課節 7
        </div>
        <h3>
         QLoRA 加入 quantized frozen base
@@ -758,7 +776,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        第 25 週 · 課節 7
+        第 25 週 · 課節 8
        </div>
        <h3>
         NF4、double quantization 和 paged optimizer 各自做甚麼
@@ -779,7 +797,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        第 25 週 · 課節 8
+        第 25 週 · 課節 9
        </div>
        <h3>
         兩種改變不同部分的 LoRA variant
@@ -797,7 +815,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        第 25 週 · 課節 9
+        第 25 週 · 課節 10
        </div>
        <h3>
         儲存與使用 adapter
@@ -821,7 +839,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        第 25 週 · 課節 10
+        第 25 週 · 課節 11
        </div>
        <h3>
         實例練習與學習檢查
@@ -849,7 +867,7 @@
        ← 上一頁
       </button>
       <span aria-live="polite" class="slide-counter">
-       1 / 10
+       1 / 11
       </span>
       <button class="slide-next" type="button">
        下一頁 →
@@ -859,34 +877,37 @@
       前往 slide
       <select aria-label="跳至 slide" class="slide-jump">
        <option value="0">
-        1. Training 更少 parameters
+        1. NF4
        </option>
        <option value="1">
-        2. 手算一個 two-by-two update
+        2. Training 更少 parameters
        </option>
        <option value="2">
-        3. 一般 shapes 與節省的條件
+        3. 手算一個 two-by-two update
        </option>
        <option value="3">
-        4. Scaling 與 zero-update initialization
+        4. 一般 shapes 與節省的條件
        </option>
        <option value="4">
-        5. 哪些東西仍佔用 memory
+        5. Scaling 與 zero-update initialization
        </option>
        <option value="5">
-        6. QLoRA 加入 quantized frozen base
+        6. 哪些東西仍佔用 memory
        </option>
        <option value="6">
-        7. NF4、double quantization 和 paged optimizer 各自做甚麼
+        7. QLoRA 加入 quantized frozen base
        </option>
        <option value="7">
-        8. 兩種改變不同部分的 LoRA variant
+        8. NF4、double quantization 和 paged optimizer 各自做甚麼
        </option>
        <option value="8">
-        9. 儲存與使用 adapter
+        9. 兩種改變不同部分的 LoRA variant
        </option>
        <option value="9">
-        10. 實例練習與學習檢查
+        10. 儲存與使用 adapter
+       </option>
+       <option value="10">
+        11. 實例練習與學習檢查
        </option>
       </select>
      </label>
@@ -915,6 +936,11 @@
       本課內容
      </strong>
      <ol>
+      <li>
+       <a href="#nf4">
+        NF4
+       </a>
+      </li>
       <li>
        <a href="#training-fewer-parameters">
         Training 更少 parameters
@@ -974,6 +1000,12 @@
      <h2>
       閱讀完整解說
      </h2>
+     <h3 id="nf4">
+      NF4
+     </h3>
+     <p>
+      NF4 是 NormalFloat 4-bit：針對近似 normal distribution weights 設計的 quantization codebook，並非普通四-bit integer rounding。
+     </p>
      <h3 id="training-fewer-parameters">
       Training 更少 parameters
      </h3>
@@ -988,18 +1020,6 @@
      </p>
      <h3 id="a-two-by-two-update-by-hand">
       手算一個 two-by-two update
-     </h3>
-     <p>
-      設 A=[0.1,0.2]，shape 是 [1,2]；B=[[1],[2]]，shape 是 [2,1]。兩者的 product BA 是 [[0.1,0.2],[0.2,0.4]]。
-     </p>
-     <p>
-      兩個 rows 成比例，因此這個 update 的 rank 最多為一。把 BA 乘以 x=[1,1]，得到 [0.3,0.6]。把這部分加到 base layer 的 Wx output。
-     </p>
-     <p>
-      這個小例子讓計算看得見，但尚未節省 parameters：A 和 B 共有四個 entries，與 2×2 dense matrix 相同。能否節省，取決於 dimensions，以及 rank 是否足夠小。
-     </p>
-     <h3 id="general-shapes-and-the-savings-condition">
-      一般 shapes 與節省的條件
      </h3>
      <figure class="mechanism-figure">
       <figcaption>
@@ -1044,6 +1064,18 @@
        A random、B 為零時，初始 adapter update 為零；B 可收到第一次非零 gradient。
       </p>
      </figure>
+     <p>
+      設 A=[0.1,0.2]，shape 是 [1,2]；B=[[1],[2]]，shape 是 [2,1]。兩者的 product BA 是 [[0.1,0.2],[0.2,0.4]]。
+     </p>
+     <p>
+      兩個 rows 成比例，因此這個 update 的 rank 最多為一。把 BA 乘以 x=[1,1]，得到 [0.3,0.6]。把這部分加到 base layer 的 Wx output。
+     </p>
+     <p>
+      這個小例子讓計算看得見，但尚未節省 parameters：A 和 B 共有四個 entries，與 2×2 dense matrix 相同。能否節省，取決於 dimensions，以及 rank 是否足夠小。
+     </p>
+     <h3 id="general-shapes-and-the-savings-condition">
+      一般 shapes 與節省的條件
+     </h3>
      <p>
       W 的 shape 是 [d_out,d_in] 時，選擇 A 為 [r,d_in]、B 為 [d_out,r]。Adapter parameters 共 r(d_in+d_out)，而 W 有 d_in×d_out 個 parameters。
      </p>
@@ -1196,7 +1228,7 @@
       </h3>
       <p>
        <a href="../tutorials/25.html">
-        Tutorial 25: 從小型 matrix 理解 LoRA 及 QLoRA
+        Tutorial 25: 從小型 matrix 理解 LoRA 和 QLoRA
        </a>
        計算 trainable parameter 數目，並檢查 LoRA initialization。
        <a href="../tutorials/26.html">

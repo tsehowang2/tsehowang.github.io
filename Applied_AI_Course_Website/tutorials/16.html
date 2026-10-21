@@ -463,7 +463,7 @@
         31
        </span>
        <span>
-        Integrating the documentation assistant and advanced extensions
+        Integrating and reviewing the documentation assistant
        </span>
        <span class="week-tick" data-week-tick="31">
        </span>
@@ -541,7 +541,7 @@
      </a>
     </div>
     <p class="save-note">
-     When you run this notebook, also
+     Tutorials 01–16 run without coursekit. The complete pack is optional for this notebook. When you need the support files,
      <a download="" href="../downloads/Applied_Generative_AI_Course.zip">
       download and extract the full course pack
      </a>
@@ -593,7 +593,7 @@
        Notebook environment and course files
       </summary>
       <p>
-       This cell finds the extracted course files. It is needed when running the notebook.
+       Run this setup first. Early tutorials create an output directory; later tutorials locate the extracted course support files.
       </p>
       <div class="code-block">
        <div class="code-bar">
@@ -604,20 +604,25 @@
          Copy code
         </button>
        </div>
-       <pre><code>from pathlib import Path
-import sys,json,time,random,hashlib,math
-if hasattr(sys.stdout,'reconfigure'): sys.stdout.reconfigure(encoding='utf-8')
-candidates=[Path.cwd(),Path.cwd().parent,Path.cwd()/'llm_course',Path.cwd()/'llm_course_v2',Path('/content/llm_course'),Path('/content/llm_course_v2')]
-COURSE=next((p for p in candidates if (p/'coursekit/core.py').exists()),None)
-if COURSE is None: raise RuntimeError('Extract the complete course pack; run from its root or notebooks directory.')
-if str(COURSE) not in sys.path:sys.path.insert(0,str(COURSE))
-RUNS=COURSE/'runs';RUNS.mkdir(exist_ok=True)
-from coursekit.core import *
+       <pre><code>import random
+from pathlib import Path
+import sys, json, math, time, random
+if hasattr(sys.stdout, 'reconfigure'):
+    sys.stdout.reconfigure(encoding='utf-8')
+COURSE = Path.cwd().parent if Path.cwd().name == 'notebooks' else Path.cwd()
+RUNS = COURSE / 'runs'
+RUNS.mkdir(exist_ok=True)
 random.seed(7)
-print('Course root:',COURSE)
+print('Outputs directory:', RUNS)
 </code></pre>
       </div>
      </details>
+     <h3 id="pause-before-the-next-step">
+      Pause before the next step
+     </h3>
+     <p>
+      Explain how a six-position input can have six next-token targets when taken from a longer sequence, although a standalone six-token sentence only supplies five adjacent pairs.
+     </p>
      <p>
       This is a consolidation worksheet. We put dimensions and operation counts beside a complete model path. The arithmetic does not replace the actual tiny-model run from week 12. Bring its report and explain each stage.
      </p>
@@ -633,22 +638,44 @@ print('Course root:',COURSE)
         Copy code
        </button>
       </div>
-      <pre><code>B,T,D,H,V=2,6,8,2,20
-dh=D//H
-trace={'token IDs':(B,T),'embeddings':(B,T,D),'split Q/K/V':(B,H,T,dh),'scores':(B,H,T,T),'merged attention':(B,T,D),'vocabulary logits':(B,T,V),'shifted targets':(B,T)}
-for name,shape in trace.items():print(name,shape)
-score_bytes=B*H*T*T*4
-assert score_bytes==576
-print('Explicit float32 scores in this example:',score_bytes,'bytes')
+      <pre><code>B, T, D, H, V = (2, 6, 8, 2, 20)
+dh = D // H
+trace = {'token IDs': (B, T), 'embeddings': (B, T, D), 'split Q/K/V': (B, H, T, dh), 'scores': (B, H, T, T), 'merged attention': (B, T, D), 'vocabulary logits': (B, T, V), 'shifted targets': (B, T)}
+for name, shape in trace.items():
+    print(name, shape)
+score_bytes = B * H * T * T * 4
+assert score_bytes == 576
+print('Explicit float32 scores in this example:', score_bytes, 'bytes')
 print('Use the week-12 implementation to verify these shapes on a live model.')
 </code></pre>
      </div>
-     <h3 id="pause-before-the-next-step">
-      Pause before the next step
+     <h3 id="count-the-matrix-multiplications">
+      Count the matrix multiplications
      </h3>
      <p>
-      Explain how a six-position input can have six next-token targets when taken from a longer sequence, although a standalone six-token sentence only supplies five adjacent pairs.
+      Count multiply-accumulates (MACs); each is approximately two FLOPs. Ignore normalization, softmax, biases and activations.
      </p>
+     <h3>
+      Code step 2
+     </h3>
+     <div class="code-block">
+      <div class="code-bar">
+       <span>
+        Python
+       </span>
+       <button class="copy-code" type="button">
+        Copy code
+       </button>
+      </div>
+      <pre><code>B, T, d_model, H, V = (2, 6, 8, 2, 20)
+d_head = d_model // H
+counts = {'QKV': 3 * B * T * d_model * d_model, 'QK and weights-V': 2 * B * H * T * T * d_head, 'output projection': B * T * d_model * d_model, 'MLP': 8 * B * T * d_model * d_model, 'vocabulary': B * T * d_model * V}
+for name, macs in counts.items():
+    print(name, macs, 'MACs')
+print('Total:', sum(counts.values()), 'MACs; approximate FLOPs:', 2 * sum(counts.values()))
+assert sum(counts.values()) == 12288
+</code></pre>
+     </div>
      <h3 id="independent-experiment">
       Independent experiment
      </h3>
@@ -658,6 +685,37 @@ print('Use the week-12 implementation to verify these shapes on a live model.')
      <p>
       Submit a short report containing your prediction, the actual result, a comparison and a limitation. Record any environment or data changes. Do not substitute an illustrative number for a measured result.
      </p>
+     <h3 id="reference-output">
+      Reference output
+     </h3>
+     <p>
+      Reference output from the CPU teaching run (paths and timings vary). This is a comparison aid, not your experiment result.
+     </p>
+     <div class="code-block">
+      <div class="code-bar">
+       <span>
+        text
+       </span>
+       <button class="copy-code" type="button">
+        Copy code
+       </button>
+      </div>
+      <pre><code>token IDs (2, 6)
+embeddings (2, 6, 8)
+split Q/K/V (2, 2, 6, 4)
+scores (2, 2, 6, 6)
+merged attention (2, 6, 8)
+vocabulary logits (2, 6, 20)
+shifted targets (2, 6)
+Explicit float32 scores in this example: 576 bytes
+Use the week-12 implementation to verify these shapes on a live model.
+QKV 2304 MACs
+QK and weights-V 1152 MACs
+output projection 768 MACs
+MLP 6144 MACs
+vocabulary 1920 MACs
+Total: 12288 MACs; approximate FLOPs: 24576</code></pre>
+     </div>
     </article>
     <div class="end-note">
      Reading the code is the first step. Complete the independent experiment and keep your actual results before marking this lab finished.

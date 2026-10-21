@@ -469,7 +469,7 @@
         31
        </span>
        <span>
-        整合文件助手與進階延伸
+        整合及檢視 documentation assistant
        </span>
        <span class="week-tick" data-week-tick="31">
        </span>
@@ -562,6 +562,9 @@
        <p>
         stable IDs、payload／source references、scope／version 及 content lineage。即使 nearest-neighbor computation 正確，錯誤標記仍會保留下來。
        </p>
+       <p>
+        評分：stable identity (1)；metadata (1)；lineage/scope consequence (1)。
+       </p>
       </details>
      </section>
      <section class="test-question">
@@ -580,7 +583,10 @@
         顯示完整解答
        </summary>
        <p>
-        1,536,000,000 bytes，尚未計 graph、payloads、IDs、replicas、text 及 overhead。
+        1,000,000×384=384,000,000 scalar elements；float32 每個佔4 bytes，所以 storage=384,000,000×4=1,536,000,000 bytes。尚未包括 graph、payloads、IDs、replicas、text 和 overhead。
+       </p>
+       <p>
+        評分：1e6×384 elements (1)；four bytes/element (1)；1,536,000,000 bytes excluding overhead (1)。
        </p>
       </details>
      </section>
@@ -601,6 +607,9 @@
        </summary>
        <p>
         建立相容、重新 embedding 的 collection，核對及 benchmark，再切換並備妥 rollback。未經 filter 的 top-k 可能先漏掉符合條件的 relevant points，之後移除 invalid candidates 也補不回。
+       </p>
+       <p>
+        評分：compatible re-embedding (1)；verification (1)；switch/rollback (1)；post-filter candidate loss (1)。
        </p>
       </details>
      </section>

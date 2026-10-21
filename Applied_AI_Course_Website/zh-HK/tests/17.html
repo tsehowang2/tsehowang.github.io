@@ -469,7 +469,7 @@
         31
        </span>
        <span>
-        整合文件助手與進階延伸
+        整合及檢視 documentation assistant
        </span>
        <span class="week-tick" data-week-tick="31">
        </span>
@@ -562,6 +562,9 @@
        <p>
         lookup row 表示 token identity；contextual row 依賴允許 context；sentence embedding 使用適合 whole-input comparison 的 representation／pooling objective。
        </p>
+       <p>
+        評分：token lookup (1)；context dependence (1)；retrieval objective/pooling (1)。
+       </p>
       </details>
      </section>
      <section class="test-question">
@@ -580,7 +583,10 @@
         顯示完整解答
        </summary>
        <p>
-        Hit=1、Recall=1/2。相關 passage 不一定提供所有必要事實。
+        Returned IDs 與 gold={H2,H3} 的 intersection 是 {H2}，有一個 hit。Intersection 非空，故 Hit@3=1。Recall@3=1個 retrieved relevant item / 2個 gold items=1/2。Related passage 不一定包含全部 required facts。
+       </p>
+       <p>
+        評分：one relevant hit (1)；Hit@3=1 (1)；Recall@3=1/2 (1)。
        </p>
       </details>
      </section>
@@ -601,6 +607,9 @@
        </summary>
        <p>
         確切 API／error 名稱可能有利 lexical matching；paraphrases 可能有利 semantic representations。可用相同主題但錯版本，或 bus-departure 與 school-opening 作 distractors。量度實際結果。
+       </p>
+       <p>
+        評分：lexical case (1)；semantic paraphrase (1)；hard negative (1)；measured comparison (1)。
        </p>
       </details>
      </section>

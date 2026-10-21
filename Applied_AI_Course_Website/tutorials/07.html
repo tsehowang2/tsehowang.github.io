@@ -463,7 +463,7 @@
         31
        </span>
        <span>
-        Integrating the documentation assistant and advanced extensions
+        Integrating and reviewing the documentation assistant
        </span>
        <span class="week-tick" data-week-tick="31">
        </span>
@@ -541,7 +541,7 @@
      </a>
     </div>
     <p class="save-note">
-     When you run this notebook, also
+     Tutorials 01–16 run without coursekit. The complete pack is optional for this notebook. When you need the support files,
      <a download="" href="../downloads/Applied_Generative_AI_Course.zip">
       download and extract the full course pack
      </a>
@@ -593,7 +593,7 @@
        Notebook environment and course files
       </summary>
       <p>
-       This cell finds the extracted course files. It is needed when running the notebook.
+       Run this setup first. Early tutorials create an output directory; later tutorials locate the extracted course support files.
       </p>
       <div class="code-block">
        <div class="code-bar">
@@ -604,20 +604,25 @@
          Copy code
         </button>
        </div>
-       <pre><code>from pathlib import Path
-import sys,json,time,random,hashlib,math
-if hasattr(sys.stdout,'reconfigure'): sys.stdout.reconfigure(encoding='utf-8')
-candidates=[Path.cwd(),Path.cwd().parent,Path.cwd()/'llm_course',Path.cwd()/'llm_course_v2',Path('/content/llm_course'),Path('/content/llm_course_v2')]
-COURSE=next((p for p in candidates if (p/'coursekit/core.py').exists()),None)
-if COURSE is None: raise RuntimeError('Extract the complete course pack; run from its root or notebooks directory.')
-if str(COURSE) not in sys.path:sys.path.insert(0,str(COURSE))
-RUNS=COURSE/'runs';RUNS.mkdir(exist_ok=True)
-from coursekit.core import *
+       <pre><code>import random
+from pathlib import Path
+import sys, json, math, time, random
+if hasattr(sys.stdout, 'reconfigure'):
+    sys.stdout.reconfigure(encoding='utf-8')
+COURSE = Path.cwd().parent if Path.cwd().name == 'notebooks' else Path.cwd()
+RUNS = COURSE / 'runs'
+RUNS.mkdir(exist_ok=True)
 random.seed(7)
-print('Course root:',COURSE)
+print('Outputs directory:', RUNS)
 </code></pre>
       </div>
      </details>
+     <h3 id="pause-before-the-next-step">
+      Pause before the next step
+     </h3>
+     <p>
+      Calculate one projection and one dot product by hand before checking the arrays.
+     </p>
      <p>
       We now generate weights from a query and keys. Use one vector for what is sought, one key per candidate, and one value per candidate. The numerical projections below are invented and deliberately tiny.
      </p>
@@ -634,23 +639,20 @@ print('Course root:',COURSE)
        </button>
       </div>
       <pre><code>import numpy as np
-x=np.array([[1.,0.],[0.,1.],[1.,1.]])
-Wq=np.array([[1.,0.],[0.,1.]])
-Wk=np.array([[1.,1.],[0.,1.]])
-Wv=np.array([[2.,0.],[0.,4.]])
-Q,K,V=x@Wq,x@Wk,x@Wv
-q=Q[2];scores=q@K.T
-e=np.exp(scores-scores.max());weights=e/e.sum()
-print('Q',Q,'K',K,'V',V,'scores',scores,'weights',weights,'output',weights@V,sep='\n')
-assert scores.shape==(3,);assert (weights@V).shape==(2,)
+x = np.array([[1.0, 0.0], [0.0, 1.0], [1.0, 1.0]])
+Wq = np.array([[1.0, 0.0], [0.0, 1.0]])
+Wk = np.array([[1.0, 1.0], [0.0, 1.0]])
+Wv = np.array([[2.0, 0.0], [0.0, 4.0]])
+Q, K, V = (x @ Wq, x @ Wk, x @ Wv)
+q = Q[2]
+scores = q @ K.T
+e = np.exp(scores - scores.max())
+weights = e / e.sum()
+print('Q', Q, 'K', K, 'V', V, 'scores', scores, 'weights', weights, 'output', weights @ V, sep='\n')
+assert scores.shape == (3,)
+assert (weights @ V).shape == (2,)
 </code></pre>
      </div>
-     <h3 id="pause-before-the-next-step">
-      Pause before the next step
-     </h3>
-     <p>
-      Calculate one projection and one dot product by hand before checking the arrays.
-     </p>
      <h3 id="independent-experiment">
       Independent experiment
      </h3>
@@ -660,6 +662,40 @@ assert scores.shape==(3,);assert (weights@V).shape==(2,)
      <p>
       Submit a short report containing your prediction, the actual result, a comparison and a limitation. Record any environment or data changes. Do not substitute an illustrative number for a measured result.
      </p>
+     <h3 id="reference-output">
+      Reference output
+     </h3>
+     <p>
+      Reference output from the CPU teaching run (paths and timings vary). This is a comparison aid, not your experiment result.
+     </p>
+     <div class="code-block">
+      <div class="code-bar">
+       <span>
+        text
+       </span>
+       <button class="copy-code" type="button">
+        Copy code
+       </button>
+      </div>
+      <pre><code>Q
+[[1. 0.]
+ [0. 1.]
+ [1. 1.]]
+K
+[[1. 1.]
+ [0. 1.]
+ [1. 2.]]
+V
+[[2. 0.]
+ [0. 4.]
+ [2. 4.]]
+scores
+[2. 1. 3.]
+weights
+[0.24472847 0.09003057 0.66524096]
+output
+[1.81993885 3.02108612]</code></pre>
+     </div>
     </article>
     <div class="end-note">
      Reading the code is the first step. Complete the independent experiment and keep your actual results before marking this lab finished.

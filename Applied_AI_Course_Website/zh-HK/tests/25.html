@@ -469,7 +469,7 @@
         31
        </span>
        <span>
-        整合文件助手與進階延伸
+        整合及檢視 documentation assistant
        </span>
        <span class="week-tick" data-week-tick="31">
        </span>
@@ -562,6 +562,9 @@
        <p>
         A=[8,4096]、B=[4096,8]；65536 parameters，相比 dense 的 16777216，比例為 .390625%。
        </p>
+       <p>
+        評分：factor shapes (1)；65,536 adapter parameters (1)；16,777,216 dense comparison (1)。
+       </p>
       </details>
      </section>
      <section class="test-question">
@@ -569,7 +572,7 @@
        問題 2
       </div>
       <p>
-       A=[.1,.2]、B=[[1],[2]]，計算 BA 及 BA×[1,1]。
+       使用 column-vector convention：A=[[.1,.2]]、B=[[1],[2]]、x=[[1],[1]]。計算 BA 和 (BA)x，再以 alpha=2、rank r=1 計 scaled adapter output (alpha/r)(BA)x。
       </p>
       <label for="week-25-question-2">
        你的練習筆記
@@ -580,7 +583,10 @@
         顯示完整解答
        </summary>
        <p>
-        BA=[[.1,.2],[.2,.4]]、output=[.3,.6]。小型 2×2 rank1 需要四個 factor entries，因此尚未節省 parameter count。
+        BA=[[.1,.2],[.2,.4]]；乘 [2,1] column x 得 [[.3],[.6]]。Scale alpha/r=2，adapter output 為 [[.6],[1.2]]；這是 update path，尚未加 frozen Wx。
+       </p>
+       <p>
+        評分：BA (1)；column output (1)；alpha/r scaled output (1)。
        </p>
       </details>
      </section>
@@ -601,6 +607,9 @@
        </summary>
        <p>
         Standard initialization 使用 random A 和 zero B。首次 gradient 可以更新 B；B 非零後 A 才開始學習。兩個 factors 都為零，會阻斷兩者首次 gradients。Frozen-base storage 和 activations 仍然存在。QLoRA 加入 NF4 base storage、quantization constants 的 double quantization，以及 paged optimizers，同時保留合適的 higher-precision compute 和 adapter state。
+       </p>
+       <p>
+        評分：zero B/random A (1)；first gradients (1)；remaining memory (1)；QLoRA distinctions (1)。
        </p>
       </details>
      </section>

@@ -463,7 +463,7 @@
         31
        </span>
        <span>
-        Integrating the documentation assistant and advanced extensions
+        Integrating and reviewing the documentation assistant
        </span>
        <span class="week-tick" data-week-tick="31">
        </span>
@@ -556,6 +556,9 @@
        <p>
         i=blockIdx.x×blockDim.x+threadIdx.x; two blocks give 512 threads; only i&lt;257 accesses arrays.
        </p>
+       <p>
+        Marking: index (1); bounds check (1); two blocks/512 threads (1).
+       </p>
       </details>
      </section>
      <section class="test-question">
@@ -574,7 +577,10 @@
         Show worked solution
        </summary>
        <p>
-        New total=18.5 ms, speedup=20/18.5≈1.081.
+        Unaffected time=20−3=17 ms. The optimized kernel takes3/2=1.5 ms. New total=17+1.5=18.5 ms; speedup=20/18.5≈1.081.
+       </p>
+       <p>
+        Marking: kernel now 1.5 ms (1); total18.5 ms (1); speedup≈1.081 (1).
        </p>
       </details>
      </section>
@@ -595,6 +601,9 @@
        </summary>
        <p>
         CPU reference/tolerances and awkward sizes, warmup, synchronization/events, repeated timings/spread, transfer boundary, actual device/software metadata and saved workload/trace.
+       </p>
+       <p>
+        Marking: correctness (1); warmup and synchronization (1); repeats/spread (1); device/workload/transfer metadata (1).
        </p>
       </details>
      </section>

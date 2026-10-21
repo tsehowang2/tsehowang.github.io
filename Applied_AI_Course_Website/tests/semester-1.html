@@ -463,7 +463,7 @@
         31
        </span>
        <span>
-        Integrating the documentation assistant and advanced extensions
+        Integrating and reviewing the documentation assistant
        </span>
        <span class="week-tick" data-week-tick="31">
        </span>
@@ -534,7 +534,7 @@
       Question 1 Language modeling and representations 15 points
      </h3>
      <p>
-      Using “I go to school by bus,” explain next-token training and give shifted inputs/targets (5). Distinguish token IDs from embedding vectors and explain why IDs cannot be averaged as meanings (5). For probabilities [.6,.2,.2], calculate negative log likelihood when train is the target and interpret lower loss (5).
+      Using “I go to school by bus,” explain next-token training and give shifted inputs/targets (5). Distinguish token IDs from embeddings; calculate cosine([3,4],[1,0]) and interpret it (3). For correct-token probabilities [.5,.25], calculate mean NLL and perplexity (2). For label order [bus, train, bicycle] and probabilities [.6,.2,.2], calculate negative log likelihood when train is the target and interpret lower loss (5).
      </p>
      <h3 id="question-2-attention-by-hand-20-points">
       Question 2 Attention by hand 20 points
@@ -546,7 +546,7 @@
       Question 3 Transformer architecture 20 points
      </h3>
      <p>
-      For B=2,T=128,d_model=256,H=8 give split Q/K/V, score, per-head output and merged output shapes (8). Compute explicitly stored float32 score memory in bytes and MiB (4). Explain residual, normalization and positionwise MLP paths in a pre-normalized block (4). Explain why position information and a causal mask solve different problems (4).
+      For B=2,T=128,d_model=256,H=8 give split Q/K/V, score, per-head output and merged output shapes (8). Compute explicitly stored float32 score memory in bytes and MiB (4). Explain residual, normalization and positionwise MLP paths in a pre-normalized block (4). Count attention-plus-MLP matrices for standard MHA d_model=64 and a two-matrix MLP of width256, excluding biases/norms; state one variant that changes this (4).
      </p>
      <h3 id="question-4-training-a-tiny-transformer-20-points">
       Question 4 Training a tiny transformer 20 points
@@ -558,13 +558,13 @@
       Question 5 Generation and instruction following 15 points
      </h3>
      <p>
-      Compare greedy decoding and sampling, including temperature (5). Explain what a KV cache stores and why it speeds decoding without learning new facts (4). Distinguish pretraining from instruction SFT (3). Explain why fluent chain-of-thought text does not establish correctness (3).
+      Compare greedy and sampling with temperature (2). For [.5,.3,.15,.05], calculate top-k=2 and top-p=.7 distributions using the smallest sorted prefix reaching the threshold (3). Explain what a KV cache stores and why it speeds decoding without learning new facts (4). Distinguish pretraining from instruction SFT (3). Explain why fluent chain-of-thought text does not establish correctness (3).
      </p>
      <h3 id="question-6-beyond-text-and-experimental-reasoning-10-points">
       Question 6 Beyond text and experimental reasoning 10 points
      </h3>
      <p>
-      Compare autoregressive image-token generation with diffusion generation (4). Describe one transformer limitation and a controlled tiny-model experiment to investigate it (6).
+      Compare autoregressive image-token generation with diffusion (3). Explain recurrent state, vanishing gradients, and the purpose of LSTM/GRU gates (3). Contrast encoder-only, decoder-only and encoder-decoder visibility (4).
      </p>
      <details class="solution exam-solution">
       <summary>
@@ -574,7 +574,7 @@
        <strong>
         Q1 (15).
        </strong>
-       Inputs I/go/to/school/by, targets go/to/school/by/bus. Each prefix predicts the following token (5). IDs are arbitrary row indices; vectors are learned representations. Renumbering IDs with corresponding table-row permutation must preserve meaning (5). -ln(.2)=1.6094 nats. Lower loss means more probability on the observed target, not proof of factual truth (5).
+       Inputs I/go/to/school/by, targets go/to/school/by/bus. Each prefix predicts the following token (5). IDs index learned rows (1). Norm([3,4])=5, cosine=3/5=.6, a direction comparison (2). Mean NLL=(ln2+ln4)/2≈1.03972, perplexity=exp(1.03972)≈2.82843 (2). -ln(.2)=1.6094 nats. Lower loss means more probability on the observed target, not proof of factual truth (5).
       </p>
       <p>
        <strong>
@@ -586,7 +586,7 @@
        <strong>
         Q3 (20).
        </strong>
-       Q/K/V [2,8,128,32], scores [2,8,128,128], head output [2,8,128,32], merged [2,128,256] (8). 262144 elements times four =1048576 bytes=1 MiB (4). x becomes x+Attention(LN(x)), then x+MLP(LN(x)); MLP acts per position and residual preserves a direct path (4). Position supplies order/location; masking prevents future leakage. Neither generally replaces the other (4).
+       Q/K/V [2,8,128,32], scores [2,8,128,128], head output [2,8,128,32], merged [2,128,256] (8). 262144 elements times four =1048576 bytes=1 MiB (4). x becomes x+Attention(LN(x)), then x+MLP(LN(x)); MLP acts per position and residual preserves a direct path (4). Attention matrices=4×64²=16,384; MLP=2×64×256=32,768; total49,152. GQA changes K/V count or a gated MLP adds a matrix (4).
       </p>
       <p>
        <strong>
@@ -598,13 +598,13 @@
        <strong>
         Q5 (15).
        </strong>
-       Greedy selects the maximum; sampling draws from a distribution. Divide logits by positive temperature: lower sharpens, higher flattens. Neither guarantees a globally best sequence (5). The cache stores prior keys/values, avoiding recomputation; parameters remain fixed (4). Pretraining learns continuation; instruction SFT updates parameters from desired responses, commonly applying loss to response tokens (3). A rationale is generated text; verify answers independently with controlled comparisons (3).
+       Greedy selects the maximum; sampling draws from probabilities; lower temperature sharpens (2). Top-k=2 retains .5,.3, divides by .8 and gives [.625,.375,0,0]. Top-p=.7 reaches the threshold with the same two entries and gives the same distribution (3). The cache stores prior keys/values, avoiding recomputation; parameters remain fixed (4). Pretraining learns continuation; instruction SFT updates parameters from desired responses, commonly applying loss to response tokens (3). A rationale is generated text; verify answers independently with controlled comparisons (3).
       </p>
       <p>
        <strong>
         Q6 (10).
        </strong>
-       Autoregression predicts discrete image tokens sequentially; diffusion learns a reverse/denoising process with a noise schedule (4). One investigation: move a synthetic dependency to increasing distances, holding architecture, data count and training budget fixed. Report held-out accuracy, context constraints and limits of a tiny synthetic task. Limitation 2, controls/design 3, interpretation 1 (6).
+       Autoregression predicts image tokens; diffusion learns a reverse/noise-prediction process (3). Recurrence updates a compressed state; repeated Jacobians can shrink gradients; LSTM/GRU gates regulate information flow (3). Encoder self-attention sees the whole input; decoder self-attention sees the prefix; encoder-decoder adds target queries over source K/V (4).
       </p>
      </details>
     </article>

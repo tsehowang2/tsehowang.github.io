@@ -463,7 +463,7 @@
         31
        </span>
        <span>
-        Integrating the documentation assistant and advanced extensions
+        Integrating and reviewing the documentation assistant
        </span>
        <span class="week-tick" data-week-tick="31">
        </span>
@@ -568,138 +568,12 @@
         Week 17 · Section 1
        </div>
        <h3>
-        A simple school handbook
+        contrastive
        </h3>
        <div class="slide-prose">
         <ul class="slide-keypoints">
          <li>
-          Imagine three handbook passages.
-         </li>
-         <li>
-          Searching is the task of choosing useful passages for this question.
-         </li>
-         <li>
-          We postponed this application until after learning representations and transformers.
-         </li>
-        </ul>
-        <a class="slide-section-link" href="#a-simple-school-handbook">
-         Read the worked explanation
-        </a>
-       </div>
-      </section>
-      <section class="lecture-slide" data-slide="" hidden="">
-       <div class="slide-stage">
-        Week 17 · Section 2
-       </div>
-       <h3>
-        A lexical baseline first
-       </h3>
-       <div class="slide-prose">
-        <ul class="slide-keypoints">
-         <li>
-          A lexical retriever compares words or terms.
-         </li>
-         <li>
-          For the question about school starting, a simple overlap method may score both H1 and H2.
-         </li>
-         <li>
-          BM25 is a widely used lexical scoring family with term-frequency saturation and length normalization.
-         </li>
-        </ul>
-        <a class="slide-section-link" href="#a-lexical-baseline-first">
-         Read the worked explanation
-        </a>
-       </div>
-      </section>
-      <section class="lecture-slide" data-slide="" hidden="">
-       <div class="slide-stage">
-        Week 17 · Section 3
-       </div>
-       <h3>
-        A sentence embedding represents the input for a task
-       </h3>
-       <div class="slide-prose">
-        <ul class="slide-keypoints">
-         <li>
-          A transformer encoder can produce contextual token vectors.
-         </li>
-         <li>
-          An embedding model trained for retrieval aims to make relevant question-passage pairs score well under its chosen similarity function.
-         </li>
-         <li>
-          The question and passage can be encoded independently in a bi-encoder.
-         </li>
-        </ul>
-        <a class="slide-section-link" href="#a-sentence-embedding-represents-the-input-for-a-task">
-         Read the worked explanation
-        </a>
-       </div>
-      </section>
-      <section class="lecture-slide" data-slide="" hidden="">
-       <div class="slide-stage">
-        Week 17 · Section 4
-       </div>
-       <h3>
-        A tiny numerical ranking
-       </h3>
-       <div class="slide-prose">
-        <ul class="slide-keypoints">
-         <li>
-          Use the invented unit question vector q=[1,0].
-         </li>
-         <li>
-          H1 ranks first. These coordinates are designed for calculation; they are not measured outputs from a real embedding model. The ranking operation is exact given the vectors, while whether the vectors encode the right relevance remains empirical.
-         </li>
-         <li>
-          In the tutorial, replace invented coordinates with actual model embeddings.
-         </li>
-        </ul>
-        <a class="slide-section-link" href="#a-tiny-numerical-ranking">
-         Read the worked explanation
-        </a>
-       </div>
-      </section>
-      <section class="lecture-slide" data-slide="" hidden="">
-       <div class="slide-stage">
-        Week 17 · Section 5
-       </div>
-       <h3>
-        How retrieval embeddings can be trained
-       </h3>
-       <div class="slide-prose">
-        <ul class="slide-keypoints">
-         <li>
-          A positive pair is a question and a passage that supports its answer.
-         </li>
-         <li>
-          A hard negative resembles the question but is wrong.
-         </li>
-         <li>
-          False negatives occur when a passage marked negative actually provides useful evidence.
-         </li>
-        </ul>
-        <a class="slide-section-link" href="#how-retrieval-embeddings-can-be-trained">
-         Read the worked explanation
-        </a>
-       </div>
-      </section>
-      <section class="lecture-slide" data-slide="" hidden="">
-       <div class="slide-stage">
-        Week 17 · Section 6
-       </div>
-       <h3>
-        A contrastive training example with three questions
-       </h3>
-       <div class="slide-prose">
-        <ul class="slide-keypoints">
-         <li>
-          Return to our school handbook.
-         </li>
-         <li>
-          A bi-encoder encodes each question and each passage separately.
-         </li>
-         <li>
-          For Q1, the positive passage is H1.
+          Contrastive learning compares labeled matching pairs with alternatives in the same objective.
          </li>
         </ul>
         <figure class="mechanism-figure">
@@ -756,7 +630,127 @@
           The candidate softmax is a training comparison, not a probability that evidence is true.
          </p>
         </figure>
-        <a class="slide-section-link" href="#a-contrastive-training-example-with-three-questions">
+        <a class="slide-section-link" href="#contrastive">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 17 · Section 2
+       </div>
+       <h3>
+        A simple school handbook
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Imagine three handbook passages.
+         </li>
+         <li>
+          Searching is the task of choosing useful passages for this question.
+         </li>
+         <li>
+          We postponed this application until after learning representations and transformers.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#a-simple-school-handbook">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 17 · Section 3
+       </div>
+       <h3>
+        A lexical baseline first
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          A lexical retriever compares words or terms.
+         </li>
+         <li>
+          For the question about school starting, a simple overlap method may score both H1 and H2.
+         </li>
+         <li>
+          BM25 is a widely used lexical scoring family with term-frequency saturation and length normalization.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#a-lexical-baseline-first">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 17 · Section 4
+       </div>
+       <h3>
+        A sentence embedding represents the input for a task
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          A transformer encoder can produce contextual token vectors.
+         </li>
+         <li>
+          An embedding model trained for retrieval aims to make relevant question-passage pairs score well under its chosen similarity function.
+         </li>
+         <li>
+          The question and passage can be encoded independently in a bi-encoder.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#a-sentence-embedding-represents-the-input-for-a-task">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 17 · Section 5
+       </div>
+       <h3>
+        A tiny numerical ranking
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Use the invented unit question vector q=[1,0].
+         </li>
+         <li>
+          H1 ranks first. These coordinates are designed for calculation; they are not measured outputs from a real embedding model. The ranking operation is exact given the vectors, while whether the vectors encode the right relevance remains empirical.
+         </li>
+         <li>
+          In the tutorial, replace invented coordinates with actual model embeddings.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#a-tiny-numerical-ranking">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 17 · Section 6
+       </div>
+       <h3>
+        How retrieval embeddings can be trained
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          A positive pair is a question and a passage that supports its answer.
+         </li>
+         <li>
+          A hard negative resembles the question but is wrong.
+         </li>
+         <li>
+          False negatives occur when a passage marked negative actually provides useful evidence.
+         </li>
+        </ul>
+        <a class="slide-section-link" href="#how-retrieval-embeddings-can-be-trained">
          Read the worked explanation
         </a>
        </div>
@@ -764,6 +758,94 @@
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
         Week 17 · Section 7
+       </div>
+       <h3>
+        A contrastive training example with three questions
+       </h3>
+       <div class="slide-prose">
+        <ul class="slide-keypoints">
+         <li>
+          Return to our school handbook.
+         </li>
+         <li>
+          A bi-encoder encodes each question and each passage separately.
+         </li>
+         <li>
+          For Q1, the positive passage is H1.
+         </li>
+        </ul>
+        <div class="table-wrap">
+         <table>
+          <thead>
+           <tr>
+            <th>
+             Question
+            </th>
+            <th>
+             H1
+            </th>
+            <th>
+             H2
+            </th>
+            <th>
+             H3
+            </th>
+           </tr>
+          </thead>
+          <tbody>
+           <tr>
+            <td>
+             Q1
+            </td>
+            <td>
+             2
+            </td>
+            <td>
+             1
+            </td>
+            <td>
+             0
+            </td>
+           </tr>
+           <tr>
+            <td>
+             Q2
+            </td>
+            <td>
+             0
+            </td>
+            <td>
+             2
+            </td>
+            <td>
+             1
+            </td>
+           </tr>
+           <tr>
+            <td>
+             Q3
+            </td>
+            <td>
+             1
+            </td>
+            <td>
+             0
+            </td>
+            <td>
+             2
+            </td>
+           </tr>
+          </tbody>
+         </table>
+        </div>
+        <a class="slide-section-link" href="#a-contrastive-training-example-with-three-questions">
+         Read the worked explanation
+        </a>
+       </div>
+      </section>
+      <section class="lecture-slide" data-slide="" hidden="">
+       <div class="slide-stage">
+        Week 17 · Section 8
        </div>
        <h3>
         A contrastive training example with three questions · continued
@@ -784,7 +866,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        Week 17 · Section 8
+        Week 17 · Section 9
        </div>
        <h3>
         Temperature connects cosine similarity to training logits
@@ -805,7 +887,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        Week 17 · Section 9
+        Week 17 · Section 10
        </div>
        <h3>
         A false negative changes what the model is taught
@@ -823,7 +905,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        Week 17 · Section 10
+        Week 17 · Section 11
        </div>
        <h3>
         Bi-encoder retrieval and cross-encoder reranking
@@ -844,7 +926,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        Week 17 · Section 11
+        Week 17 · Section 12
        </div>
        <h3>
         Prepare the query and passage the way the model expects
@@ -862,7 +944,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        Week 17 · Section 12
+        Week 17 · Section 13
        </div>
        <h3>
         One vector, several vectors, or sparse term weights
@@ -886,7 +968,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        Week 17 · Section 13
+        Week 17 · Section 14
        </div>
        <h3>
         Relevance needs labels and a definition
@@ -910,7 +992,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        Week 17 · Section 14
+        Week 17 · Section 15
        </div>
        <h3>
         Moving toward technical documentation
@@ -934,7 +1016,7 @@
       </section>
       <section class="lecture-slide" data-slide="" hidden="">
        <div class="slide-stage">
-        Week 17 · Section 15
+        Week 17 · Section 16
        </div>
        <h3>
         Worked practice and a readiness check
@@ -962,7 +1044,7 @@
        ← Previous
       </button>
       <span aria-live="polite" class="slide-counter">
-       1 / 15
+       1 / 16
       </span>
       <button class="slide-next" type="button">
        Next →
@@ -972,49 +1054,52 @@
       Go to slide
       <select aria-label="Go to slide" class="slide-jump">
        <option value="0">
-        1. A simple school handbook
+        1. contrastive
        </option>
        <option value="1">
-        2. A lexical baseline first
+        2. A simple school handbook
        </option>
        <option value="2">
-        3. A sentence embedding represents the input for a task
+        3. A lexical baseline first
        </option>
        <option value="3">
-        4. A tiny numerical ranking
+        4. A sentence embedding represents the input for a task
        </option>
        <option value="4">
-        5. How retrieval embeddings can be trained
+        5. A tiny numerical ranking
        </option>
        <option value="5">
-        6. A contrastive training example with three questions
+        6. How retrieval embeddings can be trained
        </option>
        <option value="6">
-        7. A contrastive training example with three questions · continued
+        7. A contrastive training example with three questions
        </option>
        <option value="7">
-        8. Temperature connects cosine similarity to training logits
+        8. A contrastive training example with three questions · continued
        </option>
        <option value="8">
-        9. A false negative changes what the model is taught
+        9. Temperature connects cosine similarity to training logits
        </option>
        <option value="9">
-        10. Bi-encoder retrieval and cross-encoder reranking
+        10. A false negative changes what the model is taught
        </option>
        <option value="10">
-        11. Prepare the query and passage the way the model expects
+        11. Bi-encoder retrieval and cross-encoder reranking
        </option>
        <option value="11">
-        12. One vector, several vectors, or sparse term weights
+        12. Prepare the query and passage the way the model expects
        </option>
        <option value="12">
-        13. Relevance needs labels and a definition
+        13. One vector, several vectors, or sparse term weights
        </option>
        <option value="13">
-        14. Moving toward technical documentation
+        14. Relevance needs labels and a definition
        </option>
        <option value="14">
-        15. Worked practice and a readiness check
+        15. Moving toward technical documentation
+       </option>
+       <option value="15">
+        16. Worked practice and a readiness check
        </option>
       </select>
      </label>
@@ -1043,6 +1128,11 @@
       In this lesson
      </strong>
      <ol>
+      <li>
+       <a href="#contrastive">
+        contrastive
+       </a>
+      </li>
       <li>
        <a href="#a-simple-school-handbook">
         A simple school handbook
@@ -1122,6 +1212,66 @@
      <h2>
       Read the full explanation
      </h2>
+     <h3 id="contrastive">
+      contrastive
+     </h3>
+     <figure class="mechanism-figure">
+      <figcaption>
+       What contrastive training compares
+      </figcaption>
+      <ol class="mechanism-flow">
+       <li>
+        <span class="mechanism-number">
+         01
+        </span>
+        <strong>
+         Encode
+        </strong>
+        <small>
+         question and passages
+        </small>
+       </li>
+       <li>
+        <span class="mechanism-number">
+         02
+        </span>
+        <strong>
+         Score
+        </strong>
+        <small>
+         pairwise similarity matrix
+        </small>
+       </li>
+       <li>
+        <span class="mechanism-number">
+         03
+        </span>
+        <strong>
+         Scale
+        </strong>
+        <small>
+         similarity / temperature
+        </small>
+       </li>
+       <li>
+        <span class="mechanism-number">
+         04
+        </span>
+        <strong>
+         Learn
+        </strong>
+        <small>
+         positive-pair cross-entropy
+        </small>
+       </li>
+      </ol>
+      <p>
+       The candidate softmax is a training comparison, not a probability that evidence is true.
+      </p>
+     </figure>
+     <p>
+      Contrastive learning compares labeled matching pairs with alternatives in the same objective.
+     </p>
      <h3 id="a-simple-school-handbook">
       A simple school handbook
      </h3>
@@ -1185,60 +1335,6 @@
      <h3 id="a-contrastive-training-example-with-three-questions">
       A contrastive training example with three questions
      </h3>
-     <figure class="mechanism-figure">
-      <figcaption>
-       What contrastive training compares
-      </figcaption>
-      <ol class="mechanism-flow">
-       <li>
-        <span class="mechanism-number">
-         01
-        </span>
-        <strong>
-         Encode
-        </strong>
-        <small>
-         question and passages
-        </small>
-       </li>
-       <li>
-        <span class="mechanism-number">
-         02
-        </span>
-        <strong>
-         Score
-        </strong>
-        <small>
-         pairwise similarity matrix
-        </small>
-       </li>
-       <li>
-        <span class="mechanism-number">
-         03
-        </span>
-        <strong>
-         Scale
-        </strong>
-        <small>
-         similarity / temperature
-        </small>
-       </li>
-       <li>
-        <span class="mechanism-number">
-         04
-        </span>
-        <strong>
-         Learn
-        </strong>
-        <small>
-         positive-pair cross-entropy
-        </small>
-       </li>
-      </ol>
-      <p>
-       The candidate softmax is a training comparison, not a probability that evidence is true.
-      </p>
-     </figure>
      <p>
       Return to our school handbook. Q1 is “When does school start?”, Q2 is “When does the school bus leave?”, and Q3 is “How much does a ticket for the school bus cost?” Their supporting passages are H1, H2, and H3 respectively. We label these positive pairs before training. The other passages in this small example do not answer that particular question.
      </p>

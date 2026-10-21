@@ -463,7 +463,7 @@
         31
        </span>
        <span>
-        Integrating the documentation assistant and advanced extensions
+        Integrating and reviewing the documentation assistant
        </span>
        <span class="week-tick" data-week-tick="31">
        </span>
@@ -556,6 +556,9 @@
        <p>
         Corpus/chunker, embeddings/index, tokenizer/adapter, prompt, tools, environment, evaluation records and configs; identify changed-dependency effects.
        </p>
+       <p>
+        Marking: data/index (1); model/tokenizer/adapter (1); prompt/tools/environment/evaluation (1).
+       </p>
       </details>
      </section>
      <section class="test-question">
@@ -576,6 +579,9 @@
        <p>
         Average=6 under stable matching boundaries. This does not specify worker count, p95, or saturation behavior.
        </p>
+       <p>
+        Marking: L=lambda×W (1); six average in flight (1); stability and boundary (1).
+       </p>
       </details>
      </section>
      <section class="test-question">
@@ -583,7 +589,7 @@
        Question 3
       </div>
       <p>
-       Design an API/load/reproduction check that distinguishes extraction baseline timings from real LLM service results.
+       Design API, load and reproduction checks for an application that first returns retrieved excerpts directly, then replaces that response stage with an LLM. Explain which timing claims transfer between the two versions.
       </p>
       <label for="week-29-question-3">
        Your working notes
@@ -594,7 +600,10 @@
         Show worked solution
        </summary>
        <p>
-        Pin artifacts, validate schema/scope/failures, measure actual generator with lengths/concurrency/warm/cold and timeouts, save raw timings, reproduce fresh. Label the instructional extractor appropriately.
+        Pin each version’s artifacts and test request schema, scope, invalid inputs and timeouts. Measure the LLM path with recorded prompt/output lengths, concurrency, warm/cold state and raw timings. Excerpt-return timings measure retrieval and API overhead; they do not measure LLM prefill/decode or predict its tail latency. Reproduce both configurations in a clean environment.
+       </p>
+       <p>
+        Marking: API controls (1); LLM workload protocol (1); timing distinction (1); clean reproduction (1).
        </p>
       </details>
      </section>
